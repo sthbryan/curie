@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #000000;
+  --color-surface: #0a0a0a;
+  --color-surface-hover: #141414;
+  --color-border: #1a1a1a;
+  --color-fg: #ffffff;
+  --color-fg-2: #b0b0b0;
+  --color-fg-3: #707070;
+  --color-fg-4: #404040;
+  --color-accent: #d71921;
+
+  --font-display: "Doto", ui-monospace, monospace;
+  --font-body: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text-display: 64px;
+  --text-heading: 36px;
+  --text-body: 14px;
+  --text-mono: 12px;
+  --text-micro: 10px;
+
+  --tracking-label: 0.12em;
+  --radius-sm: 2px;
+}
+
+:root[data-theme="light"] {
+  --color-bg: #f4f1ea;
+  --color-surface: #ebe6dc;
+  --color-surface-hover: #ddd8cc;
+  --color-border: #d4d0c5;
+  --color-fg: #000000;
+  --color-fg-2: #2c2c2c;
+  --color-fg-3: #6e6e6e;
+  --color-fg-4: #aeaead;
+  --color-accent: #d71921;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: inherit;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  button:focus-visible {
+    outline: 1px solid var(--color-fg);
+    outline-offset: 2px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-fg-4);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fg-3);
+}
