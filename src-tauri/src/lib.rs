@@ -3,11 +3,11 @@ use std::process::Command;
 use tauri::{Emitter, Window};
 
 #[derive(Serialize, Clone)]
-struct NodeInfo {
-    installed: bool,
-    version: Option<String>,
-    path: Option<String>,
-    manager: Option<String>,
+pub struct NodeInfo {
+    pub installed: bool,
+    pub version: Option<String>,
+    pub path: Option<String>,
+    pub manager: Option<String>,
 }
 
 #[derive(Serialize, Clone)]
@@ -22,8 +22,7 @@ fn get_locale() -> String {
     sys_locale::get_locale().unwrap_or_else(|| "en-US".to_string())
 }
 
-#[tauri::command]
-fn detect_node() -> Result<NodeInfo, String> {
+pub fn detect_node_info() -> Result<NodeInfo, String> {
     let output = Command::new("node").arg("--version").output();
 
     let stdout = output
@@ -85,7 +84,7 @@ fn detect_manager_from_path(path: &str) -> Option<String> {
 async fn install_node(window: Window) -> Result<(), String> {
     emit_progress(&window, "checking", "Checking environment", false);
 
-    if detect_node()
+    if detect_node_info()
         .map(|i| i.installed)
         .unwrap_or(false)
     {
@@ -151,6 +150,11 @@ fn emit_progress(window: &Window, stage: &str, message: &str, done: bool) {
             done,
         },
     );
+}
+
+#[tauri::command]
+fn detect_node() -> Result<NodeInfo, String> {
+    detect_node_info()
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

@@ -5,3 +5,11 @@ pre-commit:
       glob: "*.{js,ts,jsx,tsx,json,css}"
       run: bunx biome check --write --no-errors-on-unmatched {staged_files}
       stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    vitest:
+      run: bun test
+    cargo-test:
+      run: cargo test --manifest-path src-tauri/Cargo.toml
