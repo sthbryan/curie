@@ -63,19 +63,19 @@ fn detect_manager_from_path(path: &str) -> Option<String> {
     if p.contains(".volta") {
         return Some("volta".into());
     }
-    if p.contains("/nvm/") {
+    if p.contains(".nvm/") {
         return Some("nvm".into());
     }
-    if p.contains("/fnm/") {
+    if p.contains(".fnm/") {
         return Some("fnm".into());
     }
-    if p.contains("/asdf/") {
+    if p.contains(".asdf/") {
         return Some("asdf".into());
     }
     if p.contains("/mise/") || p.contains("/rtx/") {
         return Some("mise".into());
     }
-    if p.contains("/homebrew/") || p.contains("/opt/homebrew/") {
+    if p.contains("/homebrew/") || p.contains("/cellar/") {
         return Some("homebrew".into());
     }
     Some("system".into())
@@ -164,4 +164,99 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn detects_volta() {
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.volta/bin/node"),
+            Some("volta".into())
+        );
+        assert_eq!(
+            detect_manager_from_path("/home/alice/.volta/bin/node"),
+            Some("volta".into())
+        );
+    }
+
+    #[test]
+    fn detects_nvm() {
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.nvm/versions/node/v22.0.0/bin/node"),
+            Some("nvm".into())
+        );
+    }
+
+    #[test]
+    fn detects_fnm() {
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.fnm/node-versions/v22.0.0/bin/node"),
+            Some("fnm".into())
+        );
+    }
+
+    #[test]
+    fn detects_asdf() {
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.asdf/installs/nodejs/22.0.0/bin/node"),
+            Some("asdf".into())
+        );
+    }
+
+    #[test]
+    fn detects_mise_via_rtx_legacy_path() {
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.local/share/mise/installs/node/22.0.0/bin/node"),
+            Some("mise".into())
+        );
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.local/share/rtx/installs/node/22.0.0/bin/node"),
+            Some("mise".into())
+        );
+    }
+
+    #[test]
+    fn detects_homebrew_on_intel_and_silicon() {
+        assert_eq!(
+            detect_manager_from_path("/usr/local/Cellar/node/22.0.0/bin/node"),
+            Some("homebrew".into())
+        );
+        assert_eq!(
+            detect_manager_from_path("/opt/homebrew/Cellar/node/22.0.0/bin/node"),
+            Some("homebrew".into())
+        );
+    }
+
+    #[test]
+    fn falls_back_to_system_for_unknown_paths() {
+        assert_eq!(
+            detect_manager_from_path("/usr/bin/node"),
+            Some("system".into())
+        );
+        assert_eq!(
+            detect_manager_from_path("/bin/node"),
+            Some("system".into())
+        );
+    }
+
+    #[test]
+    fn is_case_insensitive() {
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.Volta/bin/node"),
+            Some("volta".into())
+        );
+        assert_eq!(
+            detect_manager_from_path("/USR/LOCAL/CELLAR/NODE/22.0.0/BIN/NODE"),
+            Some("homebrew".into())
+        );
+    }
+
+    #[test]
+    fn first_match_wins_when_multiple_candidates() {
+        let path = "/Users/alice/.volta/tools/image/node/22.0.0/bin/node";
+        assert_eq!(detect_manager_from_path(path), Some("volta".into()));
+    }
 }

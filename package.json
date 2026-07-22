@@ -12,6 +12,8 @@
     "check:fix": "biome check --write",
     "format": "biome format --write",
     "lint": "biome lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "postinstall": "lefthook install || true"
   },
   "dependencies": {
@@ -30,6 +32,7 @@
     "lefthook": "^2.1.10",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.8.3",
-    "vite": "^7.0.4"
+    "vite": "^7.0.4",
+    "vitest": "^4.1.10"
   }
 }
