@@ -1,4 +1,5 @@
 use serde::Serialize;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use tauri::{Emitter, Window};
 
@@ -23,38 +24,107 @@ fn get_locale() -> String {
 }
 
 pub fn detect_node_info() -> Result<NodeInfo, String> {
-    let output = Command::new("node").arg("--version").output();
+    if let Some(info) = find_node() {
+        return Ok(info);
+    }
+    Ok(NodeInfo {
+        installed: false,
+        version: None,
+        path: None,
+        manager: None,
+    })
+}
 
-    let stdout = output
-        .as_ref()
-        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
-        .unwrap_or_default();
+fn find_node() -> Option<NodeInfo> {
+    let home = dirs::home_dir().unwrap_or_default();
 
-    let ok = output.as_ref().map(|o| o.status.success()).unwrap_or(false);
-    if !ok {
-        return Ok(NodeInfo {
-            installed: false,
-            version: None,
-            path: None,
-            manager: None,
-        });
+    let candidates = [
+        home.join(".volta/bin/node"),
+        home.join(".nvm/current/bin/node"),
+        home.join(".fnm/current/bin/node"),
+        PathBuf::from("/opt/homebrew/bin/node"),
+        PathBuf::from("/usr/local/bin/node"),
+        PathBuf::from("/usr/bin/node"),
+        PathBuf::from("/bin/node"),
+    ];
+
+    for path in &candidates {
+        if let Some(info) = probe_path(path) {
+            return Some(info);
+        }
     }
 
-    let path = Command::new("which")
-        .arg("node")
-        .output()
-        .ok()
-        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
-        .filter(|p| !p.is_empty());
+    for shell in ["zsh", "bash"] {
+        if let Some(info) = probe_via_shell(shell) {
+            return Some(info);
+        }
+    }
 
-    let manager = path.as_deref().and_then(detect_manager_from_path);
+    if let Some(info) = probe_path(&PathBuf::from("node")) {
+        return Some(info);
+    }
 
-    Ok(NodeInfo {
+    None
+}
+
+fn probe_path(path: &Path) -> Option<NodeInfo> {
+    let output = Command::new(path).arg("--version").output().ok()?;
+    if !output.status.success() {
+        return None;
+    }
+    let version = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    if version.is_empty() {
+        return None;
+    }
+    let resolved = which_realpath(path).unwrap_or_else(|| path.to_path_buf());
+    let path_str = resolved.to_string_lossy().to_string();
+    let manager = detect_manager_from_path(&path_str);
+    Some(NodeInfo {
         installed: true,
-        version: Some(if stdout.is_empty() { "unknown".into() } else { stdout }),
-        path,
+        version: Some(version),
+        path: Some(path_str),
         manager,
     })
+}
+
+fn probe_via_shell(shell: &str) -> Option<NodeInfo> {
+    let cmd = r#"
+for f in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; do
+  [ -f "$f" ] && . "$f" 2>/dev/null
+done
+p=$(command -v node 2>/dev/null) || exit 1
+v=$(node --version 2>/dev/null) || exit 1
+printf '%s\n%s' "$p" "$v"
+"#;
+    let output = Command::new(shell).args(["-l", "-c", cmd]).output().ok()?;
+    if !output.status.success() {
+        return None;
+    }
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+    let mut lines = stdout.lines().filter(|l| !l.trim().is_empty());
+    let path = lines.next()?.trim().to_string();
+    let version = lines.next()?.trim().to_string();
+    if path.is_empty() || version.is_empty() {
+        return None;
+    }
+    let manager = detect_manager_from_path(&path);
+    Some(NodeInfo {
+        installed: true,
+        version: Some(version),
+        path: Some(path),
+        manager,
+    })
+}
+
+fn which_realpath(path: &Path) -> Option<PathBuf> {
+    let output = Command::new("readlink").arg("-f").arg(path).output().ok()?;
+    if output.status.success() {
+        let s = String::from_utf8_lossy(&output.stdout).trim().to_string();
+        if !s.is_empty() {
+            return Some(PathBuf::from(s));
+        }
+    }
+    None
 }
 
 fn detect_manager_from_path(path: &str) -> Option<String> {
@@ -271,5 +341,27 @@ mod tests {
     fn first_match_wins_when_multiple_candidates() {
         let path = "/Users/alice/.volta/tools/image/node/22.0.0/bin/node";
         assert_eq!(detect_manager_from_path(path), Some("volta".into()));
+    }
+
+    #[test]
+    fn detects_volta_shim_path() {
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.volta/bin/volta-shim"),
+            Some("volta".into())
+        );
+        assert_eq!(
+            detect_manager_from_path("/Users/alice/.volta/bin/node"),
+            Some("volta".into())
+        );
+    }
+
+    #[test]
+    fn find_node_works_without_path_set() {
+        let info = find_node();
+        if let Some(info) = info {
+            assert!(info.installed);
+            assert!(info.version.is_some());
+            assert!(info.path.is_some());
+        }
     }
 }

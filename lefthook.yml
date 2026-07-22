@@ -8,6 +8,8 @@ pre-commit:
 
 pre-push:
   parallel: true
+  env:
+    PATH: $HOME/.cargo/bin:$PATH
   commands:
     vitest:
       run: bun run test
