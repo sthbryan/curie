@@ -1,18 +1,15 @@
-import type { Lang } from "../i18n";
 import { t } from "../i18n";
+import { useAppStore } from "../store/app";
 import { Label } from "./Label";
 import { ACTIVE_AGENTS, AGENTS, RECENT, TOTAL_SKILLS, TOTAL_UPDATES } from "./types";
-
-type Props = {
-  lang: Lang;
-  onNavigate: (view: "installed") => void;
-};
 
 function density(count: number, capacity: number): number {
   return Math.min(count / capacity, 1);
 }
 
-export function Home({ lang, onNavigate }: Props) {
+export function Home() {
+  const lang = useAppStore((s) => s.lang);
+  const setView = useAppStore((s) => s.setView);
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-10 pt-12 pb-8">
@@ -52,7 +49,7 @@ export function Home({ lang, onNavigate }: Props) {
             </div>
             <button
               type="button"
-              onClick={() => onNavigate("installed")}
+              onClick={() => setView("installed")}
               className="h-8 px-4 rounded-sm bg-fg text-bg font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 transition-opacity duration-150"
             >
               {t(lang, "home.updateCta")}

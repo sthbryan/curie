@@ -2,8 +2,8 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
-import type { Lang } from "../i18n";
 import { t } from "../i18n";
+import { useAppStore } from "../store/app";
 import { Label } from "./Label";
 import {
   type InstallStep,
@@ -14,11 +14,11 @@ import {
 } from "./types";
 
 type Props = {
-  lang: Lang;
   onComplete: (node: NodeInfo) => void;
 };
 
-export function Setup({ lang, onComplete }: Props) {
+export function Setup({ onComplete }: Props) {
+  const lang = useAppStore((s) => s.lang);
   const [stage, setStage] =
     useState<Extract<Stage, "setup" | "installing" | "done" | "error">>("setup");
   const [step, setStep] = useState<InstallStep>("checking");
