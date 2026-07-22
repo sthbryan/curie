@@ -17,7 +17,7 @@ export function Header({ ready }: Props) {
         className="flex items-center gap-3"
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
       >
-        <span className="font-display text-xl font-bold leading-none tracking-tight">curie</span>
+        <span className="font-display text-xl font-bold leading-none tracking-tight">Curie</span>
         <span className="font-mono uppercase tracking-label text-micro text-fg-3">v0.1.0</span>
       </div>
       <div
