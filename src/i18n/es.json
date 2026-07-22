@@ -1,0 +1,65 @@
+{
+  "app": {
+    "version": "v0.1.0",
+    "ready": "LISTO"
+  },
+  "nav": {
+    "home": "INICIO",
+    "skills": "SKILLS",
+    "explore": "EXPLORAR",
+    "find": "BUSCAR",
+    "settings": "AJUSTES"
+  },
+  "setup": {
+    "eyebrow": "PRIMERA VEZ",
+    "title": "Preparemos tu entorno",
+    "subtitle": "No tienes que configurar nada. Solo necesitamos una herramienta para empezar a gestionar tus skills.",
+    "checklist": "QUÉ NECESITAMOS",
+    "toolName": "Node.js",
+    "toolDesc": "Ejecuta el CLI de skills. Nosotros nos encargamos de la instalación.",
+    "prompt": "¿Quieres que lo hagamos por ti?",
+    "cta": "HAZLO POR MÍ",
+    "manual": "Lo haré yo mismo",
+    "manualHint": "Pega esto en tu terminal:",
+    "manualCommand": "curl -fsSL https://get.volta.sh | bash\nvolta install node",
+    "manualLink": "Abrir volta.sh ↗",
+    "progressEyebrow": "INSTALANDO",
+    "doneEyebrow": "LISTO",
+    "doneTitle": "Tu entorno está preparado",
+    "doneHint": "Node.js quedó instalado con Volta. Ya podemos gestionar tus skills.",
+    "continue": "CONTINUAR →",
+    "errorEyebrow": "ALGO FALLÓ",
+    "errorHint": "El instalador tuvo un problema. Puedes intentar de nuevo.",
+    "retry": "REINTENTAR"
+  },
+  "stages": {
+    "checking": "Revisando tu entorno",
+    "download": "Descargando instalador de Volta",
+    "node": "Instalando Node.js con Volta",
+    "done": "Node.js está listo",
+    "error": "Algo salió mal"
+  },
+  "home": {
+    "status": "ESTADO · FUNCIONANDO",
+    "skillsReady": "skills listas en {n} herramientas de IA",
+    "needAttention": "{n} NECESITAN ATENCIÓN",
+    "updates": "{n} skills tienen actualizaciones",
+    "updateCta": "ACTUALIZAR TODO →",
+    "aiTools": "HERRAMIENTAS DE IA",
+    "active": "{n} ACTIVAS",
+    "current": "AL DÍA",
+    "updateWord": "ACTUALIZAR",
+    "recent": "RECIENTE",
+    "events": "{n} EVENTOS",
+    "actions": "ACCIONES RÁPIDAS",
+    "install": "+ INSTALAR SKILL",
+    "exploreBtn": "EXPLORAR",
+    "share": "COMPARTIR CON EQUIPO",
+    "notBuilt": "PANTALLA NO CONSTRUIDA",
+    "back": "VOLVER AL INICIO"
+  },
+  "status": {
+    "node": "NODE",
+    "agents": "AGENTES"
+  }
+}

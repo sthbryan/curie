@@ -1,3 +1,6 @@
+import en from "./i18n/en.json";
+import es from "./i18n/es.json";
+
 export type Lang = "en" | "es";
 
 export type Messages = {
@@ -50,7 +53,6 @@ export type Messages = {
     aiTools: string;
     active: string;
     current: string;
-    updatesLabel: string;
     updateWord: string;
     recent: string;
     events: string;
@@ -68,140 +70,8 @@ export type Messages = {
 };
 
 const messages: Record<Lang, Messages> = {
-  en: {
-    app: {
-      version: "v0.1.0",
-      ready: "READY",
-    },
-    nav: {
-      home: "HOME",
-      skills: "SKILLS",
-      explore: "EXPLORE",
-      find: "FIND",
-      settings: "SET",
-    },
-    setup: {
-      eyebrow: "FIRST RUN",
-      title: "Let's set up your environment",
-      subtitle:
-        "No need to configure anything. We just need one tool to start managing your skills.",
-      checklist: "WHAT WE NEED",
-      toolName: "Node.js",
-      toolDesc: "Runs the skills CLI. We'll handle the install for you.",
-      prompt: "Want us to set it up for you?",
-      cta: "DO IT FOR ME",
-      manual: "I'll do it myself",
-      manualHint: "Paste this into your terminal:",
-      manualCommand: "curl -fsSL https://get.volta.sh | bash\nvolta install node",
-      manualLink: "Open volta.sh ↗",
-      progressEyebrow: "INSTALLING",
-      doneEyebrow: "ALL SET",
-      doneTitle: "Your environment is ready",
-      doneHint: "Node.js is installed via Volta. We can now manage your skills.",
-      continue: "CONTINUE →",
-      errorEyebrow: "SOMETHING FAILED",
-      errorHint: "The installer ran into an issue. You can try again.",
-      retry: "TRY AGAIN",
-    },
-    stages: {
-      checking: "Checking your environment",
-      download: "Downloading Volta installer",
-      node: "Installing Node.js via Volta",
-      done: "Node.js is ready",
-      error: "Something went wrong",
-    },
-    home: {
-      status: "STATUS · WORKING",
-      skillsReady: "skills ready across {n} AI tools",
-      needAttention: "{n} NEED ATTENTION",
-      updates: "{n} skills have updates available",
-      updateCta: "UPDATE ALL →",
-      aiTools: "AI TOOLS",
-      active: "{n} ACTIVE",
-      current: "CURRENT",
-      updatesLabel: "UPDATES",
-      updateWord: "UPDATE",
-      recent: "RECENT",
-      events: "{n} EVENTS",
-      actions: "QUICK ACTIONS",
-      install: "+ INSTALL A SKILL",
-      exploreBtn: "EXPLORE",
-      share: "SHARE WITH TEAM",
-      notBuilt: "SCREEN NOT YET BUILT",
-      back: "BACK TO HOME",
-    },
-    status: {
-      node: "NODE",
-      agents: "AGENTS",
-    },
-  },
-  es: {
-    app: {
-      version: "v0.1.0",
-      ready: "LISTO",
-    },
-    nav: {
-      home: "INICIO",
-      skills: "SKILLS",
-      explore: "EXPLORAR",
-      find: "BUSCAR",
-      settings: "AJUSTES",
-    },
-    setup: {
-      eyebrow: "PRIMERA VEZ",
-      title: "Preparemos tu entorno",
-      subtitle:
-        "No tienes que configurar nada. Solo necesitamos una herramienta para empezar a gestionar tus skills.",
-      checklist: "QUÉ NECESITAMOS",
-      toolName: "Node.js",
-      toolDesc: "Ejecuta el CLI de skills. Nosotros nos encargamos de la instalación.",
-      prompt: "¿Quieres que lo hagamos por ti?",
-      cta: "HAZLO POR MÍ",
-      manual: "Lo haré yo mismo",
-      manualHint: "Pega esto en tu terminal:",
-      manualCommand: "curl -fsSL https://get.volta.sh | bash\nvolta install node",
-      manualLink: "Abrir volta.sh ↗",
-      progressEyebrow: "INSTALANDO",
-      doneEyebrow: "LISTO",
-      doneTitle: "Tu entorno está preparado",
-      doneHint: "Node.js quedó instalado con Volta. Ya podemos gestionar tus skills.",
-      continue: "CONTINUAR →",
-      errorEyebrow: "ALGO FALLÓ",
-      errorHint: "El instalador tuvo un problema. Puedes intentar de nuevo.",
-      retry: "REINTENTAR",
-    },
-    stages: {
-      checking: "Revisando tu entorno",
-      download: "Descargando instalador de Volta",
-      node: "Instalando Node.js con Volta",
-      done: "Node.js está listo",
-      error: "Algo salió mal",
-    },
-    home: {
-      status: "ESTADO · FUNCIONANDO",
-      skillsReady: "skills listas en {n} herramientas de IA",
-      needAttention: "{n} NECESITAN ATENCIÓN",
-      updates: "{n} skills tienen actualizaciones",
-      updateCta: "ACTUALIZAR TODO →",
-      aiTools: "HERRAMIENTAS DE IA",
-      active: "{n} ACTIVAS",
-      current: "AL DÍA",
-      updatesLabel: "ACTUALIZACIONES",
-      updateWord: "ACTUALIZAR",
-      recent: "RECIENTE",
-      events: "{n} EVENTOS",
-      actions: "ACCIONES RÁPIDAS",
-      install: "+ INSTALAR SKILL",
-      exploreBtn: "EXPLORAR",
-      share: "COMPARTIR CON EQUIPO",
-      notBuilt: "PANTALLA NO CONSTRUIDA",
-      back: "VOLVER AL INICIO",
-    },
-    status: {
-      node: "NODE",
-      agents: "AGENTES",
-    },
-  },
+  en: en as Messages,
+  es: es as Messages,
 };
 
 export function detectLang(locale: string): Lang {
@@ -227,7 +97,6 @@ export function t(lang: Lang, key: string, vars?: Record<string, string | number
   }, cur);
 }
 
-export function plural(n: number, lang: Lang, one: string, other: string): string {
-  if (lang === "es") return n === 1 ? one : other;
+export function plural(n: number, _lang: Lang, one: string, other: string): string {
   return n === 1 ? one : other;
 }
