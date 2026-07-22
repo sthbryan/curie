@@ -8,10 +8,10 @@ pre-commit:
 
 pre-push:
   parallel: true
-  env:
-    PATH: $HOME/.cargo/bin:$PATH
   commands:
     vitest:
       run: bun run test
     cargo-test:
+      env:
+        PATH: $HOME/.cargo/bin:$PATH
       run: cargo test --manifest-path src-tauri/Cargo.toml
