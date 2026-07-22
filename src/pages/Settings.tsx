@@ -1,17 +1,8 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { ChoiceButton } from "../components/ChoiceButton";
 import { Label } from "../components/Label";
-import type { NodeInfo, ThemeMode } from "../components/types";
-import type { Lang } from "../i18n";
 import { t } from "../i18n";
-
-type Props = {
-  lang: Lang;
-  setLang: (lang: Lang) => void;
-  theme: ThemeMode;
-  setTheme: (theme: ThemeMode) => void;
-  node: NodeInfo | null;
-};
+import { useAppStore } from "../store/app";
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -31,7 +22,13 @@ function SystemRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function Settings({ lang, setLang, theme, setTheme, node }: Props) {
+export function Settings() {
+  const lang = useAppStore((s) => s.lang);
+  const theme = useAppStore((s) => s.theme);
+  const node = useAppStore((s) => s.node);
+  const setLang = useAppStore((s) => s.setLang);
+  const setTheme = useAppStore((s) => s.setTheme);
+
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-10 pt-12 pb-8">
@@ -111,10 +108,8 @@ export function Settings({ lang, setLang, theme, setTheme, node }: Props) {
             </div>
           ) : (
             <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4">
-              <span className="font-body text-sm text-fg">
-                {lang === "es" ? "Node no detectado" : "Node not detected"}
-              </span>
-              <Label lang={lang}>{lang === "es" ? "VOLVER AL SETUP" : "GO BACK TO SETUP"}</Label>
+              <span className="font-body text-sm text-fg">{t(lang, "settings.nodeMissing")}</span>
+              <Label lang={lang}>{t(lang, "settings.goToSetup")}</Label>
             </div>
           )}
         </section>
@@ -127,7 +122,7 @@ export function Settings({ lang, setLang, theme, setTheme, node }: Props) {
             {t(lang, "settings.aboutDescription")}
           </p>
           <p className="font-mono uppercase tracking-label text-micro text-fg-4 pt-2 flex items-center gap-2">
-            <span>curie · v0.1.0</span>
+            <span>Curie · v0.1.0</span>
             <span className="text-fg-4">·</span>
             <button
               type="button"
