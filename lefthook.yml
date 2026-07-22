@@ -10,6 +10,6 @@ pre-push:
   parallel: true
   commands:
     vitest:
-      run: bun test
+      run: bun run test
     cargo-test:
       run: cargo test --manifest-path src-tauri/Cargo.toml

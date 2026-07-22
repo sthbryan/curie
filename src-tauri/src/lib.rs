@@ -82,17 +82,26 @@ fn detect_manager_from_path(path: &str) -> Option<String> {
 
 #[tauri::command]
 async fn install_node(window: Window) -> Result<(), String> {
-    emit_progress(&window, "checking", "Checking environment", false);
+    install_node_impl(|stage, message, done| {
+        emit_progress(&window, stage, message, done);
+    })
+}
+
+pub fn install_node_impl<F>(on_progress: F) -> Result<(), String>
+where
+    F: Fn(&str, &str, bool),
+{
+    on_progress("checking", "Checking environment", false);
 
     if detect_node_info()
         .map(|i| i.installed)
         .unwrap_or(false)
     {
-        emit_progress(&window, "done", "Node.js already installed", true);
+        on_progress("done", "Node.js already installed", true);
         return Ok(());
     }
 
-    emit_progress(&window, "download", "Downloading Volta installer", false);
+    on_progress("download", "Downloading Volta installer", false);
 
     let script = "curl -fsSL https://get.volta.sh | bash";
     let output = Command::new("bash")
@@ -103,7 +112,7 @@ async fn install_node(window: Window) -> Result<(), String> {
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-        emit_progress(&window, "error", "Failed to install Volta", true);
+        on_progress("error", "Failed to install Volta", true);
         return Err(if stderr.is_empty() {
             "Volta installer exited non-zero".into()
         } else {
@@ -115,11 +124,11 @@ async fn install_node(window: Window) -> Result<(), String> {
     let volta_bin = home.join(".volta").join("bin").join("volta");
 
     if !volta_bin.exists() {
-        emit_progress(&window, "error", "Volta binary not found", true);
+        on_progress("error", "Volta binary not found", true);
         return Err("Volta installation succeeded but binary not found".into());
     }
 
-    emit_progress(&window, "node", "Installing Node.js via Volta", false);
+    on_progress("node", "Installing Node.js via Volta", false);
 
     let output = Command::new(&volta_bin)
         .arg("install")
@@ -129,7 +138,7 @@ async fn install_node(window: Window) -> Result<(), String> {
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-        emit_progress(&window, "error", "Failed to install Node", true);
+        on_progress("error", "Failed to install Node", true);
         return Err(if stderr.is_empty() {
             "Node install exited non-zero".into()
         } else {
@@ -137,7 +146,7 @@ async fn install_node(window: Window) -> Result<(), String> {
         });
     }
 
-    emit_progress(&window, "done", "Node.js is ready", true);
+    on_progress("done", "Node.js is ready", true);
     Ok(())
 }
 
