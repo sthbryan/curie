@@ -10,9 +10,7 @@ const NAV_ITEMS_TOP: { id: View; label: string }[] = [
   { id: "search", label: "FIND" },
 ];
 
-const NAV_ITEMS_BOTTOM: { id: View; label: string }[] = [
-  { id: "settings", label: "SET" },
-];
+const NAV_ITEMS_BOTTOM: { id: View; label: string }[] = [{ id: "settings", label: "SET" }];
 
 const VIEW_ROW: { id: View; label: string }[] = [
   { id: "home", label: "HOME" },
@@ -55,9 +53,7 @@ function App() {
         <span className="font-display text-[36px] font-bold leading-none tracking-tight">
           curie
         </span>
-        <span className="font-mono text-mono uppercase tracking-label text-fg-3">
-          {theme}
-        </span>
+        <span className="font-mono text-mono uppercase tracking-label text-fg-3">{theme}</span>
         <span className="flex-1" />
         <span className="font-mono text-mono uppercase tracking-label text-fg-3">
           node v24.18.0 · 12 skills · 3 agents · 3 updates
@@ -69,6 +65,7 @@ function App() {
           <div className="flex flex-col gap-1 px-3">
             {NAV_ITEMS_TOP.map((item) => (
               <button
+                type="button"
                 key={item.id}
                 className={navBtnClass(view === item.id)}
                 onClick={() => setView(item.id)}
@@ -81,6 +78,7 @@ function App() {
           <div className="flex flex-col gap-1 px-3">
             {NAV_ITEMS_BOTTOM.map((item) => (
               <button
+                type="button"
                 key={item.id}
                 className={navBtnClass(view === item.id)}
                 onClick={() => setView(item.id)}
@@ -103,9 +101,7 @@ function App() {
 
           <section className="flex gap-14">
             <div className="flex flex-col gap-1">
-              <div className="font-mono text-mono uppercase tracking-label text-fg-3">
-                NODE
-              </div>
+              <div className="font-mono text-mono uppercase tracking-label text-fg-3">NODE</div>
               <div className="font-display text-heading font-bold leading-[1.1] tracking-tight">
                 v24.18.0
               </div>
@@ -114,9 +110,7 @@ function App() {
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <div className="font-mono text-mono uppercase tracking-label text-fg-3">
-                AGENTS
-              </div>
+              <div className="font-mono text-mono uppercase tracking-label text-fg-3">AGENTS</div>
               <div className="font-display text-heading font-bold leading-[1.1] tracking-tight">
                 3
               </div>
@@ -125,9 +119,7 @@ function App() {
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <div className="font-mono text-mono uppercase tracking-label text-fg-3">
-                UPDATES
-              </div>
+              <div className="font-mono text-mono uppercase tracking-label text-fg-3">UPDATES</div>
               <div className="font-display text-heading font-bold leading-[1.1] tracking-tight">
                 3
               </div>
@@ -146,6 +138,7 @@ function App() {
             <div className="flex gap-2">
               {VIEW_ROW.map((item) => (
                 <button
+                  type="button"
                   key={item.id}
                   className={chipClass(view === item.id)}
                   onClick={() => setView(item.id)}
@@ -158,6 +151,7 @@ function App() {
 
           <div className="flex items-center gap-4">
             <button
+              type="button"
               className="h-7 px-3 rounded-sm font-mono uppercase tracking-label text-fg-3 hover:text-fg hover:bg-surface-hover transition-colors duration-75"
               onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
             >

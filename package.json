@@ -7,7 +7,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "check": "biome check",
+    "check:fix": "biome check --write",
+    "format": "biome format --write",
+    "lint": "biome lint",
+    "prepare": "husky"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
@@ -16,13 +21,21 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
+    "@biomejs/biome": "^2.1.4",
+    "@tailwindcss/vite": "^4.1.18",
     "@tauri-apps/cli": "^2",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
-    "tailwindcss": "^4.3.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "tailwindcss": "^4.1.18",
     "typescript": "~5.8.3",
     "vite": "^7.0.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,css}": [
+      "biome check --write --no-errors-on-unmatched"
+    ]
   }
 }
