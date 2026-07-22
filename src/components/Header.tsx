@@ -1,12 +1,13 @@
-import type { Lang } from "../i18n";
 import { t } from "../i18n";
+import { useAppStore } from "../store/app";
 
 type Props = {
-  lang: Lang;
   ready: boolean;
 };
 
-export function Header({ lang, ready }: Props) {
+export function Header({ ready }: Props) {
+  const lang = useAppStore((s) => s.lang);
+
   return (
     <header
       className="flex h-12 shrink-0 items-center justify-between border-b border-border px-6 select-none"

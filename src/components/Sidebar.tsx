@@ -1,13 +1,7 @@
-import type { Lang } from "../i18n";
 import { t } from "../i18n";
+import { useAppStore } from "../store/app";
 import { NavItem } from "./NavItem";
 import type { View } from "./types";
-
-type Props = {
-  lang: Lang;
-  view: View;
-  setView: (view: View) => void;
-};
 
 const TOP_ITEMS: { id: View; key: "home" | "skills" | "explore" | "find"; num: string }[] = [
   { id: "home", key: "home", num: "01" },
@@ -16,7 +10,11 @@ const TOP_ITEMS: { id: View; key: "home" | "skills" | "explore" | "find"; num: s
   { id: "search", key: "find", num: "04" },
 ];
 
-export function Sidebar({ lang, view, setView }: Props) {
+export function Sidebar() {
+  const lang = useAppStore((s) => s.lang);
+  const view = useAppStore((s) => s.view);
+  const setView = useAppStore((s) => s.setView);
+
   return (
     <nav className="flex w-28 shrink-0 flex-col border-r border-border">
       <div className="flex flex-col py-5">
