@@ -8,15 +8,16 @@ export type AppState = {
   lang: Lang;
   hasBooted: boolean;
   view: View;
-  stage: Stage;
+  stage: Extract<Stage, "loading" | "setup" | "home">;
   node: NodeInfo | null;
 
   setTheme: (theme: ThemeMode) => void;
   setLang: (lang: Lang) => void;
   setView: (view: View) => void;
-  setStage: (stage: Stage) => void;
+  setStage: (stage: Extract<Stage, "loading" | "setup" | "home">) => void;
   setNode: (node: NodeInfo | null) => void;
   markBooted: () => void;
+  completeSetup: (node: NodeInfo) => void;
 };
 
 export const useAppStore = create<AppState>()(
@@ -35,6 +36,7 @@ export const useAppStore = create<AppState>()(
       setStage: (stage) => set({ stage }),
       setNode: (node) => set({ node }),
       markBooted: () => set({ hasBooted: true }),
+      completeSetup: (node) => set({ node, view: "home", stage: "home" }),
     }),
     {
       name: "curie.app",
