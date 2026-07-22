@@ -67,6 +67,29 @@ export type Messages = {
     node: string;
     agents: string;
   };
+  settings: {
+    eyebrow: string;
+    title: string;
+    preferences: string;
+    language: string;
+    languageEN: string;
+    languageES: string;
+    languageENFull: string;
+    languageESFull: string;
+    languageDesc: string;
+    theme: string;
+    themeDark: string;
+    themeLight: string;
+    themeDesc: string;
+    system: string;
+    nodeVersion: string;
+    nodeManager: string;
+    nodePath: string;
+    nodeMissing: string;
+    goToSetup: string;
+    about: string;
+    aboutDescription: string;
+  };
 };
 
 const messages: Record<Lang, Messages> = {

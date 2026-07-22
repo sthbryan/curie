@@ -61,5 +61,28 @@
   "status": {
     "node": "NODE",
     "agents": "AGENTES"
+  },
+  "settings": {
+    "eyebrow": "PREFERENCIAS",
+    "title": "Ajustes",
+    "preferences": "APARIENCIA",
+    "language": "Idioma",
+    "languageEN": "EN",
+    "languageES": "ES",
+    "languageENFull": "English",
+    "languageESFull": "Español",
+    "languageDesc": "Idioma de la interfaz. Se detecta del sistema en el primer arranque.",
+    "theme": "Tema",
+    "themeDark": "OSCURO",
+    "themeLight": "CLARO",
+    "themeDesc": "Oscuro por defecto. Claro usa una paleta de papel cálido.",
+    "system": "SISTEMA",
+    "nodeVersion": "NODE",
+    "nodeManager": "GESTOR",
+    "nodePath": "RUTA",
+    "nodeMissing": "Node no detectado",
+    "goToSetup": "VOLVER AL SETUP",
+    "about": "ACERCA DE",
+    "aboutDescription": "Curie te ayuda a instalar, actualizar y administrar skills de agentes de IA sin la terminal."
   }
 }

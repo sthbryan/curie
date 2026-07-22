@@ -61,5 +61,28 @@
   "status": {
     "node": "NODE",
     "agents": "AGENTS"
+  },
+  "settings": {
+    "eyebrow": "PREFERENCES",
+    "title": "Settings",
+    "preferences": "APPEARANCE",
+    "language": "Language",
+    "languageEN": "EN",
+    "languageES": "ES",
+    "languageENFull": "English",
+    "languageESFull": "Español",
+    "languageDesc": "Interface language. Detected from your system on first launch.",
+    "theme": "Theme",
+    "themeDark": "DARK",
+    "themeLight": "LIGHT",
+    "themeDesc": "Dark is default. Light uses a warm paper palette.",
+    "system": "SYSTEM",
+    "nodeVersion": "NODE",
+    "nodeManager": "MANAGER",
+    "nodePath": "PATH",
+    "nodeMissing": "Node not detected",
+    "goToSetup": "GO BACK TO SETUP",
+    "about": "ABOUT",
+    "aboutDescription": "Curie helps you install, update, and manage AI agent skills without the terminal."
   }
 }
