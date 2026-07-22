@@ -9,11 +9,12 @@ export function useBoot() {
     let cancelled = false;
 
     (async () => {
-      const state = useAppStore.getState();
-      if (!state.hasBooted) {
+      const { hasBooted, setLang, setNode, setStage, markBooted } = useAppStore.getState();
+
+      if (!hasBooted) {
         try {
           const locale = await invoke<string>("get_locale");
-          if (!cancelled) state.setLang(detectLang(locale));
+          if (!cancelled) setLang(detectLang(locale));
         } catch {
           // ignore — fall back to default lang
         }
@@ -22,13 +23,13 @@ export function useBoot() {
       try {
         const info = await invoke<NodeInfo>("detect_node");
         if (cancelled) return;
-        state.setNode(info);
-        state.setStage(info.installed ? "home" : "setup");
+        setNode(info);
+        setStage(info.installed ? "home" : "setup");
       } catch {
-        if (!cancelled) state.setStage("setup");
+        if (!cancelled) setStage("setup");
       }
 
-      if (!cancelled) state.markBooted();
+      if (!cancelled) markBooted();
     })();
 
     return () => {
