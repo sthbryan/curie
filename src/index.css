@@ -1,40 +1,55 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #000000;
-  --color-surface: #0a0a0a;
-  --color-surface-hover: #141414;
-  --color-border: #1a1a1a;
-  --color-fg: #ffffff;
-  --color-fg-2: #b0b0b0;
-  --color-fg-3: #707070;
-  --color-fg-4: #404040;
+  --color-bg: #0a0a0a;
+  --color-surface: #131313;
+  --color-surface-hover: #1c1c1c;
+  --color-surface-tint: #181818;
+  --color-border: #262626;
+  --color-border-strong: #3a3a3a;
+  --color-fg: #f5f5f3;
+  --color-fg-2: #c4c4c0;
+  --color-fg-3: #8a8a87;
+  --color-fg-4: #52524d;
   --color-accent: #d71921;
+  --color-accent-fg: #ffffff;
+  --color-success: #84a07c;
+  --color-success-fg: #0a0a0a;
 
   --font-display: "Doto", ui-monospace, monospace;
   --font-body: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --text-display: 64px;
-  --text-heading: 36px;
+  --text-display: 88px;
+  --text-heading: 32px;
   --text-body: 14px;
   --text-mono: 12px;
   --text-micro: 10px;
+  --text-kpi: 36px;
 
-  --tracking-label: 0.12em;
+  --tracking-label: 0.08em;
+  --tracking-tight: -0.02em;
+  --tracking-display: -0.035em;
+
   --radius-sm: 2px;
+  --radius-md: 4px;
 }
 
 :root[data-theme="light"] {
-  --color-bg: #f4f1ea;
-  --color-surface: #ebe6dc;
-  --color-surface-hover: #ddd8cc;
+  --color-bg: #fafaf8;
+  --color-surface: #f0eee8;
+  --color-surface-hover: #e6e3dc;
+  --color-surface-tint: #ebe9e2;
   --color-border: #d4d0c5;
-  --color-fg: #000000;
-  --color-fg-2: #2c2c2c;
-  --color-fg-3: #6e6e6e;
-  --color-fg-4: #aeaead;
-  --color-accent: #d71921;
+  --color-border-strong: #b8b4a9;
+  --color-fg: #18181b;
+  --color-fg-2: #3f3f46;
+  --color-fg-3: #71717a;
+  --color-fg-4: #a1a1aa;
+  --color-accent: #c2151c;
+  --color-accent-fg: #fafaf8;
+  --color-success: #5a7a52;
+  --color-success-fg: #fafaf8;
 }
 
 @layer base {
@@ -52,10 +67,11 @@
     color: var(--color-fg);
     font-family: var(--font-body);
     font-size: var(--text-body);
-    line-height: 1.45;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "cv11";
   }
 
   body {
@@ -79,18 +95,24 @@
     outline: 1px solid var(--color-fg);
     outline-offset: 2px;
   }
+
+  ::selection {
+    background-color: var(--color-fg);
+    color: var(--color-bg);
+  }
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-fg-4);
+  background: var(--color-border-strong);
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-fg-3);
+  background: var(--color-fg-4);
 }
