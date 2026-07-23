@@ -1,4 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import cn from "cnfast";
 import { motion } from "motion/react";
 import { Else, If, Then, When } from "react-if";
 import { ActionProgress } from "@/components/ActionProgress";
@@ -88,9 +89,11 @@ export function ExploreRow({
         <span className="font-mono uppercase tracking-label text-micro text-fg-3">{installs}</span>
         <When condition={Boolean(changeLabel)}>
           <span
-            className={`font-mono uppercase tracking-label text-micro ${
-              changeUp ? "text-success" : changeDown ? "text-accent" : "text-fg-4"
-            }`}
+            className={cn("font-mono uppercase tracking-label text-micro", {
+              "text-success": changeUp,
+              "text-accent": changeDown,
+              "text-fg-4": !changeUp && !changeDown,
+            })}
           >
             {changeLabel}
           </span>

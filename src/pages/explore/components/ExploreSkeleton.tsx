@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import { motion } from "motion/react";
 import { fadeUp } from "@/lib/motion";
 
@@ -8,7 +9,7 @@ type Props = {
 const ROW_KEYS = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"] as const;
 
 function Bone({ className }: { className: string }) {
-  return <div className={`rounded-sm bg-surface-hover ${className}`} />;
+  return <div className={cn("rounded-sm bg-surface-hover", className)} />;
 }
 
 export function ExploreSkeleton({ rows = 8 }: Props) {
