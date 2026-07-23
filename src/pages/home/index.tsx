@@ -53,7 +53,7 @@ export function Home() {
   const tToast = useT();
   const handleCheckUpdates = async () => {
     await checkSkillUpdates();
-    const n = skillUpdates.value.length;
+    const n = skillUpdates.value.filter((u) => u.updateAvailable).length;
     if (n > 0) {
       toast.success(tToast("toast.updates", { n }));
     } else {

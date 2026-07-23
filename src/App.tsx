@@ -22,7 +22,8 @@ function App() {
   useEffect(() => {
     if (skillUpdates.value.length > 0 && !notifiedUpdates.current) {
       notifiedUpdates.current = true;
-      toast.success(t(lang.value, "toast.updates", { n: skillUpdates.value.length }));
+      const n = skillUpdates.value.filter((u) => u.updateAvailable).length;
+      if (n > 0) toast.success(t(lang.value, "toast.updates", { n }));
     }
   });
 
