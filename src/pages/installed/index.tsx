@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
 import { useLocation } from "wouter";
 import { Button } from "../../components/Button";
+import { FullPageError } from "../../components/FullPageError";
+import { FullPageLoading } from "../../components/FullPageLoading";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
 import { loadGlobalSkills, removeSkills, updateSkills } from "../../lib/boot";
@@ -63,36 +65,20 @@ export function Installed() {
   };
 
   if (skillsLoading && skills.length === 0) {
-    return (
-      <main className="flex min-w-0 flex-1 items-center justify-center">
-        <span className="font-mono uppercase tracking-label text-mono text-fg-3 animate-pulse">
-          {t(lang, "home.loading")}
-        </span>
-      </main>
-    );
+    return <FullPageLoading lang={lang} />;
   }
 
   if (skillsError && skills.length === 0) {
     return (
-      <main className="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 px-10">
-        <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <Label lang={lang} className="text-accent">
-            {t(lang, "home.loadError")}
-          </Label>
-          <p className="font-body text-sm text-fg-3 break-all">{skillsError}</p>
-        </div>
-        <Button
-          size="lg"
-          variant="primary"
-          onClick={() => {
-            loadGlobalSkills().catch(() => {
-              // store handles error state
-            });
-          }}
-        >
-          {t(lang, "home.retry")}
-        </Button>
-      </main>
+      <FullPageError
+        lang={lang}
+        message={skillsError}
+        onRetry={() => {
+          loadGlobalSkills().catch(() => {
+            // store handles error state
+          });
+        }}
+      />
     );
   }
 
