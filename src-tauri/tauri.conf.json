@@ -37,5 +37,18 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "dialog": false,
+      "endpoints": [
+        "https://github.com/sthbryan/curie/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDRGREM5NkJCMjUzN0Y5NTYKUldSVytUY2x1NWJjVHlQVk9RVFprQlN6b05uc2RobUU2SW1ZRHdoMUlFUUgzRVo0Wms3WForalYK",
+      "windows": {
+        "installMode": "passive"
+      }
+    }
   }
 }
