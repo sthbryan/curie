@@ -10,7 +10,9 @@ import type {
   SkillUpdateResult,
 } from "../components/types";
 import { detectLang } from "../i18n";
-import { useAppStore } from "../store/app";
+import { useFindStore } from "../store/find";
+import { useSkillsStore } from "../store/skills";
+import { useUiStore } from "../store/ui";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
@@ -22,7 +24,7 @@ export async function findSkills(query: string, owner?: string) {
   const q = query.trim();
   const o = owner?.trim() || null;
   const { setFindQuery, setFindOwner, setFindResults, setFindLoading, setFindError } =
-    useAppStore.getState();
+    useFindStore.getState();
 
   setFindQuery(query);
   if (owner !== undefined) setFindOwner(owner);
@@ -55,7 +57,7 @@ export async function findSkills(query: string, owner?: string) {
 }
 
 export async function addSkill(packageName: string) {
-  const { setInstallingPackage, setInstallError } = useAppStore.getState();
+  const { setInstallingPackage, setInstallError } = useFindStore.getState();
   setInstallingPackage(packageName);
   setInstallError(null);
   try {
@@ -70,7 +72,7 @@ export async function addSkill(packageName: string) {
 }
 
 export async function checkSkillUpdates() {
-  const { setSkillUpdates, setUpdatesLoading, setUpdatesError } = useAppStore.getState();
+  const { setSkillUpdates, setUpdatesLoading, setUpdatesError } = useSkillsStore.getState();
   setUpdatesLoading(true);
   setUpdatesError(null);
   try {
@@ -85,7 +87,7 @@ export async function checkSkillUpdates() {
 
 export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
   const checkUpdates = options?.checkUpdates ?? true;
-  const { setSkills, setSkillsLoading, setSkillsError } = useAppStore.getState();
+  const { setSkills, setSkillsLoading, setSkillsError } = useSkillsStore.getState();
   setSkillsLoading(true);
   setSkillsError(null);
   try {
@@ -103,7 +105,7 @@ export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
 }
 
 export async function updateSkills(names?: string[]) {
-  const { setUpdatingSkill, setUpdateApplyError } = useAppStore.getState();
+  const { setUpdatingSkill, setUpdateApplyError } = useSkillsStore.getState();
   const token = names?.length === 1 ? (names[0] ?? "*") : "*";
   setUpdatingSkill(token);
   setUpdateApplyError(null);
@@ -123,7 +125,7 @@ export async function updateSkills(names?: string[]) {
 /** Remove one or more global skills via `npx skills remove -g -y`. */
 export async function removeSkills(names: string[]) {
   if (names.length === 0) return;
-  const { setRemovingSkill, setRemoveError } = useAppStore.getState();
+  const { setRemovingSkill, setRemoveError } = useSkillsStore.getState();
   setRemovingSkill(names.length === 1 ? (names[0] ?? null) : "*");
   setRemoveError(null);
   try {
@@ -142,7 +144,7 @@ export function useBoot() {
     let cancelled = false;
 
     (async () => {
-      const { hasBooted, setLang, setNode, setStage, markBooted } = useAppStore.getState();
+      const { hasBooted, setLang, setNode, setStage, markBooted } = useUiStore.getState();
 
       if (!hasBooted) {
         try {
