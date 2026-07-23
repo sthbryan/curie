@@ -1,12 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import {
-  Compass,
-  FileCode,
-  House,
-  LayoutGrid,
-  Search,
-  Settings as SettingsIcon,
-} from "lucide-react";
+import { Compass, House, LayoutGrid, Search, Settings as SettingsIcon } from "lucide-react";
 import { motion, useReducedMotionConfig } from "motion/react";
 import { useState } from "react";
 import { useLocation } from "wouter";
