@@ -35,6 +35,20 @@ export type SkillUpdateResult = {
   message: string;
 };
 
+export type SkillSearchResult = {
+  id: string;
+  name: string;
+  source: string;
+  installs: number;
+  package: string;
+  url: string;
+};
+
+export type SkillInstallResult = {
+  package: string;
+  message: string;
+};
+
 export type AgentSummary = {
   id: string;
   label: string;

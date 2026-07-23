@@ -144,3 +144,32 @@ export function availableUpdates(
     .filter((row): row is { skill: SkillInfo; source: string | null } => row !== null)
     .sort((a, b) => a.skill.name.localeCompare(b.skill.name));
 }
+
+export function formatInstalls(count: number): string {
+  if (!count || count <= 0) return "";
+  if (count >= 1_000_000) {
+    const n = count / 1_000_000;
+    const s = n >= 10 ? n.toFixed(0) : n.toFixed(1).replace(/\.0$/, "");
+    return `${s}M`;
+  }
+  if (count >= 1_000) {
+    const n = count / 1_000;
+    const s = n >= 10 ? n.toFixed(0) : n.toFixed(1).replace(/\.0$/, "");
+    return `${s}K`;
+  }
+  return String(count);
+}
+
+export function isSearchResultInstalled(
+  hit: { name: string; source: string },
+  skills: SkillInfo[],
+): boolean {
+  return skills.some((s) => {
+    if (s.name !== hit.name) return false;
+    if (!hit.source) return true;
+    if (!s.source) return true;
+    return (
+      s.source === hit.source || s.source.includes(hit.source) || hit.source.includes(s.source)
+    );
+  });
+}

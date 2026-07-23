@@ -1,11 +1,71 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
-import type { NodeInfo, SkillInfo, SkillUpdateInfo, SkillUpdateResult } from "../components/types";
+import type {
+  NodeInfo,
+  SkillInfo,
+  SkillInstallResult,
+  SkillSearchResult,
+  SkillUpdateInfo,
+  SkillUpdateResult,
+} from "../components/types";
 import { detectLang } from "../i18n";
 import { useAppStore } from "../store/app";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
+}
+
+let findRequestId = 0;
+
+export async function findSkills(query: string, owner?: string) {
+  const q = query.trim();
+  const o = owner?.trim() || null;
+  const { setFindQuery, setFindOwner, setFindResults, setFindLoading, setFindError } =
+    useAppStore.getState();
+
+  setFindQuery(query);
+  if (owner !== undefined) setFindOwner(owner);
+
+  if (q.length < 2) {
+    findRequestId += 1;
+    setFindResults([]);
+    setFindError(null);
+    setFindLoading(false);
+    return;
+  }
+
+  const requestId = ++findRequestId;
+  setFindLoading(true);
+  setFindError(null);
+  try {
+    const results = await invoke<SkillSearchResult[]>("find_skills", {
+      query: q,
+      owner: o,
+    });
+    if (requestId !== findRequestId) return;
+    setFindResults(results);
+  } catch (e) {
+    if (requestId !== findRequestId) return;
+    setFindError(errorMessage(e));
+    setFindResults([]);
+  } finally {
+    if (requestId === findRequestId) setFindLoading(false);
+  }
+}
+
+export async function addSkill(packageName: string) {
+  const { setInstallingPackage, setInstallError } = useAppStore.getState();
+  setInstallingPackage(packageName);
+  setInstallError(null);
+  try {
+    await invoke<SkillInstallResult>("add_skill", { package: packageName });
+    await loadGlobalSkills({ checkUpdates: true });
+  } catch (e) {
+    setInstallError(errorMessage(e));
+    throw e;
+  } finally {
+    setInstallingPackage(null);
+  }
 }
 
 export async function checkSkillUpdates() {
@@ -41,7 +101,6 @@ export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
   }
 }
 
-/** Update one skill, or all outdated globals when `names` is omitted/empty. */
 export async function updateSkills(names?: string[]) {
   const { setUpdatingSkill, setUpdateApplyError } = useAppStore.getState();
   const token = names?.length === 1 ? (names[0] ?? "*") : "*";

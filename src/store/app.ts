@@ -4,6 +4,7 @@ import type {
   NodeInfo,
   ReducedMotionPref,
   SkillInfo,
+  SkillSearchResult,
   SkillUpdateInfo,
   Stage,
   ThemeMode,
@@ -25,9 +26,15 @@ export type AppState = {
   skillUpdates: SkillUpdateInfo[];
   updatesLoading: boolean;
   updatesError: string | null;
-  /** Skill name currently updating, or `"*"` for update-all. */
   updatingSkill: string | null;
   updateApplyError: string | null;
+  findQuery: string;
+  findOwner: string;
+  findResults: SkillSearchResult[];
+  findLoading: boolean;
+  findError: string | null;
+  installingPackage: string | null;
+  installError: string | null;
 
   setTheme: (theme: ThemeMode) => void;
   setLang: (lang: Lang) => void;
@@ -43,6 +50,13 @@ export type AppState = {
   setUpdatesError: (error: string | null) => void;
   setUpdatingSkill: (name: string | null) => void;
   setUpdateApplyError: (error: string | null) => void;
+  setFindQuery: (query: string) => void;
+  setFindOwner: (owner: string) => void;
+  setFindResults: (results: SkillSearchResult[]) => void;
+  setFindLoading: (loading: boolean) => void;
+  setFindError: (error: string | null) => void;
+  setInstallingPackage: (pkg: string | null) => void;
+  setInstallError: (error: string | null) => void;
   markBooted: () => void;
   completeSetup: (node: NodeInfo) => void;
 };
@@ -65,6 +79,13 @@ export const useAppStore = create<AppState>()(
       updatesError: null,
       updatingSkill: null,
       updateApplyError: null,
+      findQuery: "",
+      findOwner: "",
+      findResults: [],
+      findLoading: false,
+      findError: null,
+      installingPackage: null,
+      installError: null,
 
       setTheme: (theme) => set({ theme }),
       setLang: (lang) => set({ lang }),
@@ -80,6 +101,13 @@ export const useAppStore = create<AppState>()(
       setUpdatesError: (updatesError) => set({ updatesError }),
       setUpdatingSkill: (updatingSkill) => set({ updatingSkill }),
       setUpdateApplyError: (updateApplyError) => set({ updateApplyError }),
+      setFindQuery: (findQuery) => set({ findQuery }),
+      setFindOwner: (findOwner) => set({ findOwner }),
+      setFindResults: (findResults) => set({ findResults, findError: null }),
+      setFindLoading: (findLoading) => set({ findLoading }),
+      setFindError: (findError) => set({ findError }),
+      setInstallingPackage: (installingPackage) => set({ installingPackage }),
+      setInstallError: (installError) => set({ installError }),
       markBooted: () => set({ hasBooted: true }),
       completeSetup: (node) => set({ node, view: "home", stage: "home" }),
     }),
