@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { Else, If, Then, When } from "react-if";
 import type { SkillInfo } from "../../../components/types";
 import type { Lang } from "../../../i18n";
 import { t } from "../../../i18n";
@@ -53,11 +54,11 @@ export function SkillRow({
       <div className="min-w-0 flex flex-col gap-1">
         <div className="flex min-w-0 items-center gap-2">
           <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
-          {updateAvailable && (
+          <When condition={updateAvailable}>
             <span className="shrink-0 font-mono uppercase tracking-label text-micro text-accent border border-accent/40 px-1.5 py-0.5 rounded-sm">
               {t(lang, "installed.badgeUpdate")}
             </span>
-          )}
+          </When>
         </div>
         <span className="font-mono uppercase tracking-label text-micro text-fg-4 truncate">
           {skill.scope}
@@ -74,13 +75,18 @@ export function SkillRow({
       </div>
 
       <div className="min-w-0 flex flex-wrap gap-1.5">
-        {skill.agents.length === 0 ? (
-          <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-            {t(lang, "installed.noAgents")}
-          </span>
-        ) : (
-          skill.agents.map((agent) => <AgentBadge key={`${skill.name}-${agent}`} label={agent} />)
-        )}
+        <If condition={skill.agents.length === 0}>
+          <Then>
+            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
+              {t(lang, "installed.noAgents")}
+            </span>
+          </Then>
+          <Else>
+            {skill.agents.map((agent) => (
+              <AgentBadge key={`${skill.name}-${agent}`} label={agent} />
+            ))}
+          </Else>
+        </If>
       </div>
 
       <div className="text-right">
@@ -89,13 +95,16 @@ export function SkillRow({
             updateAvailable ? "text-accent" : "text-fg-4"
           }`}
         >
-          {updateAvailable ? t(lang, "installed.badgeUpdate") : when ? formatRelative(when) : "—"}
+          <If condition={updateAvailable}>
+            <Then>{t(lang, "installed.badgeUpdate")}</Then>
+            <Else>{when ? formatRelative(when) : "—"}</Else>
+          </If>
         </span>
       </div>
 
       <div className="flex flex-wrap justify-end gap-1.5">
-        {confirmRemove ? (
-          <>
+        <If condition={confirmRemove}>
+          <Then>
             <button
               type="button"
               onClick={() => {
@@ -105,7 +114,10 @@ export function SkillRow({
               disabled={actionBusy}
               className="h-7 px-2.5 bg-accent text-accent-fg rounded-sm font-mono uppercase tracking-label text-micro font-bold hover:opacity-90 disabled:opacity-50 transition-opacity duration-150"
             >
-              {removing ? t(lang, "installed.removing") : t(lang, "installed.removeConfirm")}
+              <If condition={removing}>
+                <Then>{t(lang, "installed.removing")}</Then>
+                <Else>{t(lang, "installed.removeConfirm")}</Else>
+              </If>
             </button>
             <button
               type="button"
@@ -115,29 +127,34 @@ export function SkillRow({
             >
               {t(lang, "installed.removeCancel")}
             </button>
-          </>
-        ) : (
-          <>
-            {updateAvailable && (
+          </Then>
+          <Else>
+            <When condition={updateAvailable}>
               <button
                 type="button"
                 onClick={() => onUpdate?.(skill.name)}
                 disabled={actionBusy}
                 className="h-7 px-2.5 border border-accent/50 text-accent rounded-sm font-mono uppercase tracking-label text-micro hover:bg-accent hover:text-accent-fg disabled:opacity-50 transition-colors duration-150"
               >
-                {updating ? t(lang, "installed.updatingOne") : t(lang, "installed.updateOne")}
+                <If condition={updating}>
+                  <Then>{t(lang, "installed.updatingOne")}</Then>
+                  <Else>{t(lang, "installed.updateOne")}</Else>
+                </If>
               </button>
-            )}
+            </When>
             <button
               type="button"
               onClick={() => setConfirmRemove(true)}
               disabled={actionBusy}
               className="h-7 px-2.5 border border-border-strong text-fg-3 rounded-sm font-mono uppercase tracking-label text-micro hover:border-accent/50 hover:text-accent disabled:opacity-50 transition-colors duration-150"
             >
-              {removing ? t(lang, "installed.removing") : t(lang, "installed.remove")}
+              <If condition={removing}>
+                <Then>{t(lang, "installed.removing")}</Then>
+                <Else>{t(lang, "installed.remove")}</Else>
+              </If>
             </button>
-          </>
-        )}
+          </Else>
+        </If>
       </div>
     </motion.article>
   );
