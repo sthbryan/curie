@@ -227,12 +227,12 @@
     "updateCheckBtn": "BUSCAR ACTUALIZACIONES",
     "updateChecking": "BUSCANDO ACTUALIZACIONES…",
     "updateAvailable": "ACTUALIZACIÓN DISPONIBLE",
-    "updateBrewHint": "Instalaste Curie con Homebrew. Ejecuta el comando de abajo para actualizar.",
-    "updateDirectHint": "Descarga la última versión desde GitHub para actualizar.",
-    "updateViewRelease": "VER RELEASE",
-    "updateCopyCmd": "COPIAR COMANDO",
-    "updateCopied": "Comando copiado al portapapeles",
-    "updateUpToDate": "Curie está actualizado"
+    "updateUpToDate": "Curie está actualizado",
+    "updateInstall": "ACTUALIZAR AHORA",
+    "updateInstalling": "INSTALANDO…",
+    "updateInstallSuccess": "Actualización instalada — reiniciando…",
+    "updateInstallFailed": "No se pudo instalar la actualización automáticamente",
+    "updateOpenFallback": "ABRIR GITHUB"
   },
   "toast": {
     "installed": "Instalado {name}",

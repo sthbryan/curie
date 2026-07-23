@@ -227,12 +227,12 @@ export type Messages = {
     updateCheckBtn: string;
     updateChecking: string;
     updateAvailable: string;
-    updateBrewHint: string;
-    updateDirectHint: string;
-    updateViewRelease: string;
-    updateCopyCmd: string;
-    updateCopied: string;
     updateUpToDate: string;
+    updateInstall: string;
+    updateInstalling: string;
+    updateInstallSuccess: string;
+    updateInstallFailed: string;
+    updateOpenFallback: string;
   };
   toast: {
     installed: string;
