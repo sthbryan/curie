@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
 import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
@@ -105,32 +106,23 @@ export function Find() {
 
         <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <label className="relative flex min-w-0 flex-1">
-              <span className="sr-only">{t("query")}</span>
-              <input
-                ref={inputRef}
-                type="search"
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                }}
-                placeholder={t("queryPlaceholder")}
-                className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
-              />
-            </label>
-            <label className="relative flex w-full sm:w-48 shrink-0">
-              <span className="sr-only">{t("owner")}</span>
-              <input
-                type="text"
-                value={owner}
-                onChange={(e) => {
-                  setOwner(e.target.value);
-                }}
-                placeholder={t("ownerPlaceholder")}
-                spellCheck={false}
-                className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
-              />
-            </label>
+            <Input
+              ref={inputRef}
+              label={t("query")}
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("queryPlaceholder")}
+            />
+            <Input
+              label={t("owner")}
+              type="text"
+              value={owner}
+              onChange={(e) => setOwner(e.target.value)}
+              placeholder={t("ownerPlaceholder")}
+              spellCheck={false}
+              wrapperClassName="w-full sm:w-48 shrink-0"
+            />
             <Button
               size="lg"
               variant="primary"

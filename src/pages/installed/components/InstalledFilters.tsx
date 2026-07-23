@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
 import { filterSkills, summarizeAgents, updateNameSet } from "@/lib/skills";
@@ -31,16 +32,14 @@ export function InstalledFilters() {
   return (
     <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <label className="relative flex min-w-0 flex-1 max-w-md">
-          <span className="sr-only">{t("search")}</span>
-          <input
-            type="search"
-            value={query.value}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t("searchPlaceholder")}
-            className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
-          />
-        </label>
+        <Input
+          label={t("search")}
+          type="search"
+          value={query.value}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t("searchPlaceholder")}
+          wrapperClassName="max-w-md"
+        />
 
         <span className="font-mono uppercase tracking-label text-micro text-fg-4">
           {t("showing", { n: filteredCount, total: skills.value.length })}
