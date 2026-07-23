@@ -9,7 +9,7 @@ import { fadeUp, listStagger } from "@/lib/motion";
 import { filterSkills, updateNameSet } from "@/lib/skills";
 import { skills, skillUpdates } from "@/store/skills";
 import { lang } from "@/store/system";
-import { useInstalledActionsStore, useInstalledFiltersStore } from "../store";
+import { useInstalledActionsStore, useInstalledFiltersStore } from "../store/store";
 import { INSTALLED_GRID, SkillRow } from "./SkillRow";
 
 export function InstalledList() {

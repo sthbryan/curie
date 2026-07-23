@@ -17,7 +17,7 @@ import {
   updatesLoading,
 } from "@/store/skills";
 import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
-import { useInstalledActionsStore, useInstalledFiltersStore } from "./store";
+import { useInstalledActionsStore, useInstalledFiltersStore } from "./store/store";
 
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);

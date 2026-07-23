@@ -12,7 +12,7 @@ import { fadeUp } from "@/lib/motion";
 import { updateNameSet } from "@/lib/skills";
 import { skills, skillsLoading, skillUpdates, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
-import { useInstalledActionsStore } from "../store";
+import { useInstalledActionsStore } from "../store/store";
 
 export function InstalledHeader() {
   const updatingSkill = useInstalledActionsStore((s) => s.updatingSkill);

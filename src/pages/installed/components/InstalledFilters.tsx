@@ -6,7 +6,7 @@ import { fadeUp } from "@/lib/motion";
 import { filterSkills, summarizeAgents, updateNameSet } from "@/lib/skills";
 import { skills, skillUpdates } from "@/store/skills";
 import { lang } from "@/store/system";
-import { useInstalledFiltersStore } from "../store";
+import { useInstalledFiltersStore } from "../store/store";
 
 export function InstalledFilters() {
   const {
