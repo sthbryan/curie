@@ -5,11 +5,11 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorFallback } from "@/components/ErrorFallback";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { Header } from "@/components/Header";
-import { Placeholder } from "@/components/Placeholder";
 import { Sidebar } from "@/components/Sidebar";
 import { StatusBar } from "@/components/StatusBar";
 import { useBoot } from "@/lib/boot";
 import { pageTransition, toMotionReducedMotion } from "@/lib/motion";
+import { Explore } from "@/pages/explore";
 import { Find } from "@/pages/find";
 import { Home } from "@/pages/home";
 import { Installed } from "@/pages/installed";
@@ -32,11 +32,9 @@ function RoutedPages() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/installed" component={Installed} />
+          <Route path="/marketplace" component={Explore} />
           <Route path="/find" component={Find} />
           <Route path="/settings" component={Settings} />
-          <Route path="/marketplace">
-            <Placeholder view="marketplace" />
-          </Route>
         </Switch>
       </motion.div>
     </AnimatePresence>
