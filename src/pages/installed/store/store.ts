@@ -8,6 +8,8 @@ function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
 }
 
+// ─── Sorting ─────────────────────────────────────────────────────────────────
+
 export type SortField = "name" | "source" | "agents" | "updated";
 
 export const sortKey = signal<SortField>("updated");
