@@ -2,6 +2,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import { ChoiceButton } from "../components/ChoiceButton";
 import { Label } from "../components/Label";
 import { t } from "../i18n";
+import { APP_NAME, APP_VERSION_LABEL } from "../lib/meta";
 import { useAppStore } from "../store/app";
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -122,7 +123,9 @@ export function Settings() {
             {t(lang, "settings.aboutDescription")}
           </p>
           <p className="font-mono uppercase tracking-label text-micro text-fg-4 pt-2 flex items-center gap-2">
-            <span>Curie · v0.1.0</span>
+            <span>
+              {APP_NAME} · {APP_VERSION_LABEL}
+            </span>
             <span className="text-fg-4">·</span>
             <button
               type="button"
