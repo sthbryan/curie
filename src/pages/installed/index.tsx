@@ -12,6 +12,7 @@ export function Installed() {
   const skills = useSkillsStore((s) => s.skills);
   const skillsLoading = useSkillsStore((s) => s.skillsLoading);
   const skillsError = useSkillsStore((s) => s.skillsError);
+
   const loadSkills = () => {
     void loadGlobalSkills();
   };
