@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 
@@ -10,7 +11,7 @@ type Props = {
 
 export function Label({ lang, children, className = "", vars }: Props) {
   return (
-    <span className={`font-mono uppercase tracking-label text-fg-3 ${className}`}>
+    <span className={cn("font-mono uppercase tracking-label text-fg-3", className)}>
       {t(lang, children, vars)}
     </span>
   );

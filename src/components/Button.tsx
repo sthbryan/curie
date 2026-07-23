@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from "react";
 
 type Size = "xs" | "sm" | "md" | "lg" | "xl" | "hero";
@@ -56,7 +57,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
       ref={ref}
       type={type}
       aria-pressed={selected ? true : undefined}
-      className={`${base} ${SIZE[size]} ${visual} ${press} ${className}`.trim()}
+      className={cn(base, SIZE[size], visual, press, className)}
       {...rest}
     >
       {children}

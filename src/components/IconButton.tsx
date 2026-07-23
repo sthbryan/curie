@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type Variant = "ghost" | "accent" | "danger";
@@ -28,7 +29,11 @@ export function IconButton({
       type={type}
       title={label}
       aria-label={label}
-      className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border font-mono text-mono leading-none transition-colors duration-150 disabled:opacity-40 ${VARIANT[variant]} ${className}`.trim()}
+      className={cn(
+        "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border font-mono text-mono leading-none transition-colors duration-150 disabled:opacity-40",
+        VARIANT[variant],
+        className,
+      )}
       {...rest}
     >
       {children}

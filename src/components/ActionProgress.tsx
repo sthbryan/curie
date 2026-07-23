@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { useAsymptoticProgress } from "@/lib/useAsymptoticProgress";
@@ -5,7 +6,6 @@ import { useUiStore } from "@/store/ui";
 
 type Props = {
   active: boolean;
-  /** i18n key for the busy label, e.g. find.installing */
   labelKey: string;
   lang: Lang;
   className?: string;
@@ -31,7 +31,10 @@ export function ActionProgress({ active, labelKey, lang, className = "" }: Props
   if (prefersReduced) {
     return (
       <span
-        className={`inline-flex h-7 min-w-16 items-center justify-center px-2.5 font-mono uppercase tracking-label text-micro text-fg-3 ${className}`.trim()}
+        className={cn(
+          "inline-flex h-7 min-w-16 items-center justify-center px-2.5 font-mono uppercase tracking-label text-micro text-fg-3",
+          className,
+        )}
         aria-live="polite"
       >
         {t(lang, labelKey)}
@@ -41,7 +44,10 @@ export function ActionProgress({ active, labelKey, lang, className = "" }: Props
 
   return (
     <div
-      className={`relative h-7 w-[4.75rem] overflow-hidden rounded-sm border border-fg bg-surface-tint ${className}`.trim()}
+      className={cn(
+        "relative h-7 w-19 overflow-hidden rounded-sm border border-fg bg-surface-tint",
+        className,
+      )}
       role="progressbar"
       aria-valuemin={0}
       aria-valuemax={100}

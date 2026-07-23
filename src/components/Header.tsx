@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import { t } from "@/i18n";
 import { useUiStore } from "@/store/ui";
 
@@ -27,7 +28,7 @@ export function Header({ ready }: Props) {
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
       >
         <span
-          className={`inline-block h-1.5 w-1.5 rounded-full ${ready ? "bg-success" : "bg-fg-4"}`}
+          className={cn("inline-block h-1.5 w-1.5 rounded-full", ready ? "bg-success" : "bg-fg-4")}
           aria-hidden
         />
         <span className="font-mono uppercase tracking-label text-micro text-fg-3">
