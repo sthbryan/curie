@@ -16,7 +16,7 @@ import { Home } from "@/pages/home";
 import { Installed } from "@/pages/installed";
 import { Settings } from "@/pages/settings";
 import { Setup } from "@/pages/setup";
-import { useSystemStore } from "@/store/system";
+import { completeSetup, lang, reducedMotion, stage, theme } from "@/store/system";
 
 function RoutedPages() {
   const [location] = useLocation();
@@ -46,23 +46,19 @@ function RoutedPages() {
 }
 
 function MainContent() {
-  const stage = useSystemStore((s) => s.stage);
-  const lang = useSystemStore((s) => s.lang);
-  const completeSetup = useSystemStore((s) => s.completeSetup);
-
   let content: ReactNode;
   let key: string;
 
-  if (stage === "loading") {
+  if (stage.value === "loading") {
     key = "loading";
-    content = <FullPageLoading lang={lang} label="· · ·" />;
-  } else if (stage === "setup") {
+    content = <FullPageLoading lang={lang.value} label="· · ·" />;
+  } else if (stage.value === "setup") {
     key = "setup";
     content = <Setup onComplete={completeSetup} />;
   } else {
     return (
       <ErrorBoundary
-        resetKeys={[stage]}
+        resetKeys={[stage.value]}
         fallback={({ error, reset }) => (
           <ErrorFallback error={error} reset={reset} variant="page" onHome={() => history.back()} />
         )}
@@ -74,7 +70,7 @@ function MainContent() {
 
   return (
     <ErrorBoundary
-      resetKeys={[stage]}
+      resetKeys={[stage.value]}
       fallback={({ error, reset }) => <ErrorFallback error={error} reset={reset} variant="page" />}
     >
       <AnimatePresence mode="wait">
@@ -94,12 +90,11 @@ function MainContent() {
 }
 
 function AppShell() {
-  const stage = useSystemStore((s) => s.stage);
-  const ready = stage === "home";
+  const ready = stage.value === "home";
 
   return (
     <div className="flex h-screen w-screen flex-col bg-bg text-fg">
-      {stage !== "loading" && <Header ready={ready} />}
+      {stage.value !== "loading" && <Header ready={ready} />}
       <div className="flex min-h-0 flex-1 overflow-hidden">
         {ready && <Sidebar />}
         <MainContent />
@@ -111,21 +106,16 @@ function AppShell() {
 
 function App() {
   useBoot();
-
-  const theme = useSystemStore((s) => s.theme);
-  const lang = useSystemStore((s) => s.lang);
-  const reducedMotion = useSystemStore((s) => s.reducedMotion);
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme.value);
+  }, [theme.value]);
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
-
-  useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
+    document.documentElement.lang = lang.value;
+  }, [lang.value]);
 
   return (
-    <MotionConfig reducedMotion={reducedMotion}>
+    <MotionConfig reducedMotion={reducedMotion.value}>
       <AppShell />
     </MotionConfig>
   );
