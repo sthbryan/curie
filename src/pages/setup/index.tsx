@@ -255,7 +255,7 @@ export function Setup({ onComplete }: Props) {
               href="https://volta.sh"
               onClick={(e) => {
                 e.preventDefault();
-                openUrl("https://volta.sh").catch(() => {
+                void Promise.resolve(openUrl("https://volta.sh")).catch(() => {
                   // ignore
                 });
               }}

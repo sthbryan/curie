@@ -155,7 +155,7 @@ export function Settings() {
               variant="link"
               className="px-0 hover:underline cursor-pointer"
               onClick={() => {
-                openUrl("https://github.com/sthbryan/curie").catch(() => {
+                void Promise.resolve(openUrl("https://github.com/sthbryan/curie")).catch(() => {
                   // ignore
                 });
               }}
