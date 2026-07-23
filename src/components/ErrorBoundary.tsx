@@ -7,14 +7,8 @@ export type ErrorBoundaryFallbackProps = {
 
 type Props = {
   children: ReactNode;
-  /** Rendered when a child throws during render. */
   fallback: (props: ErrorBoundaryFallbackProps) => ReactNode;
-  /** Optional side-effect when an error is caught (logging, telemetry). */
   onError?: (error: Error, info: ErrorInfo) => void;
-  /**
-   * When any value changes, the boundary resets so a new view/page can
-   * recover without a full app reload.
-   */
   resetKeys?: ReadonlyArray<string | number | boolean | null | undefined>;
 };
 
@@ -22,7 +16,6 @@ type State = {
   error: Error | null;
 };
 
-/** Exported for unit tests. */
 export function resetKeysChanged(
   prev: Props["resetKeys"] | undefined,
   next: Props["resetKeys"] | undefined,

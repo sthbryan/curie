@@ -39,7 +39,6 @@ const gridH = rows * cell
 const ox = (SIZE - gridW) / 2 + cell / 2
 const oy = (SIZE - gridH) / 2 + cell / 2
 
-/** Superellipse (squircle) path — closer to macOS continuous corners than rx/ry. */
 function squirclePath(size, n = 5, samples = 128) {
   const a = size / 2
   const b = size / 2

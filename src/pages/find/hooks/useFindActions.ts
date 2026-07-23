@@ -11,20 +11,13 @@ export type FindActions = {
   results: SkillSearchResult[];
   loading: boolean;
   error: string | null;
-  /** Package currently being installed, or null when idle. */
   installing: string | null;
   installError: string | null;
   search: (query: string, owner: string) => Promise<void>;
   install: (pkg: string) => Promise<void>;
-  /** Dismiss install error (search errors retry on dismiss instead). */
   dismissInstallError: () => void;
 };
 
-/**
- * Owns the search + install action state for the Find page. Replaces what
- * was a global useFindStore. Keeps request-id cancellation so a slow in-
- * flight search doesn't clobber a newer one.
- */
 export function useFindActions(): FindActions {
   const [results, setResults] = useState<SkillSearchResult[]>([]);
   const [loading, setLoading] = useState(false);

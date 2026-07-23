@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
 
-/**
- * Fake-but-honest progress for long ops without real telemetry.
- * Rises quickly at first, then asymptotes toward `cap` until the
- * parent clears `active` (job finished).
- */
 export function useAsymptoticProgress(active: boolean, cap = 92): number {
   const [pct, setPct] = useState(0);
 

@@ -1,12 +1,6 @@
 import { type ClassValue, clsx } from "cnfast";
 import { extendTailwindMerge } from "tailwind-merge";
 
-/**
- * cnfast/twMerge only treat t-shirt sizes (xs/sm/…) as font-size under `text-*`.
- * Our Curie tokens (`text-micro`, `text-mono`, …) and theme colors (`text-fg-3`,
- * `text-accent`, …) all look like the same `text-*` group, so one drops the other.
- * That is why `text-micro!` was needed. Teach the merger about our tokens instead.
- */
 const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {

@@ -7,7 +7,6 @@ import { Button } from "./Button";
 import type { ErrorBoundaryFallbackProps } from "./ErrorBoundary";
 
 type Props = ErrorBoundaryFallbackProps & {
-  /** Keep chrome (sidebar/header) vs full-screen root crash. */
   variant?: "page" | "root";
   onHome?: () => void;
 };

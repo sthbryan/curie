@@ -1,11 +1,4 @@
 #!/usr/bin/env bun
-/**
- * bun release [patch|minor|major|x.y.z] [--dry-run] [--no-push] [--allow-dirty] [--yes]
- *
- * Interactive by default: asks patch / minor / major unless you pass a bump.
- * Bumps package.json, tauri.conf.json, Cargo.toml → commit → tag → push.
- */
-
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { $ } from "bun";
@@ -100,7 +93,6 @@ function bumpCargoToml(path, version) {
   writeFileSync(path, out);
 }
 
-/** Line-buffered stdin so multi-line piped input is not lost across prompts. */
 let stdinBuf = "";
 const decoder = new TextDecoder();
 const stdinReader = Bun.stdin.stream().getReader();
