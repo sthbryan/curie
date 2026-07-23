@@ -29,8 +29,8 @@ describe("detectLang", () => {
 
 describe("t", () => {
   it("resolves nested keys", () => {
-    expect(t("en", "home.status")).toBe("STATUS · WORKING");
-    expect(t("es", "home.status")).toBe("ESTADO · FUNCIONANDO");
+    expect(t("en", "home.status")).toBe("STATUS · GLOBAL");
+    expect(t("es", "home.status")).toBe("ESTADO · GLOBAL");
     expect(t("en", "app.ready")).toBe("READY");
     expect(t("es", "app.ready")).toBe("LISTO");
   });
@@ -44,6 +44,8 @@ describe("t", () => {
     expect(t("es", "stages.download")).toBe("Descargando instalador de Volta");
     expect(t("en", "status.node")).toBe("NODE");
     expect(t("es", "status.agents")).toBe("AGENTES");
+    expect(t("en", "settings.themeRose")).toBe("ROSE");
+    expect(t("es", "settings.themeDawn")).toBe("DAWN");
   });
 
   it("interpolates a single variable", () => {
@@ -52,8 +54,8 @@ describe("t", () => {
   });
 
   it("interpolates multiple variables in one string", () => {
-    expect(t("en", "home.needAttention", { n: 5 })).toBe("5 NEED ATTENTION");
-    expect(t("es", "home.needAttention", { n: 1 })).toBe("1 NECESITAN ATENCIÓN");
+    expect(t("en", "home.skillsCount", { n: 5 })).toBe("5 SKILLS");
+    expect(t("es", "home.active", { n: 1 })).toBe("1 ACTIVAS");
   });
 
   it("interpolates repeated variables", () => {
