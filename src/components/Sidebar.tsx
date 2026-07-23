@@ -7,11 +7,12 @@ import {
   Search,
   Settings as SettingsIcon,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotionConfig } from "motion/react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { t } from "@/i18n";
 import { duration, easeOut } from "@/lib/motion";
+import { reducedTransition } from "@/lib/transition";
 import { useUiStore } from "@/store/ui";
 import { NavItem } from "./NavItem";
 
@@ -33,12 +34,17 @@ export function Sidebar() {
   const [location, navigate] = useLocation();
   const [hovered, setHovered] = useState(false);
 
+  const shouldReduceMotion = useReducedMotionConfig();
+
   return (
     <motion.nav
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       animate={{ width: hovered ? EXPANDED_W : COLLAPSED_W }}
-      transition={{ duration: duration.slow, ease: easeOut }}
+      transition={reducedTransition({
+        shouldReduceMotion,
+        transition: { duration: duration.slow, ease: easeOut },
+      })}
       className="flex shrink-0 flex-col border-r border-border bg-surface"
     >
       <div className="flex flex-col gap-0.5 px-2 pt-4 pb-2">

@@ -1,7 +1,8 @@
 import type { LucideIcon } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotionConfig } from "motion/react";
 import { cn } from "@/lib/cn";
 import { duration, easeOut } from "@/lib/motion";
+import { reducedTransition } from "@/lib/transition";
 
 type Props = {
   number: string;
@@ -13,6 +14,8 @@ type Props = {
 };
 
 export function NavItem({ number, label, icon: Icon, active, expanded, onClick }: Props) {
+  const shouldReduceMotion = useReducedMotionConfig();
+
   return (
     <button
       type="button"
@@ -40,7 +43,10 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
             initial={{ opacity: 0, x: -4 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -4 }}
-            transition={{ duration: duration.base, ease: easeOut, delay: 0.06 }}
+            transition={reducedTransition({
+              shouldReduceMotion,
+              transition: { duration: duration.base, ease: easeOut, delay: 0.06 },
+            })}
             className="absolute left-9 top-1/2 flex -translate-y-1/2 flex-col items-start whitespace-nowrap ml-0.5"
           >
             <span
