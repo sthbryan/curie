@@ -9,6 +9,29 @@ function density(count: number, capacity: number): number {
   return Math.min(count / capacity, 1);
 }
 
+function Stat({
+  label,
+  value,
+  isLast = false,
+}: {
+  label: string;
+  value: number;
+  isLast?: boolean;
+}) {
+  return (
+    <div
+      className={`flex min-w-0 flex-1 flex-col gap-2 py-5 ${
+        isLast ? "" : "border-r border-border pr-6 mr-6"
+      }`}
+    >
+      <span className="font-mono uppercase tracking-label text-micro text-fg-4">{label}</span>
+      <span className="font-display text-heading font-bold leading-none tracking-tight text-fg tabular-nums">
+        {value}
+      </span>
+    </div>
+  );
+}
+
 export function Home() {
   const lang = useAppStore((s) => s.lang);
   const setView = useAppStore((s) => s.setView);
@@ -59,7 +82,7 @@ export function Home() {
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-10 pt-12 pb-8">
-        <section className="flex flex-col gap-2">
+        <section className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
             <span
               className={`inline-block h-1.5 w-1.5 rounded-full ${
@@ -70,21 +93,17 @@ export function Home() {
               {totalSkills > 0 ? t(lang, "home.status") : t(lang, "home.statusEmpty")}
             </Label>
           </div>
-          <div className="flex items-baseline gap-5 pt-3">
-            <span className="font-display text-display font-bold leading-none tracking-display">
-              {totalSkills}
-            </span>
-            <span className="font-body text-base text-fg-2 tracking-tight">
-              {totalSkills === 0
-                ? t(lang, "home.skillsNone")
-                : totalSkills === 1
-                  ? t(lang, "home.skillsReadyOne", { n: activeAgents })
-                  : t(lang, "home.skillsReady", { n: activeAgents })}
-            </span>
-          </div>
-        </section>
 
-        <hr className="border-0 border-t border-border" />
+          <div className="flex items-stretch border-y border-border">
+            <Stat label={t(lang, "home.statSkills")} value={totalSkills} />
+            <Stat label={t(lang, "home.statTools")} value={activeAgents} />
+            <Stat label={t(lang, "home.statRecent")} value={recent.length} isLast />
+          </div>
+
+          {totalSkills === 0 && (
+            <p className="font-body text-sm text-fg-3">{t(lang, "home.skillsNone")}</p>
+          )}
+        </section>
 
         <section className="grid grid-cols-2 gap-12">
           <div className="flex flex-col gap-5">
@@ -116,7 +135,7 @@ export function Home() {
                         />
                       </div>
                     </div>
-                    <span className="font-display text-kpi font-bold leading-none tracking-tight w-10 text-right">
+                    <span className="font-mono text-mono font-bold leading-none tracking-tight w-8 text-right text-fg tabular-nums">
                       {agent.count}
                     </span>
                     <span className="font-mono uppercase tracking-label text-micro w-16 text-right text-fg-3">

@@ -46,9 +46,10 @@ export type Messages = {
   home: {
     status: string;
     statusEmpty: string;
-    skillsReady: string;
-    skillsReadyOne: string;
     skillsNone: string;
+    statSkills: string;
+    statTools: string;
+    statRecent: string;
     aiTools: string;
     active: string;
     skillWord: string;

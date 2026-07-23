@@ -41,9 +41,10 @@
   "home": {
     "status": "STATUS · NPX SKILLS",
     "statusEmpty": "EMPTY · NPX SKILLS",
-    "skillsReady": "skills ready across {n} AI tools",
-    "skillsReadyOne": "skill ready across {n} AI tools",
     "skillsNone": "No global skills installed yet",
+    "statSkills": "SKILLS",
+    "statTools": "AI TOOLS",
+    "statRecent": "ACTIVITY",
     "aiTools": "AI TOOLS",
     "active": "{n} ACTIVE",
     "skillWord": "SKILL",

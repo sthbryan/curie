@@ -49,12 +49,12 @@ describe("t", () => {
   });
 
   it("interpolates a single variable", () => {
-    expect(t("en", "home.skillsReady", { n: 3 })).toBe("skills ready across 3 AI tools");
-    expect(t("es", "home.skillsReady", { n: 3 })).toBe("skills listas en 3 herramientas de IA");
+    expect(t("en", "home.active", { n: 3 })).toBe("3 ACTIVE");
+    expect(t("es", "home.active", { n: 3 })).toBe("3 ACTIVAS");
   });
 
   it("interpolates multiple variables in one string", () => {
-    expect(t("en", "home.active", { n: 5 })).toBe("5 ACTIVE");
+    expect(t("en", "home.events", { n: 5 })).toBe("5 EVENTS");
     expect(t("es", "home.active", { n: 1 })).toBe("1 ACTIVAS");
   });
 
