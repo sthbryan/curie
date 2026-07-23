@@ -27,7 +27,7 @@ afterEach(unmount);
 describe("FullPageLoading", () => {
   it("renders the default loading label", () => {
     mount(<FullPageLoading />);
-    expect(container?.textContent).toContain("Loading");
+    expect(container?.textContent).toContain("LOADING");
   });
 
   it("renders a custom label when provided", () => {
