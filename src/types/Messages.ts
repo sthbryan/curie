@@ -227,5 +227,7 @@ export type Messages = {
     installed: string;
     removed: string;
     updated: string;
+    updates: string;
+    noUpdates: string;
   };
 };

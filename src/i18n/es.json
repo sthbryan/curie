@@ -226,6 +226,8 @@
   "toast": {
     "installed": "Instalado {name}",
     "removed": "Eliminado {name}",
-    "updated": "Actualizado"
+    "updated": "Actualizado",
+    "updates": "{n} actualizaciones disponibles",
+    "noUpdates": "Todas las skills están al día"
   }
 }
