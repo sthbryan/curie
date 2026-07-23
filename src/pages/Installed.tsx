@@ -1,14 +1,16 @@
+import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Label } from "../components/Label";
 import type { SkillInfo } from "../components/types";
 import { t } from "../i18n";
 import { loadGlobalSkills } from "../lib/boot";
+import { fadeUp, listItem, listStagger } from "../lib/motion";
 import { filterSkills, formatRelative, skillTimestamp, summarizeAgents } from "../lib/skills";
 import { useAppStore } from "../store/app";
 
 function AgentBadge({ label }: { label: string }) {
   return (
-    <span className="inline-flex max-w-[9rem] truncate border border-border px-1.5 py-0.5 font-mono uppercase tracking-label text-micro text-fg-3">
+    <span className="inline-flex max-w-36 truncate border border-border px-1.5 py-0.5 font-mono uppercase tracking-label text-micro text-fg-3">
       {label}
     </span>
   );
@@ -18,7 +20,11 @@ function SkillRow({ skill, lang }: { skill: SkillInfo; lang: "en" | "es" }) {
   const when = skillTimestamp(skill);
 
   return (
-    <article className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.4fr)_5.5rem] items-start gap-4 border-b border-border py-4 first:border-t">
+    <motion.article
+      layout
+      variants={listItem}
+      className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.4fr)_5.5rem] items-start gap-4 border-b border-border py-4 first:border-t"
+    >
       <div className="min-w-0 flex flex-col gap-1">
         <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
         <span className="font-mono uppercase tracking-label text-micro text-fg-4 truncate">
@@ -50,7 +56,7 @@ function SkillRow({ skill, lang }: { skill: SkillInfo; lang: "en" | "es" }) {
           {when ? formatRelative(when) : "—"}
         </span>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
@@ -107,7 +113,7 @@ export function Installed() {
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
-        <section className="flex flex-col gap-4">
+        <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-6">
             <div className="flex flex-col gap-3">
               <Label lang={lang}>{t(lang, "installed.eyebrow")}</Label>
@@ -141,9 +147,9 @@ export function Installed() {
               </button>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="flex flex-col gap-4">
+        <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <label className="relative flex min-w-0 flex-1 max-w-md">
               <span className="sr-only">{t(lang, "installed.search")}</span>
@@ -191,11 +197,14 @@ export function Installed() {
               ))}
             </div>
           )}
-        </section>
+        </motion.section>
 
         <section className="flex flex-col">
           {skills.length === 0 ? (
-            <div className="flex flex-col gap-4 border border-border-strong bg-surface-tint px-5 py-8">
+            <motion.div
+              {...fadeUp(0.08)}
+              className="flex flex-col gap-4 border border-border-strong bg-surface-tint px-5 py-8"
+            >
               <span className="font-body text-sm text-fg">{t(lang, "installed.empty")}</span>
               <p className="font-body text-sm text-fg-3">{t(lang, "installed.emptyHint")}</p>
               <div>
@@ -207,14 +216,17 @@ export function Installed() {
                   {t(lang, "installed.install")}
                 </button>
               </div>
-            </div>
+            </motion.div>
           ) : filtered.length === 0 ? (
-            <div className="border-t border-border py-8">
+            <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
               <p className="font-body text-sm text-fg-3">{t(lang, "installed.noMatches")}</p>
-            </div>
+            </motion.div>
           ) : (
             <>
-              <div className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.4fr)_5.5rem] gap-4 border-b border-border pb-2">
+              <motion.div
+                {...fadeUp(0.06)}
+                className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.4fr)_5.5rem] gap-4 border-b border-border pb-2"
+              >
                 <span className="font-mono uppercase tracking-label text-micro text-fg-4">
                   {t(lang, "installed.colName")}
                 </span>
@@ -227,10 +239,20 @@ export function Installed() {
                 <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
                   {t(lang, "installed.colWhen")}
                 </span>
-              </div>
-              {filtered.map((skill) => (
-                <SkillRow key={`${skill.name}-${skill.path}`} skill={skill} lang={lang} />
-              ))}
+              </motion.div>
+              <motion.div
+                key={`${agentFilter ?? "all"}:${query}`}
+                className="flex flex-col"
+                variants={listStagger}
+                initial="initial"
+                animate="animate"
+              >
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {filtered.map((skill) => (
+                    <SkillRow key={`${skill.name}-${skill.path}`} skill={skill} lang={lang} />
+                  ))}
+                </AnimatePresence>
+              </motion.div>
             </>
           )}
         </section>
