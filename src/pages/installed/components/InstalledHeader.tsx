@@ -1,3 +1,4 @@
+import { CircleFadingArrowUp, Plus, RefreshCcw } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Else, If, Then, When } from "react-if";
@@ -6,6 +7,7 @@ import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { t } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
+import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { updateNameSet } from "@/lib/skills";
 import { skills, skillsLoading, skillUpdates, updatesLoading } from "@/store/skills";
@@ -47,7 +49,7 @@ export function InstalledHeader() {
           <p className="font-body text-sm text-fg-3 max-w-lg">
             {t(lang.value, "installed.subtitle", { n: skills.value.length })}
             {updateNames.size > 0
-              ? ` · ${t(lang, "installed.updatesHint", { n: updateNames.size })}`
+              ? ` · ${t(lang.value, "installed.updatesHint", { n: updateNames.size })}`
               : ""}
           </p>
         </div>
@@ -55,12 +57,13 @@ export function InstalledHeader() {
         <div className="flex shrink-0 items-center gap-2 pt-1">
           <When condition={updateNames.size > 0}>
             <Button
-              size="md"
+              size="sm"
               variant="accent-outline"
               className="font-bold"
               onClick={onUpdateAll}
               disabled={actionBusy || updatesLoading.value}
             >
+              <CircleFadingArrowUp size={15} />
               <If condition={updatingAll}>
                 <Then>{t(lang.value, "installed.updatingAll")}</Then>
                 <Else>{t(lang.value, "installed.updateAll")}</Else>
@@ -68,17 +71,22 @@ export function InstalledHeader() {
             </Button>
           </When>
           <Button
-            size="md"
+            size="sm"
             variant="outline"
             onClick={onRefresh}
             disabled={skillsLoading.value || updatesLoading.value || actionBusy}
           >
+            <RefreshCcw
+              size={15}
+              className={cn({ "animate-spin": skillsLoading.value || updatesLoading.value })}
+            />
             <If condition={skillsLoading.value || updatesLoading.value}>
               <Then>{t(lang.value, "installed.refreshing")}</Then>
               <Else>{t(lang.value, "installed.refresh")}</Else>
             </If>
           </Button>
-          <Button size="md" variant="primary" onClick={onInstall}>
+          <Button size="sm" variant="primary" onClick={onInstall}>
+            <Plus size={15} />
             {t(lang.value, "installed.install")}
           </Button>
         </div>
