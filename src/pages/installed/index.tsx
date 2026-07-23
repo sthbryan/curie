@@ -4,7 +4,7 @@ import { Label } from "../../components/Label";
 import { t } from "../../i18n";
 import { loadGlobalSkills } from "../../lib/boot";
 import { fadeUp, listStagger } from "../../lib/motion";
-import { filterSkills, summarizeAgents } from "../../lib/skills";
+import { filterSkills, summarizeAgents, updateNameSet } from "../../lib/skills";
 import { useAppStore } from "../../store/app";
 import { SkillRow } from "./components/SkillRow";
 
@@ -14,14 +14,23 @@ export function Installed() {
   const skills = useAppStore((s) => s.skills);
   const skillsLoading = useAppStore((s) => s.skillsLoading);
   const skillsError = useAppStore((s) => s.skillsError);
+  const skillUpdates = useAppStore((s) => s.skillUpdates);
+  const updatesLoading = useAppStore((s) => s.updatesLoading);
 
   const [query, setQuery] = useState("");
   const [agentFilter, setAgentFilter] = useState<string | null>(null);
+  const [updatesOnly, setUpdatesOnly] = useState(false);
 
   const agents = useMemo(() => summarizeAgents(skills), [skills]);
+  const updateNames = useMemo(() => updateNameSet(skillUpdates), [skillUpdates]);
+  const updateCount = updateNames.size;
   const filtered = useMemo(
-    () => filterSkills(skills, query, agentFilter),
-    [skills, query, agentFilter],
+    () =>
+      filterSkills(skills, query, agentFilter, {
+        updatesOnly,
+        updateNames,
+      }),
+    [skills, query, agentFilter, updatesOnly, updateNames],
   );
 
   if (skillsLoading && skills.length === 0) {
@@ -70,6 +79,9 @@ export function Installed() {
               </h2>
               <p className="font-body text-sm text-fg-3 max-w-lg">
                 {t(lang, "installed.subtitle", { n: skills.length })}
+                {updateCount > 0
+                  ? ` · ${t(lang, "installed.updatesHint", { n: updateCount })}`
+                  : ""}
               </p>
             </div>
 
@@ -81,10 +93,12 @@ export function Installed() {
                     // store handles error state
                   });
                 }}
-                disabled={skillsLoading}
+                disabled={skillsLoading || updatesLoading}
                 className="h-9 px-4 border border-border-strong text-fg-2 rounded-sm font-mono uppercase tracking-label text-mono hover:border-fg-3 hover:text-fg disabled:opacity-50 transition-colors duration-150"
               >
-                {skillsLoading ? t(lang, "installed.refreshing") : t(lang, "installed.refresh")}
+                {skillsLoading || updatesLoading
+                  ? t(lang, "installed.refreshing")
+                  : t(lang, "installed.refresh")}
               </button>
               <button
                 type="button"
@@ -115,36 +129,55 @@ export function Installed() {
             </span>
           </div>
 
-          {agents.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setAgentFilter(null);
+                setUpdatesOnly(false);
+              }}
+              className={`h-8 px-3 font-mono uppercase tracking-label text-micro transition-colors duration-150 rounded-sm ${
+                agentFilter === null && !updatesOnly
+                  ? "bg-fg text-bg font-bold"
+                  : "border border-border-strong text-fg-3 hover:border-fg-3 hover:text-fg"
+              }`}
+            >
+              {t(lang, "installed.filterAll")}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setUpdatesOnly((v) => !v);
+                setAgentFilter(null);
+              }}
+              className={`h-8 px-3 font-mono uppercase tracking-label text-micro transition-colors duration-150 rounded-sm ${
+                updatesOnly
+                  ? "bg-fg text-bg font-bold"
+                  : "border border-border-strong text-fg-3 hover:border-fg-3 hover:text-fg"
+              }`}
+            >
+              {t(lang, "installed.filterUpdates")}
+              <span className="ml-2 opacity-60">{updateCount}</span>
+            </button>
+            {agents.map((agent) => (
               <button
+                key={agent.id}
                 type="button"
-                onClick={() => setAgentFilter(null)}
+                onClick={() => {
+                  setUpdatesOnly(false);
+                  setAgentFilter(agent.label === agentFilter ? null : agent.label);
+                }}
                 className={`h-8 px-3 font-mono uppercase tracking-label text-micro transition-colors duration-150 rounded-sm ${
-                  agentFilter === null
+                  agentFilter === agent.label
                     ? "bg-fg text-bg font-bold"
                     : "border border-border-strong text-fg-3 hover:border-fg-3 hover:text-fg"
                 }`}
               >
-                {t(lang, "installed.filterAll")}
+                {agent.label}
+                <span className="ml-2 opacity-60">{agent.count}</span>
               </button>
-              {agents.map((agent) => (
-                <button
-                  key={agent.id}
-                  type="button"
-                  onClick={() => setAgentFilter(agent.label === agentFilter ? null : agent.label)}
-                  className={`h-8 px-3 font-mono uppercase tracking-label text-micro transition-colors duration-150 rounded-sm ${
-                    agentFilter === agent.label
-                      ? "bg-fg text-bg font-bold"
-                      : "border border-border-strong text-fg-3 hover:border-fg-3 hover:text-fg"
-                  }`}
-                >
-                  {agent.label}
-                  <span className="ml-2 opacity-60">{agent.count}</span>
-                </button>
-              ))}
-            </div>
-          )}
+            ))}
+          </div>
         </motion.section>
 
         <section className="flex flex-col">
@@ -189,7 +222,7 @@ export function Installed() {
                 </span>
               </motion.div>
               <motion.div
-                key={`${agentFilter ?? "all"}:${query}`}
+                key={`${agentFilter ?? "all"}:${query}:${updatesOnly ? "up" : "all"}`}
                 className="flex flex-col"
                 variants={listStagger}
                 initial="initial"
@@ -197,7 +230,12 @@ export function Installed() {
               >
                 <AnimatePresence mode="popLayout" initial={false}>
                   {filtered.map((skill) => (
-                    <SkillRow key={`${skill.name}-${skill.path}`} skill={skill} lang={lang} />
+                    <SkillRow
+                      key={`${skill.name}-${skill.path}`}
+                      skill={skill}
+                      lang={lang}
+                      updateAvailable={updateNames.has(skill.name)}
+                    />
                   ))}
                 </AnimatePresence>
               </motion.div>

@@ -9,9 +9,10 @@ import { AgentBadge } from "./AgentBadge";
 type Props = {
   skill: SkillInfo;
   lang: Lang;
+  updateAvailable?: boolean;
 };
 
-export function SkillRow({ skill, lang }: Props) {
+export function SkillRow({ skill, lang, updateAvailable = false }: Props) {
   const when = skillTimestamp(skill);
 
   return (
@@ -21,7 +22,14 @@ export function SkillRow({ skill, lang }: Props) {
       className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.4fr)_5.5rem] items-start gap-4 border-b border-border py-4 first:border-t"
     >
       <div className="min-w-0 flex flex-col gap-1">
-        <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
+          {updateAvailable && (
+            <span className="shrink-0 font-mono uppercase tracking-label text-micro text-accent border border-accent/40 px-1.5 py-0.5 rounded-sm">
+              {t(lang, "installed.badgeUpdate")}
+            </span>
+          )}
+        </div>
         <span className="font-mono uppercase tracking-label text-micro text-fg-4 truncate">
           {skill.scope}
         </span>
@@ -47,8 +55,12 @@ export function SkillRow({ skill, lang }: Props) {
       </div>
 
       <div className="text-right">
-        <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-          {when ? formatRelative(when) : "—"}
+        <span
+          className={`font-mono uppercase tracking-label text-micro ${
+            updateAvailable ? "text-accent" : "text-fg-4"
+          }`}
+        >
+          {updateAvailable ? t(lang, "installed.badgeUpdate") : when ? formatRelative(when) : "—"}
         </span>
       </div>
     </motion.article>
