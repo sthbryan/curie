@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
-import { loadGlobalSkills } from "../../lib/boot";
+import { loadGlobalSkills, updateSkills } from "../../lib/boot";
 import { fadeUp, listStagger } from "../../lib/motion";
 import { filterSkills, summarizeAgents, updateNameSet } from "../../lib/skills";
 import { useAppStore } from "../../store/app";
@@ -16,6 +16,9 @@ export function Installed() {
   const skillsError = useAppStore((s) => s.skillsError);
   const skillUpdates = useAppStore((s) => s.skillUpdates);
   const updatesLoading = useAppStore((s) => s.updatesLoading);
+  const updatingSkill = useAppStore((s) => s.updatingSkill);
+  const updateApplyError = useAppStore((s) => s.updateApplyError);
+  const setUpdateApplyError = useAppStore((s) => s.setUpdateApplyError);
 
   const [query, setQuery] = useState("");
   const [agentFilter, setAgentFilter] = useState<string | null>(null);
@@ -24,6 +27,7 @@ export function Installed() {
   const agents = useMemo(() => summarizeAgents(skills), [skills]);
   const updateNames = useMemo(() => updateNameSet(skillUpdates), [skillUpdates]);
   const updateCount = updateNames.size;
+  const updateBusy = updatingSkill !== null;
   const filtered = useMemo(
     () =>
       filterSkills(skills, query, agentFilter, {
@@ -32,6 +36,19 @@ export function Installed() {
       }),
     [skills, query, agentFilter, updatesOnly, updateNames],
   );
+
+  const handleUpdateOne = (name: string) => {
+    updateSkills([name]).catch(() => {
+      // store keeps updateApplyError
+    });
+  };
+
+  const handleUpdateAll = () => {
+    const names = [...updateNames];
+    updateSkills(names.length > 0 ? names : undefined).catch(() => {
+      // store keeps updateApplyError
+    });
+  };
 
   if (skillsLoading && skills.length === 0) {
     return (
@@ -86,6 +103,18 @@ export function Installed() {
             </div>
 
             <div className="flex shrink-0 items-center gap-2 pt-1">
+              {updateCount > 0 && (
+                <button
+                  type="button"
+                  onClick={handleUpdateAll}
+                  disabled={updateBusy || updatesLoading}
+                  className="h-9 px-4 border border-accent/50 text-accent rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:bg-accent hover:text-accent-fg disabled:opacity-50 transition-colors duration-150"
+                >
+                  {updatingSkill === "*"
+                    ? t(lang, "installed.updatingAll")
+                    : t(lang, "installed.updateAll")}
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {
@@ -93,7 +122,7 @@ export function Installed() {
                     // store handles error state
                   });
                 }}
-                disabled={skillsLoading || updatesLoading}
+                disabled={skillsLoading || updatesLoading || updateBusy}
                 className="h-9 px-4 border border-border-strong text-fg-2 rounded-sm font-mono uppercase tracking-label text-mono hover:border-fg-3 hover:text-fg disabled:opacity-50 transition-colors duration-150"
               >
                 {skillsLoading || updatesLoading
@@ -109,6 +138,24 @@ export function Installed() {
               </button>
             </div>
           </div>
+
+          {updateApplyError && (
+            <div className="flex items-start justify-between gap-4 border border-accent/30 bg-surface-tint px-4 py-3">
+              <div className="min-w-0 flex flex-col gap-1">
+                <span className="font-mono uppercase tracking-label text-micro text-accent">
+                  {t(lang, "installed.updateError")}
+                </span>
+                <p className="font-body text-sm text-fg-3 break-all">{updateApplyError}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setUpdateApplyError(null)}
+                className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 hover:text-fg"
+              >
+                ×
+              </button>
+            </div>
+          )}
         </motion.section>
 
         <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
@@ -206,7 +253,7 @@ export function Installed() {
             <>
               <motion.div
                 {...fadeUp(0.06)}
-                className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.4fr)_5.5rem] gap-4 border-b border-border pb-2"
+                className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_5rem_5.5rem] gap-4 border-b border-border pb-2"
               >
                 <span className="font-mono uppercase tracking-label text-micro text-fg-4">
                   {t(lang, "installed.colName")}
@@ -219,6 +266,9 @@ export function Installed() {
                 </span>
                 <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
                   {t(lang, "installed.colWhen")}
+                </span>
+                <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
+                  {t(lang, "installed.colActions")}
                 </span>
               </motion.div>
               <motion.div
@@ -235,6 +285,9 @@ export function Installed() {
                       skill={skill}
                       lang={lang}
                       updateAvailable={updateNames.has(skill.name)}
+                      updating={updatingSkill === skill.name || updatingSkill === "*"}
+                      updateBusy={updateBusy}
+                      onUpdate={handleUpdateOne}
                     />
                   ))}
                 </AnimatePresence>
