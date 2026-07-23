@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
+import { useLocation } from "wouter";
 import { Button } from "../../components/Button";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
@@ -20,7 +21,7 @@ import { UpdateRow } from "./components/UpdateRow";
 
 export function Home() {
   const lang = useAppStore((s) => s.lang);
-  const setView = useAppStore((s) => s.setView);
+  const [, navigate] = useLocation();
   const skills = useAppStore((s) => s.skills);
   const skillsLoading = useAppStore((s) => s.skillsLoading);
   const skillsError = useAppStore((s) => s.skillsError);
@@ -253,7 +254,7 @@ export function Home() {
               size="hero"
               variant="primary"
               className="flex-1 justify-between"
-              onClick={() => setView("search")}
+              onClick={() => navigate("/find")}
             >
               <span>{t(lang, "home.install")}</span>
               <span>→</span>
@@ -262,7 +263,7 @@ export function Home() {
               size="hero"
               variant="outline"
               className="px-6 font-bold text-fg"
-              onClick={() => setView("marketplace")}
+              onClick={() => navigate("/marketplace")}
             >
               {t(lang, "home.exploreBtn")}
             </Button>
@@ -270,7 +271,7 @@ export function Home() {
               size="hero"
               variant="ghost"
               className="px-6"
-              onClick={() => setView("installed")}
+              onClick={() => navigate("/installed")}
             >
               {t(lang, "home.viewSkills")}
             </Button>

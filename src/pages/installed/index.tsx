@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
+import { useLocation } from "wouter";
 import { Button } from "../../components/Button";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
@@ -12,7 +13,7 @@ import { SkillRow } from "./components/SkillRow";
 
 export function Installed() {
   const lang = useAppStore((s) => s.lang);
-  const setView = useAppStore((s) => s.setView);
+  const [, navigate] = useLocation();
   const skills = useAppStore((s) => s.skills);
   const skillsLoading = useAppStore((s) => s.skillsLoading);
   const skillsError = useAppStore((s) => s.skillsError);
@@ -143,7 +144,7 @@ export function Installed() {
                   <Else>{t(lang, "installed.refresh")}</Else>
                 </If>
               </Button>
-              <Button size="md" variant="primary" onClick={() => setView("search")}>
+              <Button size="md" variant="primary" onClick={() => navigate("/find")}>
                 {t(lang, "installed.install")}
               </Button>
             </div>
@@ -247,7 +248,7 @@ export function Installed() {
                 <span className="font-body text-sm text-fg">{t(lang, "installed.empty")}</span>
                 <p className="font-body text-sm text-fg-3">{t(lang, "installed.emptyHint")}</p>
                 <div>
-                  <Button size="lg" variant="primary" onClick={() => setView("search")}>
+                  <Button size="lg" variant="primary" onClick={() => navigate("/find")}>
                     {t(lang, "installed.install")}
                   </Button>
                 </div>
