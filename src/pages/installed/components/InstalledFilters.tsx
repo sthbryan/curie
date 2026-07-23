@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useMemo } from "react";
+import { When } from "react-if";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { useT } from "@/i18n";
@@ -46,17 +47,20 @@ export function InstalledFilters() {
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <Button
-          size="xs"
-          variant="outline"
-          selected={updatesOnly.value}
-          onClick={toggleUpdatesOnly}
-        >
-          {t("filterUpdates")}
-          <span className="ml-2 opacity-60">{updateNames.size}</span>
-        </Button>
-      </div>
+      <When condition={updateNames.size > 0}>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="xs"
+            variant="outline"
+            selected={updatesOnly.value}
+            onClick={toggleUpdatesOnly}
+          >
+            {t("filterUpdates")}
+            <span className="ml-2 opacity-60">{updateNames.size}</span>
+          </Button>
+        </div>
+      </When>
+
       <div className="flex flex-wrap gap-2">
         <Button
           size="xs"
