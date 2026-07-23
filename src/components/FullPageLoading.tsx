@@ -1,5 +1,5 @@
-import type { Lang } from "../i18n";
-import { t } from "../i18n";
+import type { Lang } from "@/i18n";
+import { t } from "@/i18n";
 
 type Props = {
   lang: Lang;

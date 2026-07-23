@@ -1,6 +1,6 @@
-import { t } from "../i18n";
-import { APP_NAME, APP_VERSION_LABEL } from "../lib/meta";
-import { useUiStore } from "../store/ui";
+import { t } from "@/i18n";
+import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
+import { useUiStore } from "@/store/ui";
 
 type Props = {
   ready: boolean;

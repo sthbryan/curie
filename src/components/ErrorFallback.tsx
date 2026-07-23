@@ -1,6 +1,6 @@
-import type { Lang } from "../i18n";
-import { t } from "../i18n";
-import { useUiStore } from "../store/ui";
+import type { Lang } from "@/i18n";
+import { t } from "@/i18n";
+import { useUiStore } from "@/store/ui";
 import { Button } from "./Button";
 import type { ErrorBoundaryFallbackProps } from "./ErrorBoundary";
 

@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
-import { t } from "../i18n";
-import { useUiStore } from "../store/ui";
+import { t } from "@/i18n";
+import { useUiStore } from "@/store/ui";
 import { NavItem } from "./NavItem";
 
 type NavKey = "home" | "skills" | "explore" | "find";

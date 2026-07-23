@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
-import { t } from "../i18n";
-import { useUiStore } from "../store/ui";
+import { t } from "@/i18n";
+import { useUiStore } from "@/store/ui";
 import { Button } from "./Button";
 import type { View } from "./types";
 

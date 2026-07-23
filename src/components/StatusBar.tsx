@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { t } from "../i18n";
-import { APP_NAME, APP_VERSION_LABEL } from "../lib/meta";
-import { useUiStore } from "../store/ui";
+import { t } from "@/i18n";
+import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
+import { useUiStore } from "@/store/ui";
 
 function Sep() {
   return <span className="text-fg-4/80 select-none">·</span>;
