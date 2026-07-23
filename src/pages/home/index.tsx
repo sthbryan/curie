@@ -25,12 +25,8 @@ import { UpdateRow } from "./components/UpdateRow";
 export function Home() {
   const lang = useUiStore((s) => s.lang);
   const [, navigate] = useLocation();
-  const skills = useSkillsStore((s) => s.skills);
-  const skillsLoading = useSkillsStore((s) => s.skillsLoading);
-  const skillsError = useSkillsStore((s) => s.skillsError);
-  const skillUpdates = useSkillsStore((s) => s.skillUpdates);
-  const updatesLoading = useSkillsStore((s) => s.updatesLoading);
-  const updatesError = useSkillsStore((s) => s.updatesError);
+  const { skills, skillsLoading, skillsError, skillUpdates, updatesLoading, updatesError } =
+    useSkillsStore();
 
   const agents = useMemo(() => summarizeAgents(skills), [skills]);
   const recent = useMemo(() => buildRecentActivity(skills), [skills]);

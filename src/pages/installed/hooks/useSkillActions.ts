@@ -8,13 +8,10 @@ function errorMessage(e: unknown): string {
 }
 
 export type SkillActions = {
-  /** Skill name currently being updated (or "*" for bulk). */
   updatingSkill: string | null;
   updateApplyError: string | null;
-  /** Skill name currently being removed (or "*" for bulk). */
   removingSkill: string | null;
   removeError: string | null;
-  /** Omit `names` to update all installed skills. */
   update: (names?: string[]) => Promise<void>;
   remove: (names: string[]) => Promise<void>;
   dismissErrors: () => void;

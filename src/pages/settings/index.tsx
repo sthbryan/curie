@@ -29,13 +29,7 @@ const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
 };
 
 export function Settings() {
-  const lang = useUiStore((s) => s.lang);
-  const theme = useUiStore((s) => s.theme);
-  const reducedMotion = useUiStore((s) => s.reducedMotion);
-  const node = useUiStore((s) => s.node);
-  const setLang = useUiStore((s) => s.setLang);
-  const setTheme = useUiStore((s) => s.setTheme);
-  const setReducedMotion = useUiStore((s) => s.setReducedMotion);
+  const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } = useUiStore();
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
