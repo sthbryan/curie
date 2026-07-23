@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
+import { Button } from "../../components/Button";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
 import { addSkill, findSkills } from "../../lib/boot";
@@ -86,16 +87,17 @@ export function Find() {
                 </span>
                 <p className="font-body text-sm text-fg-3 break-all">{findError ?? installError}</p>
               </div>
-              <button
-                type="button"
+              <Button
+                size="xs"
+                variant="link"
+                className="shrink-0 px-0"
                 onClick={() => {
                   if (installError) setInstallError(null);
                   if (findError) void findSkills(query, owner);
                 }}
-                className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 hover:text-fg"
               >
                 ×
-              </button>
+              </Button>
             </div>
           </When>
         </motion.section>
@@ -130,19 +132,20 @@ export function Find() {
                 className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
               />
             </label>
-            <button
-              type="button"
+            <Button
+              size="lg"
+              variant="primary"
+              className="px-4 shrink-0"
               onClick={() => {
                 void findSkills(query, owner);
               }}
               disabled={findLoading || qLen < 2}
-              className="h-10 px-4 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 disabled:opacity-50 transition-opacity duration-150 shrink-0"
             >
               <If condition={findLoading}>
                 <Then>{t(lang, "find.searching")}</Then>
                 <Else>{t(lang, "find.search")}</Else>
               </If>
-            </button>
+            </Button>
           </div>
 
           <div className="flex items-center justify-between gap-4">
