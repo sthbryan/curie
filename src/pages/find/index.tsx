@@ -159,7 +159,6 @@ export function Find() {
             loading={findLoading}
             empty={showEmpty}
             results={findResults}
-            listKey={`${query}:${owner}`}
             installedPackages={installedPackages}
             installingPackage={installingPackage}
             installBusy={installBusy}
