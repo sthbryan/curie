@@ -27,6 +27,7 @@
     "motion": "12.42.2",
     "preact": "10.29.7",
     "react-if": "4.1.6",
+    "sonner": "^2.0.7",
     "tailwind-merge": "3.6.0",
     "thinking-orbs": "^0.1.1",
     "wouter": "3.10.0"

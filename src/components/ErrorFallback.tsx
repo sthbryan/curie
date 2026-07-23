@@ -29,6 +29,8 @@ export function ErrorFallback({ error, reset, variant = "page", onHome }: Props)
     setTimeout(reset, 100);
   };
 
+  const handleReload = () => window.location.reload();
+
   const body = (
     <div className="flex max-w-md flex-col items-center gap-4 text-center">
       <span className="font-mono uppercase tracking-label text-micro text-accent">
@@ -56,7 +58,7 @@ export function ErrorFallback({ error, reset, variant = "page", onHome }: Props)
           </Button>
         </When>
         <When condition={variant === "root"}>
-          <Button size="md" variant="outline" onClick={() => window.location.reload()}>
+          <Button size="md" variant="outline" onClick={handleReload}>
             <RefreshCcw size={14} />
             {t(lang, "error.reload")}
           </Button>

@@ -40,21 +40,21 @@ export function Home() {
   const capacity = maxAgentCount(agents);
   const updateCount = updates.length;
 
+  const handleNavigateFind = () => navigate("/find");
+  const handleNavigateMarketplace = () => navigate("/marketplace");
+  const handleNavigateInstalled = () => navigate("/installed");
+  const handleRetry = () => {
+    loadGlobalSkills().catch(() => {
+      // store handles error state
+    });
+  };
+
   if (skillsLoading.value && totalSkills === 0) {
     return <FullPageLoading />;
   }
 
   if (skillsError.value && totalSkills === 0) {
-    return (
-      <FullPageError
-        message={skillsError.value}
-        onRetry={() => {
-          loadGlobalSkills().catch(() => {
-            // store handles error state
-          });
-        }}
-      />
-    );
+    return <FullPageError message={skillsError.value} onRetry={handleRetry} />;
   }
 
   return (
@@ -232,7 +232,7 @@ export function Home() {
               size="hero"
               variant="primary"
               className="flex-1 justify-between"
-              onClick={() => navigate("/find")}
+              onClick={handleNavigateFind}
             >
               <span>{t("install")}</span>
               <span>→</span>
@@ -241,16 +241,11 @@ export function Home() {
               size="hero"
               variant="outline"
               className="px-6 font-bold text-fg"
-              onClick={() => navigate("/marketplace")}
+              onClick={handleNavigateMarketplace}
             >
               {t("exploreBtn")}
             </Button>
-            <Button
-              size="hero"
-              variant="ghost"
-              className="px-6"
-              onClick={() => navigate("/installed")}
-            >
+            <Button size="hero" variant="ghost" className="px-6" onClick={handleNavigateInstalled}>
               {t("viewSkills")}
             </Button>
           </div>

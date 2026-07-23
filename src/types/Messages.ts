@@ -223,4 +223,9 @@ export type Messages = {
     about: string;
     aboutDescription: string;
   };
+  toast: {
+    installed: string;
+    removed: string;
+    updated: string;
+  };
 };

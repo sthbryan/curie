@@ -1,8 +1,11 @@
 import { signal } from "@preact/signals";
 import { invoke } from "@tauri-apps/api/core";
+import { toast } from "sonner";
 import type { SortDir } from "@/components/Table";
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
+import { t } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
+import { lang } from "@/store/system";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
@@ -66,6 +69,7 @@ export const update = async (names?: string[]) => {
     await invoke<SkillUpdateResult>("update_skills", {
       skills: names && names.length > 0 ? names : null,
     });
+    toast.success(t(lang.value, "toast.updated"));
     await loadGlobalSkills({ checkUpdates: true });
   } catch (e) {
     updateApplyError.value = errorMessage(e);
@@ -81,6 +85,7 @@ export const remove = async (names: string[]) => {
   removeError.value = null;
   try {
     await invoke<SkillRemoveResult>("remove_skills", { skills: names });
+    toast.success(t(lang.value, "toast.removed"));
     await loadGlobalSkills({ checkUpdates: true });
   } catch (e) {
     removeError.value = errorMessage(e);

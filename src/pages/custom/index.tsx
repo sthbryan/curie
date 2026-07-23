@@ -9,6 +9,8 @@ export function Custom() {
   const t = useT();
   const [, navigate] = useLocation();
 
+  const handleGoHome = () => navigate("/");
+
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
@@ -37,7 +39,7 @@ export function Custom() {
             <FileCode size={22} strokeWidth={1.25} />
           </span>
           <p className="max-w-md text-center font-body text-sm text-fg-3">{t("custom.body")}</p>
-          <Button size="sm" variant="outline" onClick={() => navigate("/")}>
+          <Button size="sm" variant="outline" onClick={handleGoHome}>
             {t("custom.back")}
           </Button>
         </motion.section>
