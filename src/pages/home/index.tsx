@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
+import { Button } from "../../components/Button";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
 import { checkSkillUpdates, loadGlobalSkills } from "../../lib/boot";
@@ -54,17 +55,17 @@ export function Home() {
           </Label>
           <p className="font-body text-sm text-fg-3 break-all">{skillsError}</p>
         </div>
-        <button
-          type="button"
+        <Button
+          size="lg"
+          variant="primary"
           onClick={() => {
             loadGlobalSkills().catch(() => {
               // store handles error state
             });
           }}
-          className="h-10 px-5 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 transition-opacity duration-150"
         >
           {t(lang, "home.retry")}
-        </button>
+        </Button>
       </main>
     );
   }
@@ -156,21 +157,22 @@ export function Home() {
                       <Else>{t(lang, "home.updatesAvailable", { n: updateCount })}</Else>
                     </If>
                   </span>
-                  <button
-                    type="button"
+                  <Button
+                    size="xs"
+                    variant="link"
+                    className="px-0"
                     onClick={() => {
                       checkSkillUpdates().catch(() => {
                         // store handles error state
                       });
                     }}
                     disabled={updatesLoading}
-                    className="font-mono uppercase tracking-label text-micro text-fg-3 hover:text-fg disabled:opacity-50 transition-colors duration-150"
                   >
                     <If condition={updatesLoading}>
                       <Then>{t(lang, "home.updatesChecking")}</Then>
                       <Else>{t(lang, "home.updatesCheck")}</Else>
                     </If>
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -247,28 +249,31 @@ export function Home() {
         <motion.section {...fadeUp(0.12)} className="flex flex-col gap-5">
           <Label lang={lang}>{t(lang, "home.actions")}</Label>
           <div className="flex gap-3">
-            <button
-              type="button"
+            <Button
+              size="hero"
+              variant="primary"
+              className="flex-1 justify-between"
               onClick={() => setView("search")}
-              className="flex flex-1 items-center justify-between h-14 px-5 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 active:scale-[0.99] transition-all duration-150"
             >
               <span>{t(lang, "home.install")}</span>
               <span>→</span>
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="hero"
+              variant="outline"
+              className="px-6 font-bold text-fg"
               onClick={() => setView("marketplace")}
-              className="flex h-14 px-6 items-center justify-center border border-border-strong text-fg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:border-fg-3 active:scale-[0.99] transition-all duration-150"
             >
               {t(lang, "home.exploreBtn")}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="hero"
+              variant="ghost"
+              className="px-6"
               onClick={() => setView("installed")}
-              className="flex h-14 px-6 items-center justify-center text-fg-3 rounded-sm font-mono uppercase tracking-label text-mono hover:text-fg hover:bg-surface-hover active:scale-[0.99] transition-all duration-150"
             >
               {t(lang, "home.viewSkills")}
-            </button>
+            </Button>
           </div>
         </motion.section>
       </div>
