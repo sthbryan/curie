@@ -135,10 +135,10 @@ export function Home() {
                         />
                       </div>
                     </div>
-                    <span className="font-mono text-mono font-bold leading-none tracking-tight w-8 text-right text-fg tabular-nums">
+                    <span className="font-mono text-micro font-bold leading-none tracking-tight w-5 text-right text-fg tabular-nums">
                       {agent.count}
                     </span>
-                    <span className="font-mono uppercase tracking-label text-micro w-16 text-right text-fg-3">
+                    <span className="font-mono uppercase tracking-label text-micro w-14 text-right text-fg-4">
                       {agent.count === 1 ? t(lang, "home.skillWord") : t(lang, "home.skillsWord")}
                     </span>
                   </div>
