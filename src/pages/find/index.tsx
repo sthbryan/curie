@@ -1,3 +1,4 @@
+import { Search, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
@@ -96,7 +97,7 @@ export function Find() {
                   if (findError) void runSearch(query, owner);
                 }}
               >
-                ×
+                <X size={10} />
               </Button>
             </div>
           </When>
@@ -139,6 +140,7 @@ export function Find() {
               }}
               disabled={findLoading || qLen < 2}
             >
+              <Search size={14} />
               <If condition={findLoading}>
                 <Then>{t("searching")}</Then>
                 <Else>{t("search")}</Else>
