@@ -11,7 +11,13 @@ import { checkSkillUpdates, loadGlobalSkills } from "@/lib/boot";
 import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { updateNameSet } from "@/lib/skills";
-import { skills, skillsLoading, skillUpdates, updatesLoading } from "@/store/skills";
+import {
+  setSkillsLoading,
+  skills,
+  skillsLoading,
+  skillUpdates,
+  updatesLoading,
+} from "@/store/skills";
 import { lang } from "@/store/system";
 import {
   dismissErrors,
@@ -31,6 +37,7 @@ export function InstalledHeader() {
   const [, navigate] = useLocation();
   const onInstall = () => navigate("/find");
   const onRefresh = async () => {
+    setSkillsLoading(true);
     await loadGlobalSkills();
     await checkSkillUpdates();
     const n = skillUpdates.value.filter((u) => u.updateAvailable).length;
