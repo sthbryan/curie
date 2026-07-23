@@ -1,4 +1,5 @@
 import cn from "cnfast";
+import { RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
@@ -147,13 +148,14 @@ export function Home() {
                     size="xs"
                     variant="link"
                     className="px-0"
-                    onClick={() => {
-                      checkSkillUpdates().catch(() => {
-                        // store handles error state
-                      });
-                    }}
+                    onClick={checkSkillUpdates}
                     disabled={updatesLoading}
                   >
+                    <RotateCcw
+                      size={16}
+                      strokeWidth={1.5}
+                      className={cn("transition-transform", updatesLoading && "animate-spin")}
+                    />
                     <If condition={updatesLoading}>
                       <Then>{t(lang, "home.updatesChecking")}</Then>
                       <Else>{t(lang, "home.updatesCheck")}</Else>
