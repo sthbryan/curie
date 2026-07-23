@@ -4,6 +4,7 @@ import type {
   NodeInfo,
   SkillInfo,
   SkillInstallResult,
+  SkillRemoveResult,
   SkillSearchResult,
   SkillUpdateInfo,
   SkillUpdateResult,
@@ -116,6 +117,23 @@ export async function updateSkills(names?: string[]) {
     throw e;
   } finally {
     setUpdatingSkill(null);
+  }
+}
+
+/** Remove one or more global skills via `npx skills remove -g -y`. */
+export async function removeSkills(names: string[]) {
+  if (names.length === 0) return;
+  const { setRemovingSkill, setRemoveError } = useAppStore.getState();
+  setRemovingSkill(names.length === 1 ? (names[0] ?? null) : "*");
+  setRemoveError(null);
+  try {
+    await invoke<SkillRemoveResult>("remove_skills", { skills: names });
+    await loadGlobalSkills({ checkUpdates: true });
+  } catch (e) {
+    setRemoveError(errorMessage(e));
+    throw e;
+  } finally {
+    setRemovingSkill(null);
   }
 }
 

@@ -35,6 +35,9 @@ export type AppState = {
   findError: string | null;
   installingPackage: string | null;
   installError: string | null;
+  /** Skill name currently being removed. */
+  removingSkill: string | null;
+  removeError: string | null;
 
   setTheme: (theme: ThemeMode) => void;
   setLang: (lang: Lang) => void;
@@ -57,6 +60,8 @@ export type AppState = {
   setFindError: (error: string | null) => void;
   setInstallingPackage: (pkg: string | null) => void;
   setInstallError: (error: string | null) => void;
+  setRemovingSkill: (name: string | null) => void;
+  setRemoveError: (error: string | null) => void;
   markBooted: () => void;
   completeSetup: (node: NodeInfo) => void;
 };
@@ -86,6 +91,8 @@ export const useAppStore = create<AppState>()(
       findError: null,
       installingPackage: null,
       installError: null,
+      removingSkill: null,
+      removeError: null,
 
       setTheme: (theme) => set({ theme }),
       setLang: (lang) => set({ lang }),
@@ -108,6 +115,8 @@ export const useAppStore = create<AppState>()(
       setFindError: (findError) => set({ findError }),
       setInstallingPackage: (installingPackage) => set({ installingPackage }),
       setInstallError: (installError) => set({ installError }),
+      setRemovingSkill: (removingSkill) => set({ removingSkill }),
+      setRemoveError: (removeError) => set({ removeError }),
       markBooted: () => set({ hasBooted: true }),
       completeSetup: (node) => set({ node, view: "home", stage: "home" }),
     }),

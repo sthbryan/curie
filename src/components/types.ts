@@ -49,6 +49,11 @@ export type SkillInstallResult = {
   message: string;
 };
 
+export type SkillRemoveResult = {
+  removed: string[];
+  message: string;
+};
+
 export type AgentSummary = {
   id: string;
   label: string;
