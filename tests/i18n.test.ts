@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { detectLang, plural, t } from "./i18n";
-import en from "./i18n/en.json";
-import es from "./i18n/es.json";
+import { detectLang, plural, t } from "@/i18n";
+import en from "@/i18n/en.json";
+import es from "@/i18n/es.json";
 
 function collectKeys(obj: unknown, prefix = ""): string[] {
   if (obj === null || typeof obj !== "object") return [prefix.replace(/\.$/, "")];

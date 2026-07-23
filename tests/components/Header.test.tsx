@@ -30,7 +30,7 @@ beforeEach(() => { lang.value = "en"; });
 describe("Header", () => {
   it("renders the ready indicator when ready", () => {
     mount(<Router><Header ready={true} /></Router>);
-    expect(container?.textContent).toContain("app.ready");
+    expect(container?.textContent).toMatch(/READY/i);
   });
 
   it("renders the nav title for root path", () => {

@@ -17,7 +17,7 @@ import {
   updateApplyError,
   updatesOnly,
   updatingSkill,
-} from "./store";
+} from "@/pages/installed/store/store";
 
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();

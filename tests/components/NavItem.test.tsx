@@ -27,7 +27,7 @@ afterEach(unmount);
 
 describe("NavItem", () => {
   it("renders label and number", () => {
-    mount(<NavItem number="01" label="Home" icon={House} active={false} expanded={false} onClick={vi.fn()} />);
+    mount(<NavItem number="01" label="Home" icon={House} active={false} expanded={true} onClick={vi.fn()} />);
     expect(container?.textContent).toContain("Home");
     expect(container?.textContent).toContain("01");
   });

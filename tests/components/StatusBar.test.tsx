@@ -32,7 +32,7 @@ beforeEach(() => {
 describe("StatusBar", () => {
   it("renders setup required when no node", () => {
     mount(<StatusBar />);
-    expect(container?.textContent).toContain("status.setupRequired");
+    expect(container?.textContent).toContain("SETUP REQUIRED");
   });
 
   it("renders node info when node is installed", () => {

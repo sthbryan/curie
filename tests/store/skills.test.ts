@@ -13,7 +13,7 @@ import {
   skillUpdates,
   updatesError,
   updatesLoading,
-} from "./skills";
+} from "@/store/skills";
 
 const sample: SkillInfo[] = [
   {

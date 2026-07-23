@@ -16,7 +16,7 @@ vi.mock("@/lib/boot", () => ({
   loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
 }));
 
-const { useExploreActions } = await import("./useExploreActions");
+const { useExploreActions } = await import("@/pages/explore/hooks/useExploreActions");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

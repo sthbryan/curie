@@ -11,7 +11,7 @@ import {
   skillTimestamp,
   summarizeAgents,
   updateNameSet,
-} from "./skills";
+} from "@/lib/skills";
 
 const sample: SkillInfo[] = [
   {

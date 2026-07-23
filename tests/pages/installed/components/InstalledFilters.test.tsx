@@ -43,6 +43,6 @@ describe("InstalledFilters", () => {
 
   it("renders the filter all button", () => {
     mount(<InstalledFilters />);
-    expect(container?.textContent).toContain("installed.filterAll");
+    expect(container?.textContent).toContain("ALL");
   });
 });

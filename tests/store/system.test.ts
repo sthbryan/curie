@@ -15,7 +15,7 @@ import {
   setTheme,
   stage,
   theme,
-} from "./system";
+} from "@/store/system";
 
 const sampleNode: NodeInfo = {
   installed: true,

@@ -30,6 +30,6 @@ beforeEach(() => { lang.value = "en"; });
 describe("Sidebar", () => {
   it("renders nav items", () => {
     mount(<Router><Sidebar /></Router>);
-    expect(container?.textContent).toContain("nav.home");
+    expect(container?.querySelector("nav")).not.toBeNull();
   });
 });

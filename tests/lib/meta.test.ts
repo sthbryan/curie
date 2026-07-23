@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { APP_NAME, APP_VERSION, APP_VERSION_LABEL } from "./meta";
+import { APP_NAME, APP_VERSION, APP_VERSION_LABEL } from "@/lib/meta";
 
 describe("meta", () => {
   it("exposes the app name from the build define", () => {

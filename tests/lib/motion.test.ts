@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { duration, easeOut, fadeUp, pageTransition } from "./motion";
+import { duration, easeOut, fadeUp, pageTransition } from "@/lib/motion";
 
 describe("motion constants", () => {
   it("exposes ordered duration values", () => {

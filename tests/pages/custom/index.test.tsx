@@ -30,11 +30,11 @@ beforeEach(() => { lang.value = "en"; });
 describe("Custom", () => {
   it("renders the title", () => {
     mount(<Router><Custom /></Router>);
-    expect(container?.textContent).toContain("custom.title");
+    expect(container?.textContent).toContain("Build your own skill");
   });
 
   it("renders a back button", () => {
     mount(<Router><Custom /></Router>);
-    expect(container?.textContent).toContain("custom.back");
+    expect(container?.textContent).toContain("BACK TO HOME");
   });
 });
