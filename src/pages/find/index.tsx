@@ -1,17 +1,15 @@
 import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
-import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { t } from "@/i18n";
-import { addSkill, findSkills } from "@/lib/boot";
 import { fadeUp } from "@/lib/motion";
 import { isSearchResultInstalled } from "@/lib/skills";
-import { useFindStore } from "@/store/find";
 import { useSkillsStore } from "@/store/skills";
 import { useUiStore } from "@/store/ui";
 import { ResultsPanel } from "./components/ResultsPanel";
+import { useFindActions } from "./hooks/useFindActions";
 
 /** Debounce searches like the CLI (~150–350ms); cancel in-flight via request id. */
 const DEBOUNCE_MS = 280;
@@ -19,17 +17,16 @@ const DEBOUNCE_MS = 280;
 export function Find() {
   const lang = useUiStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
-  const { findResults, findLoading, findError, installingPackage, installError, setInstallError } =
-    useFindStore(
-      useShallow((s) => ({
-        findResults: s.findResults,
-        findLoading: s.findLoading,
-        findError: s.findError,
-        installingPackage: s.installingPackage,
-        installError: s.installError,
-        setInstallError: s.setInstallError,
-      })),
-    );
+  const {
+    results: findResults,
+    loading: findLoading,
+    error: findError,
+    installing: installingPackage,
+    installError,
+    search: runSearch,
+    install: runInstall,
+    dismissInstallError,
+  } = useFindActions();
 
   const [query, setQuery] = useState("");
   const [owner, setOwner] = useState("");
@@ -42,10 +39,10 @@ export function Find() {
 
   useEffect(() => {
     const handle = window.setTimeout(() => {
-      void findSkills(query, owner);
+      void runSearch(query, owner);
     }, DEBOUNCE_MS);
     return () => window.clearTimeout(handle);
-  }, [query, owner]);
+  }, [query, owner, runSearch]);
 
   const installedPackages = useMemo(
     () =>
@@ -54,8 +51,8 @@ export function Find() {
   );
 
   const handleInstall = (pkg: string) => {
-    addSkill(pkg).catch(() => {
-      // store keeps installError
+    runInstall(pkg).catch(() => {
+      // hook keeps installError
     });
   };
 
@@ -96,8 +93,8 @@ export function Find() {
                 variant="link"
                 className="shrink-0 px-0"
                 onClick={() => {
-                  if (installError) setInstallError(null);
-                  if (findError) void findSkills(query, owner);
+                  if (installError) dismissInstallError();
+                  if (findError) void runSearch(query, owner);
                 }}
               >
                 ×
@@ -139,7 +136,7 @@ export function Find() {
               variant="primary"
               className="px-4 shrink-0"
               onClick={() => {
-                void findSkills(query, owner);
+                void runSearch(query, owner);
               }}
               disabled={findLoading || qLen < 2}
             >
