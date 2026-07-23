@@ -1,6 +1,19 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
-import { useSkillsStore } from "./skills";
+import {
+  setSkills,
+  setSkillsError,
+  setSkillsLoading,
+  setSkillUpdates,
+  setUpdatesError,
+  setUpdatesLoading,
+  skills,
+  skillsError,
+  skillsLoading,
+  skillUpdates,
+  updatesError,
+  updatesLoading,
+} from "./skills";
 
 const sample: SkillInfo[] = [
   {
@@ -26,58 +39,52 @@ const sampleUpdates: SkillUpdateInfo[] = [
 ];
 
 beforeEach(() => {
-  useSkillsStore.setState({
-    skills: [],
-    skillsLoading: false,
-    skillsError: null,
-    skillUpdates: [],
-    updatesLoading: false,
-    updatesError: null,
-  });
+  skills.value = [];
+  skillsLoading.value = false;
+  skillsError.value = null;
+  skillUpdates.value = [];
+  updatesLoading.value = false;
+  updatesError.value = null;
 });
 
-describe("useSkillsStore", () => {
+describe("skills store (signals)", () => {
   it("starts empty and idle", () => {
-    const s = useSkillsStore.getState();
-    expect(s.skills).toEqual([]);
-    expect(s.skillsLoading).toBe(false);
-    expect(s.skillsError).toBeNull();
-    expect(s.skillUpdates).toEqual([]);
-    expect(s.updatesLoading).toBe(false);
-    expect(s.updatesError).toBeNull();
+    expect(skills.value).toEqual([]);
+    expect(skillsLoading.value).toBe(false);
+    expect(skillsError.value).toBeNull();
+    expect(skillUpdates.value).toEqual([]);
+    expect(updatesLoading.value).toBe(false);
+    expect(updatesError.value).toBeNull();
   });
 
   it("setSkills replaces skills and clears any prior error", () => {
-    useSkillsStore.getState().setSkillsError("boom");
-    useSkillsStore.getState().setSkills(sample);
-    const s = useSkillsStore.getState();
-    expect(s.skills).toBe(sample);
-    expect(s.skillsError).toBeNull();
+    setSkillsError("boom");
+    setSkills(sample);
+    expect(skills.value).toBe(sample);
+    expect(skillsError.value).toBeNull();
   });
 
   it("setSkillsLoading toggles the loading flag", () => {
-    useSkillsStore.getState().setSkillsLoading(true);
-    expect(useSkillsStore.getState().skillsLoading).toBe(true);
+    setSkillsLoading(true);
+    expect(skillsLoading.value).toBe(true);
   });
 
   it("setSkillsError records an error", () => {
-    useSkillsStore.getState().setSkillsError("list_skills failed");
-    expect(useSkillsStore.getState().skillsError).toBe("list_skills failed");
+    setSkillsError("list_skills failed");
+    expect(skillsError.value).toBe("list_skills failed");
   });
 
   it("setSkillUpdates replaces updates and clears any prior error", () => {
-    useSkillsStore.getState().setUpdatesError("boom");
-    useSkillsStore.getState().setSkillUpdates(sampleUpdates);
-    const s = useSkillsStore.getState();
-    expect(s.skillUpdates).toBe(sampleUpdates);
-    expect(s.updatesError).toBeNull();
+    setUpdatesError("boom");
+    setSkillUpdates(sampleUpdates);
+    expect(skillUpdates.value).toBe(sampleUpdates);
+    expect(updatesError.value).toBeNull();
   });
 
   it("setUpdatesLoading and setUpdatesError work as expected", () => {
-    useSkillsStore.getState().setUpdatesLoading(true);
-    useSkillsStore.getState().setUpdatesError("check failed");
-    const s = useSkillsStore.getState();
-    expect(s.updatesLoading).toBe(true);
-    expect(s.updatesError).toBe("check failed");
+    setUpdatesLoading(true);
+    setUpdatesError("check failed");
+    expect(updatesLoading.value).toBe(true);
+    expect(updatesError.value).toBe("check failed");
   });
 });

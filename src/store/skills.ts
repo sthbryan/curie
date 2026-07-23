@@ -1,5 +1,48 @@
-import { create } from "zustand";
+import { signal } from "@preact/signals";
 import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
+
+export const skills = signal<SkillInfo[]>([]);
+export const skillsLoading = signal<boolean>(false);
+export const skillsError = signal<string | null>(null);
+export const skillUpdates = signal<SkillUpdateInfo[]>([]);
+export const updatesLoading = signal<boolean>(false);
+export const updatesError = signal<string | null>(null);
+
+export const setSkills = (next: SkillInfo[]) => {
+  skills.value = next;
+  skillsError.value = null;
+};
+export const setSkillsLoading = (next: boolean) => {
+  skillsLoading.value = next;
+};
+export const setSkillsError = (next: string | null) => {
+  skillsError.value = next;
+};
+export const setSkillUpdates = (next: SkillUpdateInfo[]) => {
+  skillUpdates.value = next;
+  updatesError.value = null;
+};
+export const setUpdatesLoading = (next: boolean) => {
+  updatesLoading.value = next;
+};
+export const setUpdatesError = (next: string | null) => {
+  updatesError.value = next;
+};
+
+export const skillsStore = {
+  skills,
+  skillsLoading,
+  skillsError,
+  skillUpdates,
+  updatesLoading,
+  updatesError,
+  setSkills,
+  setSkillsLoading,
+  setSkillsError,
+  setSkillUpdates,
+  setUpdatesLoading,
+  setUpdatesError,
+};
 
 export type SkillsState = {
   skills: SkillInfo[];
@@ -20,19 +63,3 @@ export type SkillsActions = {
 };
 
 export type SkillsStore = SkillsState & SkillsActions;
-
-export const useSkillsStore = create<SkillsStore>()((set) => ({
-  skills: [],
-  skillsLoading: false,
-  skillsError: null,
-  skillUpdates: [],
-  updatesLoading: false,
-  updatesError: null,
-
-  setSkills: (skills) => set({ skills, skillsError: null }),
-  setSkillsLoading: (skillsLoading) => set({ skillsLoading }),
-  setSkillsError: (skillsError) => set({ skillsError }),
-  setSkillUpdates: (skillUpdates) => set({ skillUpdates, updatesError: null }),
-  setUpdatesLoading: (updatesLoading) => set({ updatesLoading }),
-  setUpdatesError: (updatesError) => set({ updatesError }),
-}));
