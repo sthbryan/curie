@@ -32,6 +32,14 @@ export function Settings() {
   const t = useT("settings");
   const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } = systemStore;
 
+  const handleLangEN = () => setLang("en");
+  const handleLangES = () => setLang("es");
+  const handleOpenGitHub = () => {
+    void Promise.resolve(openUrl("https://github.com/sthbryan/curie")).catch(() => {
+      // ignore
+    });
+  };
+
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-10 pt-12 pb-8">
@@ -59,12 +67,12 @@ export function Settings() {
                   <ChoiceButton
                     active={lang.value === "en"}
                     label={t("languageEN")}
-                    onClick={() => setLang("en")}
+                    onClick={handleLangEN}
                   />
                   <ChoiceButton
                     active={lang.value === "es"}
                     label={t("languageES")}
-                    onClick={() => setLang("es")}
+                    onClick={handleLangES}
                     isLast
                   />
                 </div>
@@ -148,11 +156,7 @@ export function Settings() {
               size="xs"
               variant="link"
               className="px-0 hover:underline cursor-pointer"
-              onClick={() => {
-                void Promise.resolve(openUrl("https://github.com/sthbryan/curie")).catch(() => {
-                  // ignore
-                });
-              }}
+              onClick={handleOpenGitHub}
             >
               github.com/sthbryan/curie ↗
             </Button>

@@ -1,7 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useRef, useState } from "react";
+import { toast } from "sonner";
 import type { SkillInstallResult, SkillSearchResult } from "@/components/types";
+import { t } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
+import { lang } from "@/store/system";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
@@ -62,6 +65,7 @@ export function useFindActions(): FindActions {
     setInstallError(null);
     try {
       await invoke<SkillInstallResult>("add_skill", { package: pkg });
+      toast.success(t(lang.value, "toast.installed", { name: pkg }));
       await loadGlobalSkills({ checkUpdates: true });
     } catch (e) {
       setInstallError(errorMessage(e));

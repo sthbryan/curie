@@ -2,6 +2,7 @@ import { RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
+import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { FullPageError } from "@/components/FullPageError";
@@ -40,21 +41,31 @@ export function Home() {
   const capacity = maxAgentCount(agents);
   const updateCount = updates.length;
 
+  const handleNavigateFind = () => navigate("/find");
+  const handleNavigateMarketplace = () => navigate("/marketplace");
+  const handleNavigateInstalled = () => navigate("/installed");
+  const handleRetry = async () => {
+    await loadGlobalSkills();
+    toast.success(tToast("toast.refreshed"));
+  };
+
+  const tToast = useT();
+  const handleCheckUpdates = async () => {
+    await checkSkillUpdates();
+    const n = skillUpdates.value.filter((u) => u.updateAvailable).length;
+    if (n > 0) {
+      toast.success(tToast("toast.updates", { n }));
+    } else {
+      toast.success(tToast("toast.noUpdates"));
+    }
+  };
+
   if (skillsLoading.value && totalSkills === 0) {
     return <FullPageLoading />;
   }
 
   if (skillsError.value && totalSkills === 0) {
-    return (
-      <FullPageError
-        message={skillsError.value}
-        onRetry={() => {
-          loadGlobalSkills().catch(() => {
-            // store handles error state
-          });
-        }}
-      />
-    );
+    return <FullPageError message={skillsError.value} onRetry={handleRetry} />;
   }
 
   return (
@@ -145,7 +156,7 @@ export function Home() {
                     size="xs"
                     variant="link"
                     className="px-0"
-                    onClick={checkSkillUpdates}
+                    onClick={handleCheckUpdates}
                     disabled={updatesLoading.value}
                   >
                     <RotateCcw
@@ -232,7 +243,7 @@ export function Home() {
               size="hero"
               variant="primary"
               className="flex-1 justify-between"
-              onClick={() => navigate("/find")}
+              onClick={handleNavigateFind}
             >
               <span>{t("install")}</span>
               <span>→</span>
@@ -241,16 +252,11 @@ export function Home() {
               size="hero"
               variant="outline"
               className="px-6 font-bold text-fg"
-              onClick={() => navigate("/marketplace")}
+              onClick={handleNavigateMarketplace}
             >
               {t("exploreBtn")}
             </Button>
-            <Button
-              size="hero"
-              variant="ghost"
-              className="px-6"
-              onClick={() => navigate("/installed")}
-            >
+            <Button size="hero" variant="ghost" className="px-6" onClick={handleNavigateInstalled}>
               {t("viewSkills")}
             </Button>
           </div>

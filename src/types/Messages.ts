@@ -223,4 +223,14 @@ export type Messages = {
     about: string;
     aboutDescription: string;
   };
+  toast: {
+    installed: string;
+    removed: string;
+    updated: string;
+    updates: string;
+    noUpdates: string;
+    nodeInstalled: string;
+    setupComplete: string;
+    refreshed: string;
+  };
 };

@@ -3,6 +3,7 @@ import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { Else, If, Then, When } from "react-if";
+import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
@@ -61,6 +62,23 @@ export function Explore() {
     });
   }
 
+  const handleGoFind = () => navigate("/find");
+  const handleOpenSite = () => {
+    void openUrl("https://skills.sh");
+  };
+  const handleDismissErrors = () => {
+    if (installError) dismissInstallError();
+    if (error) void load(view);
+  };
+  const tToast = useT();
+  const handleRefresh = async () => {
+    await load(view);
+    toast.success(tToast("toast.refreshed"));
+  };
+  const handleLoadMore = () => {
+    void loadMore();
+  };
+
   const handleInstall = (pkg: string) => {
     runInstall(pkg).catch(() => {
       // hook keeps installError
@@ -81,17 +99,11 @@ export function Explore() {
                 <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
               </div>
               <div className="flex shrink-0 gap-2">
-                <Button size="sm" variant="outline" onClick={() => navigate("/find")}>
+                <Button size="sm" variant="outline" onClick={handleGoFind}>
                   <Search size={14} />
                   {t("goFind")}
                 </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    void openUrl("https://skills.sh");
-                  }}
-                >
+                <Button size="sm" variant="ghost" onClick={handleOpenSite}>
                   <SquareArrowOutUpRight size={14} />
                   {t("openSite")}
                 </Button>
@@ -114,10 +126,7 @@ export function Explore() {
                 size="xs"
                 variant="link"
                 className="shrink-0 px-0"
-                onClick={() => {
-                  if (installError) dismissInstallError();
-                  if (error) void load(view);
-                }}
+                onClick={handleDismissErrors}
               >
                 ×
               </Button>
@@ -145,7 +154,7 @@ export function Explore() {
               <span className="font-mono uppercase tracking-label text-micro text-fg-4">
                 {statusLabel}
               </span>
-              <Button size="xs" variant="ghost" onClick={() => void load(view)} disabled={loading}>
+              <Button size="xs" variant="ghost" onClick={handleRefresh} disabled={loading}>
                 <RefreshCw
                   size={10}
                   className={cn("transition-transform", loading ? "animate-spin" : "")}
@@ -169,9 +178,7 @@ export function Explore() {
             hasMore={hasMore}
             loadingMore={loadingMore}
             onInstall={handleInstall}
-            onLoadMore={() => {
-              void loadMore();
-            }}
+            onLoadMore={handleLoadMore}
           />
         </section>
       </div>

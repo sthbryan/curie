@@ -29,6 +29,8 @@ export function Sidebar() {
 
   const shouldReduceMotion = useReducedMotionConfig();
 
+  const handleNavSettings = () => navigate("/settings");
+
   return (
     <motion.nav
       onHoverStart={() => setHovered(true)}
@@ -63,7 +65,7 @@ export function Sidebar() {
           icon={SettingsIcon}
           active={location === "/settings"}
           expanded={hovered}
-          onClick={() => navigate("/settings")}
+          onClick={handleNavSettings}
         />
       </div>
     </motion.nav>

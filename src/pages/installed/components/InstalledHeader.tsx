@@ -2,15 +2,23 @@ import { CircleFadingArrowUp, Plus, RefreshCcw } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Else, If, Then, When } from "react-if";
+import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
-import { useT } from "@/i18n";
-import { loadGlobalSkills } from "@/lib/boot";
+import { t as rawT, useT } from "@/i18n";
+import { checkSkillUpdates, loadGlobalSkills } from "@/lib/boot";
 import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { updateNameSet } from "@/lib/skills";
-import { skills, skillsLoading, skillUpdates, updatesLoading } from "@/store/skills";
+import {
+  setSkillsLoading,
+  skills,
+  skillsLoading,
+  skillUpdates,
+  updatesLoading,
+} from "@/store/skills";
+import { lang } from "@/store/system";
 import {
   dismissErrors,
   removeError,
@@ -28,8 +36,14 @@ export function InstalledHeader() {
 
   const [, navigate] = useLocation();
   const onInstall = () => navigate("/find");
-  const onRefresh = () => {
-    void loadGlobalSkills();
+  const onRefresh = async () => {
+    setSkillsLoading(true);
+    await loadGlobalSkills();
+    await checkSkillUpdates();
+    const n = skillUpdates.value.filter((u) => u.updateAvailable).length;
+    toast.success(
+      n > 0 ? rawT(lang.value, "toast.updates", { n }) : rawT(lang.value, "toast.noUpdates"),
+    );
   };
   const onUpdateAll = () => {
     const names = updateNames.size > 0 ? [...updateNames] : undefined;

@@ -57,6 +57,14 @@ export function Find() {
     });
   };
 
+  const handleDismissErrors = () => {
+    if (installError) dismissInstallError();
+    if (findError) void runSearch(query, owner);
+  };
+  const handleSearch = () => {
+    void runSearch(query, owner);
+  };
+
   const qLen = query.trim().length;
   const showHint = qLen < 2;
   const showEmpty = !showHint && !findLoading && !findError && findResults.length === 0;
@@ -94,10 +102,7 @@ export function Find() {
                 variant="link"
                 className="shrink-0 px-0"
                 aria-label={t("error")}
-                onClick={() => {
-                  if (installError) dismissInstallError();
-                  if (findError) void runSearch(query, owner);
-                }}
+                onClick={handleDismissErrors}
               >
                 <X size={10} />
               </Button>
@@ -128,9 +133,7 @@ export function Find() {
               size="lg"
               variant="primary"
               className="px-4 shrink-0"
-              onClick={() => {
-                void runSearch(query, owner);
-              }}
+              onClick={handleSearch}
               disabled={findLoading || qLen < 2}
             >
               <Search size={14} />

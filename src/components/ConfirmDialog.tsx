@@ -47,6 +47,10 @@ export function ConfirmDialog(props: Props) {
     };
   }, [open, busy, onCancel]);
 
+  const handleCancel = () => {
+    if (!busy) onCancel();
+  };
+
   if (!open || typeof document === "undefined") return null;
 
   return createPortal(
@@ -55,9 +59,7 @@ export function ConfirmDialog(props: Props) {
         type="button"
         aria-label={cancelLabel}
         className="absolute inset-0 bg-bg/70"
-        onClick={() => {
-          if (!busy) onCancel();
-        }}
+        onClick={handleCancel}
         tabIndex={-1}
       />
       <div
