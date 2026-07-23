@@ -16,8 +16,8 @@ export function Sidebar() {
   const setView = useAppStore((s) => s.setView);
 
   return (
-    <nav className="flex w-28 shrink-0 flex-col border-r border-border">
-      <div className="flex flex-col py-5">
+    <nav className="flex w-29 shrink-0 flex-col border-r border-border bg-surface">
+      <div className="flex flex-col gap-0.5 px-2 pt-4 pb-2">
         {TOP_ITEMS.map((item) => (
           <NavItem
             key={item.id}
@@ -31,9 +31,7 @@ export function Sidebar() {
 
       <div className="flex-1" />
 
-      <hr className="border-border" />
-
-      <div className="flex flex-col py-5">
+      <div className="border-t border-border px-2 py-3">
         <NavItem
           number="00"
           label={t(lang, "nav.settings")}

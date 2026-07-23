@@ -11,12 +11,12 @@ export function NavItem({ number, label, active, onClick }: Props) {
       type="button"
       onClick={onClick}
       aria-current={active ? "page" : undefined}
-      className={`group relative flex h-12 flex-col items-start justify-center gap-0.5 px-4 transition-colors duration-150 ${
-        active ? "text-fg" : "text-fg-3 hover:text-fg"
+      className={`group flex w-full flex-col items-start gap-1 rounded-sm px-3 py-2.5 text-left transition-colors duration-150 ${
+        active ? "bg-surface-tint text-fg" : "text-fg-3 hover:bg-surface-hover hover:text-fg"
       }`}
     >
       <span
-        className={`font-mono text-micro leading-none ${
+        className={`font-mono text-micro leading-none tabular-nums ${
           active ? "text-fg-3" : "text-fg-4 group-hover:text-fg-3"
         }`}
       >
@@ -24,12 +24,11 @@ export function NavItem({ number, label, active, onClick }: Props) {
       </span>
       <span
         className={`font-mono uppercase tracking-label text-mono leading-none ${
-          active ? "font-bold" : ""
+          active ? "font-bold text-fg" : ""
         }`}
       >
         {label}
       </span>
-      {active && <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 bg-fg" />}
     </button>
   );
 }
