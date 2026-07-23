@@ -144,6 +144,40 @@ export type Messages = {
     installError: string;
     packageHint: string;
   };
+  explore: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    view: {
+      hot: string;
+      trending: string;
+      allTime: string;
+    };
+    colName: string;
+    colSource: string;
+    colInstalls: string;
+    colToday: string;
+    colTrend: string;
+    colActions: string;
+    install: string;
+    installing: string;
+    installed: string;
+    official: string;
+    open: string;
+    openSite: string;
+    goFind: string;
+    loading: string;
+    loadingMore: string;
+    loadMore: string;
+    refresh: string;
+    refreshing: string;
+    showing: string;
+    empty: string;
+    emptyHint: string;
+    error: string;
+    installError: string;
+    packageHint: string;
+  };
   status: {
     node: string;
     agents: string;
