@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
-import { loadGlobalSkills, updateSkills } from "../../lib/boot";
+import { loadGlobalSkills, removeSkills, updateSkills } from "../../lib/boot";
 import { fadeUp, listStagger } from "../../lib/motion";
 import { filterSkills, summarizeAgents, updateNameSet } from "../../lib/skills";
 import { useAppStore } from "../../store/app";
@@ -19,6 +19,9 @@ export function Installed() {
   const updatingSkill = useAppStore((s) => s.updatingSkill);
   const updateApplyError = useAppStore((s) => s.updateApplyError);
   const setUpdateApplyError = useAppStore((s) => s.setUpdateApplyError);
+  const removingSkill = useAppStore((s) => s.removingSkill);
+  const removeError = useAppStore((s) => s.removeError);
+  const setRemoveError = useAppStore((s) => s.setRemoveError);
 
   const [query, setQuery] = useState("");
   const [agentFilter, setAgentFilter] = useState<string | null>(null);
@@ -27,7 +30,7 @@ export function Installed() {
   const agents = useMemo(() => summarizeAgents(skills), [skills]);
   const updateNames = useMemo(() => updateNameSet(skillUpdates), [skillUpdates]);
   const updateCount = updateNames.size;
-  const updateBusy = updatingSkill !== null;
+  const actionBusy = updatingSkill !== null || removingSkill !== null;
   const filtered = useMemo(
     () =>
       filterSkills(skills, query, agentFilter, {
@@ -47,6 +50,12 @@ export function Installed() {
     const names = [...updateNames];
     updateSkills(names.length > 0 ? names : undefined).catch(() => {
       // store keeps updateApplyError
+    });
+  };
+
+  const handleRemoveOne = (name: string) => {
+    removeSkills([name]).catch(() => {
+      // store keeps removeError
     });
   };
 
@@ -107,7 +116,7 @@ export function Installed() {
                 <button
                   type="button"
                   onClick={handleUpdateAll}
-                  disabled={updateBusy || updatesLoading}
+                  disabled={actionBusy || updatesLoading}
                   className="h-9 px-4 border border-accent/50 text-accent rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:bg-accent hover:text-accent-fg disabled:opacity-50 transition-colors duration-150"
                 >
                   {updatingSkill === "*"
@@ -122,7 +131,7 @@ export function Installed() {
                     // store handles error state
                   });
                 }}
-                disabled={skillsLoading || updatesLoading || updateBusy}
+                disabled={skillsLoading || updatesLoading || actionBusy}
                 className="h-9 px-4 border border-border-strong text-fg-2 rounded-sm font-mono uppercase tracking-label text-mono hover:border-fg-3 hover:text-fg disabled:opacity-50 transition-colors duration-150"
               >
                 {skillsLoading || updatesLoading
@@ -139,17 +148,24 @@ export function Installed() {
             </div>
           </div>
 
-          {updateApplyError && (
+          {(updateApplyError || removeError) && (
             <div className="flex items-start justify-between gap-4 border border-accent/30 bg-surface-tint px-4 py-3">
               <div className="min-w-0 flex flex-col gap-1">
                 <span className="font-mono uppercase tracking-label text-micro text-accent">
-                  {t(lang, "installed.updateError")}
+                  {updateApplyError
+                    ? t(lang, "installed.updateError")
+                    : t(lang, "installed.removeError")}
                 </span>
-                <p className="font-body text-sm text-fg-3 break-all">{updateApplyError}</p>
+                <p className="font-body text-sm text-fg-3 break-all">
+                  {updateApplyError ?? removeError}
+                </p>
               </div>
               <button
                 type="button"
-                onClick={() => setUpdateApplyError(null)}
+                onClick={() => {
+                  setUpdateApplyError(null);
+                  setRemoveError(null);
+                }}
                 className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 hover:text-fg"
               >
                 ×
@@ -253,7 +269,7 @@ export function Installed() {
             <>
               <motion.div
                 {...fadeUp(0.06)}
-                className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_5rem_5.5rem] gap-4 border-b border-border pb-2"
+                className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_5rem_minmax(7.5rem,auto)] gap-4 border-b border-border pb-2"
               >
                 <span className="font-mono uppercase tracking-label text-micro text-fg-4">
                   {t(lang, "installed.colName")}
@@ -286,8 +302,10 @@ export function Installed() {
                       lang={lang}
                       updateAvailable={updateNames.has(skill.name)}
                       updating={updatingSkill === skill.name || updatingSkill === "*"}
-                      updateBusy={updateBusy}
+                      removing={removingSkill === skill.name || removingSkill === "*"}
+                      actionBusy={actionBusy}
                       onUpdate={handleUpdateOne}
+                      onRemove={handleRemoveOne}
                     />
                   ))}
                 </AnimatePresence>
