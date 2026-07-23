@@ -20,10 +20,10 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
+          bun-version: latest
 
       - name: Install system deps (Linux)
         if: runner.os == 'Linux'
@@ -42,16 +42,16 @@ jobs:
           workspaces: src-tauri
 
       - name: Install JS deps
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Lint
-        run: npm run check
+        run: bun run check
 
       - name: Test
-        run: npm test
+        run: bun run test
 
       - name: Build (frontend)
-        run: npm run build
+        run: bun run build
 
       - name: Build (Tauri)
-        run: npm run tauri build
+        run: bun run tauri build
