@@ -3,7 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { setSkills, skills } from "@/store/skills";
+import { skills } from "@/store/skills";
 import { lang } from "@/store/system";
 import { InstalledFilters } from "@/pages/installed/components/InstalledFilters";
 import { agentFilter, query, updatesOnly } from "@/pages/installed/store/store";

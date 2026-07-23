@@ -2,7 +2,7 @@
 
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { SkillInfo } from "@/components/types";
 import { lang } from "@/store/system";
 import { SkillRow } from "@/pages/installed/components/SkillRow";
@@ -41,12 +41,12 @@ const skill: SkillInfo = {
 
 describe("SkillRow", () => {
   it("renders the skill name", () => {
-    mount(<SkillRow skill={skill} lang="en" />);
+    mount(<SkillRow skill={skill} />);
     expect(container?.textContent).toContain("impeccable");
   });
 
   it("renders agent badges", () => {
-    mount(<SkillRow skill={skill} lang="en" />);
+    mount(<SkillRow skill={skill} />);
     expect(container?.textContent).toContain("Codex");
   });
 });
