@@ -70,7 +70,7 @@ export function Explore() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
         <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3">
-            <Label lang={lang.value}>{t(lang.value, "explore.eyebrow")}</Label>
+            <Label>{t(lang.value, "explore.eyebrow")}</Label>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="flex flex-col gap-2 min-w-0">
                 <h2 className="font-display text-heading font-bold tracking-tight text-fg">
@@ -152,7 +152,6 @@ export function Explore() {
 
         <section className="flex flex-col">
           <ExploreList
-            lang={lang.value}
             view={view}
             loading={loading}
             empty={showEmpty}

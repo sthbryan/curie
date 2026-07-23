@@ -2,14 +2,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { Case, Default, Switch } from "react-if";
 import { Button } from "@/components/Button";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
-import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { fadeUp, listStagger } from "@/lib/motion";
+import { lang } from "@/store/system";
 import { ExploreRow } from "./ExploreRow";
 import { ExploreSkeleton } from "./ExploreSkeleton";
 
 type Props = {
-  lang: Lang;
   view: ExploreView;
   loading: boolean;
   empty: boolean;
@@ -31,7 +30,6 @@ function installsColumnKey(view: ExploreView): string {
 }
 
 export function ExploreList({
-  lang,
   view,
   loading,
   empty,
@@ -49,7 +47,7 @@ export function ExploreList({
     <Switch>
       <Case condition={loading}>
         <div aria-busy="true" aria-live="polite">
-          <span className="sr-only">{t(lang, "explore.loading")}</span>
+          <span className="sr-only">{t(lang.value, "explore.loading")}</span>
           <ExploreSkeleton rows={8} />
         </div>
       </Case>
@@ -59,8 +57,8 @@ export function ExploreList({
           {...fadeUp(0.08)}
           className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
         >
-          <span className="font-body text-sm text-fg">{t(lang, "explore.empty")}</span>
-          <p className="font-body text-sm text-fg-3">{t(lang, "explore.emptyHint")}</p>
+          <span className="font-body text-sm text-fg">{t(lang.value, "explore.empty")}</span>
+          <p className="font-body text-sm text-fg-3">{t(lang.value, "explore.emptyHint")}</p>
         </motion.div>
       </Case>
 
@@ -73,16 +71,16 @@ export function ExploreList({
             #
           </span>
           <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-            {t(lang, "explore.colName")}
+            {t(lang.value, "explore.colName")}
           </span>
           <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-            {t(lang, "explore.colSource")}
+            {t(lang.value, "explore.colSource")}
           </span>
           <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
-            {t(lang, installsColumnKey(view))}
+            {t(lang.value, installsColumnKey(view))}
           </span>
           <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
-            {t(lang, "explore.colActions")}
+            {t(lang.value, "explore.colActions")}
           </span>
         </motion.div>
         <motion.div
@@ -99,7 +97,6 @@ export function ExploreList({
                 result={result}
                 rank={index + 1}
                 view={view}
-                lang={lang}
                 installed={installedPackages.has(result.package)}
                 installing={installingPackage === result.package}
                 installBusy={installBusy}
@@ -116,7 +113,9 @@ export function ExploreList({
               onClick={onLoadMore}
               disabled={loadingMore || installBusy}
             >
-              {loadingMore ? t(lang, "explore.loadingMore") : t(lang, "explore.loadMore")}
+              {loadingMore
+                ? t(lang.value, "explore.loadingMore")
+                : t(lang.value, "explore.loadMore")}
             </Button>
           </div>
         ) : null}

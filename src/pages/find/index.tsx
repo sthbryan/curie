@@ -11,7 +11,6 @@ import { lang } from "@/store/system";
 import { ResultsPanel } from "./components/ResultsPanel";
 import { useFindActions } from "./hooks/useFindActions";
 
-/** Debounce searches like the CLI (~150–350ms); cancel in-flight via request id. */
 const DEBOUNCE_MS = 280;
 
 export function Find() {
@@ -70,7 +69,7 @@ export function Find() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
         <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3">
-            <Label lang={lang.value}>{t(lang.value, "find.eyebrow")}</Label>
+            <Label>{t(lang.value, "find.eyebrow")}</Label>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
               {t(lang.value, "find.title")}
             </h2>
@@ -156,7 +155,6 @@ export function Find() {
 
         <section className="flex flex-col">
           <ResultsPanel
-            lang={lang.value}
             showHint={showHint}
             loading={findLoading}
             empty={showEmpty}

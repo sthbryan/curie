@@ -51,7 +51,7 @@ function MainContent() {
 
   if (stage.value === "loading") {
     key = "loading";
-    content = <FullPageLoading lang={lang.value} label="· · ·" />;
+    content = <FullPageLoading label="· · ·" />;
   } else if (stage.value === "setup") {
     key = "setup";
     content = <Setup onComplete={completeSetup} />;

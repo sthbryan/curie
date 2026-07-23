@@ -6,11 +6,11 @@ import { ActionProgress } from "@/components/ActionProgress";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { IconButton } from "@/components/IconButton";
 import type { SkillInfo } from "@/components/types";
-import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { listItem } from "@/lib/motion";
 import { formatRelative, skillTimestamp } from "@/lib/skills";
+import { lang } from "@/store/system";
 import { AgentBadge } from "./AgentBadge";
 
 export const INSTALLED_GRID =
@@ -18,7 +18,6 @@ export const INSTALLED_GRID =
 
 type Props = {
   skill: SkillInfo;
-  lang: Lang;
   updateAvailable?: boolean;
   updating?: boolean;
   removing?: boolean;
@@ -29,7 +28,6 @@ type Props = {
 
 export function SkillRow({
   skill,
-  lang,
   updateAvailable = false,
   updating = false,
   removing = false,
@@ -73,7 +71,7 @@ export function SkillRow({
 
         <div className="min-w-0 flex flex-col gap-1">
           <span className="font-mono text-mono text-fg-2 truncate">
-            {skill.source ?? t(lang, "installed.local")}
+            {skill.source ?? t(lang.value, "installed.local")}
           </span>
           <span className="font-mono text-micro text-fg-4 truncate" title={skill.path}>
             {skill.path}
@@ -84,7 +82,7 @@ export function SkillRow({
           <If condition={skill.agents.length === 0}>
             <Then>
               <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-                {t(lang, "installed.noAgents")}
+                {t(lang.value, "installed.noAgents")}
               </span>
             </Then>
             <Else>
@@ -111,7 +109,6 @@ export function SkillRow({
             <Then>
               <ActionProgress
                 active
-                lang={lang}
                 labelKey={updating ? "installed.updatingOne" : "installed.removing"}
               />
             </Then>
@@ -120,7 +117,7 @@ export function SkillRow({
                 <IconButton
                   variant="accent"
                   size="sm"
-                  label={t(lang, "installed.updateOne")}
+                  label={t(lang.value, "installed.updateOne")}
                   onClick={() => onUpdate?.(skill.name)}
                   disabled={actionBusy}
                 >
@@ -133,7 +130,7 @@ export function SkillRow({
               <IconButton
                 variant="danger"
                 size="sm"
-                label={t(lang, "installed.remove")}
+                label={t(lang.value, "installed.remove")}
                 onClick={() => setConfirmRemove(true)}
                 disabled={actionBusy}
               >
@@ -146,13 +143,13 @@ export function SkillRow({
 
       <ConfirmDialog
         open={confirmRemove}
-        title={t(lang, "installed.removeTitle")}
-        description={t(lang, "installed.removeBody")}
+        title={t(lang.value, "installed.removeTitle")}
+        description={t(lang.value, "installed.removeBody")}
         detail={skill.name}
-        confirmLabel={t(lang, "installed.removeConfirm")}
-        cancelLabel={t(lang, "installed.removeCancel")}
+        confirmLabel={t(lang.value, "installed.removeConfirm")}
+        cancelLabel={t(lang.value, "installed.removeCancel")}
         busy={removing}
-        busyLabel={t(lang, "installed.removing")}
+        busyLabel={t(lang.value, "installed.removing")}
         onCancel={() => {
           if (!removing) setConfirmRemove(false);
         }}

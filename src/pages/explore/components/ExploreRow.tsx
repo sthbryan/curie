@@ -1,20 +1,19 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { motion } from "motion/react";
-import { Else, If, Then, When } from "react-if";
+import { Else, If, Then } from "react-if";
 import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
-import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { listItem } from "@/lib/motion";
 import { formatInstalls } from "@/lib/skills";
+import { lang } from "@/store/system";
 
 type Props = {
   result: SkillExploreResult;
   rank: number;
   view: ExploreView;
-  lang: Lang;
   installed: boolean;
   installing: boolean;
   installBusy: boolean;
@@ -32,7 +31,6 @@ export function ExploreRow({
   result,
   rank,
   view,
-  lang,
   installed,
   installing,
   installBusy,
@@ -52,42 +50,23 @@ export function ExploreRow({
       <div className="pt-0.5 text-right">
         <span className="font-mono uppercase tracking-label text-micro text-fg-4">{rank}</span>
       </div>
-
       <div className="min-w-0 flex flex-col gap-1">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="font-mono text-mono text-fg truncate">{result.name}</span>
-          <When condition={result.isOfficial}>
-            <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 border border-border-strong px-1.5 py-0.5 rounded-sm">
-              {t(lang, "explore.official")}
-            </span>
-          </When>
-          <When condition={installed}>
-            <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 border border-border-strong px-1.5 py-0.5 rounded-sm">
-              {t(lang, "explore.installed")}
-            </span>
-          </When>
-        </div>
-        <span className="font-mono text-micro text-fg-4 truncate" title={result.package}>
-          {result.package}
-        </span>
+        <span className="font-mono text-mono text-fg truncate">{result.name}</span>
+        <span className="font-mono text-micro text-fg-4 truncate">{result.package}</span>
       </div>
-
       <div className="min-w-0 flex flex-col gap-1">
         <span className="font-mono text-mono text-fg-2 truncate">{result.source || "—"}</span>
         <button
           type="button"
-          onClick={() => {
-            void openUrl(result.url);
-          }}
+          onClick={() => openUrl(result.url)}
           className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
         >
-          {t(lang, "explore.open")}
+          {t(lang.value, "explore.open")}
         </button>
       </div>
-
       <div className="flex flex-col items-end gap-0.5">
         <span className="font-mono uppercase tracking-label text-micro text-fg-3">{installs}</span>
-        <When condition={Boolean(changeLabel)}>
+        {changeLabel && (
           <span
             className={cn("font-mono uppercase tracking-label text-micro", {
               "text-success": changeUp,
@@ -97,20 +76,19 @@ export function ExploreRow({
           >
             {changeLabel}
           </span>
-        </When>
+        )}
       </div>
-
       <div className="flex justify-end">
         <If condition={installed}>
           <Then>
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t(lang, "explore.installed")}
+              {t(lang.value, "explore.installed")}
             </span>
           </Then>
           <Else>
             <If condition={installing}>
               <Then>
-                <ActionProgress active lang={lang} labelKey="explore.installing" />
+                <ActionProgress active labelKey="explore.installing" />
               </Then>
               <Else>
                 <Button
@@ -119,7 +97,7 @@ export function ExploreRow({
                   onClick={() => onInstall(result.package)}
                   disabled={installBusy}
                 >
-                  {t(lang, "explore.install")}
+                  {t(lang.value, "explore.install")}
                 </Button>
               </Else>
             </If>

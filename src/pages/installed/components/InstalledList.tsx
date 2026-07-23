@@ -24,8 +24,8 @@ export function InstalledList() {
   const updateNames = useMemo(() => updateNameSet(skillUpdates.value), [skillUpdates.value]);
   const filtered = useMemo(
     () =>
-      filterSkills(skills.value, query, agentFilter, {
-        updatesOnly,
+      filterSkills(skills.value, query.value, agentFilter.value, {
+        updatesOnly: updatesOnly.value,
         updateNames,
       }),
     [skills.value, query.value, agentFilter.value, updatesOnly.value, updateNames],
@@ -102,7 +102,6 @@ export function InstalledList() {
                 <SkillRow
                   key={`${skill.name}-${skill.path}`}
                   skill={skill}
-                  lang={lang.value}
                   updateAvailable={updateNames.has(skill.name)}
                   updating={updatingSkill.value === skill.name || updatingSkill.value === "*"}
                   removing={removingSkill.value === skill.name || removingSkill.value === "*"}

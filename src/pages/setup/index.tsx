@@ -87,9 +87,7 @@ export function Setup({ onComplete }: Props) {
       <main className="flex min-w-0 flex-1 flex-col">
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-10 pt-16 pb-8">
           <section className="flex flex-col gap-6">
-            <Label lang={lang.value} className="text-fg-3">
-              {t(lang.value, "setup.progressEyebrow")}
-            </Label>
+            <Label className="text-fg-3">{t(lang.value, "setup.progressEyebrow")}</Label>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
               {t(lang.value, `stages.${step}`)}
             </h2>
@@ -141,9 +139,7 @@ export function Setup({ onComplete }: Props) {
     return (
       <main className="flex min-w-0 flex-1 flex-col items-center justify-center px-10">
         <div className="flex w-full max-w-2xl flex-col items-center gap-8 text-center">
-          <Label lang={lang.value} className="text-success">
-            {t(lang.value, "setup.doneEyebrow")}
-          </Label>
+          <Label className="text-success">{t(lang.value, "setup.doneEyebrow")}</Label>
           <div className="flex flex-col gap-3">
             <h1 className="font-display text-display font-bold leading-none tracking-display">✓</h1>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
@@ -165,9 +161,7 @@ export function Setup({ onComplete }: Props) {
     return (
       <main className="flex min-w-0 flex-1 flex-col items-center justify-center px-10">
         <div className="flex w-full max-w-2xl flex-col items-center gap-8 text-center">
-          <Label lang={lang.value} className="text-accent">
-            {t(lang.value, "setup.errorEyebrow")}
-          </Label>
+          <Label className="text-accent">{t(lang.value, "setup.errorEyebrow")}</Label>
           <div className="flex flex-col gap-3">
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
               {t(lang.value, "stages.error")}
@@ -193,9 +187,7 @@ export function Setup({ onComplete }: Props) {
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-10 pt-16 pb-8">
         <section className="flex flex-col gap-3">
-          <Label lang={lang.value} className="text-fg-3">
-            {t(lang.value, "setup.eyebrow")}
-          </Label>
+          <Label className="text-fg-3">{t(lang.value, "setup.eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg max-w-xl">
             {t(lang.value, "setup.title")}
           </h2>
@@ -207,7 +199,7 @@ export function Setup({ onComplete }: Props) {
         <hr className="border-0 border-t border-border" />
 
         <section className="flex flex-col gap-5">
-          <Label lang={lang.value}>{t(lang.value, "setup.checklist")}</Label>
+          <Label>{t(lang.value, "setup.checklist")}</Label>
           <div className="flex flex-col gap-0">
             <div className="flex items-start gap-5 border border-border bg-surface-tint p-5">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-border-strong font-display text-lg font-bold text-fg">
@@ -250,7 +242,7 @@ export function Setup({ onComplete }: Props) {
 
         {manualOpen && (
           <section className="flex flex-col gap-4 border-t border-border pt-6">
-            <Label lang={lang.value}>{t(lang.value, "setup.manualHint")}</Label>
+            <Label>{t(lang.value, "setup.manualHint")}</Label>
             <pre className="border border-border bg-surface p-4 font-mono text-mono text-fg-2 overflow-x-auto rounded-sm">
               {t(lang.value, "setup.manualCommand")}
             </pre>

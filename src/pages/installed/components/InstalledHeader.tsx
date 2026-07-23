@@ -42,7 +42,7 @@ export function InstalledHeader() {
     <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-6">
         <div className="flex flex-col gap-3">
-          <Label lang={lang.value}>{t(lang.value, "installed.eyebrow")}</Label>
+          <Label>{t(lang.value, "installed.eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg">
             {t(lang.value, "installed.title")}
           </h2>

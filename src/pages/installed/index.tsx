@@ -2,7 +2,6 @@ import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { loadGlobalSkills } from "@/lib/boot";
 import { skills, skillsError, skillsLoading } from "@/store/skills";
-import { lang } from "@/store/system";
 import { InstalledFilters } from "./components/InstalledFilters";
 import { InstalledHeader } from "./components/InstalledHeader";
 import { InstalledList } from "./components/InstalledList";
@@ -13,11 +12,11 @@ export function Installed() {
   };
 
   if (skillsLoading.value && skills.value.length === 0) {
-    return <FullPageLoading lang={lang.value} />;
+    return <FullPageLoading />;
   }
 
   if (skillsError.value && skills.value.length === 0) {
-    return <FullPageError lang={lang.value} message={skillsError.value} onRetry={loadSkills} />;
+    return <FullPageError message={skillsError.value} onRetry={loadSkills} />;
   }
 
   return (

@@ -41,13 +41,12 @@ export function Home() {
   const updateCount = updates.length;
 
   if (skillsLoading.value && totalSkills === 0) {
-    return <FullPageLoading lang={lang.value} />;
+    return <FullPageLoading />;
   }
 
   if (skillsError.value && totalSkills === 0) {
     return (
       <FullPageError
-        lang={lang.value}
         message={skillsError.value}
         onRetry={() => {
           loadGlobalSkills().catch(() => {
@@ -74,7 +73,7 @@ export function Home() {
                 totalSkills > 0 ? "bg-success" : "bg-fg-4",
               )}
             />
-            <Label lang={lang.value}>
+            <Label>
               {totalSkills > 0 ? t(lang.value, "home.status") : t(lang.value, "home.statusEmpty")}
             </Label>
           </motion.div>
@@ -109,8 +108,8 @@ export function Home() {
         >
           <motion.div variants={staggerItem} className="flex flex-col gap-5">
             <div className="flex items-baseline justify-between">
-              <Label lang={lang.value}>{t(lang.value, "home.aiTools")}</Label>
-              <Label lang={lang.value} className="text-micro">
+              <Label>{t(lang.value, "home.aiTools")}</Label>
+              <Label className="text-micro">
                 {t(lang.value, "home.active", { n: activeAgents })}
               </Label>
             </div>
@@ -128,7 +127,7 @@ export function Home() {
                   animate="animate"
                 >
                   {agents.map((agent) => (
-                    <AgentRow key={agent.id} agent={agent} capacity={capacity} lang={lang.value} />
+                    <AgentRow key={agent.id} agent={agent} capacity={capacity} />
                   ))}
                 </motion.div>
               </Else>
@@ -138,7 +137,7 @@ export function Home() {
           <motion.div variants={staggerItem} className="flex flex-col gap-8">
             <div className="flex flex-col gap-5">
               <div className="flex items-baseline justify-between gap-3">
-                <Label lang={lang.value}>{t(lang.value, "home.updates")}</Label>
+                <Label>{t(lang.value, "home.updates")}</Label>
                 <div className="flex items-center gap-3">
                   <span className="font-mono uppercase tracking-label text-micro text-fg-3">
                     <If condition={updatesLoading.value && skillUpdates.value.length === 0}>
@@ -193,12 +192,7 @@ export function Home() {
                     animate="animate"
                   >
                     {updates.map(({ skill, source }) => (
-                      <UpdateRow
-                        key={skill.name}
-                        name={skill.name}
-                        source={source}
-                        lang={lang.value}
-                      />
+                      <UpdateRow key={skill.name} name={skill.name} source={source} />
                     ))}
                   </motion.div>
                 </Default>
@@ -207,8 +201,8 @@ export function Home() {
 
             <div className="flex flex-col gap-5">
               <div className="flex items-baseline justify-between">
-                <Label lang={lang.value}>{t(lang.value, "home.recent")}</Label>
-                <Label lang={lang.value} className="text-micro">
+                <Label>{t(lang.value, "home.recent")}</Label>
+                <Label className="text-micro">
                   {t(lang.value, "home.events", { n: recent.length })}
                 </Label>
               </div>
@@ -226,11 +220,7 @@ export function Home() {
                     animate="animate"
                   >
                     {recent.map((event) => (
-                      <RecentRow
-                        key={`${event.kind}-${event.skill}-${event.at}`}
-                        event={event}
-                        lang={lang.value}
-                      />
+                      <RecentRow key={`${event.kind}-${event.skill}-${event.at}`} event={event} />
                     ))}
                   </motion.div>
                 </Else>
@@ -242,7 +232,7 @@ export function Home() {
         <hr className="border-0 border-t border-border" />
 
         <motion.section {...fadeUp(0.12)} className="flex flex-col gap-5">
-          <Label lang={lang.value}>{t(lang.value, "home.actions")}</Label>
+          <Label>{t(lang.value, "home.actions")}</Label>
           <div className="flex gap-3">
             <Button
               size="hero"

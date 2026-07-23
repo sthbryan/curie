@@ -35,7 +35,7 @@ export function Settings() {
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-10 pt-12 pb-8">
         <section className="flex flex-col gap-3">
-          <Label lang={lang.value}>{t(lang.value, "settings.eyebrow")}</Label>
+          <Label>{t(lang.value, "settings.eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg">
             {t(lang.value, "settings.title")}
           </h2>
@@ -45,7 +45,7 @@ export function Settings() {
 
         <section className="flex flex-col gap-1">
           <div className="flex items-baseline justify-between pb-4">
-            <Label lang={lang.value}>{t(lang.value, "settings.preferences")}</Label>
+            <Label>{t(lang.value, "settings.preferences")}</Label>
           </div>
 
           <div className="flex flex-col gap-1">
@@ -121,7 +121,7 @@ export function Settings() {
         <hr className="border-0 border-t border-border" />
 
         <section className="flex flex-col gap-5">
-          <Label lang={lang.value}>{t(lang.value, "settings.system")}</Label>
+          <Label>{t(lang.value, "settings.system")}</Label>
 
           {node.value?.installed ? (
             <div className="flex flex-col">
@@ -143,7 +143,7 @@ export function Settings() {
               <span className="font-body text-sm text-fg">
                 {t(lang.value, "settings.nodeMissing")}
               </span>
-              <Label lang={lang.value}>{t(lang.value, "settings.goToSetup")}</Label>
+              <Label>{t(lang.value, "settings.goToSetup")}</Label>
             </div>
           )}
         </section>
@@ -151,7 +151,7 @@ export function Settings() {
         <hr className="border-0 border-t border-border" />
 
         <section className="flex flex-col gap-3">
-          <Label lang={lang.value}>{t(lang.value, "settings.about")}</Label>
+          <Label>{t(lang.value, "settings.about")}</Label>
           <p className="font-body text-sm text-fg-2 max-w-md leading-relaxed">
             {t(lang.value, "settings.aboutDescription")}
           </p>

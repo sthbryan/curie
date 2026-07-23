@@ -4,21 +4,20 @@ import { Else, If, Then, When } from "react-if";
 import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
 import type { SkillSearchResult } from "@/components/types";
-import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { listItem } from "@/lib/motion";
 import { formatInstalls } from "@/lib/skills";
+import { lang } from "@/store/system";
 
 type Props = {
   result: SkillSearchResult;
-  lang: Lang;
   installed: boolean;
   installing: boolean;
   installBusy: boolean;
   onInstall: (pkg: string) => void;
 };
 
-export function ResultRow({ result, lang, installed, installing, installBusy, onInstall }: Props) {
+export function ResultRow({ result, installed, installing, installBusy, onInstall }: Props) {
   const installs = formatInstalls(result.installs);
 
   return (
@@ -32,7 +31,7 @@ export function ResultRow({ result, lang, installed, installing, installBusy, on
           <span className="font-mono text-mono text-fg truncate">{result.name}</span>
           <When condition={installed}>
             <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 border border-border-strong px-1.5 py-0.5 rounded-sm">
-              {t(lang, "find.installed")}
+              {t(lang.value, "find.installed")}
             </span>
           </When>
         </div>
@@ -50,7 +49,7 @@ export function ResultRow({ result, lang, installed, installing, installBusy, on
           }}
           className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
         >
-          {t(lang, "find.open")}
+          {t(lang.value, "find.open")}
         </button>
       </div>
 
@@ -64,13 +63,13 @@ export function ResultRow({ result, lang, installed, installing, installBusy, on
         <If condition={installed}>
           <Then>
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t(lang, "find.installed")}
+              {t(lang.value, "find.installed")}
             </span>
           </Then>
           <Else>
             <If condition={installing}>
               <Then>
-                <ActionProgress active lang={lang} labelKey="find.installing" />
+                <ActionProgress active labelKey="find.installing" />
               </Then>
               <Else>
                 <Button
@@ -79,7 +78,7 @@ export function ResultRow({ result, lang, installed, installing, installBusy, on
                   onClick={() => onInstall(result.package)}
                   disabled={installBusy}
                 >
-                  {t(lang, "find.install")}
+                  {t(lang.value, "find.install")}
                 </Button>
               </Else>
             </If>
