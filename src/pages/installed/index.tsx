@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
+import { Button } from "../../components/Button";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
 import { loadGlobalSkills, removeSkills, updateSkills } from "../../lib/boot";
@@ -79,17 +80,17 @@ export function Installed() {
           </Label>
           <p className="font-body text-sm text-fg-3 break-all">{skillsError}</p>
         </div>
-        <button
-          type="button"
+        <Button
+          size="lg"
+          variant="primary"
           onClick={() => {
             loadGlobalSkills().catch(() => {
               // store handles error state
             });
           }}
-          className="h-10 px-5 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 transition-opacity duration-150"
         >
           {t(lang, "home.retry")}
-        </button>
+        </Button>
       </main>
     );
   }
@@ -114,40 +115,37 @@ export function Installed() {
 
             <div className="flex shrink-0 items-center gap-2 pt-1">
               <When condition={updateCount > 0}>
-                <button
-                  type="button"
+                <Button
+                  size="md"
+                  variant="accent-outline"
+                  className="font-bold"
                   onClick={handleUpdateAll}
                   disabled={actionBusy || updatesLoading}
-                  className="h-9 px-4 border border-accent/50 text-accent rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:bg-accent hover:text-accent-fg disabled:opacity-50 transition-colors duration-150"
                 >
                   <If condition={updatingSkill === "*"}>
                     <Then>{t(lang, "installed.updatingAll")}</Then>
                     <Else>{t(lang, "installed.updateAll")}</Else>
                   </If>
-                </button>
+                </Button>
               </When>
-              <button
-                type="button"
+              <Button
+                size="md"
+                variant="outline"
                 onClick={() => {
                   loadGlobalSkills().catch(() => {
                     // store handles error state
                   });
                 }}
                 disabled={skillsLoading || updatesLoading || actionBusy}
-                className="h-9 px-4 border border-border-strong text-fg-2 rounded-sm font-mono uppercase tracking-label text-mono hover:border-fg-3 hover:text-fg disabled:opacity-50 transition-colors duration-150"
               >
                 <If condition={skillsLoading || updatesLoading}>
                   <Then>{t(lang, "installed.refreshing")}</Then>
                   <Else>{t(lang, "installed.refresh")}</Else>
                 </If>
-              </button>
-              <button
-                type="button"
-                onClick={() => setView("search")}
-                className="h-9 px-4 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 transition-opacity duration-150"
-              >
+              </Button>
+              <Button size="md" variant="primary" onClick={() => setView("search")}>
                 {t(lang, "installed.install")}
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -164,16 +162,17 @@ export function Installed() {
                   {updateApplyError ?? removeError}
                 </p>
               </div>
-              <button
-                type="button"
+              <Button
+                size="xs"
+                variant="link"
+                className="shrink-0 px-0"
                 onClick={() => {
                   setUpdateApplyError(null);
                   setRemoveError(null);
                 }}
-                className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 hover:text-fg"
               >
                 ×
-              </button>
+              </Button>
             </div>
           </When>
         </motion.section>
@@ -197,52 +196,43 @@ export function Installed() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
+            <Button
+              size="sm"
+              variant="outline"
+              selected={agentFilter === null && !updatesOnly}
               onClick={() => {
                 setAgentFilter(null);
                 setUpdatesOnly(false);
               }}
-              className={`h-8 px-3 font-mono uppercase tracking-label text-micro transition-colors duration-150 rounded-sm ${
-                agentFilter === null && !updatesOnly
-                  ? "bg-fg text-bg font-bold"
-                  : "border border-border-strong text-fg-3 hover:border-fg-3 hover:text-fg"
-              }`}
             >
               {t(lang, "installed.filterAll")}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              selected={updatesOnly}
               onClick={() => {
                 setUpdatesOnly((v) => !v);
                 setAgentFilter(null);
               }}
-              className={`h-8 px-3 font-mono uppercase tracking-label text-micro transition-colors duration-150 rounded-sm ${
-                updatesOnly
-                  ? "bg-fg text-bg font-bold"
-                  : "border border-border-strong text-fg-3 hover:border-fg-3 hover:text-fg"
-              }`}
             >
               {t(lang, "installed.filterUpdates")}
               <span className="ml-2 opacity-60">{updateCount}</span>
-            </button>
+            </Button>
             {agents.map((agent) => (
-              <button
+              <Button
                 key={agent.id}
-                type="button"
+                size="sm"
+                variant="outline"
+                selected={agentFilter === agent.label}
                 onClick={() => {
                   setUpdatesOnly(false);
                   setAgentFilter(agent.label === agentFilter ? null : agent.label);
                 }}
-                className={`h-8 px-3 font-mono uppercase tracking-label text-micro transition-colors duration-150 rounded-sm ${
-                  agentFilter === agent.label
-                    ? "bg-fg text-bg font-bold"
-                    : "border border-border-strong text-fg-3 hover:border-fg-3 hover:text-fg"
-                }`}
               >
                 {agent.label}
                 <span className="ml-2 opacity-60">{agent.count}</span>
-              </button>
+              </Button>
             ))}
           </div>
         </motion.section>
@@ -257,13 +247,9 @@ export function Installed() {
                 <span className="font-body text-sm text-fg">{t(lang, "installed.empty")}</span>
                 <p className="font-body text-sm text-fg-3">{t(lang, "installed.emptyHint")}</p>
                 <div>
-                  <button
-                    type="button"
-                    onClick={() => setView("search")}
-                    className="h-10 px-5 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 transition-opacity duration-150"
-                  >
+                  <Button size="lg" variant="primary" onClick={() => setView("search")}>
                     {t(lang, "installed.install")}
-                  </button>
+                  </Button>
                 </div>
               </motion.div>
             </Case>
