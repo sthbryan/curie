@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/cn";
 import { listItem, listStagger } from "@/lib/motion";
-import { TableHeader } from "./header";
-import { TableSkeleton } from "./skeleton";
+import { TableHeader } from "./TableHeader";
+import { TableSkeleton } from "./TableSkeleton";
 import type { ColumnDef, SortDir, TableProps } from "./types";
 
 export type { ColumnDef, SortDir, TableProps };

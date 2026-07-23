@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
-import { Bone } from "./bone";
+import { Bone } from "./Bone";
 import type { ColumnDef } from "./types";
 
 const SKELETON_KEYS = Array.from({ length: 20 }, (_, i) => `skel-${i}`);
