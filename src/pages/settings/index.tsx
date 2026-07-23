@@ -1,4 +1,7 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { RotateCcw, SquareArrowOutUpRight } from "lucide-react";
+import { Case, Else, If, Switch, Then } from "react-if";
+import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
 import { Label } from "@/components/Label";
@@ -9,8 +12,11 @@ import {
   type ThemeMode,
 } from "@/components/types";
 import { useT } from "@/i18n";
+import { checkAppUpdate } from "@/lib/boot";
+import { cn } from "@/lib/cn";
 import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
 import { systemStore } from "@/store/system";
+import { appUpdate, appUpdateLoading } from "@/store/update";
 import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
@@ -38,6 +44,17 @@ export function Settings() {
     void Promise.resolve(openUrl("https://github.com/sthbryan/curie")).catch(() => {
       // ignore
     });
+  };
+  const handleCheckUpdates = () => {
+    void checkAppUpdate();
+  };
+  const handleOpenRelease = () => {
+    const url = appUpdate.value?.releaseUrl;
+    if (url) void Promise.resolve(openUrl(url)).catch(() => {});
+  };
+  const handleCopyCommand = () => {
+    navigator.clipboard.writeText(appUpdate.value?.updateCommand ?? "");
+    toast(t("updateCopied"));
   };
 
   return (
@@ -123,21 +140,24 @@ export function Settings() {
         <section className="flex flex-col gap-5">
           <Label>{t("system")}</Label>
 
-          {node.value?.installed ? (
-            <div className="flex flex-col">
-              <SystemRow
-                label={t("nodeVersion")}
-                value={node.value.version?.replace(/^v/, "") ?? "—"}
-              />
-              <SystemRow label={t("nodeManager")} value={node.value.manager ?? "—"} />
-              <SystemRow label={t("nodePath")} value={node.value.path ?? "—"} />
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4">
-              <span className="font-body text-sm text-fg">{t("nodeMissing")}</span>
-              <Label>{t("goToSetup")}</Label>
-            </div>
-          )}
+          <If condition={Boolean(node.value?.installed)}>
+            <Then>
+              <div className="flex flex-col">
+                <SystemRow
+                  label={t("nodeVersion")}
+                  value={node.value?.version?.replace(/^v/, "") ?? "—"}
+                />
+                <SystemRow label={t("nodeManager")} value={node.value?.manager ?? "—"} />
+                <SystemRow label={t("nodePath")} value={node.value?.path ?? "—"} />
+              </div>
+            </Then>
+            <Else>
+              <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4">
+                <span className="font-body text-sm text-fg">{t("nodeMissing")}</span>
+                <Label>{t("goToSetup")}</Label>
+              </div>
+            </Else>
+          </If>
         </section>
 
         <hr className="border-0 border-t border-border" />
@@ -147,7 +167,7 @@ export function Settings() {
           <p className="font-body text-sm text-fg-2 max-w-md leading-relaxed">
             {t("aboutDescription")}
           </p>
-          <p className="font-mono uppercase tracking-label text-micro text-fg-4 pt-2 flex items-center gap-2">
+          <p className="font-mono uppercase tracking-label text-micro text-fg-4 pt-2 flex items-center gap-2 flex-wrap">
             <span>
               {APP_NAME} · {APP_VERSION_LABEL}
             </span>
@@ -155,12 +175,71 @@ export function Settings() {
             <Button
               size="xs"
               variant="link"
-              className="px-0 hover:underline cursor-pointer"
+              className="px-0 hover:underline cursor-pointer inline-flex items-center gap-1"
               onClick={handleOpenGitHub}
             >
-              github.com/sthbryan/curie ↗
+              github.com/sthbryan/curie
+              <SquareArrowOutUpRight size={10} strokeWidth={1.5} />
+            </Button>
+            <span className="text-fg-4">·</span>
+            <Button
+              size="xs"
+              variant="link"
+              className="px-0 hover:underline cursor-pointer inline-flex items-center gap-1"
+              onClick={handleCheckUpdates}
+              disabled={appUpdateLoading.value}
+            >
+              <RotateCcw
+                size={10}
+                strokeWidth={1.5}
+                className={cn("transition-transform", appUpdateLoading.value && "animate-spin")}
+              />
+              <If condition={appUpdateLoading.value}>
+                <Then>{t("updateChecking")}</Then>
+                <Else>{t("updateCheckBtn")}</Else>
+              </If>
             </Button>
           </p>
+
+          <Switch>
+            <Case condition={appUpdateLoading.value}>
+              <p className="font-body text-xs text-fg-4 pt-1">{t("updateChecking")}</p>
+            </Case>
+            <Case condition={Boolean(appUpdate.value?.updateAvailable)}>
+              <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4 mt-2">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono uppercase tracking-label text-micro text-accent">
+                    {t("updateAvailable")}
+                  </span>
+                  <span className="font-body text-sm text-fg-1">
+                    v{appUpdate.value?.latestVersion}
+                  </span>
+                </div>
+                <p className="font-body text-xs text-fg-3">
+                  <If condition={appUpdate.value?.installMethod === "homebrew"}>
+                    <Then>{t("updateBrewHint")}</Then>
+                    <Else>{t("updateDirectHint")}</Else>
+                  </If>
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <Button size="xs" variant="outline" onClick={handleOpenRelease}>
+                    {t("updateViewRelease")}
+                    <SquareArrowOutUpRight size={10} strokeWidth={1.5} />
+                  </Button>
+                  <If condition={Boolean(appUpdate.value?.updateCommand)}>
+                    <Then>
+                      <Button size="xs" variant="outline" onClick={handleCopyCommand}>
+                        {t("updateCopyCmd")}
+                      </Button>
+                    </Then>
+                  </If>
+                </div>
+              </div>
+            </Case>
+            <Case condition={Boolean(appUpdate.value) && !appUpdate.value?.updateAvailable}>
+              <p className="font-body text-xs text-fg-4 pt-1">{t("updateUpToDate")}</p>
+            </Case>
+          </Switch>
         </section>
       </div>
     </main>
