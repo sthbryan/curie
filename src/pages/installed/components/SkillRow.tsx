@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Else, If, Then, When } from "react-if";
+import { Button } from "../../../components/Button";
 import type { SkillInfo } from "../../../components/types";
 import type { Lang } from "../../../i18n";
 import { t } from "../../../i18n";
@@ -95,54 +96,55 @@ export function SkillRow({
       <div className="flex flex-wrap justify-end gap-1.5">
         <If condition={confirmRemove}>
           <Then>
-            <button
-              type="button"
+            <Button
+              size="xs"
+              variant="accent"
               onClick={() => {
                 setConfirmRemove(false);
                 onRemove?.(skill.name);
               }}
               disabled={actionBusy}
-              className="h-7 px-2.5 bg-accent text-accent-fg rounded-sm font-mono uppercase tracking-label text-micro font-bold hover:opacity-90 disabled:opacity-50 transition-opacity duration-150"
             >
               <If condition={removing}>
                 <Then>{t(lang, "installed.removing")}</Then>
                 <Else>{t(lang, "installed.removeConfirm")}</Else>
               </If>
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="xs"
+              variant="outline"
+              className="text-fg-3"
               onClick={() => setConfirmRemove(false)}
               disabled={removing}
-              className="h-7 px-2.5 border border-border-strong text-fg-3 rounded-sm font-mono uppercase tracking-label text-micro hover:border-fg-3 hover:text-fg disabled:opacity-50 transition-colors duration-150"
             >
               {t(lang, "installed.removeCancel")}
-            </button>
+            </Button>
           </Then>
           <Else>
             <When condition={updateAvailable}>
-              <button
-                type="button"
+              <Button
+                size="xs"
+                variant="accent-outline"
                 onClick={() => onUpdate?.(skill.name)}
                 disabled={actionBusy}
-                className="h-7 px-2.5 border border-accent/50 text-accent rounded-sm font-mono uppercase tracking-label text-micro hover:bg-accent hover:text-accent-fg disabled:opacity-50 transition-colors duration-150"
               >
                 <If condition={updating}>
                   <Then>{t(lang, "installed.updatingOne")}</Then>
                   <Else>{t(lang, "installed.updateOne")}</Else>
                 </If>
-              </button>
+              </Button>
             </When>
-            <button
-              type="button"
+            <Button
+              size="xs"
+              variant="danger"
               onClick={() => setConfirmRemove(true)}
               disabled={actionBusy}
-              className="h-7 px-2.5 border border-border-strong text-fg-3 rounded-sm font-mono uppercase tracking-label text-micro hover:border-accent/50 hover:text-accent disabled:opacity-50 transition-colors duration-150"
             >
               <If condition={removing}>
                 <Then>{t(lang, "installed.removing")}</Then>
                 <Else>{t(lang, "installed.remove")}</Else>
               </If>
-            </button>
+            </Button>
           </Else>
         </If>
       </div>
