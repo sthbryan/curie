@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import { AnimatePresence, motion } from "motion/react";
 import { Case, Default, Switch } from "react-if";
 import { Button } from "@/components/Button";
@@ -59,7 +60,7 @@ export function InstalledList({
         <Default>
           <motion.div
             {...fadeUp(0.06)}
-            className={`grid ${INSTALLED_GRID} gap-4 border-b border-border pb-2`}
+            className={cn("grid", INSTALLED_GRID, "gap-4 border-b border-border pb-2")}
           >
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
               {t(lang, "installed.colName")}
