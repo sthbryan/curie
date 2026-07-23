@@ -11,7 +11,6 @@ const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), 
 
 export default defineConfig(async () => ({
   plugins: [preact(), tailwindcss()],
-
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
@@ -25,12 +24,10 @@ export default defineConfig(async () => ({
       ),
     },
   },
-
   define: {
     __APP_NAME__: JSON.stringify("Curie"),
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
-
   clearScreen: false,
   server: {
     port: 1420,
@@ -47,11 +44,7 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
-
   test: {
-    // Make the aliases above apply to vitest's resolver too — otherwise deps
-    // like wouter/zustand load the real react (left as a peer of motion)
-    // and crash with `Cannot read properties of null (reading 'useContext')`.
     alias: {
       react: "preact/compat",
       "react-dom/test-utils": "preact/test-utils",
@@ -62,9 +55,6 @@ export default defineConfig(async () => ({
         new URL("./src/test/shims/use-sync-external-store.js", import.meta.url),
       ),
     },
-    // Force vitest to process (transform + apply aliases for) these deps
-    // instead of externalizing them — required so wouter/zustand/motion's
-    // `import ... from "react"` gets rewritten to preact/compat.
     server: {
       deps: {
         inline: [/^(?!.*\.tsx?$).*$/],
@@ -80,5 +70,8 @@ export default defineConfig(async () => ({
         },
       },
     },
+    pool: "threads",
+    maxWorkers: '100%',
+    minWorkers: 1,
   },
 }));
