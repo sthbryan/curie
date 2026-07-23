@@ -1,6 +1,6 @@
-import cn from "cnfast";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
+import { cn } from "@/lib/cn";
 import { useAsymptoticProgress } from "@/lib/useAsymptoticProgress";
 import { useUiStore } from "@/store/ui";
 

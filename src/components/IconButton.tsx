@@ -1,5 +1,5 @@
-import cn from "cnfast";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 type Variant = "ghost" | "accent" | "danger";
 

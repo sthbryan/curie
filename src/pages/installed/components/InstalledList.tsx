@@ -1,10 +1,10 @@
-import cn from "cnfast";
 import { AnimatePresence, motion } from "motion/react";
 import { Case, Default, Switch } from "react-if";
 import { Button } from "@/components/Button";
 import type { SkillInfo } from "@/components/types";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
+import { cn } from "@/lib/cn";
 import { fadeUp, listStagger } from "@/lib/motion";
 import { INSTALLED_GRID, SkillRow } from "./SkillRow";
 

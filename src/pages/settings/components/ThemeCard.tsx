@@ -1,5 +1,5 @@
-import cn from "cnfast";
 import type { ThemeMode } from "@/components/types";
+import { cn } from "@/lib/cn";
 
 type Props = {
   id: ThemeMode;

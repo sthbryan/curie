@@ -1,5 +1,5 @@
-import cn from "cnfast";
 import { motion } from "motion/react";
+import { cn } from "@/lib/cn";
 import { staggerItem } from "@/lib/motion";
 
 type Props = {

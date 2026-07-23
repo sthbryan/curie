@@ -1,4 +1,4 @@
-import cn from "cnfast";
+import { cn } from "@/lib/cn";
 
 type Props = {
   active: boolean;

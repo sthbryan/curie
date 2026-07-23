@@ -1,4 +1,3 @@
-import cn from "cnfast";
 import { ArrowUp, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -9,6 +8,7 @@ import { IconButton } from "@/components/IconButton";
 import type { SkillInfo } from "@/components/types";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
+import { cn } from "@/lib/cn";
 import { listItem } from "@/lib/motion";
 import { formatRelative, skillTimestamp } from "@/lib/skills";
 import { AgentBadge } from "./AgentBadge";

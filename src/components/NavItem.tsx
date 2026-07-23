@@ -1,6 +1,6 @@
-import cn from "cnfast";
 import type { LucideIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { cn } from "@/lib/cn";
 import { duration, easeOut } from "@/lib/motion";
 
 type Props = {
@@ -45,7 +45,7 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
           >
             <span
               className={cn(
-                "font-mono leading-none tabular-nums text-micro!",
+                "font-mono leading-none tabular-nums text-micro",
                 active ? "text-fg-3" : "text-fg-4",
               )}
             >
@@ -53,7 +53,7 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
             </span>
             <span
               className={cn(
-                "font-mono uppercase leading-none tracking-label text-micro! transition-colors group-hover:text-fg",
+                "font-mono uppercase leading-none tracking-label text-micro transition-colors group-hover:text-fg",
                 active ? "font-bold text-fg" : "text-fg-2",
               )}
             >

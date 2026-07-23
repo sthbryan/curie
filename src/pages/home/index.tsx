@@ -1,4 +1,3 @@
-import cn from "cnfast";
 import { RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
@@ -10,6 +9,7 @@ import { FullPageLoading } from "@/components/FullPageLoading";
 import { Label } from "@/components/Label";
 import { t } from "@/i18n";
 import { checkSkillUpdates, loadGlobalSkills } from "@/lib/boot";
+import { cn } from "@/lib/cn";
 import { fadeUp, listStagger, staggerContainer, staggerItem } from "@/lib/motion";
 import {
   availableUpdates,

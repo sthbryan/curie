@@ -1,7 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import cn from "cnfast";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
@@ -14,6 +13,7 @@ import {
 } from "@/components/types";
 import { t } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
+import { cn } from "@/lib/cn";
 import { useUiStore } from "@/store/ui";
 
 type Props = {

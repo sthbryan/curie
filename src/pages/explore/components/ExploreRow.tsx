@@ -1,5 +1,4 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
-import cn from "cnfast";
 import { motion } from "motion/react";
 import { Else, If, Then, When } from "react-if";
 import { ActionProgress } from "@/components/ActionProgress";
@@ -7,6 +6,7 @@ import { Button } from "@/components/Button";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
+import { cn } from "@/lib/cn";
 import { listItem } from "@/lib/motion";
 import { formatInstalls } from "@/lib/skills";
 

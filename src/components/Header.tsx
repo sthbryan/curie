@@ -1,5 +1,5 @@
-import cn from "cnfast";
 import { t } from "@/i18n";
+import { cn } from "@/lib/cn";
 import { useUiStore } from "@/store/ui";
 
 type Props = {
