@@ -15,12 +15,6 @@
     "lineWidth": 100,
     "lineEnding": "lf"
   },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true
-    }
-  },
   "css": {
     "parser": {
       "tailwindDirectives": true
