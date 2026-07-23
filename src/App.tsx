@@ -3,6 +3,7 @@ import { type ReactNode, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ErrorFallback } from "./components/ErrorFallback";
+import { FullPageLoading } from "./components/FullPageLoading";
 import { Header } from "./components/Header";
 import { Placeholder } from "./components/Placeholder";
 import { Sidebar } from "./components/Sidebar";
@@ -44,6 +45,7 @@ function RoutedPages() {
 
 function MainContent() {
   const stage = useAppStore((s) => s.stage);
+  const lang = useAppStore((s) => s.lang);
   const completeSetup = useAppStore((s) => s.completeSetup);
 
   let content: ReactNode;
@@ -51,13 +53,7 @@ function MainContent() {
 
   if (stage === "loading") {
     key = "loading";
-    content = (
-      <main className="flex min-w-0 flex-1 items-center justify-center">
-        <span className="font-mono uppercase tracking-label text-mono text-fg-3 animate-pulse">
-          · · ·
-        </span>
-      </main>
-    );
+    content = <FullPageLoading lang={lang} label="· · ·" />;
   } else if (stage === "setup") {
     key = "setup";
     content = <Setup onComplete={completeSetup} />;
