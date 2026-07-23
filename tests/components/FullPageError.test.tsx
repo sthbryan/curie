@@ -26,13 +26,13 @@ afterEach(unmount);
 
 describe("FullPageError", () => {
   it("renders the message", () => {
-    mount(<FullPageError lang="en" message="fail" onRetry={vi.fn()} />);
+    mount(<FullPageError message="fail" onRetry={vi.fn()} />);
     expect(container?.textContent).toContain("fail");
   });
 
   it("calls onRetry when button is clicked", () => {
     const onRetry = vi.fn();
-    mount(<FullPageError lang="en" message="fail" onRetry={onRetry} />);
+    mount(<FullPageError message="fail" onRetry={onRetry} />);
     const btn = container?.querySelector("button");
     btn?.click();
     expect(onRetry).toHaveBeenCalledOnce();

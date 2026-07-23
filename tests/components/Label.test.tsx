@@ -26,12 +26,12 @@ afterEach(unmount);
 
 describe("Label", () => {
   it("renders the translated text", () => {
-    mount(<Label lang="en">nav.home</Label>);
+    mount(<Label>nav.home</Label>);
     expect(container?.textContent).toContain("HOME");
   });
 
   it("applies className", () => {
-    mount(<Label lang="en" className="custom">nav.home</Label>);
+    mount(<Label className="custom">nav.home</Label>);
     expect(container?.querySelector(".custom")).not.toBeNull();
   });
 });

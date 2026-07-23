@@ -26,12 +26,12 @@ afterEach(unmount);
 
 describe("FullPageLoading", () => {
   it("renders the default loading label", () => {
-    mount(<FullPageLoading lang="en" />);
+    mount(<FullPageLoading />);
     expect(container?.textContent).toContain("Loading");
   });
 
   it("renders a custom label when provided", () => {
-    mount(<FullPageLoading lang="en" label="Working..." />);
+    mount(<FullPageLoading label="Working..." />);
     expect(container?.textContent).toContain("Working...");
   });
 });

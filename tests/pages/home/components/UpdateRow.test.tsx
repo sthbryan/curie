@@ -28,7 +28,7 @@ beforeEach(() => { lang.value = "en"; });
 
 describe("UpdateRow", () => {
   it("renders the skill name", () => {
-    mount(<UpdateRow name="impeccable" source="me/impeccable" lang="en" />);
+    mount(<UpdateRow name="impeccable" source="me/impeccable" />);
     expect(container?.textContent).toContain("impeccable");
   });
 });
