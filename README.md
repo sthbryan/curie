@@ -75,7 +75,7 @@ Curie works with the real skills ecosystem on your computer. It doesn’t invent
 
 **Coming soon**
 
-- [ ] Install in one click  
+- [x] Install in one click  
 - [x] Remove & update from the app  
 - [x] Find skills without leaving Curie  
 - [x] Explore the marketplace  
