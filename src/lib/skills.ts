@@ -1,4 +1,4 @@
-import type { Activity, AgentSummary, SkillInfo } from "../components/types";
+import type { Activity, AgentSummary, SkillInfo, SkillUpdateInfo } from "../components/types";
 
 export function summarizeAgents(skills: SkillInfo[]): AgentSummary[] {
   const counts = new Map<string, number>();
@@ -92,11 +92,18 @@ export function filterSkills(
   skills: SkillInfo[],
   query: string,
   agent: string | null,
+  options?: {
+    updatesOnly?: boolean;
+    updateNames?: Set<string>;
+  },
 ): SkillInfo[] {
   const q = query.trim().toLowerCase();
+  const updatesOnly = options?.updatesOnly ?? false;
+  const updateNames = options?.updateNames;
 
   return skills
     .filter((skill) => {
+      if (updatesOnly && updateNames && !updateNames.has(skill.name)) return false;
       if (agent && !skill.agents.some((a) => a === agent)) return false;
       if (!q) return true;
       const hay = [skill.name, skill.source ?? "", skill.path, ...skill.agents]
@@ -104,9 +111,36 @@ export function filterSkills(
         .toLowerCase();
       return hay.includes(q);
     })
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort((a, b) => {
+      if (updateNames) {
+        const aUp = updateNames.has(a.name) ? 0 : 1;
+        const bUp = updateNames.has(b.name) ? 0 : 1;
+        if (aUp !== bUp) return aUp - bUp;
+      }
+      return a.name.localeCompare(b.name);
+    });
 }
 
 export function skillTimestamp(skill: SkillInfo): string | null {
   return skill.updatedAt ?? skill.installedAt;
+}
+
+export function updateNameSet(updates: SkillUpdateInfo[]): Set<string> {
+  return new Set(updates.filter((u) => u.updateAvailable).map((u) => u.name));
+}
+
+export function availableUpdates(
+  skills: SkillInfo[],
+  updates: SkillUpdateInfo[],
+): Array<{ skill: SkillInfo; source: string | null }> {
+  const byName = new Map(skills.map((s) => [s.name, s]));
+  return updates
+    .filter((u) => u.updateAvailable)
+    .map((u) => {
+      const skill = byName.get(u.name);
+      if (!skill) return null;
+      return { skill, source: u.source ?? skill.source };
+    })
+    .filter((row): row is { skill: SkillInfo; source: string | null } => row !== null)
+    .sort((a, b) => a.skill.name.localeCompare(b.skill.name));
 }

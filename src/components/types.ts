@@ -23,6 +23,13 @@ export type SkillInfo = {
   updatedAt: string | null;
 };
 
+export type SkillUpdateInfo = {
+  name: string;
+  source: string | null;
+  updateAvailable: boolean;
+  checkable: boolean;
+};
+
 export type AgentSummary = {
   id: string;
   label: string;
