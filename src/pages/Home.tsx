@@ -1,7 +1,9 @@
+import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Label } from "../components/Label";
 import { t } from "../i18n";
 import { loadGlobalSkills } from "../lib/boot";
+import { fadeUp, listItem, listStagger, staggerContainer, staggerItem } from "../lib/motion";
 import { buildRecentActivity, maxAgentCount, summarizeAgents } from "../lib/skills";
 import { useAppStore } from "../store/app";
 
@@ -19,7 +21,8 @@ function Stat({
   isLast?: boolean;
 }) {
   return (
-    <div
+    <motion.div
+      variants={staggerItem}
       className={`flex min-w-0 flex-1 flex-col gap-2 py-5 ${
         isLast ? "" : "border-r border-border pr-6 mr-6"
       }`}
@@ -28,7 +31,7 @@ function Stat({
       <span className="font-display text-heading font-bold leading-none tracking-tight text-fg tabular-nums">
         {value}
       </span>
-    </div>
+    </motion.div>
   );
 }
 
@@ -82,8 +85,13 @@ export function Home() {
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-10 pt-12 pb-8">
-        <section className="flex flex-col gap-5">
-          <div className="flex items-center gap-3">
+        <motion.section
+          className="flex flex-col gap-5"
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+        >
+          <motion.div variants={staggerItem} className="flex items-center gap-3">
             <span
               className={`inline-block h-1.5 w-1.5 rounded-full ${
                 totalSkills > 0 ? "bg-success" : "bg-fg-4"
@@ -92,21 +100,33 @@ export function Home() {
             <Label lang={lang}>
               {totalSkills > 0 ? t(lang, "home.status") : t(lang, "home.statusEmpty")}
             </Label>
-          </div>
+          </motion.div>
 
-          <div className="flex items-stretch border-y border-border">
+          <motion.div
+            className="flex items-stretch border-y border-border"
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+          >
             <Stat label={t(lang, "home.statSkills")} value={totalSkills} />
             <Stat label={t(lang, "home.statTools")} value={activeAgents} />
             <Stat label={t(lang, "home.statRecent")} value={recent.length} isLast />
-          </div>
+          </motion.div>
 
           {totalSkills === 0 && (
-            <p className="font-body text-sm text-fg-3">{t(lang, "home.skillsNone")}</p>
+            <motion.p {...fadeUp(0.08)} className="font-body text-sm text-fg-3">
+              {t(lang, "home.skillsNone")}
+            </motion.p>
           )}
-        </section>
+        </motion.section>
 
-        <section className="grid grid-cols-2 gap-12">
-          <div className="flex flex-col gap-5">
+        <motion.section
+          className="grid grid-cols-2 gap-12"
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+        >
+          <motion.div variants={staggerItem} className="flex flex-col gap-5">
             <div className="flex items-baseline justify-between">
               <Label lang={lang}>{t(lang, "home.aiTools")}</Label>
               <Label lang={lang} className="text-micro">
@@ -118,10 +138,16 @@ export function Home() {
                 {t(lang, "home.skillsNone")}
               </p>
             ) : (
-              <div className="flex flex-col">
+              <motion.div
+                className="flex flex-col"
+                variants={listStagger}
+                initial="initial"
+                animate="animate"
+              >
                 {agents.map((agent) => (
-                  <div
+                  <motion.div
                     key={agent.id}
+                    variants={listItem}
                     className="flex items-center gap-4 border-b border-border py-3 first:border-t"
                   >
                     <span className="font-mono text-mono text-fg-2 w-32 truncate">
@@ -129,9 +155,11 @@ export function Home() {
                     </span>
                     <div className="flex flex-1 items-center gap-2">
                       <div className="relative h-1.5 flex-1 bg-border overflow-hidden rounded-sm">
-                        <div
-                          className="absolute inset-y-0 left-0 bg-fg-2 transition-[width] duration-300"
-                          style={{ width: `${density(agent.count, capacity) * 100}%` }}
+                        <motion.div
+                          className="absolute inset-y-0 left-0 bg-fg-2"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${density(agent.count, capacity) * 100}%` }}
+                          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
                         />
                       </div>
                     </div>
@@ -141,13 +169,13 @@ export function Home() {
                     <span className="font-mono uppercase tracking-label text-micro w-14 text-right text-fg-4">
                       {agent.count === 1 ? t(lang, "home.skillWord") : t(lang, "home.skillsWord")}
                     </span>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col gap-5">
+          <motion.div variants={staggerItem} className="flex flex-col gap-5">
             <div className="flex items-baseline justify-between">
               <Label lang={lang}>{t(lang, "home.recent")}</Label>
               <Label lang={lang} className="text-micro">
@@ -159,10 +187,16 @@ export function Home() {
                 {t(lang, "home.noRecent")}
               </p>
             ) : (
-              <div className="flex flex-col">
+              <motion.div
+                className="flex flex-col"
+                variants={listStagger}
+                initial="initial"
+                animate="animate"
+              >
                 {recent.map((event) => (
-                  <div
+                  <motion.div
                     key={`${event.kind}-${event.skill}-${event.at}`}
+                    variants={listItem}
                     className="flex items-baseline gap-3 border-b border-border py-3 first:border-t"
                   >
                     <span className="font-mono uppercase tracking-label text-micro text-fg-3 w-16 shrink-0">
@@ -177,16 +211,16 @@ export function Home() {
                     <Label lang={lang} className="text-micro w-20 text-right shrink-0">
                       {event.when}
                     </Label>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         <hr className="border-0 border-t border-border" />
 
-        <section className="flex flex-col gap-5">
+        <motion.section {...fadeUp(0.12)} className="flex flex-col gap-5">
           <Label lang={lang}>{t(lang, "home.actions")}</Label>
           <div className="flex gap-3">
             <button
@@ -212,7 +246,7 @@ export function Home() {
               {t(lang, "home.viewSkills")}
             </button>
           </div>
-        </section>
+        </motion.section>
       </div>
     </main>
   );
