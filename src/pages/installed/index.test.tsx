@@ -5,8 +5,18 @@ import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
 import type { SkillInfo } from "@/components/types";
-import { useSkillsStore } from "@/store/skills";
-import { useSystemStore } from "@/store/system";
+import {
+  setSkills,
+  setSkillsLoading,
+  setSkillUpdates,
+  skills,
+  skillsError,
+  skillsLoading,
+  skillUpdates,
+  updatesError,
+  updatesLoading,
+} from "@/store/skills";
+import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
 import { useInstalledActionsStore, useInstalledFiltersStore } from "./store";
 
 const invokeMock = vi.fn();
@@ -50,22 +60,18 @@ const skill = (name: string, agents: string[]): SkillInfo => ({
 beforeEach(() => {
   invokeMock.mockReset();
   loadGlobalSkillsMock.mockClear();
-  useSkillsStore.setState({
-    skills: [],
-    skillsLoading: false,
-    skillsError: null,
-    skillUpdates: [],
-    updatesLoading: false,
-    updatesError: null,
-  });
-  useSystemStore.setState({
-    theme: "dark",
-    lang: "en",
-    reducedMotion: "user",
-    hasBooted: true,
-    stage: "home",
-    node: { installed: true, version: "20.0.0", path: "/usr/bin/node", manager: "volta" },
-  });
+  skills.value = [];
+  skillsLoading.value = false;
+  skillsError.value = null;
+  skillUpdates.value = [];
+  updatesLoading.value = false;
+  updatesError.value = null;
+  theme.value = "dark";
+  lang.value = "en";
+  reducedMotion.value = "user";
+  hasBooted.value = false;
+  stage.value = "loading";
+  node.value = null;
   useInstalledActionsStore.setState({
     updatingSkill: null,
     updateApplyError: null,
@@ -94,15 +100,13 @@ afterEach(() => {
 
 describe("Installed", () => {
   it("renders the loading screen when skills are loading and empty", () => {
-    useSkillsStore.getState().setSkillsLoading(true);
+    setSkillsLoading(true);
     render(<Installed />);
     expect(container?.textContent).toMatch(/loading|cargando/i);
   });
 
   it("renders installed skills and the filter bar", () => {
-    useSkillsStore
-      .getState()
-      .setSkills([skill("impeccable", ["Claude Code", "Codex"]), skill("find-skills", ["Codex"])]);
+    setSkills([skill("impeccable", ["Claude Code", "Codex"]), skill("find-skills", ["Codex"])]);
     render(<Installed />);
     expect(container?.textContent).toContain("impeccable");
     expect(container?.textContent).toContain("find-skills");
@@ -110,9 +114,7 @@ describe("Installed", () => {
   });
 
   it("filters the list as the user types in the search box", () => {
-    useSkillsStore
-      .getState()
-      .setSkills([skill("impeccable", ["Codex"]), skill("find-skills", ["Codex"])]);
+    setSkills([skill("impeccable", ["Codex"]), skill("find-skills", ["Codex"])]);
     render(<Installed />);
     const searchInput = container?.querySelector('input[type="search"]') as HTMLInputElement | null;
     expect(searchInput).not.toBeNull();
@@ -129,12 +131,10 @@ describe("Installed", () => {
 
   it("triggers update_skills for the given name when the row update button is clicked", async () => {
     invokeMock.mockResolvedValue({ updated: ["impeccable"], message: "ok" });
-    useSkillsStore.getState().setSkills([skill("impeccable", ["Codex"])]);
-    useSkillsStore
-      .getState()
-      .setSkillUpdates([
-        { name: "impeccable", source: "me/impeccable", updateAvailable: true, checkable: true },
-      ]);
+    setSkills([skill("impeccable", ["Codex"])]);
+    setSkillUpdates([
+      { name: "impeccable", source: "me/impeccable", updateAvailable: true, checkable: true },
+    ]);
     render(<Installed />);
 
     const updateBtn = container?.querySelector(

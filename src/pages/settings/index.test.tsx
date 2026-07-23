@@ -4,7 +4,16 @@ import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
-import { useSystemStore } from "@/store/system";
+import {
+  hasBooted,
+  lang,
+  node,
+  reducedMotion,
+  setLang,
+  setNode,
+  stage,
+  theme,
+} from "@/store/system";
 
 const openUrl = vi.fn();
 vi.mock("@tauri-apps/plugin-opener", () => ({
@@ -28,14 +37,12 @@ function render(ui: React.ReactNode) {
 }
 
 beforeEach(() => {
-  useSystemStore.setState({
-    theme: "dark",
-    lang: "en",
-    reducedMotion: "user",
-    hasBooted: true,
-    stage: "home",
-    node: null,
-  });
+  theme.value = "dark";
+  lang.value = "en";
+  reducedMotion.value = "user";
+  hasBooted.value = false;
+  stage.value = "loading";
+  node.value = null;
   openUrl.mockReset();
 });
 
@@ -63,7 +70,7 @@ describe("Settings", () => {
   });
 
   it("renders Spanish copy when lang=es", () => {
-    useSystemStore.getState().setLang("es");
+    setLang("es");
     render(<Settings />);
     expect(container?.textContent).toContain("Ajustes");
     expect(container?.textContent).toContain("Idioma");
@@ -81,12 +88,12 @@ describe("Settings", () => {
     act(() => {
       esButtons[0]?.click();
     });
-    expect(useSystemStore.getState().lang).toBe("es");
+    expect(lang.value).toBe("es");
 
     act(() => {
       enButtons[0]?.click();
     });
-    expect(useSystemStore.getState().lang).toBe("en");
+    expect(lang.value).toBe("en");
   });
 
   it("switches the theme when a ThemeCard is clicked", () => {
@@ -95,11 +102,11 @@ describe("Settings", () => {
     act(() => {
       rose?.click();
     });
-    expect(useSystemStore.getState().theme).toBe("rose");
+    expect(theme.value).toBe("rose");
   });
 
   it("shows the system info block when node is installed", () => {
-    useSystemStore.getState().setNode({
+    setNode({
       installed: true,
       version: "v20.0.0",
       path: "/usr/bin/node",

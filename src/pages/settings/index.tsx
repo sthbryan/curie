@@ -10,7 +10,7 @@ import {
 } from "@/components/types";
 import { t } from "@/i18n";
 import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
-import { useSystemStore } from "@/store/system";
+import { systemStore } from "@/store/system";
 import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
@@ -29,16 +29,15 @@ const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
 };
 
 export function Settings() {
-  const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } =
-    useSystemStore();
+  const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } = systemStore;
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-10 pt-12 pb-8">
         <section className="flex flex-col gap-3">
-          <Label lang={lang}>{t(lang, "settings.eyebrow")}</Label>
+          <Label lang={lang.value}>{t(lang.value, "settings.eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-            {t(lang, "settings.title")}
+            {t(lang.value, "settings.title")}
           </h2>
         </section>
 
@@ -46,24 +45,27 @@ export function Settings() {
 
         <section className="flex flex-col gap-1">
           <div className="flex items-baseline justify-between pb-4">
-            <Label lang={lang}>{t(lang, "settings.preferences")}</Label>
+            <Label lang={lang.value}>{t(lang.value, "settings.preferences")}</Label>
           </div>
 
           <div className="flex flex-col gap-1">
-            <Row label={t(lang, "settings.language")}>
+            <Row label={t(lang.value, "settings.language")}>
               <div className="flex items-center gap-3">
                 <span className="font-body text-sm text-fg-3 hidden sm:inline">
-                  {t(lang, lang === "en" ? "settings.languageENFull" : "settings.languageESFull")}
+                  {t(
+                    lang.value,
+                    lang.value === "en" ? "settings.languageENFull" : "settings.languageESFull",
+                  )}
                 </span>
                 <div className="flex">
                   <ChoiceButton
-                    active={lang === "en"}
-                    label={t(lang, "settings.languageEN")}
+                    active={lang.value === "en"}
+                    label={t(lang.value, "settings.languageEN")}
                     onClick={() => setLang("en")}
                   />
                   <ChoiceButton
-                    active={lang === "es"}
-                    label={t(lang, "settings.languageES")}
+                    active={lang.value === "es"}
+                    label={t(lang.value, "settings.languageES")}
                     onClick={() => setLang("es")}
                     isLast
                   />
@@ -72,19 +74,19 @@ export function Settings() {
             </Row>
 
             <p className="font-body text-sm text-fg-3 pb-4 pl-0">
-              {t(lang, "settings.languageDesc")}
+              {t(lang.value, "settings.languageDesc")}
             </p>
 
             <div className="flex flex-col gap-3 border-b border-border py-4">
-              <span className="font-body text-sm text-fg">{t(lang, "settings.theme")}</span>
+              <span className="font-body text-sm text-fg">{t(lang.value, "settings.theme")}</span>
               <div className="grid grid-cols-2 gap-3">
                 {THEME_OPTIONS.map((opt) => (
                   <ThemeCard
                     key={opt.id}
                     id={opt.id}
-                    active={theme === opt.id}
-                    label={t(lang, THEME_LABEL[opt.id].label)}
-                    hint={t(lang, THEME_LABEL[opt.id].hint)}
+                    active={theme.value === opt.id}
+                    label={t(lang.value, THEME_LABEL[opt.id].label)}
+                    hint={t(lang.value, THEME_LABEL[opt.id].hint)}
                     swatches={opt.swatches}
                     onClick={() => setTheme(opt.id)}
                   />
@@ -93,16 +95,16 @@ export function Settings() {
             </div>
 
             <p className="font-body text-sm text-fg-3 pb-4 pl-0 pt-3">
-              {t(lang, "settings.themeDesc")}
+              {t(lang.value, "settings.themeDesc")}
             </p>
 
-            <Row label={t(lang, "settings.reducedMotion")}>
+            <Row label={t(lang.value, "settings.reducedMotion")}>
               <div className="flex">
                 {REDUCED_MOTION_OPTIONS.map((opt, index) => (
                   <ChoiceButton
                     key={opt}
-                    active={reducedMotion === opt}
-                    label={t(lang, REDUCED_MOTION_LABEL[opt])}
+                    active={reducedMotion.value === opt}
+                    label={t(lang.value, REDUCED_MOTION_LABEL[opt])}
                     onClick={() => setReducedMotion(opt)}
                     isLast={index === REDUCED_MOTION_OPTIONS.length - 1}
                   />
@@ -111,7 +113,7 @@ export function Settings() {
             </Row>
 
             <p className="font-body text-sm text-fg-3 pb-4 pl-0">
-              {t(lang, "settings.reducedMotionDesc")}
+              {t(lang.value, "settings.reducedMotionDesc")}
             </p>
           </div>
         </section>
@@ -119,21 +121,29 @@ export function Settings() {
         <hr className="border-0 border-t border-border" />
 
         <section className="flex flex-col gap-5">
-          <Label lang={lang}>{t(lang, "settings.system")}</Label>
+          <Label lang={lang.value}>{t(lang.value, "settings.system")}</Label>
 
-          {node?.installed ? (
+          {node.value?.installed ? (
             <div className="flex flex-col">
               <SystemRow
-                label={t(lang, "settings.nodeVersion")}
-                value={node.version?.replace(/^v/, "") ?? "—"}
+                label={t(lang.value, "settings.nodeVersion")}
+                value={node.value.version?.replace(/^v/, "") ?? "—"}
               />
-              <SystemRow label={t(lang, "settings.nodeManager")} value={node.manager ?? "—"} />
-              <SystemRow label={t(lang, "settings.nodePath")} value={node.path ?? "—"} />
+              <SystemRow
+                label={t(lang.value, "settings.nodeManager")}
+                value={node.value.manager ?? "—"}
+              />
+              <SystemRow
+                label={t(lang.value, "settings.nodePath")}
+                value={node.value.path ?? "—"}
+              />
             </div>
           ) : (
             <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4">
-              <span className="font-body text-sm text-fg">{t(lang, "settings.nodeMissing")}</span>
-              <Label lang={lang}>{t(lang, "settings.goToSetup")}</Label>
+              <span className="font-body text-sm text-fg">
+                {t(lang.value, "settings.nodeMissing")}
+              </span>
+              <Label lang={lang.value}>{t(lang.value, "settings.goToSetup")}</Label>
             </div>
           )}
         </section>
@@ -141,9 +151,9 @@ export function Settings() {
         <hr className="border-0 border-t border-border" />
 
         <section className="flex flex-col gap-3">
-          <Label lang={lang}>{t(lang, "settings.about")}</Label>
+          <Label lang={lang.value}>{t(lang.value, "settings.about")}</Label>
           <p className="font-body text-sm text-fg-2 max-w-md leading-relaxed">
-            {t(lang, "settings.aboutDescription")}
+            {t(lang.value, "settings.aboutDescription")}
           </p>
           <p className="font-mono uppercase tracking-label text-micro text-fg-4 pt-2 flex items-center gap-2">
             <span>

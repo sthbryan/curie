@@ -17,36 +17,38 @@ import {
   maxAgentCount,
   summarizeAgents,
 } from "@/lib/skills";
-import { useSkillsStore } from "@/store/skills";
-import { useSystemStore } from "@/store/system";
+import { skillsStore } from "@/store/skills";
+import { lang } from "@/store/system";
 import { AgentRow } from "./components/AgentRow";
 import { RecentRow } from "./components/RecentRow";
 import { Stat } from "./components/Stat";
 import { UpdateRow } from "./components/UpdateRow";
 
 export function Home() {
-  const lang = useSystemStore((s) => s.lang);
   const [, navigate] = useLocation();
   const { skills, skillsLoading, skillsError, skillUpdates, updatesLoading, updatesError } =
-    useSkillsStore();
+    skillsStore;
 
-  const agents = useMemo(() => summarizeAgents(skills), [skills]);
-  const recent = useMemo(() => buildRecentActivity(skills), [skills]);
-  const updates = useMemo(() => availableUpdates(skills, skillUpdates), [skills, skillUpdates]);
-  const totalSkills = skills.length;
+  const agents = useMemo(() => summarizeAgents(skills.value), [skills.value]);
+  const recent = useMemo(() => buildRecentActivity(skills.value), [skills.value]);
+  const updates = useMemo(
+    () => availableUpdates(skills.value, skillUpdates.value),
+    [skills.value, skillUpdates.value],
+  );
+  const totalSkills = skills.value.length;
   const activeAgents = agents.length;
   const capacity = maxAgentCount(agents);
   const updateCount = updates.length;
 
-  if (skillsLoading && totalSkills === 0) {
-    return <FullPageLoading lang={lang} />;
+  if (skillsLoading.value && totalSkills === 0) {
+    return <FullPageLoading lang={lang.value} />;
   }
 
-  if (skillsError && totalSkills === 0) {
+  if (skillsError.value && totalSkills === 0) {
     return (
       <FullPageError
-        lang={lang}
-        message={skillsError}
+        lang={lang.value}
+        message={skillsError.value}
         onRetry={() => {
           loadGlobalSkills().catch(() => {
             // store handles error state
@@ -72,8 +74,8 @@ export function Home() {
                 totalSkills > 0 ? "bg-success" : "bg-fg-4",
               )}
             />
-            <Label lang={lang}>
-              {totalSkills > 0 ? t(lang, "home.status") : t(lang, "home.statusEmpty")}
+            <Label lang={lang.value}>
+              {totalSkills > 0 ? t(lang.value, "home.status") : t(lang.value, "home.statusEmpty")}
             </Label>
           </motion.div>
 
@@ -83,18 +85,18 @@ export function Home() {
             initial="initial"
             animate="animate"
           >
-            <Stat label={t(lang, "home.statSkills")} value={totalSkills} />
-            <Stat label={t(lang, "home.statTools")} value={activeAgents} />
+            <Stat label={t(lang.value, "home.statSkills")} value={totalSkills} />
+            <Stat label={t(lang.value, "home.statTools")} value={activeAgents} />
             <Stat
-              label={t(lang, "home.statUpdates")}
-              value={updatesLoading && skillUpdates.length === 0 ? "…" : updateCount}
+              label={t(lang.value, "home.statUpdates")}
+              value={updatesLoading.value && skillUpdates.value.length === 0 ? "…" : updateCount}
               isLast
             />
           </motion.div>
 
           <When condition={totalSkills === 0}>
             <motion.p {...fadeUp(0.08)} className="font-body text-sm text-fg-3">
-              {t(lang, "home.skillsNone")}
+              {t(lang.value, "home.skillsNone")}
             </motion.p>
           </When>
         </motion.section>
@@ -107,15 +109,15 @@ export function Home() {
         >
           <motion.div variants={staggerItem} className="flex flex-col gap-5">
             <div className="flex items-baseline justify-between">
-              <Label lang={lang}>{t(lang, "home.aiTools")}</Label>
-              <Label lang={lang} className="text-micro">
-                {t(lang, "home.active", { n: activeAgents })}
+              <Label lang={lang.value}>{t(lang.value, "home.aiTools")}</Label>
+              <Label lang={lang.value} className="text-micro">
+                {t(lang.value, "home.active", { n: activeAgents })}
               </Label>
             </div>
             <If condition={agents.length === 0}>
               <Then>
                 <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
-                  {t(lang, "home.skillsNone")}
+                  {t(lang.value, "home.skillsNone")}
                 </p>
               </Then>
               <Else>
@@ -126,7 +128,7 @@ export function Home() {
                   animate="animate"
                 >
                   {agents.map((agent) => (
-                    <AgentRow key={agent.id} agent={agent} capacity={capacity} lang={lang} />
+                    <AgentRow key={agent.id} agent={agent} capacity={capacity} lang={lang.value} />
                   ))}
                 </motion.div>
               </Else>
@@ -136,12 +138,12 @@ export function Home() {
           <motion.div variants={staggerItem} className="flex flex-col gap-8">
             <div className="flex flex-col gap-5">
               <div className="flex items-baseline justify-between gap-3">
-                <Label lang={lang}>{t(lang, "home.updates")}</Label>
+                <Label lang={lang.value}>{t(lang.value, "home.updates")}</Label>
                 <div className="flex items-center gap-3">
                   <span className="font-mono uppercase tracking-label text-micro text-fg-3">
-                    <If condition={updatesLoading && skillUpdates.length === 0}>
-                      <Then>{t(lang, "home.updatesChecking")}</Then>
-                      <Else>{t(lang, "home.updatesAvailable", { n: updateCount })}</Else>
+                    <If condition={updatesLoading.value && skillUpdates.value.length === 0}>
+                      <Then>{t(lang.value, "home.updatesChecking")}</Then>
+                      <Else>{t(lang.value, "home.updatesAvailable", { n: updateCount })}</Else>
                     </If>
                   </span>
                   <Button
@@ -149,37 +151,37 @@ export function Home() {
                     variant="link"
                     className="px-0"
                     onClick={checkSkillUpdates}
-                    disabled={updatesLoading}
+                    disabled={updatesLoading.value}
                   >
                     <RotateCcw
                       size={10}
                       strokeWidth={1.5}
-                      className={cn("transition-transform", updatesLoading && "animate-spin")}
+                      className={cn("transition-transform", updatesLoading.value && "animate-spin")}
                     />
-                    <If condition={updatesLoading}>
-                      <Then>{t(lang, "home.updatesChecking")}</Then>
-                      <Else>{t(lang, "home.updatesCheck")}</Else>
+                    <If condition={updatesLoading.value}>
+                      <Then>{t(lang.value, "home.updatesChecking")}</Then>
+                      <Else>{t(lang.value, "home.updatesCheck")}</Else>
                     </If>
                   </Button>
                 </div>
               </div>
 
               <Switch>
-                <Case condition={Boolean(updatesError)}>
+                <Case condition={Boolean(updatesError.value)}>
                   <p className="font-body text-sm text-fg-3 py-3 border-t border-border break-all">
-                    {t(lang, "home.updatesError")}
+                    {t(lang.value, "home.updatesError")}
                   </p>
                 </Case>
-                <Case condition={updatesLoading && skillUpdates.length === 0}>
+                <Case condition={updatesLoading.value && skillUpdates.value.length === 0}>
                   <p className="font-body text-sm text-fg-3 py-3 border-t border-border animate-pulse">
-                    {t(lang, "home.updatesChecking")}
+                    {t(lang.value, "home.updatesChecking")}
                   </p>
                 </Case>
                 <Case condition={updateCount === 0}>
                   <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
                     <If condition={totalSkills === 0}>
-                      <Then>{t(lang, "home.skillsNone")}</Then>
-                      <Else>{t(lang, "home.noUpdates")}</Else>
+                      <Then>{t(lang.value, "home.skillsNone")}</Then>
+                      <Else>{t(lang.value, "home.noUpdates")}</Else>
                     </If>
                   </p>
                 </Case>
@@ -191,7 +193,12 @@ export function Home() {
                     animate="animate"
                   >
                     {updates.map(({ skill, source }) => (
-                      <UpdateRow key={skill.name} name={skill.name} source={source} lang={lang} />
+                      <UpdateRow
+                        key={skill.name}
+                        name={skill.name}
+                        source={source}
+                        lang={lang.value}
+                      />
                     ))}
                   </motion.div>
                 </Default>
@@ -200,15 +207,15 @@ export function Home() {
 
             <div className="flex flex-col gap-5">
               <div className="flex items-baseline justify-between">
-                <Label lang={lang}>{t(lang, "home.recent")}</Label>
-                <Label lang={lang} className="text-micro">
-                  {t(lang, "home.events", { n: recent.length })}
+                <Label lang={lang.value}>{t(lang.value, "home.recent")}</Label>
+                <Label lang={lang.value} className="text-micro">
+                  {t(lang.value, "home.events", { n: recent.length })}
                 </Label>
               </div>
               <If condition={recent.length === 0}>
                 <Then>
                   <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
-                    {t(lang, "home.noRecent")}
+                    {t(lang.value, "home.noRecent")}
                   </p>
                 </Then>
                 <Else>
@@ -222,7 +229,7 @@ export function Home() {
                       <RecentRow
                         key={`${event.kind}-${event.skill}-${event.at}`}
                         event={event}
-                        lang={lang}
+                        lang={lang.value}
                       />
                     ))}
                   </motion.div>
@@ -235,7 +242,7 @@ export function Home() {
         <hr className="border-0 border-t border-border" />
 
         <motion.section {...fadeUp(0.12)} className="flex flex-col gap-5">
-          <Label lang={lang}>{t(lang, "home.actions")}</Label>
+          <Label lang={lang.value}>{t(lang.value, "home.actions")}</Label>
           <div className="flex gap-3">
             <Button
               size="hero"
@@ -243,7 +250,7 @@ export function Home() {
               className="flex-1 justify-between"
               onClick={() => navigate("/find")}
             >
-              <span>{t(lang, "home.install")}</span>
+              <span>{t(lang.value, "home.install")}</span>
               <span>→</span>
             </Button>
             <Button
@@ -252,7 +259,7 @@ export function Home() {
               className="px-6 font-bold text-fg"
               onClick={() => navigate("/marketplace")}
             >
-              {t(lang, "home.exploreBtn")}
+              {t(lang.value, "home.exploreBtn")}
             </Button>
             <Button
               size="hero"
@@ -260,7 +267,7 @@ export function Home() {
               className="px-6"
               onClick={() => navigate("/installed")}
             >
-              {t(lang, "home.viewSkills")}
+              {t(lang.value, "home.viewSkills")}
             </Button>
           </div>
         </motion.section>

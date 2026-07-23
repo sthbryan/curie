@@ -1,28 +1,23 @@
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { loadGlobalSkills } from "@/lib/boot";
-import { useSkillsStore } from "@/store/skills";
-import { useSystemStore } from "@/store/system";
+import { skills, skillsError, skillsLoading } from "@/store/skills";
+import { lang } from "@/store/system";
 import { InstalledFilters } from "./components/InstalledFilters";
 import { InstalledHeader } from "./components/InstalledHeader";
 import { InstalledList } from "./components/InstalledList";
 
 export function Installed() {
-  const lang = useSystemStore((s) => s.lang);
-  const skills = useSkillsStore((s) => s.skills);
-  const skillsLoading = useSkillsStore((s) => s.skillsLoading);
-  const skillsError = useSkillsStore((s) => s.skillsError);
-
   const loadSkills = () => {
     void loadGlobalSkills();
   };
 
-  if (skillsLoading && skills.length === 0) {
-    return <FullPageLoading lang={lang} />;
+  if (skillsLoading.value && skills.value.length === 0) {
+    return <FullPageLoading lang={lang.value} />;
   }
 
-  if (skillsError && skills.length === 0) {
-    return <FullPageError lang={lang} message={skillsError} onRetry={loadSkills} />;
+  if (skillsError.value && skills.value.length === 0) {
+    return <FullPageError lang={lang.value} message={skillsError.value} onRetry={loadSkills} />;
   }
 
   return (

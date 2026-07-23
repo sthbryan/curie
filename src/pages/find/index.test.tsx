@@ -5,8 +5,15 @@ import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
 import type { SkillSearchResult } from "@/components/types";
-import { useSkillsStore } from "@/store/skills";
-import { useSystemStore } from "@/store/system";
+import {
+  skills,
+  skillsError,
+  skillsLoading,
+  skillUpdates,
+  updatesError,
+  updatesLoading,
+} from "@/store/skills";
+import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
 
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
@@ -46,22 +53,18 @@ const sample: SkillSearchResult = {
 beforeEach(() => {
   invokeMock.mockReset();
   loadGlobalSkillsMock.mockClear();
-  useSkillsStore.setState({
-    skills: [],
-    skillsLoading: false,
-    skillsError: null,
-    skillUpdates: [],
-    updatesLoading: false,
-    updatesError: null,
-  });
-  useSystemStore.setState({
-    theme: "dark",
-    lang: "en",
-    reducedMotion: "user",
-    hasBooted: true,
-    stage: "home",
-    node: { installed: true, version: "20.0.0", path: "/usr/bin/node", manager: "volta" },
-  });
+  skills.value = [];
+  skillsLoading.value = false;
+  skillsError.value = null;
+  skillUpdates.value = [];
+  updatesLoading.value = false;
+  updatesError.value = null;
+  theme.value = "dark";
+  lang.value = "en";
+  reducedMotion.value = "user";
+  hasBooted.value = false;
+  stage.value = "loading";
+  node.value = null;
 });
 
 afterEach(() => {

@@ -4,7 +4,7 @@ import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { NodeInfo, ProgressEvent } from "@/components/types";
-import { useSystemStore } from "@/store/system";
+import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
 
 const invokeMock = vi.fn();
 const listenMock = vi.fn();
@@ -56,14 +56,12 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockClear();
   unlisten.mockReset();
   listenMock.mockResolvedValue(unlisten);
-  useSystemStore.setState({
-    theme: "dark",
-    lang: "en",
-    reducedMotion: "user",
-    hasBooted: true,
-    stage: "setup",
-    node: null,
-  });
+  theme.value = "dark";
+  lang.value = "en";
+  reducedMotion.value = "user";
+  hasBooted.value = false;
+  stage.value = "loading";
+  node.value = null;
 });
 
 afterEach(() => {
