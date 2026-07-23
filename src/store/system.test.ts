@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { beforeEach, describe, expect, it } from "vitest";
 import type { NodeInfo } from "@/components/types";
-import { useUiStore } from "./ui";
+import { useSystemStore } from "./system";
 
 const sampleNode: NodeInfo = {
   installed: true,
@@ -13,7 +13,7 @@ const sampleNode: NodeInfo = {
 const initial = {
   theme: "dark" as const,
   lang: "en" as const,
-  reducedMotion: "system" as const,
+  reducedMotion: "user" as const,
   hasBooted: false,
   stage: "loading" as const,
   node: null,
@@ -21,69 +21,69 @@ const initial = {
 
 beforeEach(() => {
   localStorage.clear();
-  useUiStore.setState(initial);
+  useSystemStore.setState(initial);
 });
 
-describe("useUiStore", () => {
+describe("useSystemStore", () => {
   it("starts with the documented defaults", () => {
-    const s = useUiStore.getState();
+    const s = useSystemStore.getState();
     expect(s.theme).toBe("dark");
     expect(s.lang).toBe("en");
-    expect(s.reducedMotion).toBe("system");
+    expect(s.reducedMotion).toBe("user");
     expect(s.hasBooted).toBe(false);
     expect(s.stage).toBe("loading");
     expect(s.node).toBeNull();
   });
 
   it("setTheme updates the theme", () => {
-    useUiStore.getState().setTheme("light");
-    expect(useUiStore.getState().theme).toBe("light");
+    useSystemStore.getState().setTheme("light");
+    expect(useSystemStore.getState().theme).toBe("light");
   });
 
   it("setLang updates the language", () => {
-    useUiStore.getState().setLang("es");
-    expect(useUiStore.getState().lang).toBe("es");
+    useSystemStore.getState().setLang("es");
+    expect(useSystemStore.getState().lang).toBe("es");
   });
 
   it("setReducedMotion updates the preference", () => {
-    useUiStore.getState().setReducedMotion("true");
-    expect(useUiStore.getState().reducedMotion).toBe("true");
+    useSystemStore.getState().setReducedMotion("always");
+    expect(useSystemStore.getState().reducedMotion).toBe("always");
   });
 
   it("setStage transitions between loading, setup and home", () => {
-    useUiStore.getState().setStage("setup");
-    expect(useUiStore.getState().stage).toBe("setup");
-    useUiStore.getState().setStage("home");
-    expect(useUiStore.getState().stage).toBe("home");
+    useSystemStore.getState().setStage("setup");
+    expect(useSystemStore.getState().stage).toBe("setup");
+    useSystemStore.getState().setStage("home");
+    expect(useSystemStore.getState().stage).toBe("home");
   });
 
   it("setNode stores the detected node info", () => {
-    useUiStore.getState().setNode(sampleNode);
-    expect(useUiStore.getState().node).toEqual(sampleNode);
-    useUiStore.getState().setNode(null);
-    expect(useUiStore.getState().node).toBeNull();
+    useSystemStore.getState().setNode(sampleNode);
+    expect(useSystemStore.getState().node).toEqual(sampleNode);
+    useSystemStore.getState().setNode(null);
+    expect(useSystemStore.getState().node).toBeNull();
   });
 
   it("markBooted flips hasBooted to true", () => {
-    useUiStore.getState().markBooted();
-    expect(useUiStore.getState().hasBooted).toBe(true);
+    useSystemStore.getState().markBooted();
+    expect(useSystemStore.getState().hasBooted).toBe(true);
   });
 
   it("completeSetup stores the node and transitions to home", () => {
-    useUiStore.getState().setStage("setup");
-    useUiStore.getState().completeSetup(sampleNode);
-    const s = useUiStore.getState();
+    useSystemStore.getState().setStage("setup");
+    useSystemStore.getState().completeSetup(sampleNode);
+    const s = useSystemStore.getState();
     expect(s.node).toEqual(sampleNode);
     expect(s.stage).toBe("home");
   });
 
   it("persists only theme, lang, reducedMotion, and hasBooted to localStorage", () => {
-    useUiStore.getState().setTheme("light");
-    useUiStore.getState().setLang("es");
-    useUiStore.getState().setReducedMotion("true");
-    useUiStore.getState().markBooted();
-    useUiStore.getState().setStage("setup");
-    useUiStore.getState().setNode(sampleNode);
+    useSystemStore.getState().setTheme("light");
+    useSystemStore.getState().setLang("es");
+    useSystemStore.getState().setReducedMotion("always");
+    useSystemStore.getState().markBooted();
+    useSystemStore.getState().setStage("setup");
+    useSystemStore.getState().setNode(sampleNode);
 
     const raw = localStorage.getItem("curie.ui");
     expect(raw).not.toBeNull();
@@ -100,15 +100,15 @@ describe("useUiStore", () => {
     localStorage.setItem(
       "curie.ui",
       JSON.stringify({
-        state: { theme: "light", lang: "es", reducedMotion: "true", hasBooted: true },
+        state: { theme: "light", lang: "es", reducedMotion: "always", hasBooted: true },
         version: 0,
       }),
     );
-    await useUiStore.persist.rehydrate();
-    const s = useUiStore.getState();
+    await useSystemStore.persist.rehydrate();
+    const s = useSystemStore.getState();
     expect(s.theme).toBe("light");
     expect(s.lang).toBe("es");
-    expect(s.reducedMotion).toBe("true");
+    expect(s.reducedMotion).toBe("always");
     expect(s.hasBooted).toBe(true);
     // stage and node fall back to defaults — not rehydrated
     expect(s.stage).toBe("loading");

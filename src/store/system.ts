@@ -3,14 +3,16 @@ import { persist } from "zustand/middleware";
 import type { NodeInfo, ReducedMotionPref, Stage, ThemeMode } from "@/components/types";
 import type { Lang } from "@/i18n";
 
-export type UiState = {
+export type SystemState = {
   theme: ThemeMode;
   lang: Lang;
   reducedMotion: ReducedMotionPref;
   hasBooted: boolean;
   stage: Extract<Stage, "loading" | "setup" | "home">;
   node: NodeInfo | null;
+};
 
+export type SystemActions = {
   setTheme: (theme: ThemeMode) => void;
   setLang: (lang: Lang) => void;
   setReducedMotion: (pref: ReducedMotionPref) => void;
@@ -20,7 +22,9 @@ export type UiState = {
   completeSetup: (node: NodeInfo) => void;
 };
 
-export const useUiStore = create<UiState>()(
+export type SystemStore = SystemState & SystemActions;
+
+export const useSystemStore = create<SystemStore>()(
   persist(
     (set) => ({
       theme: "dark",
