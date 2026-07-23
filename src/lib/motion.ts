@@ -18,10 +18,10 @@ export const duration = {
 } as const;
 
 export const pageTransition = {
-  initial: { opacity: 0, y: 8 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -4 },
-  transition: { duration: duration.fast, type: "spring" },
+  initial: { opacity: 0, y: 12, scale: 0.99 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -6, scale: 1.005 },
+  transition: { duration: duration.slow, ease: easeOut },
 } as const;
 
 export const fadeUp = (delay = 0) =>
