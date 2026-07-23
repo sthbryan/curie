@@ -1,22 +1,16 @@
 import { useReducedMotionConfig } from "motion/react";
-import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { useAsymptoticProgress } from "@/lib/useAsymptoticProgress";
+import { lang } from "@/store/system";
 
 type Props = {
   active: boolean;
   labelKey: string;
-  lang: Lang;
   className?: string;
 };
 
-/**
- * Compact busy control for row actions. Shows a filled bar + percent
- * (asymptotic — no real CLI progress stream). Falls back to a static
- * label when reduced motion is on.
- */
-export function ActionProgress({ active, labelKey, lang, className = "" }: Props) {
+export function ActionProgress({ active, labelKey, className = "" }: Props) {
   const shouldReduceMotion = useReducedMotionConfig();
   const prefersReduced = shouldReduceMotion === true;
 
@@ -33,7 +27,7 @@ export function ActionProgress({ active, labelKey, lang, className = "" }: Props
         )}
         aria-live="polite"
       >
-        {t(lang, labelKey)}
+        {t(lang.value, labelKey)}
       </span>
     );
   }
@@ -48,7 +42,7 @@ export function ActionProgress({ active, labelKey, lang, className = "" }: Props
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={pct}
-      aria-label={t(lang, labelKey)}
+      aria-label={t(lang.value, labelKey)}
     >
       <div
         className="absolute inset-y-0 left-0 bg-fg/20 transition-[width] duration-150 ease-out"
