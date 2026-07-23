@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
-import { act } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import { createRoot } from "preact/compat/client";
+import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ErrorBoundary, type ErrorBoundaryFallbackProps, resetKeysChanged } from "./ErrorBoundary";
 
@@ -15,7 +15,7 @@ function Bomb({ shouldThrow, message = "boom" }: BombProps) {
   return <div data-testid="child">child-ok</div>;
 }
 
-let root: Root | null = null;
+let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
 
 function mount(element: React.ReactElement) {
