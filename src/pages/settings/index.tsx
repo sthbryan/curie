@@ -1,10 +1,18 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { ChoiceButton } from "../components/ChoiceButton";
-import { Label } from "../components/Label";
-import { THEME_OPTIONS, type ThemeMode } from "../components/types";
-import { t } from "../i18n";
-import { APP_NAME, APP_VERSION_LABEL } from "../lib/meta";
-import { useAppStore } from "../store/app";
+import { ChoiceButton } from "../../components/ChoiceButton";
+import { Label } from "../../components/Label";
+import {
+  REDUCED_MOTION_OPTIONS,
+  type ReducedMotionPref,
+  THEME_OPTIONS,
+  type ThemeMode,
+} from "../../components/types";
+import { t } from "../../i18n";
+import { APP_NAME, APP_VERSION_LABEL } from "../../lib/meta";
+import { useAppStore } from "../../store/app";
+import { Row } from "./components/Row";
+import { SystemRow } from "./components/SystemRow";
+import { ThemeCard } from "./components/ThemeCard";
 
 const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
   dark: { label: "settings.themeDark", hint: "settings.themeDarkHint" },
@@ -13,81 +21,20 @@ const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
   dawn: { label: "settings.themeDawn", hint: "settings.themeDawnHint" },
 };
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex items-center justify-between border-b border-border py-4">
-      <span className="font-body text-sm text-fg">{label}</span>
-      <div className="flex items-center">{children}</div>
-    </div>
-  );
-}
-
-function SystemRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between border-b border-border py-3">
-      <span className="font-mono uppercase tracking-label text-mono text-fg-3">{label}</span>
-      <span className="font-mono text-mono text-fg truncate max-w-md text-right">{value}</span>
-    </div>
-  );
-}
-
-function ThemeCard({
-  id,
-  active,
-  label,
-  hint,
-  swatches,
-  onClick,
-}: {
-  id: ThemeMode;
-  active: boolean;
-  label: string;
-  hint: string;
-  swatches: [string, string, string];
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      data-theme-option={id}
-      className={`flex flex-col gap-3 border p-4 text-left transition-colors duration-150 rounded-sm ${
-        active
-          ? "border-fg bg-surface-tint"
-          : "border-border-strong hover:border-fg-3 hover:bg-surface-hover"
-      }`}
-    >
-      <div className="flex items-center gap-1.5">
-        {swatches.map((color) => (
-          <span
-            key={`${id}-${color}`}
-            className="h-5 w-5 rounded-sm border border-border-strong"
-            style={{ backgroundColor: color }}
-            aria-hidden
-          />
-        ))}
-      </div>
-      <div className="flex flex-col gap-0.5">
-        <span
-          className={`font-mono uppercase tracking-label text-mono ${
-            active ? "text-fg font-bold" : "text-fg-2"
-          }`}
-        >
-          {label}
-        </span>
-        <span className="font-mono uppercase tracking-label text-micro text-fg-4">{hint}</span>
-      </div>
-    </button>
-  );
-}
+const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
+  system: "settings.reducedMotionSystem",
+  true: "settings.reducedMotionTrue",
+  false: "settings.reducedMotionFalse",
+};
 
 export function Settings() {
   const lang = useAppStore((s) => s.lang);
   const theme = useAppStore((s) => s.theme);
+  const reducedMotion = useAppStore((s) => s.reducedMotion);
   const node = useAppStore((s) => s.node);
   const setLang = useAppStore((s) => s.setLang);
   const setTheme = useAppStore((s) => s.setTheme);
+  const setReducedMotion = useAppStore((s) => s.setReducedMotion);
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
@@ -151,6 +98,24 @@ export function Settings() {
 
             <p className="font-body text-sm text-fg-3 pb-4 pl-0 pt-3">
               {t(lang, "settings.themeDesc")}
+            </p>
+
+            <Row label={t(lang, "settings.reducedMotion")}>
+              <div className="flex">
+                {REDUCED_MOTION_OPTIONS.map((opt, index) => (
+                  <ChoiceButton
+                    key={opt}
+                    active={reducedMotion === opt}
+                    label={t(lang, REDUCED_MOTION_LABEL[opt])}
+                    onClick={() => setReducedMotion(opt)}
+                    isLast={index === REDUCED_MOTION_OPTIONS.length - 1}
+                  />
+                ))}
+              </div>
+            </Row>
+
+            <p className="font-body text-sm text-fg-3 pb-4 pl-0">
+              {t(lang, "settings.reducedMotionDesc")}
             </p>
           </div>
         </section>
