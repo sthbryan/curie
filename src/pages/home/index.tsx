@@ -2,6 +2,7 @@ import { RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
+import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { FullPageError } from "@/components/FullPageError";
@@ -47,6 +48,16 @@ export function Home() {
     loadGlobalSkills().catch(() => {
       // store handles error state
     });
+  };
+
+  const handleCheckUpdates = async () => {
+    await checkSkillUpdates();
+    const n = skillUpdates.value.length;
+    if (n > 0) {
+      toast.success(t("updatesAvailable", { n }));
+    } else {
+      toast.success(t("noUpdates"));
+    }
   };
 
   if (skillsLoading.value && totalSkills === 0) {
@@ -145,7 +156,7 @@ export function Home() {
                     size="xs"
                     variant="link"
                     className="px-0"
-                    onClick={checkSkillUpdates}
+                    onClick={handleCheckUpdates}
                     disabled={updatesLoading.value}
                   >
                     <RotateCcw
