@@ -4,6 +4,8 @@ import {
   availableUpdates,
   buildRecentActivity,
   filterSkills,
+  formatInstalls,
+  isSearchResultInstalled,
   maxAgentCount,
   summarizeAgents,
   updateNameSet,
@@ -102,5 +104,27 @@ describe("availableUpdates", () => {
     const rows = availableUpdates(sample, sampleUpdates);
     expect(rows).toHaveLength(1);
     expect(rows[0]?.skill.name).toBe("impeccable");
+  });
+});
+
+describe("formatInstalls", () => {
+  it("formats compact counts", () => {
+    expect(formatInstalls(0)).toBe("");
+    expect(formatInstalls(42)).toBe("42");
+    expect(formatInstalls(5500)).toBe("5.5K");
+    expect(formatInstalls(11865)).toBe("12K");
+    expect(formatInstalls(1_200_000)).toBe("1.2M");
+  });
+});
+
+describe("isSearchResultInstalled", () => {
+  it("matches by name and source", () => {
+    expect(
+      isSearchResultInstalled({ name: "impeccable", source: "pbakaus/impeccable" }, sample),
+    ).toBe(true);
+    expect(isSearchResultInstalled({ name: "impeccable", source: "other/repo" }, sample)).toBe(
+      false,
+    );
+    expect(isSearchResultInstalled({ name: "missing", source: "x/y" }, sample)).toBe(false);
   });
 });
