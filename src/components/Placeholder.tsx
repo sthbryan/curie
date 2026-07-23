@@ -1,5 +1,6 @@
 import { t } from "../i18n";
 import { useAppStore } from "../store/app";
+import { Button } from "./Button";
 import type { View } from "./types";
 
 type Props = {
@@ -18,13 +19,9 @@ export function Placeholder({ view }: Props) {
       <span className="font-mono uppercase tracking-label text-mono text-fg-3">
         {t(lang, "home.notBuilt")}
       </span>
-      <button
-        type="button"
-        onClick={() => setView("home")}
-        className="mt-4 h-9 px-4 border border-border-strong text-fg-2 rounded-sm font-mono uppercase tracking-label text-mono hover:border-fg-3 hover:text-fg active:scale-[0.99] transition-all duration-150"
-      >
+      <Button size="md" variant="outline" className="mt-4" onClick={() => setView("home")}>
         {t(lang, "home.back")}
-      </button>
+      </Button>
     </main>
   );
 }
