@@ -31,6 +31,23 @@ Your agents already use **skills**, small packages that show tools like Claude C
 
 ---
 
+## Screenshots
+
+<div style="display: flex; flex-direction: row; gap: 2rem; align-items: center;">
+  <p align="center">
+    <img src="./assets/screenshots/home.webp" alt="Home screen" width="600" />
+    <br />
+    <em>Home — dashboard with stats, recent activity, and quick actions</em>
+  </p>
+
+  <p align="center">
+    <img src="./assets/screenshots/explore.webp" alt="Explore marketplace" width="600" />
+    <br />
+    <em>Explore — browse trending skills from the marketplace</em>
+  </p>
+</div>
+---
+
 ## Why people open Curie
 
 **Clarity over chaos**  
