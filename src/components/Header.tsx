@@ -1,13 +1,13 @@
 import { t } from "../i18n";
 import { APP_NAME, APP_VERSION_LABEL } from "../lib/meta";
-import { useAppStore } from "../store/app";
+import { useUiStore } from "../store/ui";
 
 type Props = {
   ready: boolean;
 };
 
 export function Header({ ready }: Props) {
-  const lang = useAppStore((s) => s.lang);
+  const lang = useUiStore((s) => s.lang);
 
   return (
     <header
