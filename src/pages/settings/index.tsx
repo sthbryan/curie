@@ -10,7 +10,7 @@ import {
 } from "../../components/types";
 import { t } from "../../i18n";
 import { APP_NAME, APP_VERSION_LABEL } from "../../lib/meta";
-import { useAppStore } from "../../store/app";
+import { useUiStore } from "../../store/ui";
 import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
@@ -29,13 +29,13 @@ const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
 };
 
 export function Settings() {
-  const lang = useAppStore((s) => s.lang);
-  const theme = useAppStore((s) => s.theme);
-  const reducedMotion = useAppStore((s) => s.reducedMotion);
-  const node = useAppStore((s) => s.node);
-  const setLang = useAppStore((s) => s.setLang);
-  const setTheme = useAppStore((s) => s.setTheme);
-  const setReducedMotion = useAppStore((s) => s.setReducedMotion);
+  const lang = useUiStore((s) => s.lang);
+  const theme = useUiStore((s) => s.theme);
+  const reducedMotion = useUiStore((s) => s.reducedMotion);
+  const node = useUiStore((s) => s.node);
+  const setLang = useUiStore((s) => s.setLang);
+  const setTheme = useUiStore((s) => s.setTheme);
+  const setReducedMotion = useUiStore((s) => s.setReducedMotion);
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">

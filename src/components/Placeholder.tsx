@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import { t } from "../i18n";
-import { useAppStore } from "../store/app";
+import { useUiStore } from "../store/ui";
 import { Button } from "./Button";
 import type { View } from "./types";
 
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function Placeholder({ view }: Props) {
-  const lang = useAppStore((s) => s.lang);
+  const lang = useUiStore((s) => s.lang);
   const [, navigate] = useLocation();
 
   return (
