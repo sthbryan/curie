@@ -1,9 +1,17 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { ChoiceButton } from "../components/ChoiceButton";
 import { Label } from "../components/Label";
+import { THEME_OPTIONS, type ThemeMode } from "../components/types";
 import { t } from "../i18n";
 import { APP_NAME, APP_VERSION_LABEL } from "../lib/meta";
 import { useAppStore } from "../store/app";
+
+const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
+  dark: { label: "settings.themeDark", hint: "settings.themeDarkHint" },
+  light: { label: "settings.themeLight", hint: "settings.themeLightHint" },
+  rose: { label: "settings.themeRose", hint: "settings.themeRoseHint" },
+  dawn: { label: "settings.themeDawn", hint: "settings.themeDawnHint" },
+};
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -20,6 +28,57 @@ function SystemRow({ label, value }: { label: string; value: string }) {
       <span className="font-mono uppercase tracking-label text-mono text-fg-3">{label}</span>
       <span className="font-mono text-mono text-fg truncate max-w-md text-right">{value}</span>
     </div>
+  );
+}
+
+function ThemeCard({
+  id,
+  active,
+  label,
+  hint,
+  swatches,
+  onClick,
+}: {
+  id: ThemeMode;
+  active: boolean;
+  label: string;
+  hint: string;
+  swatches: [string, string, string];
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      data-theme-option={id}
+      className={`flex flex-col gap-3 border p-4 text-left transition-colors duration-150 rounded-sm ${
+        active
+          ? "border-fg bg-surface-tint"
+          : "border-border-strong hover:border-fg-3 hover:bg-surface-hover"
+      }`}
+    >
+      <div className="flex items-center gap-1.5">
+        {swatches.map((color) => (
+          <span
+            key={`${id}-${color}`}
+            className="h-5 w-5 rounded-sm border border-border-strong"
+            style={{ backgroundColor: color }}
+            aria-hidden
+          />
+        ))}
+      </div>
+      <div className="flex flex-col gap-0.5">
+        <span
+          className={`font-mono uppercase tracking-label text-mono ${
+            active ? "text-fg font-bold" : "text-fg-2"
+          }`}
+        >
+          {label}
+        </span>
+        <span className="font-mono uppercase tracking-label text-micro text-fg-4">{hint}</span>
+      </div>
+    </button>
   );
 }
 
@@ -73,23 +132,26 @@ export function Settings() {
               {t(lang, "settings.languageDesc")}
             </p>
 
-            <Row label={t(lang, "settings.theme")}>
-              <div className="flex">
-                <ChoiceButton
-                  active={theme === "dark"}
-                  label={t(lang, "settings.themeDark")}
-                  onClick={() => setTheme("dark")}
-                />
-                <ChoiceButton
-                  active={theme === "light"}
-                  label={t(lang, "settings.themeLight")}
-                  onClick={() => setTheme("light")}
-                  isLast
-                />
+            <div className="flex flex-col gap-3 border-b border-border py-4">
+              <span className="font-body text-sm text-fg">{t(lang, "settings.theme")}</span>
+              <div className="grid grid-cols-2 gap-3">
+                {THEME_OPTIONS.map((opt) => (
+                  <ThemeCard
+                    key={opt.id}
+                    id={opt.id}
+                    active={theme === opt.id}
+                    label={t(lang, THEME_LABEL[opt.id].label)}
+                    hint={t(lang, THEME_LABEL[opt.id].hint)}
+                    swatches={opt.swatches}
+                    onClick={() => setTheme(opt.id)}
+                  />
+                ))}
               </div>
-            </Row>
+            </div>
 
-            <p className="font-body text-sm text-fg-3 pb-4 pl-0">{t(lang, "settings.themeDesc")}</p>
+            <p className="font-body text-sm text-fg-3 pb-4 pl-0 pt-3">
+              {t(lang, "settings.themeDesc")}
+            </p>
           </div>
         </section>
 

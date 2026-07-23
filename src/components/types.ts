@@ -1,44 +1,37 @@
-export type ThemeMode = "dark" | "light";
+export type ThemeMode = "dark" | "light" | "rose" | "dawn";
 export type View = "home" | "installed" | "marketplace" | "search" | "settings";
-
-export type Agent = {
-  id: string;
-  label: string;
-  count: number;
-  capacity: number;
-  status: "current" | "updates";
-  updates: number;
-};
-
-export const AGENTS: Agent[] = [
-  { id: "claude", label: "claude-code", count: 9, capacity: 12, status: "updates", updates: 3 },
-  { id: "cursor", label: "cursor", count: 6, capacity: 12, status: "current", updates: 0 },
-  { id: "opencode", label: "opencode", count: 4, capacity: 12, status: "current", updates: 0 },
-];
-
-export type Activity = {
-  kind: "install" | "update" | "remove";
-  skill: string;
-  agent: string;
-  when: string;
-};
-
-export const RECENT: Activity[] = [
-  { kind: "install", skill: "skill-creator", agent: "claude-code", when: "2h ago" },
-  { kind: "install", skill: "web-design-guidelines", agent: "claude-code", when: "yesterday" },
-  { kind: "update", skill: "react-patterns", agent: "cursor", when: "yesterday" },
-  { kind: "install", skill: "figma-tokens", agent: "opencode", when: "3 days ago" },
-];
-
-export const TOTAL_SKILLS = 12;
-export const TOTAL_UPDATES = 3;
-export const ACTIVE_AGENTS = AGENTS.filter((a) => a.count > 0).length;
 
 export type NodeInfo = {
   installed: boolean;
   version: string | null;
   path: string | null;
   manager: string | null;
+};
+
+export type SkillInfo = {
+  name: string;
+  path: string;
+  scope: string;
+  agents: string[];
+  source: string | null;
+  sourceUrl: string | null;
+  sourceType: string | null;
+  installedAt: string | null;
+  updatedAt: string | null;
+};
+
+export type AgentSummary = {
+  id: string;
+  label: string;
+  count: number;
+};
+
+export type Activity = {
+  kind: "install" | "update";
+  skill: string;
+  source: string | null;
+  when: string;
+  at: string;
 };
 
 export type Stage = "loading" | "setup" | "installing" | "done" | "error" | "home";
@@ -52,3 +45,13 @@ export type ProgressEvent = {
   message: string;
   done: boolean;
 };
+
+export const THEME_OPTIONS: {
+  id: ThemeMode;
+  swatches: [string, string, string];
+}[] = [
+  { id: "dark", swatches: ["#0a0a0a", "#f5f5f3", "#d71921"] },
+  { id: "light", swatches: ["#fafaf8", "#18181b", "#c2151c"] },
+  { id: "rose", swatches: ["#191724", "#e0def4", "#eb6f92"] },
+  { id: "dawn", swatches: ["#faf4ed", "#575279", "#b4637a"] },
+];
