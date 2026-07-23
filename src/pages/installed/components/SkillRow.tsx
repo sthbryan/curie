@@ -1,3 +1,5 @@
+import cn from "cnfast";
+import { ArrowUp, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
@@ -56,7 +58,11 @@ export function SkillRow({
       <motion.article
         layout
         variants={listItem}
-        className={`grid ${INSTALLED_GRID} items-center gap-4 border-b border-border py-4 first:border-t`}
+        className={cn(
+          "grid",
+          INSTALLED_GRID,
+          "items-center gap-4 border-b border-border py-4 first:border-t",
+        )}
       >
         <div className="min-w-0 flex flex-col gap-1">
           <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
@@ -91,9 +97,10 @@ export function SkillRow({
 
         <div className="text-right">
           <span
-            className={`font-mono uppercase tracking-label text-micro ${
-              updateAvailable ? "text-accent" : "text-fg-4"
-            }`}
+            className={cn(
+              "font-mono uppercase tracking-label text-micro",
+              updateAvailable ? "text-accent" : "text-fg-4",
+            )}
           >
             {when ? formatRelative(when) : "—"}
           </span>
@@ -116,7 +123,7 @@ export function SkillRow({
                   onClick={() => onUpdate?.(skill.name)}
                   disabled={actionBusy}
                 >
-                  ↑
+                  <ArrowUp />
                 </IconButton>
               </When>
               <When condition={!updateAvailable}>
@@ -128,7 +135,7 @@ export function SkillRow({
                 onClick={() => setConfirmRemove(true)}
                 disabled={actionBusy}
               >
-                ×
+                <X />
               </IconButton>
             </Else>
           </If>
