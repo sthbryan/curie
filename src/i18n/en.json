@@ -1,12 +1,11 @@
 {
   "app": {
-    "ready": "READY",
-    "appName": "Curie · Skills Manager"
+    "ready": "READY"
   },
   "error": {
     "eyebrow": "SOMETHING BROKE",
-    "title": "This view crashed",
-    "subtitle": "The rest of Curie is still running. Retry this screen or go home.",
+    "title": "Something went wrong in this section",
+    "subtitle": "The rest of Curie is still working. Try reloading this screen or restarting the app.",
     "unknown": "Unknown error",
     "retry": "RETRY",
     "home": "GO HOME",
@@ -50,8 +49,8 @@
     "error": "Something went wrong"
   },
   "home": {
-    "status": "STATUS · NPX SKILLS",
-    "statusEmpty": "EMPTY · NPX SKILLS",
+    "status": "HOME · SKILLS",
+    "statusEmpty": "HOME · SKILLS EMPTY",
     "skillsNone": "No global skills installed yet",
     "statSkills": "SKILLS",
     "statTools": "AI TOOLS",
