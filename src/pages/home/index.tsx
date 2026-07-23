@@ -1,39 +1,14 @@
 import { motion } from "motion/react";
 import { useMemo } from "react";
-import { Label } from "../components/Label";
-import { t } from "../i18n";
-import { loadGlobalSkills } from "../lib/boot";
-import { fadeUp, listItem, listStagger, staggerContainer, staggerItem } from "../lib/motion";
-import { buildRecentActivity, maxAgentCount, summarizeAgents } from "../lib/skills";
-import { useAppStore } from "../store/app";
-
-function density(count: number, capacity: number): number {
-  return Math.min(count / capacity, 1);
-}
-
-function Stat({
-  label,
-  value,
-  isLast = false,
-}: {
-  label: string;
-  value: number;
-  isLast?: boolean;
-}) {
-  return (
-    <motion.div
-      variants={staggerItem}
-      className={`flex min-w-0 flex-1 flex-col gap-2 py-5 ${
-        isLast ? "" : "border-r border-border pr-6 mr-6"
-      }`}
-    >
-      <span className="font-mono uppercase tracking-label text-micro text-fg-4">{label}</span>
-      <span className="font-display text-heading font-bold leading-none tracking-tight text-fg tabular-nums">
-        {value}
-      </span>
-    </motion.div>
-  );
-}
+import { Label } from "../../components/Label";
+import { t } from "../../i18n";
+import { loadGlobalSkills } from "../../lib/boot";
+import { fadeUp, listStagger, staggerContainer, staggerItem } from "../../lib/motion";
+import { buildRecentActivity, maxAgentCount, summarizeAgents } from "../../lib/skills";
+import { useAppStore } from "../../store/app";
+import { AgentRow } from "./components/AgentRow";
+import { RecentRow } from "./components/RecentRow";
+import { Stat } from "./components/Stat";
 
 export function Home() {
   const lang = useAppStore((s) => s.lang);
@@ -145,31 +120,7 @@ export function Home() {
                 animate="animate"
               >
                 {agents.map((agent) => (
-                  <motion.div
-                    key={agent.id}
-                    variants={listItem}
-                    className="flex items-center gap-4 border-b border-border py-3 first:border-t"
-                  >
-                    <span className="font-mono text-mono text-fg-2 w-32 truncate">
-                      {agent.label}
-                    </span>
-                    <div className="flex flex-1 items-center gap-2">
-                      <div className="relative h-1.5 flex-1 bg-border overflow-hidden rounded-sm">
-                        <motion.div
-                          className="absolute inset-y-0 left-0 bg-fg-2"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${density(agent.count, capacity) * 100}%` }}
-                          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-                        />
-                      </div>
-                    </div>
-                    <span className="font-mono text-mono font-bold leading-none tracking-tight w-5 text-right text-fg tabular-nums">
-                      {agent.count}
-                    </span>
-                    <span className="font-mono uppercase tracking-label text-micro w-14 text-right text-fg-4">
-                      {agent.count === 1 ? t(lang, "home.skillWord") : t(lang, "home.skillsWord")}
-                    </span>
-                  </motion.div>
+                  <AgentRow key={agent.id} agent={agent} capacity={capacity} lang={lang} />
                 ))}
               </motion.div>
             )}
@@ -194,24 +145,11 @@ export function Home() {
                 animate="animate"
               >
                 {recent.map((event) => (
-                  <motion.div
+                  <RecentRow
                     key={`${event.kind}-${event.skill}-${event.at}`}
-                    variants={listItem}
-                    className="flex items-baseline gap-3 border-b border-border py-3 first:border-t"
-                  >
-                    <span className="font-mono uppercase tracking-label text-micro text-fg-3 w-16 shrink-0">
-                      {event.kind === "install"
-                        ? t(lang, "home.kindInstall")
-                        : t(lang, "home.kindUpdate")}
-                    </span>
-                    <span className="font-mono text-mono text-fg grow truncate">{event.skill}</span>
-                    <Label lang={lang} className="text-micro w-28 truncate text-right">
-                      {event.source ?? "local"}
-                    </Label>
-                    <Label lang={lang} className="text-micro w-20 text-right shrink-0">
-                      {event.when}
-                    </Label>
-                  </motion.div>
+                    event={event}
+                    lang={lang}
+                  />
                 ))}
               </motion.div>
             )}
