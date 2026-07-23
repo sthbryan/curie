@@ -83,6 +83,11 @@ export type Messages = {
     refresh: string;
     refreshing: string;
     install: string;
+    updateAll: string;
+    updatingAll: string;
+    updateOne: string;
+    updatingOne: string;
+    updateError: string;
     search: string;
     searchPlaceholder: string;
     showing: string;
@@ -93,6 +98,7 @@ export type Messages = {
     colSource: string;
     colAgents: string;
     colWhen: string;
+    colActions: string;
     local: string;
     noAgents: string;
     empty: string;
