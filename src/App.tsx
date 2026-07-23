@@ -1,21 +1,21 @@
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { type ReactNode, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
-import { ErrorBoundary } from "./components/ErrorBoundary";
-import { ErrorFallback } from "./components/ErrorFallback";
-import { FullPageLoading } from "./components/FullPageLoading";
-import { Header } from "./components/Header";
-import { Placeholder } from "./components/Placeholder";
-import { Sidebar } from "./components/Sidebar";
-import { StatusBar } from "./components/StatusBar";
-import { useBoot } from "./lib/boot";
-import { pageTransition, toMotionReducedMotion } from "./lib/motion";
-import { Find } from "./pages/find";
-import { Home } from "./pages/home";
-import { Installed } from "./pages/installed";
-import { Settings } from "./pages/settings";
-import { Setup } from "./pages/setup";
-import { useUiStore } from "./store/ui";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ErrorFallback } from "@/components/ErrorFallback";
+import { FullPageLoading } from "@/components/FullPageLoading";
+import { Header } from "@/components/Header";
+import { Placeholder } from "@/components/Placeholder";
+import { Sidebar } from "@/components/Sidebar";
+import { StatusBar } from "@/components/StatusBar";
+import { useBoot } from "@/lib/boot";
+import { pageTransition, toMotionReducedMotion } from "@/lib/motion";
+import { Find } from "@/pages/find";
+import { Home } from "@/pages/home";
+import { Installed } from "@/pages/installed";
+import { Settings } from "@/pages/settings";
+import { Setup } from "@/pages/setup";
+import { useUiStore } from "@/store/ui";
 
 function RoutedPages() {
   const [location] = useLocation();
