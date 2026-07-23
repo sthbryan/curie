@@ -5,8 +5,10 @@ import {
   buildRecentActivity,
   filterSkills,
   formatInstalls,
+  formatRelative,
   isSearchResultInstalled,
   maxAgentCount,
+  skillTimestamp,
   summarizeAgents,
   updateNameSet,
 } from "./skills";
@@ -97,6 +99,11 @@ describe("filterSkills", () => {
     const all = filterSkills(sample, "", null, { updateNames: names });
     expect(all[0]?.name).toBe("impeccable");
   });
+
+  it("falls back to name sort when updateNames is empty or all skills share status", () => {
+    const allNoUpdates = filterSkills(sample, "", null, { updateNames: new Set() });
+    expect(allNoUpdates.map((s) => s.name)).toEqual(["find-skills", "impeccable"]);
+  });
 });
 
 describe("availableUpdates", () => {
@@ -104,6 +111,38 @@ describe("availableUpdates", () => {
     const rows = availableUpdates(sample, sampleUpdates);
     expect(rows).toHaveLength(1);
     expect(rows[0]?.skill.name).toBe("impeccable");
+  });
+
+  it("drops updates whose skill is not installed", () => {
+    const rows = availableUpdates(sample, [
+      ...sampleUpdates,
+      {
+        name: "ghost",
+        source: "x/y",
+        updateAvailable: true,
+        checkable: true,
+      },
+    ]);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.skill.name).toBe("impeccable");
+  });
+
+  it("sorts available updates alphabetically by skill name", () => {
+    const rows = availableUpdates(sample, [
+      {
+        name: "find-skills",
+        source: "vercel-labs/skills",
+        updateAvailable: true,
+        checkable: true,
+      },
+      {
+        name: "impeccable",
+        source: "pbakaus/impeccable",
+        updateAvailable: true,
+        checkable: true,
+      },
+    ]);
+    expect(rows.map((r) => r.skill.name)).toEqual(["find-skills", "impeccable"]);
   });
 });
 
@@ -126,5 +165,62 @@ describe("isSearchResultInstalled", () => {
       false,
     );
     expect(isSearchResultInstalled({ name: "missing", source: "x/y" }, sample)).toBe(false);
+  });
+});
+
+describe("formatRelative", () => {
+  const now = Date.parse("2026-07-22T12:00:00.000Z");
+
+  it("returns the raw iso string when the date cannot be parsed", () => {
+    expect(formatRelative("not-a-date", now)).toBe("not-a-date");
+  });
+
+  it("formats sub-minute, sub-hour, sub-day, and sub-month deltas", () => {
+    expect(formatRelative("2026-07-22T11:59:30.000Z", now)).toBe("just now");
+    expect(formatRelative("2026-07-22T11:55:00.000Z", now)).toBe("5m ago");
+    expect(formatRelative("2026-07-22T10:00:00.000Z", now)).toBe("2h ago");
+    expect(formatRelative("2026-07-21T12:00:00.000Z", now)).toBe("yesterday");
+    expect(formatRelative("2026-07-08T12:00:00.000Z", now)).toBe("14d ago");
+  });
+
+  it("clamps future deltas to 0", () => {
+    expect(formatRelative("2026-07-22T12:00:00.000Z", now)).toBe("just now");
+  });
+
+  it("formats months and years for long deltas", () => {
+    expect(formatRelative("2026-01-22T12:00:00.000Z", now)).toBe("6mo ago");
+    expect(formatRelative("2024-07-22T12:00:00.000Z", now)).toBe("2y ago");
+  });
+});
+
+describe("buildRecentActivity", () => {
+  it("emits an update event when updatedAt exists without installedAt", () => {
+    const orphan: SkillInfo = {
+      ...sample[0],
+      installedAt: null,
+      updatedAt: "2026-07-15T12:00:00.000Z",
+    };
+    const events = buildRecentActivity([orphan]);
+    expect(events.some((e) => e.kind === "update" && e.skill === "impeccable")).toBe(true);
+    expect(events.some((e) => e.kind === "install")).toBe(false);
+  });
+
+  it("skips the update event when updatedAt equals installedAt", () => {
+    const events = buildRecentActivity([
+      {
+        ...sample[0],
+        installedAt: "2026-07-12T10:00:00.000Z",
+        updatedAt: "2026-07-12T10:00:00.000Z",
+      },
+    ]);
+    expect(events.some((e) => e.kind === "update")).toBe(false);
+  });
+});
+
+describe("skillTimestamp", () => {
+  it("prefers updatedAt and falls back to installedAt", () => {
+    expect(skillTimestamp(sample[0])).toBe("2026-07-12T10:00:00.000Z");
+    expect(skillTimestamp({ ...sample[0], updatedAt: null })).toBe("2026-07-10T10:00:00.000Z");
+    expect(skillTimestamp({ ...sample[0], updatedAt: null, installedAt: null })).toBeNull();
   });
 });

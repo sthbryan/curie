@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectLang, t } from "./i18n";
+import { detectLang, plural, t } from "./i18n";
 import en from "./i18n/en.json";
 import es from "./i18n/es.json";
 
@@ -73,6 +73,11 @@ describe("t", () => {
     expect(t("es", "home.notAKey")).toBe("home.notAKey");
   });
 
+  it("returns the key when it resolves to a non-leaf object", () => {
+    expect(t("en", "home")).toBe("home");
+    expect(t("es", "settings")).toBe("settings");
+  });
+
   it("ignores unknown variables in vars map", () => {
     expect(t("en", "home.updatesAvailable", { n: 4, extra: "ignored" })).toBe("4 AVAILABLE");
   });
@@ -99,5 +104,14 @@ describe("JSON parity", () => {
     }
     expect(findEmpty(en)).toEqual([]);
     expect(findEmpty(es)).toEqual([]);
+  });
+});
+
+describe("plural", () => {
+  it("picks 'one' when n=1 and 'other' otherwise", () => {
+    expect(plural(1, "en", "skill", "skills")).toBe("skill");
+    expect(plural(0, "en", "skill", "skills")).toBe("skills");
+    expect(plural(2, "en", "skill", "skills")).toBe("skills");
+    expect(plural(99, "en", "skill", "skills")).toBe("skills");
   });
 });
