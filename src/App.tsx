@@ -5,11 +5,11 @@ import { Placeholder } from "./components/Placeholder";
 import { Sidebar } from "./components/Sidebar";
 import { StatusBar } from "./components/StatusBar";
 import { useBoot } from "./lib/boot";
-import { pageTransition } from "./lib/motion";
-import { Home } from "./pages/Home";
-import { Installed } from "./pages/Installed";
-import { Settings } from "./pages/Settings";
-import { Setup } from "./pages/Setup";
+import { pageTransition, toMotionReducedMotion } from "./lib/motion";
+import { Home } from "./pages/home";
+import { Installed } from "./pages/installed";
+import { Settings } from "./pages/settings";
+import { Setup } from "./pages/setup";
 import { useAppStore } from "./store/app";
 
 function MainContent() {
@@ -83,6 +83,7 @@ function App() {
 
   const theme = useAppStore((s) => s.theme);
   const lang = useAppStore((s) => s.lang);
+  const reducedMotion = useAppStore((s) => s.reducedMotion);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -93,7 +94,7 @@ function App() {
   }, [lang]);
 
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion={toMotionReducedMotion(reducedMotion)}>
       <AppShell />
     </MotionConfig>
   );
