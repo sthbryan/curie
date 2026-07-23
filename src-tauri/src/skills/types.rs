@@ -51,6 +51,13 @@ pub struct SkillInstallResult {
     pub message: String,
 }
 
+#[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillRemoveResult {
+    pub removed: Vec<String>,
+    pub message: String,
+}
+
 #[derive(Deserialize)]
 pub(crate) struct SearchApiResponse {
     #[serde(default)]
