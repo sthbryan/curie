@@ -1,70 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
-import type {
-  NodeInfo,
-  SkillInfo,
-  SkillInstallResult,
-  SkillRemoveResult,
-  SkillSearchResult,
-  SkillUpdateInfo,
-  SkillUpdateResult,
-} from "@/components/types";
+import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "@/components/types";
 import { detectLang } from "@/i18n";
-import { useFindStore } from "@/store/find";
 import { useSkillsStore } from "@/store/skills";
 import { useUiStore } from "@/store/ui";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
-}
-
-let findRequestId = 0;
-
-export async function findSkills(query: string, owner?: string) {
-  const q = query.trim();
-  const o = owner?.trim() || null;
-  const { setFindResults, setFindLoading, setFindError } = useFindStore.getState();
-
-  if (q.length < 2) {
-    findRequestId += 1;
-    setFindResults([]);
-    setFindError(null);
-    setFindLoading(false);
-    return;
-  }
-
-  const requestId = ++findRequestId;
-  setFindLoading(true);
-  setFindError(null);
-  try {
-    const results = await invoke<SkillSearchResult[]>("find_skills", {
-      query: q,
-      owner: o,
-    });
-    if (requestId !== findRequestId) return;
-    setFindResults(results);
-  } catch (e) {
-    if (requestId !== findRequestId) return;
-    setFindError(errorMessage(e));
-    setFindResults([]);
-  } finally {
-    if (requestId === findRequestId) setFindLoading(false);
-  }
-}
-
-export async function addSkill(packageName: string) {
-  const { setInstallingPackage, setInstallError } = useFindStore.getState();
-  setInstallingPackage(packageName);
-  setInstallError(null);
-  try {
-    await invoke<SkillInstallResult>("add_skill", { package: packageName });
-    await loadGlobalSkills({ checkUpdates: true });
-  } catch (e) {
-    setInstallError(errorMessage(e));
-    throw e;
-  } finally {
-    setInstallingPackage(null);
-  }
 }
 
 export async function checkSkillUpdates() {
@@ -97,41 +39,6 @@ export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
     setSkillsError(errorMessage(e));
   } finally {
     setSkillsLoading(false);
-  }
-}
-
-export async function updateSkills(names?: string[]) {
-  const { setUpdatingSkill, setUpdateApplyError } = useSkillsStore.getState();
-  const token = names?.length === 1 ? (names[0] ?? "*") : "*";
-  setUpdatingSkill(token);
-  setUpdateApplyError(null);
-  try {
-    await invoke<SkillUpdateResult>("update_skills", {
-      skills: names && names.length > 0 ? names : null,
-    });
-    await loadGlobalSkills({ checkUpdates: true });
-  } catch (e) {
-    setUpdateApplyError(errorMessage(e));
-    throw e;
-  } finally {
-    setUpdatingSkill(null);
-  }
-}
-
-/** Remove one or more global skills via `npx skills remove -g -y`. */
-export async function removeSkills(names: string[]) {
-  if (names.length === 0) return;
-  const { setRemovingSkill, setRemoveError } = useSkillsStore.getState();
-  setRemovingSkill(names.length === 1 ? (names[0] ?? null) : "*");
-  setRemoveError(null);
-  try {
-    await invoke<SkillRemoveResult>("remove_skills", { skills: names });
-    await loadGlobalSkills({ checkUpdates: true });
-  } catch (e) {
-    setRemoveError(errorMessage(e));
-    throw e;
-  } finally {
-    setRemovingSkill(null);
   }
 }
 
