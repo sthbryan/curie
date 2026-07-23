@@ -2,6 +2,18 @@ export type ThemeMode = "dark" | "light" | "rose" | "dawn";
 export type ReducedMotionPref = "user" | "always" | "never";
 export type View = "home" | "installed" | "marketplace" | "search" | "settings";
 
+export type InstallMethod = "homebrew" | "direct" | "unknown";
+
+export type AppUpdateInfo = {
+  currentVersion: string;
+  latestVersion: string | null;
+  updateAvailable: boolean;
+  releaseUrl: string | null;
+  releaseNotes: string | null;
+  installMethod: InstallMethod;
+  updateCommand: string | null;
+};
+
 export const REDUCED_MOTION_OPTIONS: ReducedMotionPref[] = ["user", "always", "never"];
 
 export type NodeInfo = {
