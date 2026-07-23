@@ -21,7 +21,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 
-const { checkSkillUpdates, loadGlobalSkills, useBoot } = await import("./boot");
+const { checkSkillUpdates, loadGlobalSkills, useBoot } = await import("@/lib/boot");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

@@ -29,7 +29,7 @@ vi.mock("@/lib/boot", () => ({
   loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
 }));
 
-const { Explore } = await import("./index");
+const { Explore } = await import("@/pages/explore/index");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -104,7 +104,12 @@ describe("Explore", () => {
     await act(async () => {
       await new Promise((r) => setTimeout(r, 0));
     });
+    // Force all pending microtasks and state updates
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 0));
+    });
     expect(invokeMock).toHaveBeenCalledWith("explore_skills", { view: "hot", page: 0 });
+    expect(container?.textContent).toMatch(/1\s*of\s*1/i);
     expect(container?.textContent).toContain("impeccable");
   });
 

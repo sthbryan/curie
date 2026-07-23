@@ -20,7 +20,7 @@ vi.mock("@tauri-apps/plugin-opener", () => ({
   openUrl: (...args: unknown[]) => openUrl(...args),
 }));
 
-const { Settings } = await import("./index");
+const { Settings } = await import("@/pages/settings/index");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

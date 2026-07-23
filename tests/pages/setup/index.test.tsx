@@ -24,7 +24,7 @@ vi.mock("@/lib/boot", () => ({
   loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
 }));
 
-const { Setup } = await import("./index");
+const { Setup } = await import("@/pages/setup/index");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
