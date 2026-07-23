@@ -7,25 +7,27 @@ import { t } from "../../i18n";
 import { addSkill, findSkills } from "../../lib/boot";
 import { fadeUp } from "../../lib/motion";
 import { isSearchResultInstalled } from "../../lib/skills";
-import { useAppStore } from "../../store/app";
+import { useFindStore } from "../../store/find";
+import { useSkillsStore } from "../../store/skills";
+import { useUiStore } from "../../store/ui";
 import { ResultsPanel } from "./components/ResultsPanel";
 
 /** Debounce searches like the CLI (~150–350ms); cancel in-flight via request id. */
 const DEBOUNCE_MS = 280;
 
 export function Find() {
-  const lang = useAppStore((s) => s.lang);
-  const skills = useAppStore((s) => s.skills);
-  const findQuery = useAppStore((s) => s.findQuery);
-  const findOwner = useAppStore((s) => s.findOwner);
-  const findResults = useAppStore((s) => s.findResults);
-  const findLoading = useAppStore((s) => s.findLoading);
-  const findError = useAppStore((s) => s.findError);
-  const installingPackage = useAppStore((s) => s.installingPackage);
-  const installError = useAppStore((s) => s.installError);
-  const setInstallError = useAppStore((s) => s.setInstallError);
-  const setFindQuery = useAppStore((s) => s.setFindQuery);
-  const setFindOwner = useAppStore((s) => s.setFindOwner);
+  const lang = useUiStore((s) => s.lang);
+  const skills = useSkillsStore((s) => s.skills);
+  const findQuery = useFindStore((s) => s.findQuery);
+  const findOwner = useFindStore((s) => s.findOwner);
+  const findResults = useFindStore((s) => s.findResults);
+  const findLoading = useFindStore((s) => s.findLoading);
+  const findError = useFindStore((s) => s.findError);
+  const installingPackage = useFindStore((s) => s.installingPackage);
+  const installError = useFindStore((s) => s.installError);
+  const setInstallError = useFindStore((s) => s.setInstallError);
+  const setFindQuery = useFindStore((s) => s.setFindQuery);
+  const setFindOwner = useFindStore((s) => s.setFindOwner);
 
   const [query, setQuery] = useState(findQuery);
   const [owner, setOwner] = useState(findOwner);
