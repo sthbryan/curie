@@ -28,6 +28,7 @@
     "preact": "10.29.7",
     "react-if": "4.1.6",
     "tailwind-merge": "3.6.0",
+    "thinking-orbs": "^0.1.1",
     "wouter": "3.10.0"
   },
   "devDependencies": {
