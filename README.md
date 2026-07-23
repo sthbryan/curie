@@ -57,9 +57,14 @@ Native desktop app. Themes (including Rosé Pine). English & Spanish. Motion you
 
 ## Get it
 
+```bash
+curl -fsSL https://raw.githubusercontent.com/sthbryan/curie/main/install.sh | bash
+```
+
 | | |
 |---|---|
-| **Download** | [GitHub Releases](https://github.com/sthbryan/curie/releases) — macOS, Windows, Linux when published |
+| **Install** | One-liner above (macOS Apple Silicon · Linux x86_64) |
+| **Download** | [GitHub Releases](https://github.com/sthbryan/curie/releases) |
 | **From source** | Step-by-step in [INSTALL.md](./INSTALL.md) |
 
 Curie works with the real skills ecosystem on your computer. It doesn’t invent a parallel world — your agents keep finding skills where they already look.
