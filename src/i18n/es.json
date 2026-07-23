@@ -119,7 +119,7 @@
   "find": {
     "eyebrow": "BUSCAR · SKILLS.SH",
     "title": "Buscar skills",
-    "subtitle": "Busca en el registro de npx skills find",
+    "subtitle": "Busca skills en el registro de skills",
     "query": "Consulta",
     "queryPlaceholder": "typescript, react, design…",
     "owner": "Filtro de owner",
@@ -140,7 +140,7 @@
     "emptyHint": "Prueba otra consulta o quita el filtro de owner",
     "error": "Falló la búsqueda",
     "installError": "Falló la instalación",
-    "packageHint": "Instala global con npx skills add -g -y"
+    "packageHint": "Se instalan globalmente en tu dispositivo"
   },
   "custom": {
     "eyebrow": "CUSTOM · LOCAL",
@@ -153,11 +153,11 @@
   "explore": {
     "eyebrow": "EXPLORAR · SKILLS.SH",
     "title": "Explorar skills",
-    "subtitle": "Recorre el ranking de skills.sh — hot, trending y all-time",
+    "subtitle": "Explora las skills más populares y recientes del registro skills",
     "view": {
-      "hot": "HOT",
-      "trending": "TRENDING",
-      "allTime": "ALL-TIME"
+      "hot": "POPULAR",
+      "trending": "TENDENCIA",
+      "allTime": "TODAS"
     },
     "colName": "SKILL",
     "colSource": "FUENTE",

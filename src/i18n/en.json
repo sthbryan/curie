@@ -153,7 +153,7 @@
   "explore": {
     "eyebrow": "EXPLORE · SKILLS.SH",
     "title": "Explore skills",
-    "subtitle": "Browse the skills.sh leaderboard — hot, trending, and all-time installs",
+    "subtitle": "Browse the most popular and recent skills from the skills registry",
     "view": {
       "hot": "HOT",
       "trending": "TRENDING",
@@ -182,7 +182,7 @@
     "emptyHint": "Try another board or search with Find",
     "error": "Could not load explore",
     "installError": "Install failed",
-    "packageHint": "Installs globally with npx skills add -g -y"
+    "packageHint": "Will install globally in your device"
   },
   "status": {
     "node": "NODE",
