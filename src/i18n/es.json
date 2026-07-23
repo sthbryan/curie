@@ -198,7 +198,7 @@
     "languageES": "ES",
     "languageENFull": "English",
     "languageESFull": "Español",
-    "languageDesc": "Idioma de la interfaz. Se detecta del sistema en el primer arranque.",
+    "languageDesc": "Elige el idioma de la interfaz de la app.",
     "theme": "Tema",
     "themeDark": "OSCURO",
     "themeDarkHint": "NOTHING",
@@ -208,12 +208,12 @@
     "themeRoseHint": "ROSÉ PINE",
     "themeDawn": "DAWN",
     "themeDawnHint": "ROSÉ PINE",
-    "themeDesc": "Oscuro y claro son los de Curie. Rose y Dawn usan la paleta Rosé Pine.",
-    "reducedMotion": "Reducir movimiento",
-    "reducedMotionSystem": "SYSTEM",
-    "reducedMotionTrue": "TRUE",
-    "reducedMotionFalse": "FALSE",
-    "reducedMotionDesc": "System sigue el SO. True reduce siempre. False mantiene las animaciones.",
+    "themeDesc": "Elige el tema que mejor se adapte a tu entorno y preferencias.",
+    "reducedMotion": "Reducir animaciones",
+    "reducedMotionSystem": "SISTEMA",
+    "reducedMotionTrue": "SI",
+    "reducedMotionFalse": "NO",
+    "reducedMotionDesc": "\"Sistema\" usa la preferencia de tu sistema operativo. \"SI\" desactiva las animaciones. \"NO\" habilita las animaciones.",
     "system": "SISTEMA",
     "nodeVersion": "NODE",
     "nodeManager": "GESTOR",
@@ -221,6 +221,6 @@
     "nodeMissing": "Node no detectado",
     "goToSetup": "VOLVER AL SETUP",
     "about": "ACERCA DE",
-    "aboutDescription": "Curie te ayuda a instalar, actualizar y administrar skills de agentes de IA sin la terminal."
+    "aboutDescription": "Curie te ayuda a instalar, actualizar, eliminar y gestionar tus skills. Está construido con React, TypeScript y Tauri."
   }
 }

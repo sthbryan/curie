@@ -198,7 +198,7 @@
     "languageES": "ES",
     "languageENFull": "English",
     "languageESFull": "Español",
-    "languageDesc": "Interface language. Detected from your system on first launch.",
+    "languageDesc": "Choose the language for the app interface.",
     "theme": "Theme",
     "themeDark": "DARK",
     "themeDarkHint": "NOTHING",
@@ -208,12 +208,12 @@
     "themeRoseHint": "ROSÉ PINE",
     "themeDawn": "DAWN",
     "themeDawnHint": "ROSÉ PINE",
-    "themeDesc": "Dark and light are Curie defaults. Rose and Dawn use the Rosé Pine palette.",
+    "themeDesc": "Choose the theme which best suits your environment and preferences.",
     "reducedMotion": "Reduce motion",
     "reducedMotionSystem": "SYSTEM",
     "reducedMotionTrue": "TRUE",
     "reducedMotionFalse": "FALSE",
-    "reducedMotionDesc": "System follows OS preference. True always reduces motion. False keeps animations on.",
+    "reducedMotionDesc": "\"System\" uses your OS preference. \"True\" disables all motion. \"False\" enables all motion.",
     "system": "SYSTEM",
     "nodeVersion": "NODE",
     "nodeManager": "MANAGER",
@@ -221,6 +221,6 @@
     "nodeMissing": "Node not detected",
     "goToSetup": "GO BACK TO SETUP",
     "about": "ABOUT",
-    "aboutDescription": "Curie helps you install, update, and manage AI agent skills without the terminal."
+    "aboutDescription": "Curie helps you install, update, delete, and manage your skills. It is built with React, TypeScript, and Tauri."
   }
 }
