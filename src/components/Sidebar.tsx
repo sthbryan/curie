@@ -23,7 +23,8 @@ const TOP_ITEMS: { path: string; key: NavKey; num: string; icon: LucideIcon }[] 
   { path: "/installed", key: "skills", num: "02", icon: LayoutGrid },
   { path: "/marketplace", key: "explore", num: "03", icon: Compass },
   { path: "/find", key: "find", num: "04", icon: Search },
-  { path: "/custom", key: "custom", num: "05", icon: FileCode },
+  // TODO: disabled for now, will be re-enabled when we have a custom skill feature
+  // { path: "/custom", key: "custom", num: "05", icon: FileCode },
 ];
 
 const COLLAPSED_W = 50;
