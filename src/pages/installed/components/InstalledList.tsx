@@ -1,24 +1,73 @@
-import { AnimatePresence, motion } from "motion/react";
-import { useMemo } from "react";
+import { ArrowUp, X } from "lucide-react";
+import { motion } from "motion/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Case, Default, Switch } from "react-if";
 import { useLocation } from "wouter";
+import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { IconButton } from "@/components/IconButton";
+import type { ColumnDef } from "@/components/Table";
+import { Table } from "@/components/Table";
+import type { SkillInfo } from "@/components/types";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { fadeUp, listStagger } from "@/lib/motion";
-import { filterSkills, updateNameSet } from "@/lib/skills";
+import { fadeUp } from "@/lib/motion";
+import { filterSkills, formatRelative, skillTimestamp, updateNameSet } from "@/lib/skills";
 import { skills, skillUpdates } from "@/store/skills";
 import { lang } from "@/store/system";
+import type { SortField } from "../store/store";
 import {
   agentFilter,
   query,
   remove,
   removingSkill,
+  setSort,
+  sortDir,
+  sortKey,
   update,
   updatesOnly,
   updatingSkill,
 } from "../store/store";
-import { INSTALLED_GRID, SkillRow } from "./SkillRow";
+import { AgentBadge } from "./AgentBadge";
+
+const INSTALLED_GRID = "grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.1fr)_4.5rem_5rem]";
+
+function sortSkills(
+  skills: SkillInfo[],
+  updateNames: Set<string>,
+  key: SortField,
+  dir: "asc" | "desc",
+): SkillInfo[] {
+  return [...skills].sort((a, b) => {
+    const aUp = updateNames.has(a.name) ? -1 : 0;
+    const bUp = updateNames.has(b.name) ? -1 : 0;
+    if (aUp !== bUp) return aUp - bUp;
+
+    let cmp = 0;
+    switch (key) {
+      case "name":
+        cmp = a.name.localeCompare(b.name);
+        break;
+      case "source":
+        cmp = (a.source ?? "").localeCompare(b.source ?? "");
+        break;
+      case "agents":
+        cmp = a.agents.length - b.agents.length;
+        break;
+      case "updated": {
+        const aTs = skillTimestamp(a);
+        const bTs = skillTimestamp(b);
+        if (!aTs && !bTs) cmp = 0;
+        else if (!aTs) cmp = 1;
+        else if (!bTs) cmp = -1;
+        else cmp = Date.parse(aTs) - Date.parse(bTs);
+        break;
+      }
+    }
+    return dir === "asc" ? cmp : -cmp;
+  });
+}
 
 export function InstalledList() {
   const updateNames = useMemo(() => updateNameSet(skillUpdates.value), [skillUpdates.value]);
@@ -30,22 +79,150 @@ export function InstalledList() {
       }),
     [skills.value, query.value, agentFilter.value, updatesOnly.value, updateNames],
   );
+  const sorted = useMemo(
+    () => sortSkills(filtered, updateNames, sortKey.value, sortDir.value),
+    [filtered, updateNames, sortKey.value, sortDir.value],
+  );
   const actionBusy = updatingSkill.value !== null || removingSkill.value !== null;
+
+  const [confirmRemove, setConfirmRemove] = useState<string | null>(null);
+  const wasRemoving = useRef(false);
+
+  useEffect(() => {
+    if (removingSkill.value) {
+      wasRemoving.current = true;
+      return;
+    }
+    if (wasRemoving.current) {
+      wasRemoving.current = false;
+      setConfirmRemove(null);
+    }
+  }, [removingSkill.value]);
 
   const [, navigate] = useLocation();
   const onInstall = () => navigate("/find");
   const onUpdate = (name: string) => {
-    update([name]).catch(() => {
-      // store keeps updateApplyError
-    });
+    update([name]).catch(() => {});
   };
   const onRemove = (name: string) => {
-    remove([name]).catch(() => {
-      // store keeps removeError
-    });
+    remove([name]).catch(() => {});
   };
 
-  const listKey = `${agentFilter.value ?? "all"}:${query.value}:${updatesOnly.value ? "up" : "all"}`;
+  const listKey = `${agentFilter.value ?? "all"}:${query.value}:${updatesOnly.value ? "up" : "all"}:${sortKey.value}:${sortDir.value}`;
+
+  const columns: ColumnDef<SkillInfo>[] = [
+    {
+      key: "name",
+      header: t(lang.value, "installed.colName"),
+      sortable: true,
+      cellClassName: "min-w-0 flex flex-col gap-1",
+      cell: (skill) => (
+        <>
+          <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
+          <span className="font-mono uppercase tracking-label text-micro text-fg-4 truncate">
+            {skill.scope}
+          </span>
+        </>
+      ),
+    },
+    {
+      key: "source",
+      header: t(lang.value, "installed.colSource"),
+      sortable: true,
+      cellClassName: "min-w-0 flex flex-col gap-1",
+      cell: (skill) => (
+        <>
+          <span className="font-mono text-mono text-fg-2 truncate">
+            {skill.source ?? t(lang.value, "installed.local")}
+          </span>
+          <span className="font-mono text-micro text-fg-4 truncate" title={skill.path}>
+            {skill.path}
+          </span>
+        </>
+      ),
+    },
+    {
+      key: "agents",
+      header: t(lang.value, "installed.colAgents"),
+      sortable: true,
+      cellClassName: "min-w-0 flex flex-wrap gap-1.5",
+      cell: (skill) =>
+        skill.agents.length === 0 ? (
+          <span className="font-mono uppercase tracking-label text-micro text-fg-4">
+            {t(lang.value, "installed.noAgents")}
+          </span>
+        ) : (
+          skill.agents.map((agent) => <AgentBadge key={`${skill.name}-${agent}`} label={agent} />)
+        ),
+    },
+    {
+      key: "updated",
+      header: t(lang.value, "installed.colWhen"),
+      sortable: true,
+      headerClassName: "text-right",
+      cellClassName: "text-right",
+      cell: (skill) => {
+        const when = skillTimestamp(skill);
+        const isUpdate = updateNames.has(skill.name);
+        return (
+          <span
+            className={cn(
+              "font-mono uppercase tracking-label text-micro",
+              isUpdate ? "text-accent" : "text-fg-4",
+            )}
+          >
+            {when ? formatRelative(when) : "—"}
+          </span>
+        );
+      },
+    },
+    {
+      key: "actions",
+      header: t(lang.value, "installed.colActions"),
+      headerClassName: "text-right",
+      cellClassName: "flex h-7 items-center justify-end gap-1",
+      cell: (skill) => {
+        const updating = updatingSkill.value === skill.name || updatingSkill.value === "*";
+        const removing = removingSkill.value === skill.name || removingSkill.value === "*";
+        const isBusy = updating || removing;
+        return (
+          <>
+            {isBusy ? (
+              <ActionProgress
+                active
+                labelKey={updating ? "installed.updatingOne" : "installed.removing"}
+              />
+            ) : (
+              <>
+                {updateNames.has(skill.name) ? (
+                  <IconButton
+                    variant="accent"
+                    size="sm"
+                    label={t(lang.value, "installed.updateOne")}
+                    onClick={() => onUpdate(skill.name)}
+                    disabled={actionBusy}
+                  >
+                    <ArrowUp size={14} />
+                  </IconButton>
+                ) : (
+                  <span className="inline-block h-7 w-7 shrink-0" aria-hidden />
+                )}
+                <IconButton
+                  variant="danger"
+                  size="sm"
+                  label={t(lang.value, "installed.remove")}
+                  onClick={() => setConfirmRemove(skill.name)}
+                  disabled={actionBusy}
+                >
+                  <X size={13} />
+                </IconButton>
+              </>
+            )}
+          </>
+        );
+      },
+    },
+  ];
 
   return (
     <section className="flex flex-col">
@@ -64,56 +241,41 @@ export function InstalledList() {
             </div>
           </motion.div>
         </Case>
-        <Case condition={filtered.length === 0}>
+        <Case condition={sorted.length === 0}>
           <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
             <p className="font-body text-sm text-fg-3">{t(lang.value, "installed.noMatches")}</p>
           </motion.div>
         </Case>
         <Default>
-          <motion.div
-            {...fadeUp(0.06)}
-            className={cn("grid", INSTALLED_GRID, "gap-4 border-b border-border pb-2")}
-          >
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t(lang.value, "installed.colName")}
-            </span>
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t(lang.value, "installed.colSource")}
-            </span>
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t(lang.value, "installed.colAgents")}
-            </span>
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
-              {t(lang.value, "installed.colWhen")}
-            </span>
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
-              {t(lang.value, "installed.colActions")}
-            </span>
-          </motion.div>
-          <motion.div
-            key={listKey}
-            className="flex flex-col"
-            variants={listStagger}
-            initial="initial"
-            animate="animate"
-          >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {filtered.map((skill) => (
-                <SkillRow
-                  key={`${skill.name}-${skill.path}`}
-                  skill={skill}
-                  updateAvailable={updateNames.has(skill.name)}
-                  updating={updatingSkill.value === skill.name || updatingSkill.value === "*"}
-                  removing={removingSkill.value === skill.name || removingSkill.value === "*"}
-                  actionBusy={actionBusy}
-                  onUpdate={onUpdate}
-                  onRemove={onRemove}
-                />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          <Table
+            columns={columns}
+            rows={sorted}
+            gridTemplate={INSTALLED_GRID}
+            sortKey={sortKey.value}
+            sortDir={sortDir.value}
+            onSort={(key) => setSort(key as SortField)}
+            bodyKey={listKey}
+            getRowKey={(skill) => `${skill.name}-${skill.path}`}
+          />
         </Default>
       </Switch>
+
+      <ConfirmDialog
+        open={confirmRemove !== null}
+        title={t(lang.value, "installed.removeTitle")}
+        description={t(lang.value, "installed.removeBody")}
+        detail={confirmRemove ?? undefined}
+        confirmLabel={t(lang.value, "installed.removeConfirm")}
+        cancelLabel={t(lang.value, "installed.removeCancel")}
+        busy={removingSkill.value !== null}
+        busyLabel={t(lang.value, "installed.removing")}
+        onCancel={() => {
+          if (!removingSkill.value) setConfirmRemove(null);
+        }}
+        onConfirm={() => {
+          if (confirmRemove) onRemove(confirmRemove);
+        }}
+      />
     </section>
   );
 }

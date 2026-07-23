@@ -1,11 +1,26 @@
 import { signal } from "@preact/signals";
 import { invoke } from "@tauri-apps/api/core";
+import type { SortDir } from "@/components/Table";
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
 import { loadGlobalSkills } from "@/lib/boot";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
 }
+
+export type SortField = "name" | "source" | "agents" | "updated";
+
+export const sortKey = signal<SortField>("updated");
+export const sortDir = signal<SortDir>("desc");
+
+export const setSort = (key: SortField) => {
+  if (sortKey.value === key) {
+    sortDir.value = sortDir.value === "asc" ? "desc" : "asc";
+  } else {
+    sortKey.value = key;
+    sortDir.value = "desc";
+  }
+};
 
 // ─── Filters ─────────────────────────────────────────────────────────────────
 
