@@ -12,14 +12,14 @@ export const pageTransition = {
   initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -4 },
-  transition: { duration: duration.base, ease: easeOut },
+  transition: { duration: duration.base, type: "spring" },
 } as const;
 
 export const fadeUp = (delay = 0) =>
   ({
     initial: { opacity: 0, y: 10 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: duration.slow, ease: easeOut, delay },
+    transition: { duration: duration.slow, type: "spring", delay },
   }) as const;
 
 export const staggerContainer: Variants = {
@@ -56,6 +56,11 @@ export const listItem: Variants = {
   animate: {
     opacity: 1,
     y: 0,
+    transition: { duration: duration.fast, ease: easeOut },
+  },
+  exit: {
+    opacity: 0,
+    y: -4,
     transition: { duration: duration.fast, ease: easeOut },
   },
 };
