@@ -50,13 +50,14 @@ export function Home() {
     });
   };
 
+  const tToast = useT();
   const handleCheckUpdates = async () => {
     await checkSkillUpdates();
     const n = skillUpdates.value.length;
     if (n > 0) {
-      toast.success(t("updatesAvailable", { n }));
+      toast.success(tToast("toast.updates", { n }));
     } else {
-      toast.success(t("noUpdates"));
+      toast.success(tToast("toast.noUpdates"));
     }
   };
 
