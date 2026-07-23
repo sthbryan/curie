@@ -29,8 +29,8 @@ describe("detectLang", () => {
 
 describe("t", () => {
   it("resolves nested keys", () => {
-    expect(t("en", "home.status")).toBe("STATUS · NPX SKILLS");
-    expect(t("es", "home.status")).toBe("ESTADO · NPX SKILLS");
+    expect(t("en", "home.status")).toBe("HOME · SKILLS");
+    expect(t("es", "home.status")).toBe("INICIO · SKILLS");
     expect(t("en", "app.ready")).toBe("READY");
     expect(t("es", "app.ready")).toBe("LISTO");
     expect(t("en", "error.retry")).toBe("RETRY");
@@ -49,7 +49,7 @@ describe("t", () => {
     expect(t("en", "settings.themeRose")).toBe("ROSE");
     expect(t("es", "settings.themeDawn")).toBe("DAWN");
     expect(t("en", "settings.reducedMotionSystem")).toBe("SYSTEM");
-    expect(t("es", "settings.reducedMotionTrue")).toBe("TRUE");
+    expect(t("es", "settings.reducedMotionTrue")).toBe("SI");
     expect(t("en", "installed.title")).toBe("Skills");
     expect(t("es", "installed.filterAll")).toBe("TODAS");
   });

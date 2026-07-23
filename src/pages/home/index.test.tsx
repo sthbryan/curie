@@ -58,7 +58,7 @@ beforeEach(() => {
   useSystemStore.setState({
     theme: "dark",
     lang: "en",
-    reducedMotion: "system",
+    reducedMotion: "user",
     hasBooted: true,
     stage: "home",
     node: { installed: true, version: "20.0.0", path: "/usr/bin/node", manager: "volta" },
@@ -98,7 +98,7 @@ describe("Home", () => {
       },
     ]);
     render(<Home />);
-    expect(container?.textContent).toContain("STATUS · NPX SKILLS");
+    expect(container?.textContent).toContain("HOME · SKILLS");
     expect(container?.textContent).toContain("impeccable");
     expect(container?.textContent).toContain("Codex");
     expect(container?.textContent).toContain("find-skills");

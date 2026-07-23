@@ -74,7 +74,7 @@ beforeEach(() => {
   useSystemStore.setState({
     theme: "dark",
     lang: "en",
-    reducedMotion: "system",
+    reducedMotion: "user",
     hasBooted: true,
     stage: "home",
     node: { installed: true, version: "20.0.0", path: "/usr/bin/node", manager: "volta" },

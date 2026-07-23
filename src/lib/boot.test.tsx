@@ -69,7 +69,7 @@ beforeEach(() => {
   useSystemStore.setState({
     theme: "dark",
     lang: "en",
-    reducedMotion: "system",
+    reducedMotion: "user",
     hasBooted: false,
     stage: "loading",
     node: null,

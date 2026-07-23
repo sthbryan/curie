@@ -1,19 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { duration, easeOut, fadeUp, pageTransition, toMotionReducedMotion } from "./motion";
-
-describe("toMotionReducedMotion", () => {
-  it("maps 'true' to 'always'", () => {
-    expect(toMotionReducedMotion("true")).toBe("always");
-  });
-
-  it("maps 'false' to 'never'", () => {
-    expect(toMotionReducedMotion("false")).toBe("never");
-  });
-
-  it("maps 'system' to 'user'", () => {
-    expect(toMotionReducedMotion("system")).toBe("user");
-  });
-});
+import { duration, easeOut, fadeUp, pageTransition } from "./motion";
 
 describe("motion constants", () => {
   it("exposes ordered duration values", () => {
