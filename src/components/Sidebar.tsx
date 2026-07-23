@@ -25,7 +25,7 @@ const TOP_ITEMS: { path: string; key: NavKey; num: string; icon: LucideIcon }[] 
   { path: "/custom", key: "custom", num: "05", icon: FileCode },
 ];
 
-const COLLAPSED_W = 56;
+const COLLAPSED_W = 50;
 const EXPANDED_W = 160;
 
 export function Sidebar() {
