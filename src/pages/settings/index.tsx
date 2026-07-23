@@ -1,4 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { Button } from "../../components/Button";
 import { ChoiceButton } from "../../components/ChoiceButton";
 import { Label } from "../../components/Label";
 import {
@@ -154,17 +155,18 @@ export function Settings() {
               {APP_NAME} · {APP_VERSION_LABEL}
             </span>
             <span className="text-fg-4">·</span>
-            <button
-              type="button"
+            <Button
+              size="xs"
+              variant="link"
+              className="px-0 hover:underline cursor-pointer"
               onClick={() => {
                 openUrl("https://github.com/sthbryan/curie").catch(() => {
                   // ignore
                 });
               }}
-              className="font-mono uppercase tracking-label text-micro text-fg-3 hover:text-fg hover:underline cursor-pointer transition-colors duration-150"
             >
               github.com/sthbryan/curie ↗
-            </button>
+            </Button>
           </p>
         </section>
       </div>
