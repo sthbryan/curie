@@ -4,8 +4,16 @@ import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "@/components/types";
-import { useSkillsStore } from "@/store/skills";
-import { useSystemStore } from "@/store/system";
+import {
+  setUpdatesError,
+  skills,
+  skillsError,
+  skillsLoading,
+  skillUpdates,
+  updatesError,
+  updatesLoading,
+} from "@/store/skills";
+import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
 
 const invokeMock = vi.fn();
 
@@ -13,7 +21,6 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 
-// Must import after the mock is registered.
 const { checkSkillUpdates, loadGlobalSkills, useBoot } = await import("./boot");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -58,22 +65,18 @@ const sampleUpdates: SkillUpdateInfo[] = [
 beforeEach(() => {
   invokeMock.mockReset();
   localStorage.clear();
-  useSkillsStore.setState({
-    skills: [],
-    skillsLoading: false,
-    skillsError: null,
-    skillUpdates: [],
-    updatesLoading: false,
-    updatesError: null,
-  });
-  useSystemStore.setState({
-    theme: "dark",
-    lang: "en",
-    reducedMotion: "user",
-    hasBooted: false,
-    stage: "loading",
-    node: null,
-  });
+  skills.value = [];
+  skillsLoading.value = false;
+  skillsError.value = null;
+  skillUpdates.value = [];
+  updatesLoading.value = false;
+  updatesError.value = null;
+  theme.value = "dark";
+  lang.value = "en";
+  reducedMotion.value = "user";
+  hasBooted.value = false;
+  stage.value = "loading";
+  node.value = null;
 });
 
 describe("loadGlobalSkills", () => {
@@ -86,10 +89,9 @@ describe("loadGlobalSkills", () => {
 
     await loadGlobalSkills();
 
-    const s = useSkillsStore.getState();
-    expect(s.skills).toBe(sampleSkills);
-    expect(s.skillsError).toBeNull();
-    expect(s.skillsLoading).toBe(false);
+    expect(skills.value).toBe(sampleSkills);
+    expect(skillsError.value).toBeNull();
+    expect(skillsLoading.value).toBe(false);
     expect(invokeMock).toHaveBeenCalledWith("list_skills");
     expect(invokeMock).toHaveBeenCalledWith("check_skill_updates");
   });
@@ -108,23 +110,21 @@ describe("loadGlobalSkills", () => {
   it("records an error when list_skills rejects", async () => {
     invokeMock.mockImplementation(() => Promise.reject(new Error("boom")));
     await loadGlobalSkills();
-    const s = useSkillsStore.getState();
-    expect(s.skillsError).toBe("boom");
-    expect(s.skillsLoading).toBe(false);
+    expect(skillsError.value).toBe("boom");
+    expect(skillsLoading.value).toBe(false);
   });
 });
 
 describe("checkSkillUpdates", () => {
   it("stores the update list and clears any prior error", async () => {
     invokeMock.mockImplementation(() => Promise.resolve(sampleUpdates));
-    useSkillsStore.getState().setUpdatesError("stale");
+    setUpdatesError("stale");
 
     await checkSkillUpdates();
 
-    const s = useSkillsStore.getState();
-    expect(s.skillUpdates).toBe(sampleUpdates);
-    expect(s.updatesError).toBeNull();
-    expect(s.updatesLoading).toBe(false);
+    expect(skillUpdates.value).toBe(sampleUpdates);
+    expect(updatesError.value).toBeNull();
+    expect(updatesLoading.value).toBe(false);
   });
 
   it("records the rejection message and clears loading", async () => {
@@ -132,16 +132,14 @@ describe("checkSkillUpdates", () => {
 
     await checkSkillUpdates();
 
-    const s = useSkillsStore.getState();
-    expect(s.updatesError).toBe("plain string error");
-    expect(s.updatesLoading).toBe(false);
+    expect(updatesError.value).toBe("plain string error");
+    expect(updatesLoading.value).toBe(false);
   });
 });
 
-// useBoot needs a React render context.
+// useBoot needs a render context.
 let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
-let mounted: React.ReactElement | null = null;
 
 function BootHarness() {
   useBoot();
@@ -152,7 +150,7 @@ function mountHarness() {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
-  mounted = <BootHarness />;
+  const mounted = <BootHarness />;
   act(() => {
     root?.render(mounted);
   });
@@ -169,7 +167,6 @@ function unmount() {
     container.remove();
     container = null;
   }
-  mounted = null;
 }
 
 afterEach(() => {
@@ -189,11 +186,10 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 0));
     });
 
-    const s = useSystemStore.getState();
-    expect(s.lang).toBe("es");
-    expect(s.node).toEqual(nodeMissing);
-    expect(s.stage).toBe("setup");
-    expect(s.hasBooted).toBe(true);
+    expect(lang.value).toBe("es");
+    expect(node.value).toEqual(nodeMissing);
+    expect(stage.value).toBe("setup");
+    expect(hasBooted.value).toBe(true);
   });
 
   it("routes to home and loads skills when node is installed", async () => {
@@ -210,12 +206,10 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    const ui = useSystemStore.getState();
-    const skills = useSkillsStore.getState();
-    expect(ui.node).toEqual(nodeInstalled);
-    expect(ui.stage).toBe("home");
-    expect(ui.hasBooted).toBe(true);
-    expect(skills.skills).toBe(sampleSkills);
+    expect(node.value).toEqual(nodeInstalled);
+    expect(stage.value).toBe("home");
+    expect(hasBooted.value).toBe(true);
+    expect(skills.value).toBe(sampleSkills);
   });
 
   it("falls back to default lang when get_locale rejects", async () => {
@@ -232,7 +226,7 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    expect(useSystemStore.getState().lang).toBe("en");
+    expect(lang.value).toBe("en");
   });
 
   it("falls back to setup stage when detect_node rejects", async () => {
@@ -247,13 +241,12 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 0));
     });
 
-    const s = useSystemStore.getState();
-    expect(s.stage).toBe("setup");
-    expect(s.hasBooted).toBe(true);
+    expect(stage.value).toBe("setup");
+    expect(hasBooted.value).toBe(true);
   });
 
   it("skips get_locale on a re-mount when hasBooted is already true", async () => {
-    useSystemStore.getState().markBooted();
+    hasBooted.value = true;
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "detect_node") return Promise.resolve(nodeInstalled);
       if (cmd === "list_skills") return Promise.resolve([]);
@@ -295,7 +288,7 @@ describe("useBoot", () => {
     });
 
     // The cancelled branch must not have written to the store.
-    expect(useSystemStore.getState().hasBooted).toBe(false);
-    expect(useSystemStore.getState().node).toBeNull();
+    expect(hasBooted.value).toBe(false);
+    expect(node.value).toBeNull();
   });
 });

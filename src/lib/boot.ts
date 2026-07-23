@@ -2,15 +2,21 @@ import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
 import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "@/components/types";
 import { detectLang } from "@/i18n";
-import { useSkillsStore } from "@/store/skills";
-import { useSystemStore } from "@/store/system";
+import {
+  setSkills,
+  setSkillsError,
+  setSkillsLoading,
+  setSkillUpdates,
+  setUpdatesError,
+  setUpdatesLoading,
+} from "@/store/skills";
+import { hasBooted, markBooted, setLang, setNode, setStage } from "@/store/system";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
 }
 
 export async function checkSkillUpdates() {
-  const { setSkillUpdates, setUpdatesLoading, setUpdatesError } = useSkillsStore.getState();
   setUpdatesLoading(true);
   setUpdatesError(null);
   try {
@@ -25,7 +31,6 @@ export async function checkSkillUpdates() {
 
 export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
   const checkUpdates = options?.checkUpdates ?? true;
-  const { setSkills, setSkillsLoading, setSkillsError } = useSkillsStore.getState();
   setSkillsLoading(true);
   setSkillsError(null);
   try {
@@ -47,9 +52,7 @@ export function useBoot() {
     let cancelled = false;
 
     (async () => {
-      const { hasBooted, setLang, setNode, setStage, markBooted } = useSystemStore.getState();
-
-      if (!hasBooted) {
+      if (!hasBooted.value) {
         try {
           const locale = await invoke<string>("get_locale");
           if (!cancelled) setLang(detectLang(locale));
