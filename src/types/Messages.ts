@@ -1,7 +1,7 @@
 export type Messages = {
   app: {
     ready: string;
-    appName: string;
+    loading: string;
   };
   error: {
     eyebrow: string;
@@ -75,7 +75,6 @@ export type Messages = {
     install: string;
     exploreBtn: string;
     viewSkills: string;
-    loading: string;
     loadError: string;
     retry: string;
     notBuilt: string;
