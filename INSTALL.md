@@ -4,7 +4,21 @@ This guide covers **downloading a built app** and **building from source**. For 
 
 ---
 
-## Option A — One-line install (recommended)
+## Option A — Homebrew (macOS Apple Silicon)
+
+```bash
+brew install --cask sthbryan/tap/curie
+```
+
+Upgrade later:
+
+```bash
+brew update && brew upgrade --cask curie
+```
+
+The cask lives in the [sthbryan/homebrew-tap](https://github.com/sthbryan/homebrew-tap) repo. **Every Curie release needs a matching bump there** (`version` + `sha256` of the new DMG); until that lands, `brew upgrade` will not see the new build.
+
+## Option B — One-line install script
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sthbryan/curie/main/install.sh | bash
@@ -28,7 +42,7 @@ curl -fsSL https://raw.githubusercontent.com/sthbryan/curie/main/install.sh | CU
 curl -fsSL https://raw.githubusercontent.com/sthbryan/curie/main/install.sh | CURIE_FORCE_APPIMAGE=1 bash
 ```
 
-## Option B — Download a binary manually
+## Option C — Download a binary manually
 
 1. Open [GitHub Releases](https://github.com/sthbryan/curie/releases).
 2. Download the build for your platform:
@@ -59,11 +73,11 @@ xattr -d com.apple.quarantine /Applications/Curie.app/Contents/MacOS/curie
 
 You can also allow it once via **System Settings → Privacy & Security**, or right-click → **Open**.
 
-> Releases may be sparse early on. If nothing is published yet, use **Option C**.
+> Releases may be sparse early on. If nothing is published yet, use **Option D**.
 
 ---
 
-## Option C — Build from source
+## Option D — Build from source
 
 ### Prerequisites
 

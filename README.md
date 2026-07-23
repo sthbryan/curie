@@ -57,13 +57,22 @@ Native desktop app. Themes (including Rosé Pine). English & Spanish. Motion you
 
 ## Get it
 
+**macOS (Apple Silicon) — Homebrew**
+
+```bash
+brew install --cask sthbryan/tap/curie
+```
+
+**macOS / Linux — one-liner**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sthbryan/curie/main/install.sh | bash
 ```
 
 | | |
 |---|---|
-| **Install** | One-liner above (macOS Apple Silicon · Linux x86_64) |
+| **Homebrew** | `brew install --cask sthbryan/tap/curie` (Apple Silicon) |
+| **Install script** | One-liner above (macOS Apple Silicon · Linux x86_64) |
 | **Download** | [GitHub Releases](https://github.com/sthbryan/curie/releases) |
 | **From source** | Step-by-step in [INSTALL.md](./INSTALL.md) |
 
