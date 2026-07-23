@@ -4,28 +4,66 @@ This guide covers **downloading a built app** and **building from source**. For 
 
 ---
 
-## Option A — Download a binary
+## Option A — One-line install (recommended)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/sthbryan/curie/main/install.sh | bash
+```
+
+The script detects your OS/arch, downloads the matching asset from [GitHub Releases](https://github.com/sthbryan/curie/releases), and installs it:
+
+| Platform | Asset | Install location |
+|----------|--------|------------------|
+| macOS Apple Silicon | `.dmg` | `/Applications/Curie.app` |
+| Linux (Debian/Ubuntu) | `.deb` | system package (`dpkg` / `apt`) |
+| Linux (other) | `.AppImage` | `~/.local/bin/curie` |
+
+Optional env vars:
+
+```bash
+# pin a version
+curl -fsSL https://raw.githubusercontent.com/sthbryan/curie/main/install.sh | CURIE_VERSION=0.1.0 bash
+
+# force AppImage on Debian/Ubuntu
+curl -fsSL https://raw.githubusercontent.com/sthbryan/curie/main/install.sh | CURIE_FORCE_APPIMAGE=1 bash
+```
+
+## Option B — Download a binary manually
 
 1. Open [GitHub Releases](https://github.com/sthbryan/curie/releases).
 2. Download the build for your platform:
-   - **macOS** — `.dmg` or `.app`
-   - **Windows** — `.msi` or `.exe`
-   - **Linux** — `.AppImage` (or distro package when published)
+   - **macOS (Apple Silicon)** — `Curie_*_aarch64.dmg`
+   - **Linux x86_64** — `Curie_*_amd64.deb` or `Curie_*_amd64.AppImage`
+   - **Windows** — not published yet
 3. Install / open as usual for your OS.
-4. On macOS, if Gatekeeper blocks the app: **System Settings → Privacy & Security** and allow Curie, or right-click → Open the first time.
 
-For macOS Apple Silicon, you may need to remove the quarantine attribute:
+### macOS — quarantine (Gatekeeper)
+
+`install.sh` already runs this after copying the app into `/Applications`:
 
 ```bash
-xattr -d com.apple.quarantine /usr/local/bin/ftm
+xattr -dr com.apple.quarantine /Applications/Curie.app
 ```
 
+(`-d` deletes the attribute; `-r` is recursive so it covers the whole `.app` bundle.)
 
-> Releases may be sparse early on. If nothing is published yet, use **Option B**.
+If you installed manually and macOS says the app is damaged / can’t be opened, clear quarantine yourself:
+
+```bash
+# whole app bundle (recommended)
+xattr -dr com.apple.quarantine /Applications/Curie.app
+
+# or only the binary inside the bundle
+xattr -d com.apple.quarantine /Applications/Curie.app/Contents/MacOS/curie
+```
+
+You can also allow it once via **System Settings → Privacy & Security**, or right-click → **Open**.
+
+> Releases may be sparse early on. If nothing is published yet, use **Option C**.
 
 ---
 
-## Option B — Build from source
+## Option C — Build from source
 
 ### Prerequisites
 
