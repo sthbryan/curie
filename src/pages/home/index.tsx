@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
@@ -65,9 +66,10 @@ export function Home() {
         >
           <motion.div variants={staggerItem} className="flex items-center gap-3">
             <span
-              className={`inline-block h-1.5 w-1.5 rounded-full ${
-                totalSkills > 0 ? "bg-success" : "bg-fg-4"
-              }`}
+              className={cn(
+                "inline-block h-1.5 w-1.5 rounded-full",
+                totalSkills > 0 ? "bg-success" : "bg-fg-4",
+              )}
             />
             <Label lang={lang}>
               {totalSkills > 0 ? t(lang, "home.status") : t(lang, "home.statusEmpty")}
