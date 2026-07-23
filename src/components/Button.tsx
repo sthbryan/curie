@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from "react";
 
 type Size = "xs" | "sm" | "md" | "lg" | "xl" | "hero";
 type Variant = "primary" | "accent" | "accent-outline" | "outline" | "danger" | "ghost" | "link";
@@ -35,21 +35,25 @@ const VARIANT: Record<Variant, string> = {
 
 const SELECTED = "bg-fg text-bg font-bold hover:opacity-90 transition-opacity duration-150";
 
-export function Button({
-  children,
-  size = "md",
-  variant = "outline",
-  selected = false,
-  className = "",
-  type = "button",
-  ...rest
-}: Props) {
+export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+  {
+    children,
+    size = "md",
+    variant = "outline",
+    selected = false,
+    className = "",
+    type = "button",
+    ...rest
+  },
+  ref,
+) {
   const base =
     "inline-flex items-center justify-center gap-2 rounded-sm font-mono uppercase tracking-label disabled:opacity-50";
   const press = size === "xl" || size === "hero" ? "active:scale-[0.99]" : "";
   const visual = selected ? SELECTED : VARIANT[variant];
   return (
     <button
+      ref={ref}
       type={type}
       aria-pressed={selected ? true : undefined}
       className={`${base} ${SIZE[size]} ${visual} ${press} ${className}`.trim()}
@@ -58,4 +62,4 @@ export function Button({
       {children}
     </button>
   );
-}
+});
