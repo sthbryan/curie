@@ -13,14 +13,14 @@ import {
 } from "../../components/types";
 import { t } from "../../i18n";
 import { loadGlobalSkills } from "../../lib/boot";
-import { useAppStore } from "../../store/app";
+import { useUiStore } from "../../store/ui";
 
 type Props = {
   onComplete: (node: NodeInfo) => void;
 };
 
 export function Setup({ onComplete }: Props) {
-  const lang = useAppStore((s) => s.lang);
+  const lang = useUiStore((s) => s.lang);
   const [stage, setStage] =
     useState<Extract<Stage, "setup" | "installing" | "done" | "error">>("setup");
   const [step, setStep] = useState<InstallStep>("checking");
