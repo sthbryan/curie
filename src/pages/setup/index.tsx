@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import cn from "cnfast";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
@@ -109,18 +110,22 @@ export function Setup({ onComplete }: Props) {
                   className="flex items-center gap-4 border-b border-border py-4 first:border-t"
                 >
                   <span
-                    className={`flex h-6 w-6 items-center justify-center rounded-full font-mono text-mono font-bold ${
-                      isDone
-                        ? "bg-success text-success-fg"
-                        : isCurrent
-                          ? "border border-fg-3 text-fg-3"
-                          : "border border-border text-fg-4"
-                    }`}
+                    className={cn(
+                      "flex h-6 w-6 items-center justify-center rounded-full font-mono text-mono font-bold",
+                      {
+                        "bg-success text-success-fg": isDone,
+                        "border border-fg-3 text-fg-3": isCurrent,
+                        "border border-border text-fg-4": !isDone && !isCurrent,
+                      },
+                    )}
                   >
                     {isDone ? "✓" : isCurrent ? "●" : ""}
                   </span>
                   <span
-                    className={`font-body text-sm ${isDone || isCurrent ? "text-fg" : "text-fg-4"}`}
+                    className={cn("font-body text-sm", {
+                      "text-fg": isDone || isCurrent,
+                      "text-fg-4": !isDone && !isCurrent,
+                    })}
                   >
                     {t(lang, `stages.${s}`)}
                   </span>
