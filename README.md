@@ -71,10 +71,10 @@ Curie works with the real skills ecosystem on your computer. It doesn’t invent
 **Coming soon**
 
 - [ ] Install in one click  
-- [ ] Remove & update from the app  
-- [ ] Find skills without leaving Curie  
-- [ ] Explore the marketplace  
-- [ ] Friendlier errors when something fails  
+- [x] Remove & update from the app  
+- [x] Find skills without leaving Curie  
+- [x] Explore the marketplace  
+- [x] Friendlier errors when something fails  
 
 **Next up**
 
