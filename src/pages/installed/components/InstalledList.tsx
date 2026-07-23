@@ -9,19 +9,18 @@ import { fadeUp, listStagger } from "@/lib/motion";
 import { filterSkills, updateNameSet } from "@/lib/skills";
 import { skills, skillUpdates } from "@/store/skills";
 import { lang } from "@/store/system";
-import { useInstalledActionsStore, useInstalledFiltersStore } from "../store/store";
+import {
+  agentFilter,
+  query,
+  remove,
+  removingSkill,
+  update,
+  updatesOnly,
+  updatingSkill,
+} from "../store/store";
 import { INSTALLED_GRID, SkillRow } from "./SkillRow";
 
 export function InstalledList() {
-  const query = useInstalledFiltersStore((s) => s.query);
-  const agentFilter = useInstalledFiltersStore((s) => s.agentFilter);
-  const updatesOnly = useInstalledFiltersStore((s) => s.updatesOnly);
-
-  const updatingSkill = useInstalledActionsStore((s) => s.updatingSkill);
-  const removingSkill = useInstalledActionsStore((s) => s.removingSkill);
-  const update = useInstalledActionsStore((s) => s.update);
-  const remove = useInstalledActionsStore((s) => s.remove);
-
   const updateNames = useMemo(() => updateNameSet(skillUpdates.value), [skillUpdates.value]);
   const filtered = useMemo(
     () =>
@@ -29,9 +28,9 @@ export function InstalledList() {
         updatesOnly,
         updateNames,
       }),
-    [skills.value, query, agentFilter, updatesOnly, updateNames],
+    [skills.value, query.value, agentFilter.value, updatesOnly.value, updateNames],
   );
-  const actionBusy = updatingSkill !== null || removingSkill !== null;
+  const actionBusy = updatingSkill.value !== null || removingSkill.value !== null;
 
   const [, navigate] = useLocation();
   const onInstall = () => navigate("/find");
@@ -46,7 +45,7 @@ export function InstalledList() {
     });
   };
 
-  const listKey = `${agentFilter ?? "all"}:${query}:${updatesOnly ? "up" : "all"}`;
+  const listKey = `${agentFilter.value ?? "all"}:${query.value}:${updatesOnly.value ? "up" : "all"}`;
 
   return (
     <section className="flex flex-col">
@@ -105,8 +104,8 @@ export function InstalledList() {
                   skill={skill}
                   lang={lang.value}
                   updateAvailable={updateNames.has(skill.name)}
-                  updating={updatingSkill === skill.name || updatingSkill === "*"}
-                  removing={removingSkill === skill.name || removingSkill === "*"}
+                  updating={updatingSkill.value === skill.name || updatingSkill.value === "*"}
+                  removing={removingSkill.value === skill.name || removingSkill.value === "*"}
                   actionBusy={actionBusy}
                   onUpdate={onUpdate}
                   onRemove={onRemove}

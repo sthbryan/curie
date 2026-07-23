@@ -6,28 +6,26 @@ import { fadeUp } from "@/lib/motion";
 import { filterSkills, summarizeAgents, updateNameSet } from "@/lib/skills";
 import { skills, skillUpdates } from "@/store/skills";
 import { lang } from "@/store/system";
-import { useInstalledFiltersStore } from "../store/store";
+import {
+  agentFilter,
+  clearFilters,
+  query,
+  setAgentFilter,
+  setQuery,
+  toggleUpdatesOnly,
+  updatesOnly,
+} from "../store/store";
 
 export function InstalledFilters() {
-  const {
-    query,
-    agentFilter,
-    updatesOnly,
-    setQuery,
-    setAgentFilter,
-    toggleUpdatesOnly,
-    clearFilters,
-  } = useInstalledFiltersStore();
-
   const updateNames = useMemo(() => updateNameSet(skillUpdates.value), [skillUpdates.value]);
   const agents = useMemo(() => summarizeAgents(skills.value), [skills.value]);
   const filteredCount = useMemo(
     () =>
-      filterSkills(skills.value, query, agentFilter, {
-        updatesOnly,
+      filterSkills(skills.value, query.value, agentFilter.value, {
+        updatesOnly: updatesOnly.value,
         updateNames,
       }).length,
-    [skills.value, query, agentFilter, updatesOnly, updateNames],
+    [skills.value, query.value, agentFilter.value, updatesOnly.value, updateNames],
   );
 
   return (
@@ -37,7 +35,7 @@ export function InstalledFilters() {
           <span className="sr-only">{t(lang.value, "installed.search")}</span>
           <input
             type="search"
-            value={query}
+            value={query.value}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t(lang.value, "installed.searchPlaceholder")}
             className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
@@ -50,7 +48,12 @@ export function InstalledFilters() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button size="xs" variant="outline" selected={updatesOnly} onClick={toggleUpdatesOnly}>
+        <Button
+          size="xs"
+          variant="outline"
+          selected={updatesOnly.value}
+          onClick={toggleUpdatesOnly}
+        >
           {t(lang.value, "installed.filterUpdates")}
           <span className="ml-2 opacity-60">{updateNames.size}</span>
         </Button>
@@ -59,7 +62,7 @@ export function InstalledFilters() {
         <Button
           size="xs"
           variant="outline"
-          selected={agentFilter === null && !updatesOnly}
+          selected={agentFilter.value === null && !updatesOnly.value}
           onClick={clearFilters}
         >
           {t(lang.value, "installed.filterAll")}
@@ -69,8 +72,8 @@ export function InstalledFilters() {
             key={agent.id}
             size="xs"
             variant="outline"
-            selected={agentFilter === agent.label}
-            onClick={() => setAgentFilter(agentFilter === agent.label ? null : agent.label)}
+            selected={agentFilter.value === agent.label}
+            onClick={() => setAgentFilter(agentFilter.value === agent.label ? null : agent.label)}
           >
             {agent.label}
             <span className="ml-2 opacity-60">{agent.count}</span>

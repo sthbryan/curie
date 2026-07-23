@@ -17,7 +17,15 @@ import {
   updatesLoading,
 } from "@/store/skills";
 import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
-import { useInstalledActionsStore, useInstalledFiltersStore } from "./store/store";
+import {
+  agentFilter,
+  query,
+  removeError,
+  removingSkill,
+  updateApplyError,
+  updatesOnly,
+  updatingSkill,
+} from "./store/store";
 
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
@@ -72,17 +80,13 @@ beforeEach(() => {
   hasBooted.value = false;
   stage.value = "loading";
   node.value = null;
-  useInstalledActionsStore.setState({
-    updatingSkill: null,
-    updateApplyError: null,
-    removingSkill: null,
-    removeError: null,
-  });
-  useInstalledFiltersStore.setState({
-    query: "",
-    agentFilter: null,
-    updatesOnly: false,
-  });
+  updatingSkill.value = null;
+  updateApplyError.value = null;
+  removingSkill.value = null;
+  removeError.value = null;
+  query.value = "";
+  agentFilter.value = null;
+  updatesOnly.value = false;
 });
 
 afterEach(() => {
