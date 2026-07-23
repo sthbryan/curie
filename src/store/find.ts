@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { SkillSearchResult } from "../components/types";
+import type { SkillSearchResult } from "@/components/types";
 
 export type FindState = {
   findQuery: string;

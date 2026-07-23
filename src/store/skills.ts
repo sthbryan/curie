@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { SkillInfo, SkillUpdateInfo } from "../components/types";
+import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
 
 export type SkillsState = {
   skills: SkillInfo[];

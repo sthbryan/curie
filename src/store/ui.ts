@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { NodeInfo, ReducedMotionPref, Stage, ThemeMode } from "../components/types";
-import type { Lang } from "../i18n";
+import type { NodeInfo, ReducedMotionPref, Stage, ThemeMode } from "@/components/types";
+import type { Lang } from "@/i18n";
 
 export type UiState = {
   theme: ThemeMode;
