@@ -41,7 +41,7 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -4 }}
             transition={{ duration: duration.base, ease: easeOut, delay: 0.06 }}
-            className="absolute left-9 top-1/2 flex -translate-y-1/2 flex-col items-start gap-0.5 whitespace-nowrap"
+            className="absolute left-9 top-1/2 flex -translate-y-1/2 flex-col items-start whitespace-nowrap ml-0.5"
           >
             <span
               className={cn(
