@@ -1,8 +1,8 @@
 export type ThemeMode = "dark" | "light" | "rose" | "dawn";
-export type ReducedMotionPref = "system" | "true" | "false";
+export type ReducedMotionPref = "user" | "always" | "never";
 export type View = "home" | "installed" | "marketplace" | "search" | "settings";
 
-export const REDUCED_MOTION_OPTIONS: ReducedMotionPref[] = ["system", "true", "false"];
+export const REDUCED_MOTION_OPTIONS: ReducedMotionPref[] = ["user", "always", "never"];
 
 export type NodeInfo = {
   installed: boolean;

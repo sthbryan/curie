@@ -23,9 +23,9 @@ const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
 };
 
 const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
-  system: "settings.reducedMotionSystem",
-  true: "settings.reducedMotionTrue",
-  false: "settings.reducedMotionFalse",
+  user: "settings.reducedMotionSystem",
+  always: "settings.reducedMotionTrue",
+  never: "settings.reducedMotionFalse",
 };
 
 export function Settings() {

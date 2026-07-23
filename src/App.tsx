@@ -8,7 +8,7 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { StatusBar } from "@/components/StatusBar";
 import { useBoot } from "@/lib/boot";
-import { pageTransition, toMotionReducedMotion } from "@/lib/motion";
+import { pageTransition } from "@/lib/motion";
 import { Custom } from "@/pages/custom";
 import { Explore } from "@/pages/explore";
 import { Find } from "@/pages/find";
@@ -125,7 +125,7 @@ function App() {
   }, [lang]);
 
   return (
-    <MotionConfig reducedMotion={toMotionReducedMotion(reducedMotion)}>
+    <MotionConfig reducedMotion={reducedMotion}>
       <AppShell />
     </MotionConfig>
   );

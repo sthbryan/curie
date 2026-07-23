@@ -1,13 +1,4 @@
 import type { Transition, Variants } from "motion/react";
-import type { ReducedMotionPref } from "@/components/types";
-
-export type MotionReducedMotion = "user" | "always" | "never";
-
-export function toMotionReducedMotion(pref: ReducedMotionPref): MotionReducedMotion {
-  if (pref === "true") return "always";
-  if (pref === "false") return "never";
-  return "user";
-}
 
 export const easeOut: Transition["ease"] = [0.22, 1, 0.36, 1];
 
