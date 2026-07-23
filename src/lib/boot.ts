@@ -37,7 +37,6 @@ export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
     const skills = await invoke<SkillInfo[]>("list_skills");
     setSkills(skills);
     if (checkUpdates) {
-      // Fire-and-forget so the list renders immediately.
       void checkSkillUpdates();
     }
   } catch (e) {
