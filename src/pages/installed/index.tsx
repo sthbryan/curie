@@ -1,64 +1,12 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
-import { Label } from "../components/Label";
-import type { SkillInfo } from "../components/types";
-import { t } from "../i18n";
-import { loadGlobalSkills } from "../lib/boot";
-import { fadeUp, listItem, listStagger } from "../lib/motion";
-import { filterSkills, formatRelative, skillTimestamp, summarizeAgents } from "../lib/skills";
-import { useAppStore } from "../store/app";
-
-function AgentBadge({ label }: { label: string }) {
-  return (
-    <span className="inline-flex max-w-36 truncate border border-border px-1.5 py-0.5 font-mono uppercase tracking-label text-micro text-fg-3">
-      {label}
-    </span>
-  );
-}
-
-function SkillRow({ skill, lang }: { skill: SkillInfo; lang: "en" | "es" }) {
-  const when = skillTimestamp(skill);
-
-  return (
-    <motion.article
-      layout
-      variants={listItem}
-      className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.4fr)_5.5rem] items-start gap-4 border-b border-border py-4 first:border-t"
-    >
-      <div className="min-w-0 flex flex-col gap-1">
-        <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
-        <span className="font-mono uppercase tracking-label text-micro text-fg-4 truncate">
-          {skill.scope}
-        </span>
-      </div>
-
-      <div className="min-w-0 flex flex-col gap-1">
-        <span className="font-mono text-mono text-fg-2 truncate">
-          {skill.source ?? t(lang, "installed.local")}
-        </span>
-        <span className="font-mono text-micro text-fg-4 truncate" title={skill.path}>
-          {skill.path}
-        </span>
-      </div>
-
-      <div className="min-w-0 flex flex-wrap gap-1.5">
-        {skill.agents.length === 0 ? (
-          <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-            {t(lang, "installed.noAgents")}
-          </span>
-        ) : (
-          skill.agents.map((agent) => <AgentBadge key={`${skill.name}-${agent}`} label={agent} />)
-        )}
-      </div>
-
-      <div className="text-right">
-        <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-          {when ? formatRelative(when) : "—"}
-        </span>
-      </div>
-    </motion.article>
-  );
-}
+import { Label } from "../../components/Label";
+import { t } from "../../i18n";
+import { loadGlobalSkills } from "../../lib/boot";
+import { fadeUp, listStagger } from "../../lib/motion";
+import { filterSkills, summarizeAgents } from "../../lib/skills";
+import { useAppStore } from "../../store/app";
+import { SkillRow } from "./components/SkillRow";
 
 export function Installed() {
   const lang = useAppStore((s) => s.lang);
