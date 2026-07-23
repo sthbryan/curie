@@ -2,13 +2,13 @@ import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { loadGlobalSkills } from "@/lib/boot";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { InstalledFilters } from "./components/InstalledFilters";
 import { InstalledHeader } from "./components/InstalledHeader";
 import { InstalledList } from "./components/InstalledList";
 
 export function Installed() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
   const skillsLoading = useSkillsStore((s) => s.skillsLoading);
   const skillsError = useSkillsStore((s) => s.skillsError);

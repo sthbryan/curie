@@ -5,10 +5,10 @@ import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { t } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 export function Custom() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const [, navigate] = useLocation();
 
   return (

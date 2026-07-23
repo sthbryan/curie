@@ -10,7 +10,7 @@ import {
 } from "@/components/types";
 import { t } from "@/i18n";
 import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
@@ -29,7 +29,8 @@ const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
 };
 
 export function Settings() {
-  const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } = useUiStore();
+  const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } =
+    useSystemStore();
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">

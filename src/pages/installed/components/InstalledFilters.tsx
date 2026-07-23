@@ -5,11 +5,11 @@ import { t } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
 import { filterSkills, summarizeAgents, updateNameSet } from "@/lib/skills";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { useInstalledFiltersStore } from "../store";
 
 export function InstalledFilters() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
   const skillUpdates = useSkillsStore((s) => s.skillUpdates);
 

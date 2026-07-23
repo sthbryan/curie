@@ -10,14 +10,14 @@ import { t } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { ExploreList } from "./components/ExploreList";
 import { useExploreActions } from "./hooks/useExploreActions";
 
 const VIEWS: ExploreView[] = ["hot", "trending", "all-time"];
 
 export function Explore() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
   const [, navigate] = useLocation();
   const {

@@ -2,7 +2,7 @@ import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { useAsymptoticProgress } from "@/lib/useAsymptoticProgress";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 type Props = {
   active: boolean;
@@ -17,7 +17,7 @@ type Props = {
  * label when reduced motion is on.
  */
 export function ActionProgress({ active, labelKey, lang, className = "" }: Props) {
-  const reducedMotion = useUiStore((s) => s.reducedMotion);
+  const reducedMotion = useSystemStore((s) => s.reducedMotion);
   const prefersReduced =
     reducedMotion === "true" ||
     (reducedMotion === "system" &&

@@ -14,14 +14,14 @@ import {
 import { t } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
 import { cn } from "@/lib/cn";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 type Props = {
   onComplete: (node: NodeInfo) => void;
 };
 
 export function Setup({ onComplete }: Props) {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const [stage, setStage] =
     useState<Extract<Stage, "setup" | "installing" | "done" | "error">>("setup");
   const [step, setStep] = useState<InstallStep>("checking");

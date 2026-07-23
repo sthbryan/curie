@@ -9,11 +9,11 @@ import { loadGlobalSkills } from "@/lib/boot";
 import { fadeUp } from "@/lib/motion";
 import { updateNameSet } from "@/lib/skills";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { useInstalledActionsStore } from "../store";
 
 export function InstalledHeader() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
   const skillUpdates = useSkillsStore((s) => s.skillUpdates);
   const skillsLoading = useSkillsStore((s) => s.skillsLoading);

@@ -5,7 +5,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "@/components/types";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 const invokeMock = vi.fn();
 
@@ -66,7 +66,7 @@ beforeEach(() => {
     updatesLoading: false,
     updatesError: null,
   });
-  useUiStore.setState({
+  useSystemStore.setState({
     theme: "dark",
     lang: "en",
     reducedMotion: "system",
@@ -189,7 +189,7 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 0));
     });
 
-    const s = useUiStore.getState();
+    const s = useSystemStore.getState();
     expect(s.lang).toBe("es");
     expect(s.node).toEqual(nodeMissing);
     expect(s.stage).toBe("setup");
@@ -210,7 +210,7 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    const ui = useUiStore.getState();
+    const ui = useSystemStore.getState();
     const skills = useSkillsStore.getState();
     expect(ui.node).toEqual(nodeInstalled);
     expect(ui.stage).toBe("home");
@@ -232,7 +232,7 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    expect(useUiStore.getState().lang).toBe("en");
+    expect(useSystemStore.getState().lang).toBe("en");
   });
 
   it("falls back to setup stage when detect_node rejects", async () => {
@@ -247,13 +247,13 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 0));
     });
 
-    const s = useUiStore.getState();
+    const s = useSystemStore.getState();
     expect(s.stage).toBe("setup");
     expect(s.hasBooted).toBe(true);
   });
 
   it("skips get_locale on a re-mount when hasBooted is already true", async () => {
-    useUiStore.getState().markBooted();
+    useSystemStore.getState().markBooted();
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "detect_node") return Promise.resolve(nodeInstalled);
       if (cmd === "list_skills") return Promise.resolve([]);
@@ -295,7 +295,7 @@ describe("useBoot", () => {
     });
 
     // The cancelled branch must not have written to the store.
-    expect(useUiStore.getState().hasBooted).toBe(false);
-    expect(useUiStore.getState().node).toBeNull();
+    expect(useSystemStore.getState().hasBooted).toBe(false);
+    expect(useSystemStore.getState().node).toBeNull();
   });
 });

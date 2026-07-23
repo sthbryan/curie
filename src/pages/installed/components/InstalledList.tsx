@@ -8,12 +8,12 @@ import { cn } from "@/lib/cn";
 import { fadeUp, listStagger } from "@/lib/motion";
 import { filterSkills, updateNameSet } from "@/lib/skills";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { useInstalledActionsStore, useInstalledFiltersStore } from "../store";
 import { INSTALLED_GRID, SkillRow } from "./SkillRow";
 
 export function InstalledList() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
   const skillUpdates = useSkillsStore((s) => s.skillUpdates);
 

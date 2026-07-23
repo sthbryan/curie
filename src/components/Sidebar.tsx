@@ -13,7 +13,7 @@ import { useLocation } from "wouter";
 import { t } from "@/i18n";
 import { duration, easeOut } from "@/lib/motion";
 import { reducedTransition } from "@/lib/transition";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { NavItem } from "./NavItem";
 
 type NavKey = "home" | "skills" | "explore" | "find" | "custom";
@@ -30,7 +30,7 @@ const COLLAPSED_W = 50;
 const EXPANDED_W = 160;
 
 export function Sidebar() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const [location, navigate] = useLocation();
   const [hovered, setHovered] = useState(false);
 

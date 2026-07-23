@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { t } from "@/i18n";
 import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 function Sep() {
   return <span className="text-fg-4/80 select-none">·</span>;
@@ -12,8 +12,8 @@ function Meta({ children, dim }: { children: ReactNode; dim?: boolean }) {
 }
 
 export function StatusBar() {
-  const lang = useUiStore((s) => s.lang);
-  const node = useUiStore((s) => s.node);
+  const lang = useSystemStore((s) => s.lang);
+  const node = useSystemStore((s) => s.node);
 
   return (
     <footer className="shrink-0 flex h-9 items-center justify-between border-t border-border bg-surface px-5">

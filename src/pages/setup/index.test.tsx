@@ -4,7 +4,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { NodeInfo, ProgressEvent } from "@/components/types";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 const invokeMock = vi.fn();
 const listenMock = vi.fn();
@@ -56,7 +56,7 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockClear();
   unlisten.mockReset();
   listenMock.mockResolvedValue(unlisten);
-  useUiStore.setState({
+  useSystemStore.setState({
     theme: "dark",
     lang: "en",
     reducedMotion: "system",

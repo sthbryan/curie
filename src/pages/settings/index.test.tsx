@@ -4,7 +4,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 const openUrl = vi.fn();
 vi.mock("@tauri-apps/plugin-opener", () => ({
@@ -28,7 +28,7 @@ function render(ui: React.ReactNode) {
 }
 
 beforeEach(() => {
-  useUiStore.setState({
+  useSystemStore.setState({
     theme: "dark",
     lang: "en",
     reducedMotion: "system",
@@ -63,7 +63,7 @@ describe("Settings", () => {
   });
 
   it("renders Spanish copy when lang=es", () => {
-    useUiStore.getState().setLang("es");
+    useSystemStore.getState().setLang("es");
     render(<Settings />);
     expect(container?.textContent).toContain("Ajustes");
     expect(container?.textContent).toContain("Idioma");
@@ -81,12 +81,12 @@ describe("Settings", () => {
     act(() => {
       esButtons[0]?.click();
     });
-    expect(useUiStore.getState().lang).toBe("es");
+    expect(useSystemStore.getState().lang).toBe("es");
 
     act(() => {
       enButtons[0]?.click();
     });
-    expect(useUiStore.getState().lang).toBe("en");
+    expect(useSystemStore.getState().lang).toBe("en");
   });
 
   it("switches the theme when a ThemeCard is clicked", () => {
@@ -95,11 +95,11 @@ describe("Settings", () => {
     act(() => {
       rose?.click();
     });
-    expect(useUiStore.getState().theme).toBe("rose");
+    expect(useSystemStore.getState().theme).toBe("rose");
   });
 
   it("shows the system info block when node is installed", () => {
-    useUiStore.getState().setNode({
+    useSystemStore.getState().setNode({
       installed: true,
       version: "v20.0.0",
       path: "/usr/bin/node",

@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 type Props = {
   ready: boolean;
@@ -17,7 +17,7 @@ const locationMap: Record<string, string> = {
 };
 
 export function Header({ ready }: Props) {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const [location] = useLocation();
 
   const currentLocation = locationMap[location] || location;

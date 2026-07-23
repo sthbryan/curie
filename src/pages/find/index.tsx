@@ -7,7 +7,7 @@ import { t } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { ResultsPanel } from "./components/ResultsPanel";
 import { useFindActions } from "./hooks/useFindActions";
 
@@ -15,7 +15,7 @@ import { useFindActions } from "./hooks/useFindActions";
 const DEBOUNCE_MS = 280;
 
 export function Find() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
   const {
     results: findResults,

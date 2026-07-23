@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
 import type { SkillInfo } from "@/components/types";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { useInstalledActionsStore, useInstalledFiltersStore } from "./store";
 
 const invokeMock = vi.fn();
@@ -58,7 +58,7 @@ beforeEach(() => {
     updatesLoading: false,
     updatesError: null,
   });
-  useUiStore.setState({
+  useSystemStore.setState({
     theme: "dark",
     lang: "en",
     reducedMotion: "system",

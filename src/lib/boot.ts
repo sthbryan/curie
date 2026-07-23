@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "@/components/types";
 import { detectLang } from "@/i18n";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
@@ -47,7 +47,7 @@ export function useBoot() {
     let cancelled = false;
 
     (async () => {
-      const { hasBooted, setLang, setNode, setStage, markBooted } = useUiStore.getState();
+      const { hasBooted, setLang, setNode, setStage, markBooted } = useSystemStore.getState();
 
       if (!hasBooted) {
         try {

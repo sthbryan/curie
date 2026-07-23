@@ -18,14 +18,14 @@ import {
   summarizeAgents,
 } from "@/lib/skills";
 import { useSkillsStore } from "@/store/skills";
-import { useUiStore } from "@/store/ui";
+import { useSystemStore } from "@/store/system";
 import { AgentRow } from "./components/AgentRow";
 import { RecentRow } from "./components/RecentRow";
 import { Stat } from "./components/Stat";
 import { UpdateRow } from "./components/UpdateRow";
 
 export function Home() {
-  const lang = useUiStore((s) => s.lang);
+  const lang = useSystemStore((s) => s.lang);
   const [, navigate] = useLocation();
   const { skills, skillsLoading, skillsError, skillUpdates, updatesLoading, updatesError } =
     useSkillsStore();
