@@ -9,6 +9,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { StatusBar } from "@/components/StatusBar";
 import { useBoot } from "@/lib/boot";
 import { pageTransition, toMotionReducedMotion } from "@/lib/motion";
+import { Custom } from "@/pages/custom";
 import { Explore } from "@/pages/explore";
 import { Find } from "@/pages/find";
 import { Home } from "@/pages/home";
@@ -34,6 +35,7 @@ function RoutedPages() {
           <Route path="/installed" component={Installed} />
           <Route path="/marketplace" component={Explore} />
           <Route path="/find" component={Find} />
+          <Route path="/custom" component={Custom} />
           <Route path="/settings" component={Settings} />
         </Switch>
       </motion.div>

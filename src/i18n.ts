@@ -147,6 +147,14 @@ export type Messages = {
     installError: string;
     packageHint: string;
   };
+  custom: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    comingSoon: string;
+    body: string;
+    back: string;
+  };
   explore: {
     eyebrow: string;
     title: string;
