@@ -1,6 +1,7 @@
 {
   "app": {
-    "ready": "LISTO"
+    "ready": "LISTO",
+    "appName": "Curie · Administrador de Skills"
   },
   "error": {
     "eyebrow": "ALGO FALLÓ",

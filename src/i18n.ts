@@ -6,6 +6,7 @@ export type Lang = "en" | "es";
 export type Messages = {
   app: {
     ready: string;
+    appName: string;
   };
   error: {
     eyebrow: string;
