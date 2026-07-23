@@ -1,5 +1,4 @@
 import { t } from "@/i18n";
-import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
 import { useUiStore } from "@/store/ui";
 
 type Props = {
@@ -19,10 +18,7 @@ export function Header({ ready }: Props) {
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
       >
         <span className="font-display text-lg font-bold leading-none tracking-tight text-fg">
-          {APP_NAME}
-        </span>
-        <span className="font-mono uppercase tracking-label text-micro text-fg-4 border border-border px-1.5 py-px rounded-sm leading-none">
-          {APP_VERSION_LABEL}
+          {t(lang, "app.appName")}
         </span>
       </div>
 
