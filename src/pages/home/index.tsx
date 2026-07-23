@@ -152,7 +152,7 @@ export function Home() {
                     disabled={updatesLoading}
                   >
                     <RotateCcw
-                      size={16}
+                      size={10}
                       strokeWidth={1.5}
                       className={cn("transition-transform", updatesLoading && "animate-spin")}
                     />
