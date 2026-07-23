@@ -49,11 +49,17 @@ export type Messages = {
     skillsNone: string;
     statSkills: string;
     statTools: string;
-    statRecent: string;
+    statUpdates: string;
     aiTools: string;
     active: string;
     skillWord: string;
     skillsWord: string;
+    updates: string;
+    updatesAvailable: string;
+    updatesCheck: string;
+    updatesChecking: string;
+    updatesError: string;
+    noUpdates: string;
     recent: string;
     events: string;
     noRecent: string;
@@ -73,6 +79,7 @@ export type Messages = {
     eyebrow: string;
     title: string;
     subtitle: string;
+    updatesHint: string;
     refresh: string;
     refreshing: string;
     install: string;
@@ -80,6 +87,8 @@ export type Messages = {
     searchPlaceholder: string;
     showing: string;
     filterAll: string;
+    filterUpdates: string;
+    badgeUpdate: string;
     colName: string;
     colSource: string;
     colAgents: string;
