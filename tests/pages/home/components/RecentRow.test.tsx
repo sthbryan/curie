@@ -28,7 +28,7 @@ beforeEach(() => { lang.value = "en"; });
 
 describe("RecentRow", () => {
   it("renders the skill name", () => {
-    mount(<RecentRow lang="en" event={{ kind: "install", skill: "impeccable", source: "me", when: "now" }} />);
+    mount(<RecentRow event={{ kind: "install", skill: "impeccable", source: "me", when: "now", at: "2026-07-23T12:00:00Z" }} />);
     expect(container?.textContent).toContain("impeccable");
   });
 });

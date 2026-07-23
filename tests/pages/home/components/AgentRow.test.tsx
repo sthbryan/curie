@@ -28,7 +28,7 @@ beforeEach(() => { lang.value = "en"; });
 
 describe("AgentRow", () => {
   it("renders agent label and count", () => {
-    mount(<AgentRow lang="en" agent={{ label: "Codex", count: 5, skills: 5 }} capacity={10} />);
+    mount(<AgentRow agent={{ id: "codex", label: "Codex", count: 5 }} capacity={10} />);
     expect(container?.textContent).toContain("Codex");
     expect(container?.textContent).toContain("5");
   });

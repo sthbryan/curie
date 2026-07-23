@@ -27,12 +27,12 @@ afterEach(unmount);
 
 describe("Placeholder", () => {
   it("renders the view name", () => {
-    mount(<Router><Placeholder view="custom" /></Router>);
-    expect(container?.textContent).toContain("CUSTOM");
+    mount(<Router><Placeholder view="marketplace" /></Router>);
+    expect(container?.textContent).toContain("MARKETPLACE");
   });
 
   it("renders a back button", () => {
-    mount(<Router><Placeholder view="custom" /></Router>);
+    mount(<Router><Placeholder view="marketplace" /></Router>);
     expect(container?.textContent).toContain("BACK TO HOME");
   });
 });
