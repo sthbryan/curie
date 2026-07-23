@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
+import { Button } from "../../components/Button";
 import { Label } from "../../components/Label";
 import {
   type InstallStep,
@@ -148,13 +149,9 @@ export function Setup({ onComplete }: Props) {
               {t(lang, "setup.doneHint")}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleContinue}
-            className="h-12 px-8 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 active:scale-[0.99] transition-all duration-150"
-          >
+          <Button size="xl" variant="primary" className="px-8" onClick={handleContinue}>
             {t(lang, "setup.continue")}
-          </button>
+          </Button>
         </div>
       </main>
     );
@@ -176,20 +173,12 @@ export function Setup({ onComplete }: Props) {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleRetry}
-              className="h-12 px-6 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 active:scale-[0.99] transition-all duration-150"
-            >
+            <Button size="xl" variant="primary" onClick={handleRetry}>
               {t(lang, "setup.retry")}
-            </button>
-            <button
-              type="button"
-              onClick={() => setManualOpen(true)}
-              className="h-12 px-6 border border-border-strong text-fg-2 rounded-sm font-mono uppercase tracking-label text-mono hover:border-fg-3 hover:text-fg active:scale-[0.99] transition-all duration-150"
-            >
+            </Button>
+            <Button size="xl" variant="outline" onClick={() => setManualOpen(true)}>
               {t(lang, "setup.manual")}
-            </button>
+            </Button>
           </div>
         </div>
       </main>
@@ -235,22 +224,19 @@ export function Setup({ onComplete }: Props) {
         <section className="flex flex-col gap-5">
           <p className="font-body text-base text-fg-2">{t(lang, "setup.prompt")}</p>
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleInstall}
-              className="flex h-14 items-center gap-3 px-8 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 active:scale-[0.99] transition-all duration-150"
-            >
+            <Button size="hero" variant="primary" className="px-8 gap-3" onClick={handleInstall}>
               <span>{t(lang, "setup.cta")}</span>
               <span>→</span>
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="hero"
+              variant="ghost"
+              className="px-6"
               onClick={() => setManualOpen((o) => !o)}
-              className="flex h-14 items-center px-6 text-fg-3 rounded-sm font-mono uppercase tracking-label text-mono hover:text-fg hover:bg-surface-hover active:scale-[0.99] transition-all duration-150"
             >
               {t(lang, "setup.manual")}
               <span className="ml-2">{manualOpen ? "▴" : "▾"}</span>
-            </button>
+            </Button>
           </div>
         </section>
 
