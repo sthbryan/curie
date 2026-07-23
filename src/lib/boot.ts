@@ -8,11 +8,11 @@ import type {
   SkillSearchResult,
   SkillUpdateInfo,
   SkillUpdateResult,
-} from "../components/types";
-import { detectLang } from "../i18n";
-import { useFindStore } from "../store/find";
-import { useSkillsStore } from "../store/skills";
-import { useUiStore } from "../store/ui";
+} from "@/components/types";
+import { detectLang } from "@/i18n";
+import { useFindStore } from "@/store/find";
+import { useSkillsStore } from "@/store/skills";
+import { useUiStore } from "@/store/ui";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);

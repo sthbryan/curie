@@ -1,5 +1,5 @@
 import type { Transition, Variants } from "motion/react";
-import type { ReducedMotionPref } from "../components/types";
+import type { ReducedMotionPref } from "@/components/types";
 
 export type MotionReducedMotion = "user" | "always" | "never";
 

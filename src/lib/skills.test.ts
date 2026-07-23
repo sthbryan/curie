@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { SkillInfo, SkillUpdateInfo } from "../components/types";
+import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
 import {
   availableUpdates,
   buildRecentActivity,

@@ -1,4 +1,4 @@
-import type { Activity, AgentSummary, SkillInfo, SkillUpdateInfo } from "../components/types";
+import type { Activity, AgentSummary, SkillInfo, SkillUpdateInfo } from "@/components/types";
 
 export function summarizeAgents(skills: SkillInfo[]): AgentSummary[] {
   const counts = new Map<string, number>();
