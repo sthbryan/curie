@@ -1,3 +1,5 @@
+import { House, RefreshCcw } from "lucide-react";
+import { When } from "react-if";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { useUiStore } from "@/store/ui";
@@ -23,6 +25,11 @@ export function ErrorFallback({ error, reset, variant = "page", onHome }: Props)
   const lang = resolveLang();
   const message = error.message?.trim() || t(lang, "error.unknown");
 
+  const goToHome = () => {
+    onHome?.();
+    setTimeout(reset, 100);
+  };
+
   const body = (
     <div className="flex max-w-md flex-col items-center gap-4 text-center">
       <span className="font-mono uppercase tracking-label text-micro text-accent">
@@ -40,25 +47,21 @@ export function ErrorFallback({ error, reset, variant = "page", onHome }: Props)
       </p>
       <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
         <Button size="md" variant="primary" onClick={reset}>
+          <RefreshCcw size={14} />
           {t(lang, "error.retry")}
         </Button>
-        {onHome && (
-          <Button
-            size="md"
-            variant="outline"
-            onClick={() => {
-              onHome();
-              reset();
-            }}
-          >
+        <When condition={Boolean(onHome)}>
+          <Button size="md" variant="outline" onClick={goToHome}>
+            <House size={14} />
             {t(lang, "error.home")}
           </Button>
-        )}
-        {variant === "root" && (
+        </When>
+        <When condition={variant === "root"}>
           <Button size="md" variant="outline" onClick={() => window.location.reload()}>
+            <RefreshCcw size={14} />
             {t(lang, "error.reload")}
           </Button>
-        )}
+        </When>
       </div>
     </div>
   );

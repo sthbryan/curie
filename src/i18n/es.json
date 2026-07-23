@@ -3,9 +3,9 @@
     "ready": "LISTO"
   },
   "error": {
-    "eyebrow": "ALGO FALLÓ",
-    "title": "Algo salió mal en esta sección",
-    "subtitle": "El resto de Curie sigue funcionando. Intenta recargar esta pantalla o reinicia la app.",
+    "eyebrow": "ALGO SALIO MAL",
+    "title": "ERROR DE LA APLICACIÓN",
+    "subtitle": "Algo dejó de funcionar inesperadamente. Intenta recargar esta pantalla o reiniciar la app.",
     "unknown": "Error desconocido",
     "retry": "REINTENTAR",
     "home": "IR AL INICIO",

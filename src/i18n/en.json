@@ -3,9 +3,9 @@
     "ready": "READY"
   },
   "error": {
-    "eyebrow": "SOMETHING BROKE",
-    "title": "Something went wrong in this section",
-    "subtitle": "The rest of Curie is still working. Try reloading this screen or restarting the app.",
+    "eyebrow": "SOMETHING WENT WRONG",
+    "title": "APPLICATION ERROR",
+    "subtitle": "Something stopped working unexpectedly. Try reloading this screen or restarting the app.",
     "unknown": "Unknown error",
     "retry": "RETRY",
     "home": "GO HOME",
