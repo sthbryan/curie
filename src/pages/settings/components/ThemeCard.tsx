@@ -1,3 +1,4 @@
+import cn from "cnfast";
 import type { ThemeMode } from "@/components/types";
 
 type Props = {
@@ -16,11 +17,13 @@ export function ThemeCard({ id, active, label, hint, swatches, onClick }: Props)
       onClick={onClick}
       aria-pressed={active}
       data-theme-option={id}
-      className={`flex flex-col gap-3 border p-4 text-left transition-colors duration-150 rounded-sm ${
-        active
-          ? "border-fg bg-surface-tint"
-          : "border-border-strong hover:border-fg-3 hover:bg-surface-hover"
-      }`}
+      className={cn(
+        "flex flex-col gap-3 border p-4 text-left transition-colors duration-150 rounded-sm",
+        {
+          "border-fg bg-surface-tint": active,
+          "border-border-strong hover:border-fg-3 hover:bg-surface-hover": !active,
+        },
+      )}
     >
       <div className="flex items-center gap-1.5">
         {swatches.map((color) => (
@@ -34,9 +37,10 @@ export function ThemeCard({ id, active, label, hint, swatches, onClick }: Props)
       </div>
       <div className="flex flex-col gap-0.5">
         <span
-          className={`font-mono uppercase tracking-label text-mono ${
-            active ? "text-fg font-bold" : "text-fg-2"
-          }`}
+          className={cn(
+            "font-mono uppercase tracking-label text-mono",
+            active ? "text-fg font-bold" : "text-fg-2",
+          )}
         >
           {label}
         </span>
