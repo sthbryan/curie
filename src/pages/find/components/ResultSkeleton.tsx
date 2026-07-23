@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { fadeUp } from "../../../lib/motion";
+import { fadeUp } from "@/lib/motion";
 
 type Props = {
   rows?: number;

@@ -1,10 +1,10 @@
 import { motion } from "motion/react";
 import { Else, If, Then, When } from "react-if";
-import { Button } from "../../../components/Button";
-import { Label } from "../../../components/Label";
-import type { Lang } from "../../../i18n";
-import { t } from "../../../i18n";
-import { fadeUp } from "../../../lib/motion";
+import { Button } from "@/components/Button";
+import { Label } from "@/components/Label";
+import type { Lang } from "@/i18n";
+import { t } from "@/i18n";
+import { fadeUp } from "@/lib/motion";
 
 type Props = {
   lang: Lang;

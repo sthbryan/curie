@@ -1,12 +1,12 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { motion } from "motion/react";
 import { Else, If, Then, When } from "react-if";
-import { Button } from "../../../components/Button";
-import type { SkillSearchResult } from "../../../components/types";
-import type { Lang } from "../../../i18n";
-import { t } from "../../../i18n";
-import { listItem } from "../../../lib/motion";
-import { formatInstalls } from "../../../lib/skills";
+import { Button } from "@/components/Button";
+import type { SkillSearchResult } from "@/components/types";
+import type { Lang } from "@/i18n";
+import { t } from "@/i18n";
+import { listItem } from "@/lib/motion";
+import { formatInstalls } from "@/lib/skills";
 
 type Props = {
   result: SkillSearchResult;

@@ -1,12 +1,12 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Else, If, Then, When } from "react-if";
-import { Button } from "../../../components/Button";
-import type { SkillInfo } from "../../../components/types";
-import type { Lang } from "../../../i18n";
-import { t } from "../../../i18n";
-import { listItem } from "../../../lib/motion";
-import { formatRelative, skillTimestamp } from "../../../lib/skills";
+import { Button } from "@/components/Button";
+import type { SkillInfo } from "@/components/types";
+import type { Lang } from "@/i18n";
+import { t } from "@/i18n";
+import { listItem } from "@/lib/motion";
+import { formatRelative, skillTimestamp } from "@/lib/skills";
 import { AgentBadge } from "./AgentBadge";
 
 type Props = {

@@ -1,4 +1,4 @@
-import type { ThemeMode } from "../../../components/types";
+import type { ThemeMode } from "@/components/types";
 
 type Props = {
   id: ThemeMode;

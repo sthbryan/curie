@@ -1,9 +1,9 @@
 import { motion } from "motion/react";
-import { Button } from "../../../components/Button";
-import type { AgentSummary } from "../../../components/types";
-import type { Lang } from "../../../i18n";
-import { t } from "../../../i18n";
-import { fadeUp } from "../../../lib/motion";
+import { Button } from "@/components/Button";
+import type { AgentSummary } from "@/components/types";
+import type { Lang } from "@/i18n";
+import { t } from "@/i18n";
+import { fadeUp } from "@/lib/motion";
 
 type Props = {
   lang: Lang;

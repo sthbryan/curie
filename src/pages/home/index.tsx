@@ -2,21 +2,21 @@ import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
 import { useLocation } from "wouter";
-import { Button } from "../../components/Button";
-import { FullPageError } from "../../components/FullPageError";
-import { FullPageLoading } from "../../components/FullPageLoading";
-import { Label } from "../../components/Label";
-import { t } from "../../i18n";
-import { checkSkillUpdates, loadGlobalSkills } from "../../lib/boot";
-import { fadeUp, listStagger, staggerContainer, staggerItem } from "../../lib/motion";
+import { Button } from "@/components/Button";
+import { FullPageError } from "@/components/FullPageError";
+import { FullPageLoading } from "@/components/FullPageLoading";
+import { Label } from "@/components/Label";
+import { t } from "@/i18n";
+import { checkSkillUpdates, loadGlobalSkills } from "@/lib/boot";
+import { fadeUp, listStagger, staggerContainer, staggerItem } from "@/lib/motion";
 import {
   availableUpdates,
   buildRecentActivity,
   maxAgentCount,
   summarizeAgents,
-} from "../../lib/skills";
-import { useSkillsStore } from "../../store/skills";
-import { useUiStore } from "../../store/ui";
+} from "@/lib/skills";
+import { useSkillsStore } from "@/store/skills";
+import { useUiStore } from "@/store/ui";
 import { AgentRow } from "./components/AgentRow";
 import { RecentRow } from "./components/RecentRow";
 import { Stat } from "./components/Stat";

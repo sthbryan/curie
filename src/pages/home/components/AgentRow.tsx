@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
-import type { AgentSummary } from "../../../components/types";
-import type { Lang } from "../../../i18n";
-import { t } from "../../../i18n";
-import { listItem } from "../../../lib/motion";
+import type { AgentSummary } from "@/components/types";
+import type { Lang } from "@/i18n";
+import { t } from "@/i18n";
+import { listItem } from "@/lib/motion";
 
 type Props = {
   agent: AgentSummary;

@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Case, Default, Switch } from "react-if";
-import type { SkillSearchResult } from "../../../components/types";
-import type { Lang } from "../../../i18n";
-import { t } from "../../../i18n";
-import { fadeUp, listStagger } from "../../../lib/motion";
+import type { SkillSearchResult } from "@/components/types";
+import type { Lang } from "@/i18n";
+import { t } from "@/i18n";
+import { fadeUp, listStagger } from "@/lib/motion";
 import { ResultRow } from "./ResultRow";
 import { ResultSkeleton } from "./ResultSkeleton";
 

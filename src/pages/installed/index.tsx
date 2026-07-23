@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 import { useLocation } from "wouter";
-import { FullPageError } from "../../components/FullPageError";
-import { FullPageLoading } from "../../components/FullPageLoading";
-import { loadGlobalSkills, removeSkills, updateSkills } from "../../lib/boot";
-import { filterSkills, summarizeAgents, updateNameSet } from "../../lib/skills";
-import { useSkillsStore } from "../../store/skills";
-import { useUiStore } from "../../store/ui";
+import { FullPageError } from "@/components/FullPageError";
+import { FullPageLoading } from "@/components/FullPageLoading";
+import { loadGlobalSkills, removeSkills, updateSkills } from "@/lib/boot";
+import { filterSkills, summarizeAgents, updateNameSet } from "@/lib/skills";
+import { useSkillsStore } from "@/store/skills";
+import { useUiStore } from "@/store/ui";
 import { InstalledFilters } from "./components/InstalledFilters";
 import { InstalledHeader } from "./components/InstalledHeader";
 import { InstalledList } from "./components/InstalledList";

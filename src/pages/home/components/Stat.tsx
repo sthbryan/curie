@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { staggerItem } from "../../../lib/motion";
+import { staggerItem } from "@/lib/motion";
 
 type Props = {
   label: string;

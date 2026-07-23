@@ -1,15 +1,15 @@
 import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
-import { Button } from "../../components/Button";
-import { Label } from "../../components/Label";
-import { t } from "../../i18n";
-import { addSkill, findSkills } from "../../lib/boot";
-import { fadeUp } from "../../lib/motion";
-import { isSearchResultInstalled } from "../../lib/skills";
-import { useFindStore } from "../../store/find";
-import { useSkillsStore } from "../../store/skills";
-import { useUiStore } from "../../store/ui";
+import { Button } from "@/components/Button";
+import { Label } from "@/components/Label";
+import { t } from "@/i18n";
+import { addSkill, findSkills } from "@/lib/boot";
+import { fadeUp } from "@/lib/motion";
+import { isSearchResultInstalled } from "@/lib/skills";
+import { useFindStore } from "@/store/find";
+import { useSkillsStore } from "@/store/skills";
+import { useUiStore } from "@/store/ui";
 import { ResultsPanel } from "./components/ResultsPanel";
 
 /** Debounce searches like the CLI (~150–350ms); cancel in-flight via request id. */

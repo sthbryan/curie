@@ -1,16 +1,16 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { Button } from "../../components/Button";
-import { ChoiceButton } from "../../components/ChoiceButton";
-import { Label } from "../../components/Label";
+import { Button } from "@/components/Button";
+import { ChoiceButton } from "@/components/ChoiceButton";
+import { Label } from "@/components/Label";
 import {
   REDUCED_MOTION_OPTIONS,
   type ReducedMotionPref,
   THEME_OPTIONS,
   type ThemeMode,
-} from "../../components/types";
-import { t } from "../../i18n";
-import { APP_NAME, APP_VERSION_LABEL } from "../../lib/meta";
-import { useUiStore } from "../../store/ui";
+} from "@/components/types";
+import { t } from "@/i18n";
+import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
+import { useUiStore } from "@/store/ui";
 import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";

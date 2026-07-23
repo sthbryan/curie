@@ -2,18 +2,18 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
-import { Button } from "../../components/Button";
-import { Label } from "../../components/Label";
+import { Button } from "@/components/Button";
+import { Label } from "@/components/Label";
 import {
   type InstallStep,
   type NodeInfo,
   type ProgressEvent,
   STEP_ORDER,
   type Stage,
-} from "../../components/types";
-import { t } from "../../i18n";
-import { loadGlobalSkills } from "../../lib/boot";
-import { useUiStore } from "../../store/ui";
+} from "@/components/types";
+import { t } from "@/i18n";
+import { loadGlobalSkills } from "@/lib/boot";
+import { useUiStore } from "@/store/ui";
 
 type Props = {
   onComplete: (node: NodeInfo) => void;
