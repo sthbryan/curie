@@ -1,11 +1,20 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { readFileSync } from "node:fs";
+import { defineConfig } from "vite";
 
 const host = process.env.TAURI_DEV_HOST;
+const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf-8")) as {
+  version: string;
+};
 
 export default defineConfig(async () => ({
   plugins: [react(), tailwindcss()],
+
+  define: {
+    __APP_NAME__: JSON.stringify("Curie"),
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
 
   clearScreen: false,
   server: {

@@ -14,6 +14,7 @@
     "lint": "biome lint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "release": "bun scripts/release.mjs",
     "postinstall": "lefthook install || true"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "@biomejs/biome": "^2.1.4",
     "@tailwindcss/vite": "^4.1.18",
     "@tauri-apps/cli": "^2",
+    "@types/node": "^26.1.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
