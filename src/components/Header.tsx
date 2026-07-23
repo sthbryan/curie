@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { useSystemStore } from "@/store/system";
+import { lang } from "@/store/system";
 
 type Props = {
   ready: boolean;
@@ -17,7 +17,6 @@ const locationMap: Record<string, string> = {
 };
 
 export function Header({ ready }: Props) {
-  const lang = useSystemStore((s) => s.lang);
   const [location] = useLocation();
 
   const currentLocation = locationMap[location] || location;
@@ -32,7 +31,7 @@ export function Header({ ready }: Props) {
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
       >
         <span className="font-display text-lg font-bold leading-none tracking-tight text-fg uppercase">
-          {t(lang, currentLocation)}
+          {t(lang.value, currentLocation)}
         </span>
       </div>
 
@@ -45,7 +44,7 @@ export function Header({ ready }: Props) {
           aria-hidden
         />
         <span className="font-mono uppercase tracking-label text-micro text-fg-3">
-          {t(lang, "app.ready")}
+          {t(lang.value, "app.ready")}
         </span>
       </div>
     </header>

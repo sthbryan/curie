@@ -2,7 +2,7 @@ import { House, RefreshCcw } from "lucide-react";
 import { When } from "react-if";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
-import { useSystemStore } from "@/store/system";
+import { lang } from "@/store/system";
 import { Button } from "./Button";
 import type { ErrorBoundaryFallbackProps } from "./ErrorBoundary";
 
@@ -14,7 +14,7 @@ type Props = ErrorBoundaryFallbackProps & {
 
 function resolveLang(): Lang {
   try {
-    return useSystemStore.getState().lang;
+    return lang.value;
   } catch {
     const raw = document.documentElement.lang || navigator.language || "en";
     return raw.toLowerCase().startsWith("es") ? "es" : "en";

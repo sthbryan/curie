@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import { t } from "@/i18n";
-import { useSystemStore } from "@/store/system";
+import { lang } from "@/store/system";
 import { Button } from "./Button";
 import type { View } from "./types";
 
@@ -9,7 +9,6 @@ type Props = {
 };
 
 export function Placeholder({ view }: Props) {
-  const lang = useSystemStore((s) => s.lang);
   const [, navigate] = useLocation();
 
   return (
@@ -18,10 +17,10 @@ export function Placeholder({ view }: Props) {
         {view.toUpperCase()}
       </span>
       <span className="font-mono uppercase tracking-label text-mono text-fg-3">
-        {t(lang, "home.notBuilt")}
+        {t(lang.value, "home.notBuilt")}
       </span>
       <Button size="md" variant="outline" className="mt-4" onClick={() => navigate("/")}>
-        {t(lang, "home.back")}
+        {t(lang.value, "home.back")}
       </Button>
     </main>
   );
