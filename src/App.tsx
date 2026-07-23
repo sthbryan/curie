@@ -1,7 +1,6 @@
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { type ReactNode, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
-import { useShallow } from "zustand/react/shallow";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorFallback } from "@/components/ErrorFallback";
 import { FullPageLoading } from "@/components/FullPageLoading";
@@ -45,9 +44,9 @@ function RoutedPages() {
 }
 
 function MainContent() {
-  const { stage, lang, completeSetup } = useUiStore(
-    useShallow((s) => ({ stage: s.stage, lang: s.lang, completeSetup: s.completeSetup })),
-  );
+  const stage = useUiStore((s) => s.stage);
+  const lang = useUiStore((s) => s.lang);
+  const completeSetup = useUiStore((s) => s.completeSetup);
 
   let content: ReactNode;
   let key: string;
@@ -111,9 +110,9 @@ function AppShell() {
 function App() {
   useBoot();
 
-  const { theme, lang, reducedMotion } = useUiStore(
-    useShallow((s) => ({ theme: s.theme, lang: s.lang, reducedMotion: s.reducedMotion })),
-  );
+  const theme = useUiStore((s) => s.theme);
+  const lang = useUiStore((s) => s.lang);
+  const reducedMotion = useUiStore((s) => s.reducedMotion);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
