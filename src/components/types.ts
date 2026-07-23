@@ -44,6 +44,28 @@ export type SkillSearchResult = {
   url: string;
 };
 
+export type ExploreView = "hot" | "trending" | "all-time";
+
+export type SkillExploreResult = {
+  id: string;
+  name: string;
+  source: string;
+  installs: number;
+  package: string;
+  url: string;
+  installsYesterday: number | null;
+  change: number | null;
+  isOfficial: boolean;
+};
+
+export type ExplorePage = {
+  skills: SkillExploreResult[];
+  total: number;
+  hasMore: boolean;
+  page: number;
+  view: string;
+};
+
 export type SkillInstallResult = {
   package: string;
   message: string;
