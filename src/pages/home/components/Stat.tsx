@@ -3,7 +3,7 @@ import { staggerItem } from "../../../lib/motion";
 
 type Props = {
   label: string;
-  value: number;
+  value: number | string;
   isLast?: boolean;
 };
 

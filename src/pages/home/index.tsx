@@ -2,13 +2,19 @@ import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
-import { loadGlobalSkills } from "../../lib/boot";
+import { checkSkillUpdates, loadGlobalSkills } from "../../lib/boot";
 import { fadeUp, listStagger, staggerContainer, staggerItem } from "../../lib/motion";
-import { buildRecentActivity, maxAgentCount, summarizeAgents } from "../../lib/skills";
+import {
+  availableUpdates,
+  buildRecentActivity,
+  maxAgentCount,
+  summarizeAgents,
+} from "../../lib/skills";
 import { useAppStore } from "../../store/app";
 import { AgentRow } from "./components/AgentRow";
 import { RecentRow } from "./components/RecentRow";
 import { Stat } from "./components/Stat";
+import { UpdateRow } from "./components/UpdateRow";
 
 export function Home() {
   const lang = useAppStore((s) => s.lang);
@@ -16,12 +22,17 @@ export function Home() {
   const skills = useAppStore((s) => s.skills);
   const skillsLoading = useAppStore((s) => s.skillsLoading);
   const skillsError = useAppStore((s) => s.skillsError);
+  const skillUpdates = useAppStore((s) => s.skillUpdates);
+  const updatesLoading = useAppStore((s) => s.updatesLoading);
+  const updatesError = useAppStore((s) => s.updatesError);
 
   const agents = useMemo(() => summarizeAgents(skills), [skills]);
   const recent = useMemo(() => buildRecentActivity(skills), [skills]);
+  const updates = useMemo(() => availableUpdates(skills, skillUpdates), [skills, skillUpdates]);
   const totalSkills = skills.length;
   const activeAgents = agents.length;
   const capacity = maxAgentCount(agents);
+  const updateCount = updates.length;
 
   if (skillsLoading && totalSkills === 0) {
     return (
@@ -85,7 +96,11 @@ export function Home() {
           >
             <Stat label={t(lang, "home.statSkills")} value={totalSkills} />
             <Stat label={t(lang, "home.statTools")} value={activeAgents} />
-            <Stat label={t(lang, "home.statRecent")} value={recent.length} isLast />
+            <Stat
+              label={t(lang, "home.statUpdates")}
+              value={updatesLoading && skillUpdates.length === 0 ? "…" : updateCount}
+              isLast
+            />
           </motion.div>
 
           {totalSkills === 0 && (
@@ -126,33 +141,87 @@ export function Home() {
             )}
           </motion.div>
 
-          <motion.div variants={staggerItem} className="flex flex-col gap-5">
-            <div className="flex items-baseline justify-between">
-              <Label lang={lang}>{t(lang, "home.recent")}</Label>
-              <Label lang={lang} className="text-micro">
-                {t(lang, "home.events", { n: recent.length })}
-              </Label>
+          <motion.div variants={staggerItem} className="flex flex-col gap-8">
+            <div className="flex flex-col gap-5">
+              <div className="flex items-baseline justify-between gap-3">
+                <Label lang={lang}>{t(lang, "home.updates")}</Label>
+                <div className="flex items-center gap-3">
+                  <Label lang={lang} className="text-micro">
+                    {updatesLoading && skillUpdates.length === 0
+                      ? t(lang, "home.updatesChecking")
+                      : t(lang, "home.updatesAvailable", { n: updateCount })}
+                  </Label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      checkSkillUpdates().catch(() => {
+                        // store handles error state
+                      });
+                    }}
+                    disabled={updatesLoading}
+                    className="font-mono uppercase tracking-label text-micro text-fg-3 hover:text-fg disabled:opacity-50 transition-colors duration-150"
+                  >
+                    {updatesLoading
+                      ? t(lang, "home.updatesChecking")
+                      : t(lang, "home.updatesCheck")}
+                  </button>
+                </div>
+              </div>
+
+              {updatesError ? (
+                <p className="font-body text-sm text-fg-3 py-3 border-t border-border break-all">
+                  {t(lang, "home.updatesError")}
+                </p>
+              ) : updatesLoading && skillUpdates.length === 0 ? (
+                <p className="font-body text-sm text-fg-3 py-3 border-t border-border animate-pulse">
+                  {t(lang, "home.updatesChecking")}
+                </p>
+              ) : updateCount === 0 ? (
+                <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
+                  {totalSkills === 0 ? t(lang, "home.skillsNone") : t(lang, "home.noUpdates")}
+                </p>
+              ) : (
+                <motion.div
+                  className="flex flex-col"
+                  variants={listStagger}
+                  initial="initial"
+                  animate="animate"
+                >
+                  {updates.map(({ skill, source }) => (
+                    <UpdateRow key={skill.name} name={skill.name} source={source} lang={lang} />
+                  ))}
+                </motion.div>
+              )}
             </div>
-            {recent.length === 0 ? (
-              <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
-                {t(lang, "home.noRecent")}
-              </p>
-            ) : (
-              <motion.div
-                className="flex flex-col"
-                variants={listStagger}
-                initial="initial"
-                animate="animate"
-              >
-                {recent.map((event) => (
-                  <RecentRow
-                    key={`${event.kind}-${event.skill}-${event.at}`}
-                    event={event}
-                    lang={lang}
-                  />
-                ))}
-              </motion.div>
-            )}
+
+            <div className="flex flex-col gap-5">
+              <div className="flex items-baseline justify-between">
+                <Label lang={lang}>{t(lang, "home.recent")}</Label>
+                <Label lang={lang} className="text-micro">
+                  {t(lang, "home.events", { n: recent.length })}
+                </Label>
+              </div>
+              {recent.length === 0 ? (
+                <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
+                  {t(lang, "home.noRecent")}
+                </p>
+              ) : (
+                <motion.div
+                  className="flex flex-col"
+                  variants={listStagger}
+                  initial="initial"
+                  animate="animate"
+                >
+                  {recent.map((event) => (
+                    <RecentRow
+                      key={`${event.kind}-${event.skill}-${event.at}`}
+                      event={event}
+                      lang={lang}
+                    />
+                  ))}
+                </motion.div>
+              )}
+            </div>
           </motion.div>
         </motion.section>
 

@@ -21,7 +21,7 @@ export function RecentRow({ event, lang }: Props) {
       </span>
       <span className="font-mono text-mono text-fg grow truncate">{event.skill}</span>
       <Label lang={lang} className="text-micro w-28 truncate text-right">
-        {event.source ?? "local"}
+        {event.source ?? t(lang, "installed.local")}
       </Label>
       <Label lang={lang} className="text-micro w-20 text-right shrink-0">
         {event.when}
