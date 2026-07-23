@@ -65,7 +65,7 @@ export function useFindActions(): FindActions {
     setInstallError(null);
     try {
       await invoke<SkillInstallResult>("add_skill", { package: pkg });
-      toast.success(t(lang.value, "toast.installed"));
+      toast.success(t(lang.value, "toast.installed", { name: pkg }));
       await loadGlobalSkills({ checkUpdates: true });
     } catch (e) {
       setInstallError(errorMessage(e));

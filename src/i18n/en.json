@@ -224,8 +224,8 @@
     "aboutDescription": "Curie helps you install, update, delete, and manage your skills. It is built with React, TypeScript, and Tauri."
   },
   "toast": {
-    "installed": "Installed",
-    "removed": "Removed",
+    "installed": "Installed {name}",
+    "removed": "Removed {name}",
     "updated": "Updated"
   }
 }

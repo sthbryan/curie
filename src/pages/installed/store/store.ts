@@ -69,7 +69,7 @@ export const update = async (names?: string[]) => {
     await invoke<SkillUpdateResult>("update_skills", {
       skills: names && names.length > 0 ? names : null,
     });
-    toast.success(t(lang.value, "toast.updated"));
+    toast.success(t(lang.value, "toast.updated", { name: names?.length === 1 ? names[0] : "" }));
     await loadGlobalSkills({ checkUpdates: true });
   } catch (e) {
     updateApplyError.value = errorMessage(e);
@@ -85,7 +85,8 @@ export const remove = async (names: string[]) => {
   removeError.value = null;
   try {
     await invoke<SkillRemoveResult>("remove_skills", { skills: names });
-    toast.success(t(lang.value, "toast.removed"));
+    const removedName = names.length === 1 ? names[0] : null;
+    toast.success(t(lang.value, "toast.removed", removedName ? { name: removedName } : undefined));
     await loadGlobalSkills({ checkUpdates: true });
   } catch (e) {
     removeError.value = errorMessage(e);
