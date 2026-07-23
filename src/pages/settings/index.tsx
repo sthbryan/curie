@@ -1,5 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { RotateCcw, SquareArrowOutUpRight } from "lucide-react";
+import { Download, RotateCcw, SquareArrowOutUpRight } from "lucide-react";
 import { Case, Else, If, Switch, Then } from "react-if";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
@@ -12,11 +12,11 @@ import {
   type ThemeMode,
 } from "@/components/types";
 import { useT } from "@/i18n";
-import { checkAppUpdate } from "@/lib/boot";
+import { checkAppUpdate, installAppUpdate } from "@/lib/boot";
 import { cn } from "@/lib/cn";
 import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
 import { systemStore } from "@/store/system";
-import { appUpdate, appUpdateLoading } from "@/store/update";
+import { appInstallRunning, appUpdate, appUpdateLoading } from "@/store/update";
 import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
@@ -48,13 +48,22 @@ export function Settings() {
   const handleCheckUpdates = () => {
     void checkAppUpdate();
   };
+  const handleInstallUpdate = async () => {
+    const result = await installAppUpdate();
+    if (!result) return;
+    if (result.success) {
+      toast.success(t("updateInstallSuccess"));
+      return;
+    }
+    toast.error(result.message || t("updateInstallFailed"));
+    const fallback = result.fallbackUrl ?? appUpdate.value?.releaseUrl;
+    if (fallback) {
+      void Promise.resolve(openUrl(fallback)).catch(() => {});
+    }
+  };
   const handleOpenRelease = () => {
     const url = appUpdate.value?.releaseUrl;
     if (url) void Promise.resolve(openUrl(url)).catch(() => {});
-  };
-  const handleCopyCommand = () => {
-    navigator.clipboard.writeText(appUpdate.value?.updateCommand ?? "");
-    toast(t("updateCopied"));
   };
 
   return (
@@ -215,24 +224,23 @@ export function Settings() {
                     v{appUpdate.value?.latestVersion}
                   </span>
                 </div>
-                <p className="font-body text-xs text-fg-3">
-                  <If condition={appUpdate.value?.installMethod === "homebrew"}>
-                    <Then>{t("updateBrewHint")}</Then>
-                    <Else>{t("updateDirectHint")}</Else>
-                  </If>
-                </p>
                 <div className="flex items-center gap-2 pt-1">
+                  <Button
+                    size="xs"
+                    variant="accent"
+                    onClick={handleInstallUpdate}
+                    disabled={appInstallRunning.value}
+                  >
+                    <Download size={10} strokeWidth={1.5} />
+                    <If condition={appInstallRunning.value}>
+                      <Then>{t("updateInstalling")}</Then>
+                      <Else>{t("updateInstall")}</Else>
+                    </If>
+                  </Button>
                   <Button size="xs" variant="outline" onClick={handleOpenRelease}>
-                    {t("updateViewRelease")}
+                    {t("updateOpenFallback")}
                     <SquareArrowOutUpRight size={10} strokeWidth={1.5} />
                   </Button>
-                  <If condition={Boolean(appUpdate.value?.updateCommand)}>
-                    <Then>
-                      <Button size="xs" variant="outline" onClick={handleCopyCommand}>
-                        {t("updateCopyCmd")}
-                      </Button>
-                    </Then>
-                  </If>
                 </div>
               </div>
             </Case>
