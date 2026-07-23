@@ -11,6 +11,7 @@ import {
   type Stage,
 } from "../components/types";
 import { t } from "../i18n";
+import { loadGlobalSkills } from "../lib/boot";
 import { useAppStore } from "../store/app";
 
 type Props = {
@@ -62,6 +63,9 @@ export function Setup({ onComplete }: Props) {
       const node = await invoke<NodeInfo>("detect_node");
       if (node.installed) {
         onComplete(node);
+        loadGlobalSkills().catch(() => {
+          // store handles error state
+        });
       } else {
         setStage("error");
         setErrorMsg(t(lang, "stages.error"));

@@ -236,6 +236,165 @@ fn detect_node() -> Result<NodeInfo, String> {
     detect_node_info()
 }
 
+#[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillInfo {
+    pub name: String,
+    pub path: String,
+    pub scope: String,
+    pub agents: Vec<String>,
+    pub source: Option<String>,
+    pub source_url: Option<String>,
+    pub source_type: Option<String>,
+    pub installed_at: Option<String>,
+    pub updated_at: Option<String>,
+}
+
+#[derive(serde::Deserialize)]
+struct CliSkill {
+    name: String,
+    path: String,
+    scope: String,
+    #[serde(default)]
+    agents: Vec<String>,
+    source: Option<String>,
+    #[serde(rename = "sourceUrl")]
+    source_url: Option<String>,
+    #[serde(rename = "sourceType")]
+    source_type: Option<String>,
+}
+
+#[derive(serde::Deserialize, Default)]
+struct SkillLockFile {
+    #[serde(default)]
+    skills: std::collections::HashMap<String, SkillLockEntry>,
+}
+
+#[derive(serde::Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+struct SkillLockEntry {
+    installed_at: Option<String>,
+    updated_at: Option<String>,
+}
+
+fn resolve_node_bin() -> PathBuf {
+    detect_node_info()
+        .ok()
+        .and_then(|info| info.path.map(PathBuf::from))
+        .unwrap_or_else(|| PathBuf::from("node"))
+}
+
+fn resolve_npx_bin() -> PathBuf {
+    let node = resolve_node_bin();
+    if let Some(parent) = node.parent() {
+        let candidate = parent.join("npx");
+        if candidate.exists() {
+            return candidate;
+        }
+    }
+    PathBuf::from("npx")
+}
+
+fn run_skills_list_global() -> Result<Vec<CliSkill>, String> {
+    let node = resolve_node_bin();
+    let npx = resolve_npx_bin();
+    let mut cmd = Command::new(&npx);
+    cmd.args(["--yes", "skills", "list", "-g", "--json"])
+        .env("DISABLE_TELEMETRY", "1")
+        .env("npm_config_yes", "true");
+
+    if let Some(parent) = node.parent() {
+        let path = std::env::var_os("PATH").unwrap_or_default();
+        let mut paths = std::env::split_paths(&path).collect::<Vec<_>>();
+        paths.insert(0, parent.to_path_buf());
+        if let Ok(joined) = std::env::join_paths(paths) {
+            cmd.env("PATH", joined);
+        }
+    }
+
+    let output = cmd
+        .output()
+        .map_err(|e| format!("Failed to run skills list: {e}"))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+        return Err(if !stderr.is_empty() {
+            stderr
+        } else if !stdout.is_empty() {
+            stdout
+        } else {
+            "skills list exited non-zero".into()
+        });
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let json = extract_json_array(&stdout)
+        .ok_or_else(|| "skills list did not return JSON".to_string())?;
+
+    serde_json::from_str(json).map_err(|e| format!("Failed to parse skills list JSON: {e}"))
+}
+
+fn extract_json_array(raw: &str) -> Option<&str> {
+    let start = raw.find('[')?;
+    let end = raw.rfind(']')?;
+    if end < start {
+        return None;
+    }
+    Some(&raw[start..=end])
+}
+
+fn load_skill_lock() -> SkillLockFile {
+    let home = match dirs::home_dir() {
+        Some(h) => h,
+        None => return SkillLockFile::default(),
+    };
+
+    let candidates = [
+        home.join(".agents").join(".skill-lock.json"),
+        home.join(".skill-lock.json"),
+        home.join("skills-lock.json"),
+    ];
+
+    for path in candidates {
+        if let Ok(raw) = std::fs::read_to_string(&path) {
+            if let Ok(lock) = serde_json::from_str::<SkillLockFile>(&raw) {
+                return lock;
+            }
+        }
+    }
+
+    SkillLockFile::default()
+}
+
+pub fn list_global_skills() -> Result<Vec<SkillInfo>, String> {
+    let cli_skills = run_skills_list_global()?;
+    let lock = load_skill_lock();
+
+    Ok(cli_skills
+        .into_iter()
+        .map(|s| {
+            let meta = lock.skills.get(&s.name);
+            SkillInfo {
+                name: s.name,
+                path: s.path,
+                scope: s.scope,
+                agents: s.agents,
+                source: s.source,
+                source_url: s.source_url,
+                source_type: s.source_type,
+                installed_at: meta.and_then(|m| m.installed_at.clone()),
+                updated_at: meta.and_then(|m| m.updated_at.clone()),
+            }
+        })
+        .collect())
+}
+
+#[tauri::command]
+fn list_skills() -> Result<Vec<SkillInfo>, String> {
+    list_global_skills()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -243,7 +402,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_locale,
             detect_node,
-            install_node
+            install_node,
+            list_skills
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -363,5 +523,13 @@ mod tests {
             assert!(info.version.is_some());
             assert!(info.path.is_some());
         }
+    }
+
+    #[test]
+    fn extract_json_array_strips_noise() {
+        let raw = "Global Skills\n[{ \"name\": \"a\", \"path\": \"/x\", \"scope\": \"global\" }]\n";
+        let json = extract_json_array(raw).expect("json");
+        assert!(json.starts_with('['));
+        assert!(json.ends_with(']'));
     }
 }

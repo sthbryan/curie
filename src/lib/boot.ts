@@ -1,8 +1,23 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
-import type { NodeInfo } from "../components/types";
+import type { NodeInfo, SkillInfo } from "../components/types";
 import { detectLang } from "../i18n";
 import { useAppStore } from "../store/app";
+
+export async function loadGlobalSkills() {
+  const { setSkills, setSkillsLoading, setSkillsError } = useAppStore.getState();
+  setSkillsLoading(true);
+  setSkillsError(null);
+  try {
+    const skills = await invoke<SkillInfo[]>("list_skills");
+    setSkills(skills);
+  } catch (e) {
+    const message = typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
+    setSkillsError(message);
+  } finally {
+    setSkillsLoading(false);
+  }
+}
 
 export function useBoot() {
   useEffect(() => {
@@ -25,6 +40,9 @@ export function useBoot() {
         if (cancelled) return;
         setNode(info);
         setStage(info.installed ? "home" : "setup");
+        if (info.installed) {
+          await loadGlobalSkills();
+        }
       } catch {
         if (!cancelled) setStage("setup");
       }
