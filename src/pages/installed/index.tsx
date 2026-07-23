@@ -1,46 +1,33 @@
 import { useMemo, useState } from "react";
 import { useLocation } from "wouter";
-import { useShallow } from "zustand/react/shallow";
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
-import { loadGlobalSkills, removeSkills, updateSkills } from "@/lib/boot";
+import { loadGlobalSkills } from "@/lib/boot";
 import { filterSkills, summarizeAgents, updateNameSet } from "@/lib/skills";
 import { useSkillsStore } from "@/store/skills";
 import { useUiStore } from "@/store/ui";
 import { InstalledFilters } from "./components/InstalledFilters";
 import { InstalledHeader } from "./components/InstalledHeader";
 import { InstalledList } from "./components/InstalledList";
+import { useSkillActions } from "./hooks/useSkillActions";
 
 export function Installed() {
   const lang = useUiStore((s) => s.lang);
   const [, navigate] = useLocation();
+  const skills = useSkillsStore((s) => s.skills);
+  const skillsLoading = useSkillsStore((s) => s.skillsLoading);
+  const skillsError = useSkillsStore((s) => s.skillsError);
+  const skillUpdates = useSkillsStore((s) => s.skillUpdates);
+  const updatesLoading = useSkillsStore((s) => s.updatesLoading);
   const {
-    skills,
-    skillsLoading,
-    skillsError,
-    skillUpdates,
-    updatesLoading,
     updatingSkill,
     updateApplyError,
-    setUpdateApplyError,
     removingSkill,
     removeError,
-    setRemoveError,
-  } = useSkillsStore(
-    useShallow((s) => ({
-      skills: s.skills,
-      skillsLoading: s.skillsLoading,
-      skillsError: s.skillsError,
-      skillUpdates: s.skillUpdates,
-      updatesLoading: s.updatesLoading,
-      updatingSkill: s.updatingSkill,
-      updateApplyError: s.updateApplyError,
-      setUpdateApplyError: s.setUpdateApplyError,
-      removingSkill: s.removingSkill,
-      removeError: s.removeError,
-      setRemoveError: s.setRemoveError,
-    })),
-  );
+    update: runUpdate,
+    remove: runRemove,
+    dismissErrors,
+  } = useSkillActions();
 
   const [query, setQuery] = useState("");
   const [agentFilter, setAgentFilter] = useState<string | null>(null);
@@ -60,21 +47,21 @@ export function Installed() {
   );
 
   const handleUpdateOne = (name: string) => {
-    updateSkills([name]).catch(() => {
-      // store keeps updateApplyError
+    runUpdate([name]).catch(() => {
+      // hook keeps updateApplyError
     });
   };
 
   const handleUpdateAll = () => {
     const names = [...updateNames];
-    updateSkills(names.length > 0 ? names : undefined).catch(() => {
-      // store keeps updateApplyError
+    runUpdate(names.length > 0 ? names : undefined).catch(() => {
+      // hook keeps updateApplyError
     });
   };
 
   const handleRemoveOne = (name: string) => {
-    removeSkills([name]).catch(() => {
-      // store keeps removeError
+    runRemove([name]).catch(() => {
+      // hook keeps removeError
     });
   };
 
@@ -116,10 +103,7 @@ export function Installed() {
             });
           }}
           onInstall={() => navigate("/find")}
-          onDismissError={() => {
-            setUpdateApplyError(null);
-            setRemoveError(null);
-          }}
+          onDismissError={dismissErrors}
         />
 
         <InstalledFilters
