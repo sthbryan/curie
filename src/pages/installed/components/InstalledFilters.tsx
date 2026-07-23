@@ -9,13 +9,15 @@ import { lang } from "@/store/system";
 import { useInstalledFiltersStore } from "../store";
 
 export function InstalledFilters() {
-  const query = useInstalledFiltersStore((s) => s.query);
-  const agentFilter = useInstalledFiltersStore((s) => s.agentFilter);
-  const updatesOnly = useInstalledFiltersStore((s) => s.updatesOnly);
-  const setQuery = useInstalledFiltersStore((s) => s.setQuery);
-  const setAgentFilter = useInstalledFiltersStore((s) => s.setAgentFilter);
-  const toggleUpdatesOnly = useInstalledFiltersStore((s) => s.toggleUpdatesOnly);
-  const clearFilters = useInstalledFiltersStore((s) => s.clearFilters);
+  const {
+    query,
+    agentFilter,
+    updatesOnly,
+    setQuery,
+    setAgentFilter,
+    toggleUpdatesOnly,
+    clearFilters,
+  } = useInstalledFiltersStore();
 
   const updateNames = useMemo(() => updateNameSet(skillUpdates.value), [skillUpdates.value]);
   const agents = useMemo(() => summarizeAgents(skills.value), [skills.value]);
@@ -48,22 +50,24 @@ export function InstalledFilters() {
       </div>
 
       <div className="flex flex-wrap gap-2">
+        <Button size="xs" variant="outline" selected={updatesOnly} onClick={toggleUpdatesOnly}>
+          {t(lang.value, "installed.filterUpdates")}
+          <span className="ml-2 opacity-60">{updateNames.size}</span>
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-2">
         <Button
-          size="sm"
+          size="xs"
           variant="outline"
           selected={agentFilter === null && !updatesOnly}
           onClick={clearFilters}
         >
           {t(lang.value, "installed.filterAll")}
         </Button>
-        <Button size="sm" variant="outline" selected={updatesOnly} onClick={toggleUpdatesOnly}>
-          {t(lang.value, "installed.filterUpdates")}
-          <span className="ml-2 opacity-60">{updateNames.size}</span>
-        </Button>
         {agents.map((agent) => (
           <Button
             key={agent.id}
-            size="sm"
+            size="xs"
             variant="outline"
             selected={agentFilter === agent.label}
             onClick={() => setAgentFilter(agentFilter === agent.label ? null : agent.label)}

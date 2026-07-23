@@ -23,7 +23,7 @@ export const useInstalledFiltersStore = create<InstalledFiltersState>()((set) =>
 
   setQuery: (query) => set({ query }),
   setAgentFilter: (agentFilter) => set({ agentFilter }),
-  toggleUpdatesOnly: () => set({ updatesOnly: true, agentFilter: null }),
+  toggleUpdatesOnly: () => set((state) => ({ updatesOnly: !state.updatesOnly, agentFilter: null })),
   clearFilters: () => set({ agentFilter: null, updatesOnly: false }),
 }));
 
