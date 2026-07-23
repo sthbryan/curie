@@ -25,7 +25,7 @@ export const useUiStore = create<UiState>()(
     (set) => ({
       theme: "dark",
       lang: "en",
-      reducedMotion: "system",
+      reducedMotion: "user",
       hasBooted: false,
       stage: "loading",
       node: null,
