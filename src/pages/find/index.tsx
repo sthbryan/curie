@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Else, If, Then, When } from "react-if";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
 import { addSkill, findSkills } from "../../lib/boot";
@@ -74,11 +75,14 @@ export function Find() {
             <p className="font-body text-sm text-fg-3 max-w-lg">{t(lang, "find.subtitle")}</p>
           </div>
 
-          {(findError || installError) && (
+          <When condition={Boolean(findError || installError)}>
             <div className="flex items-start justify-between gap-4 border border-accent/30 bg-surface-tint px-4 py-3">
               <div className="min-w-0 flex flex-col gap-1">
                 <span className="font-mono uppercase tracking-label text-micro text-accent">
-                  {findError ? t(lang, "find.error") : t(lang, "find.installError")}
+                  <If condition={Boolean(findError)}>
+                    <Then>{t(lang, "find.error")}</Then>
+                    <Else>{t(lang, "find.installError")}</Else>
+                  </If>
                 </span>
                 <p className="font-body text-sm text-fg-3 break-all">{findError ?? installError}</p>
               </div>
@@ -93,7 +97,7 @@ export function Find() {
                 ×
               </button>
             </div>
-          )}
+          </When>
         </motion.section>
 
         <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
@@ -134,7 +138,10 @@ export function Find() {
               disabled={findLoading || qLen < 2}
               className="h-10 px-4 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 disabled:opacity-50 transition-opacity duration-150 shrink-0"
             >
-              {findLoading ? t(lang, "find.searching") : t(lang, "find.search")}
+              <If condition={findLoading}>
+                <Then>{t(lang, "find.searching")}</Then>
+                <Else>{t(lang, "find.search")}</Else>
+              </If>
             </button>
           </div>
 

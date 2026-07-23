@@ -1,5 +1,6 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { motion } from "motion/react";
+import { Else, If, Then, When } from "react-if";
 import type { SkillSearchResult } from "../../../components/types";
 import type { Lang } from "../../../i18n";
 import { t } from "../../../i18n";
@@ -27,11 +28,11 @@ export function ResultRow({ result, lang, installed, installing, installBusy, on
       <div className="min-w-0 flex flex-col gap-1">
         <div className="flex min-w-0 items-center gap-2">
           <span className="font-mono text-mono text-fg truncate">{result.name}</span>
-          {installed && (
+          <When condition={installed}>
             <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 border border-border-strong px-1.5 py-0.5 rounded-sm">
               {t(lang, "find.installed")}
             </span>
-          )}
+          </When>
         </div>
         <span className="font-mono text-micro text-fg-4 truncate" title={result.package}>
           {result.package}
@@ -58,20 +59,26 @@ export function ResultRow({ result, lang, installed, installing, installBusy, on
       </div>
 
       <div className="flex justify-end">
-        {installed ? (
-          <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-            {t(lang, "find.installed")}
-          </span>
-        ) : (
-          <button
-            type="button"
-            onClick={() => onInstall(result.package)}
-            disabled={installBusy}
-            className="h-7 px-2.5 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-micro font-bold hover:opacity-90 disabled:opacity-50 transition-opacity duration-150"
-          >
-            {installing ? t(lang, "find.installing") : t(lang, "find.install")}
-          </button>
-        )}
+        <If condition={installed}>
+          <Then>
+            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
+              {t(lang, "find.installed")}
+            </span>
+          </Then>
+          <Else>
+            <button
+              type="button"
+              onClick={() => onInstall(result.package)}
+              disabled={installBusy}
+              className="h-7 px-2.5 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-micro font-bold hover:opacity-90 disabled:opacity-50 transition-opacity duration-150"
+            >
+              <If condition={installing}>
+                <Then>{t(lang, "find.installing")}</Then>
+                <Else>{t(lang, "find.install")}</Else>
+              </If>
+            </button>
+          </Else>
+        </If>
       </div>
     </motion.article>
   );
