@@ -1,7 +1,6 @@
 import { useLocation } from "wouter";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { APP_NAME } from "@/lib/meta";
 import { useUiStore } from "@/store/ui";
 
 type Props = {
