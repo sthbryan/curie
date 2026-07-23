@@ -10,23 +10,24 @@ import { t } from "../../i18n";
 import { loadGlobalSkills, removeSkills, updateSkills } from "../../lib/boot";
 import { fadeUp, listStagger } from "../../lib/motion";
 import { filterSkills, summarizeAgents, updateNameSet } from "../../lib/skills";
-import { useAppStore } from "../../store/app";
+import { useSkillsStore } from "../../store/skills";
+import { useUiStore } from "../../store/ui";
 import { SkillRow } from "./components/SkillRow";
 
 export function Installed() {
-  const lang = useAppStore((s) => s.lang);
+  const lang = useUiStore((s) => s.lang);
   const [, navigate] = useLocation();
-  const skills = useAppStore((s) => s.skills);
-  const skillsLoading = useAppStore((s) => s.skillsLoading);
-  const skillsError = useAppStore((s) => s.skillsError);
-  const skillUpdates = useAppStore((s) => s.skillUpdates);
-  const updatesLoading = useAppStore((s) => s.updatesLoading);
-  const updatingSkill = useAppStore((s) => s.updatingSkill);
-  const updateApplyError = useAppStore((s) => s.updateApplyError);
-  const setUpdateApplyError = useAppStore((s) => s.setUpdateApplyError);
-  const removingSkill = useAppStore((s) => s.removingSkill);
-  const removeError = useAppStore((s) => s.removeError);
-  const setRemoveError = useAppStore((s) => s.setRemoveError);
+  const skills = useSkillsStore((s) => s.skills);
+  const skillsLoading = useSkillsStore((s) => s.skillsLoading);
+  const skillsError = useSkillsStore((s) => s.skillsError);
+  const skillUpdates = useSkillsStore((s) => s.skillUpdates);
+  const updatesLoading = useSkillsStore((s) => s.updatesLoading);
+  const updatingSkill = useSkillsStore((s) => s.updatingSkill);
+  const updateApplyError = useSkillsStore((s) => s.updateApplyError);
+  const setUpdateApplyError = useSkillsStore((s) => s.setUpdateApplyError);
+  const removingSkill = useSkillsStore((s) => s.removingSkill);
+  const removeError = useSkillsStore((s) => s.removeError);
+  const setRemoveError = useSkillsStore((s) => s.setRemoveError);
 
   const [query, setQuery] = useState("");
   const [agentFilter, setAgentFilter] = useState<string | null>(null);
