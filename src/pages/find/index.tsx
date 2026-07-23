@@ -1,13 +1,14 @@
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Label } from "../../components/Label";
 import { t } from "../../i18n";
 import { addSkill, findSkills } from "../../lib/boot";
-import { fadeUp, listStagger } from "../../lib/motion";
+import { fadeUp } from "../../lib/motion";
 import { isSearchResultInstalled } from "../../lib/skills";
 import { useAppStore } from "../../store/app";
-import { ResultRow } from "./components/ResultRow";
+import { ResultsPanel } from "./components/ResultsPanel";
 
+/** Debounce searches like the CLI (~150–350ms); cancel in-flight via request id. */
 const DEBOUNCE_MS = 280;
 
 export function Find() {
@@ -55,7 +56,11 @@ export function Find() {
   const qLen = query.trim().length;
   const showHint = qLen < 2;
   const showEmpty = !showHint && !findLoading && !findError && findResults.length === 0;
-  const showResults = !showHint && findResults.length > 0;
+  const showResults = !showHint && !findLoading && findResults.length > 0;
+
+  let statusLabel = t(lang, "find.packageHint");
+  if (findLoading) statusLabel = t(lang, "find.searching");
+  else if (showResults) statusLabel = t(lang, "find.results", { n: findResults.length });
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
@@ -135,76 +140,24 @@ export function Find() {
 
           <div className="flex items-center justify-between gap-4">
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {findLoading
-                ? t(lang, "find.searching")
-                : showResults
-                  ? t(lang, "find.results", { n: findResults.length })
-                  : t(lang, "find.packageHint")}
+              {statusLabel}
             </span>
           </div>
         </motion.section>
 
         <section className="flex flex-col">
-          {showHint ? (
-            <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
-              <p className="font-body text-sm text-fg-3">{t(lang, "find.hint")}</p>
-            </motion.div>
-          ) : findLoading && findResults.length === 0 ? (
-            <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
-              <span className="font-mono uppercase tracking-label text-mono text-fg-3 animate-pulse">
-                {t(lang, "find.searching")}
-              </span>
-            </motion.div>
-          ) : showEmpty ? (
-            <motion.div
-              {...fadeUp(0.08)}
-              className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
-            >
-              <span className="font-body text-sm text-fg">{t(lang, "find.empty")}</span>
-              <p className="font-body text-sm text-fg-3">{t(lang, "find.emptyHint")}</p>
-            </motion.div>
-          ) : showResults ? (
-            <>
-              <motion.div
-                {...fadeUp(0.06)}
-                className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_4.5rem_7rem] gap-4 border-b border-border pb-2"
-              >
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-                  {t(lang, "find.colName")}
-                </span>
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-                  {t(lang, "find.colSource")}
-                </span>
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
-                  {t(lang, "find.colInstalls")}
-                </span>
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
-                  {t(lang, "find.colActions")}
-                </span>
-              </motion.div>
-              <motion.div
-                key={`${query}:${owner}`}
-                className="flex flex-col"
-                variants={listStagger}
-                initial="initial"
-                animate="animate"
-              >
-                <AnimatePresence mode="popLayout" initial={false}>
-                  {findResults.map((result) => (
-                    <ResultRow
-                      key={result.id}
-                      result={result}
-                      lang={lang}
-                      installed={installedPackages.has(result.package)}
-                      installing={installingPackage === result.package}
-                      installBusy={installBusy}
-                      onInstall={handleInstall}
-                    />
-                  ))}
-                </AnimatePresence>
-              </motion.div>
-            </>
-          ) : null}
+          <ResultsPanel
+            lang={lang}
+            showHint={showHint}
+            loading={findLoading}
+            empty={showEmpty}
+            results={findResults}
+            listKey={`${query}:${owner}`}
+            installedPackages={installedPackages}
+            installingPackage={installingPackage}
+            installBusy={installBusy}
+            onInstall={handleInstall}
+          />
         </section>
       </div>
     </main>
