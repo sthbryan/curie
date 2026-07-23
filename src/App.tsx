@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { Header } from "./components/Header";
-import { Home } from "./components/Home";
 import { Placeholder } from "./components/Placeholder";
-import { Setup } from "./components/Setup";
 import { Sidebar } from "./components/Sidebar";
 import { StatusBar } from "./components/StatusBar";
 import { useBoot } from "./lib/boot";
+import { Home } from "./pages/Home";
 import { Settings } from "./pages/Settings";
+import { Setup } from "./pages/Setup";
 import { useAppStore } from "./store/app";
 
 function MainContent() {

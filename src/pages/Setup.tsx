@@ -2,16 +2,16 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
-import { t } from "../i18n";
-import { useAppStore } from "../store/app";
-import { Label } from "./Label";
+import { Label } from "../components/Label";
 import {
   type InstallStep,
   type NodeInfo,
   type ProgressEvent,
   STEP_ORDER,
   type Stage,
-} from "./types";
+} from "../components/types";
+import { t } from "../i18n";
+import { useAppStore } from "../store/app";
 
 type Props = {
   onComplete: (node: NodeInfo) => void;

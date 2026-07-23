@@ -1,7 +1,7 @@
+import { Label } from "../components/Label";
+import { ACTIVE_AGENTS, AGENTS, RECENT, TOTAL_SKILLS, TOTAL_UPDATES } from "../components/types";
 import { t } from "../i18n";
 import { useAppStore } from "../store/app";
-import { Label } from "./Label";
-import { ACTIVE_AGENTS, AGENTS, RECENT, TOTAL_SKILLS, TOTAL_UPDATES } from "./types";
 
 function density(count: number, capacity: number): number {
   return Math.min(count / capacity, 1);
