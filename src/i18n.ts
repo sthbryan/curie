@@ -88,6 +88,11 @@ export type Messages = {
     updateOne: string;
     updatingOne: string;
     updateError: string;
+    remove: string;
+    removing: string;
+    removeConfirm: string;
+    removeCancel: string;
+    removeError: string;
     search: string;
     searchPlaceholder: string;
     showing: string;
