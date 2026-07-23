@@ -44,10 +44,9 @@ export function Home() {
   const handleNavigateFind = () => navigate("/find");
   const handleNavigateMarketplace = () => navigate("/marketplace");
   const handleNavigateInstalled = () => navigate("/installed");
-  const handleRetry = () => {
-    loadGlobalSkills().catch(() => {
-      // store handles error state
-    });
+  const handleRetry = async () => {
+    await loadGlobalSkills();
+    toast.success(tToast("toast.refreshed"));
   };
 
   const tToast = useT();
