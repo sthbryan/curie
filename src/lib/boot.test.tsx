@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
-import { act } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import { createRoot } from "preact/compat/client";
+import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "@/components/types";
 import { useSkillsStore } from "@/store/skills";
@@ -139,7 +139,7 @@ describe("checkSkillUpdates", () => {
 });
 
 // useBoot needs a React render context.
-let root: Root | null = null;
+let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
 let mounted: React.ReactElement | null = null;
 

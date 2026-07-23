@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
-import { act } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import { createRoot } from "preact/compat/client";
+import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SkillSearchResult } from "@/components/types";
 
@@ -21,7 +21,7 @@ const { useFindActions } = await import("./useFindActions");
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 type Result<T> = { current: T | null };
-let root: Root | null = null;
+let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
 const lastResult: Result<unknown> = { current: null };
 

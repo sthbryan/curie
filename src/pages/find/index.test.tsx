@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
-import { act } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import { createRoot } from "preact/compat/client";
+import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
 import type { SkillSearchResult } from "@/components/types";
@@ -22,7 +22,7 @@ const { Find } = await import("./index");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-let root: Root | null = null;
+let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
 
 function render(ui: React.ReactNode) {

@@ -1,13 +1,13 @@
 // @vitest-environment happy-dom
 
-import { act } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import { createRoot } from "preact/compat/client";
+import { act } from "preact/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
 import { Button } from "./Button";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-let root: Root | null = null;
+let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
 
 function mount(ui: React.ReactElement) {
