@@ -2,7 +2,7 @@
 
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ErrorBoundary, type ErrorBoundaryFallbackProps, resetKeysChanged } from "./ErrorBoundary";
 
 // React 19 + happy-dom: enable act warnings globally for this file.
@@ -43,6 +43,10 @@ function unmount() {
 afterEach(() => {
   unmount();
   vi.restoreAllMocks();
+});
+
+beforeEach(() => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
 describe("ErrorBoundary", () => {
@@ -102,12 +106,12 @@ describe("ErrorBoundary", () => {
   });
 
   it("logs to console.error in DEV when no onError handler is provided", () => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     mount(
       <ErrorBoundary fallback={() => <div>fb</div>}>
         <Bomb shouldThrow />
       </ErrorBoundary>,
     );
+    const spy = vi.mocked(console.error);
     const tagged = spy.mock.calls.find((call) => call[0] === "[ErrorBoundary]");
     expect(tagged).toBeDefined();
     expect(tagged?.[1]).toBeInstanceOf(Error);
