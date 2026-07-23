@@ -1,11 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { NodeInfo, SkillInfo, Stage, ThemeMode, View } from "../components/types";
+import type {
+  NodeInfo,
+  ReducedMotionPref,
+  SkillInfo,
+  Stage,
+  ThemeMode,
+  View,
+} from "../components/types";
 import type { Lang } from "../i18n";
 
 export type AppState = {
   theme: ThemeMode;
   lang: Lang;
+  reducedMotion: ReducedMotionPref;
   hasBooted: boolean;
   view: View;
   stage: Extract<Stage, "loading" | "setup" | "home">;
@@ -16,6 +24,7 @@ export type AppState = {
 
   setTheme: (theme: ThemeMode) => void;
   setLang: (lang: Lang) => void;
+  setReducedMotion: (pref: ReducedMotionPref) => void;
   setView: (view: View) => void;
   setStage: (stage: Extract<Stage, "loading" | "setup" | "home">) => void;
   setNode: (node: NodeInfo | null) => void;
@@ -31,6 +40,7 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       theme: "dark",
       lang: "en",
+      reducedMotion: "system",
       hasBooted: false,
       view: "home",
       stage: "loading",
@@ -41,6 +51,7 @@ export const useAppStore = create<AppState>()(
 
       setTheme: (theme) => set({ theme }),
       setLang: (lang) => set({ lang }),
+      setReducedMotion: (reducedMotion) => set({ reducedMotion }),
       setView: (view) => set({ view }),
       setStage: (stage) => set({ stage }),
       setNode: (node) => set({ node }),
@@ -55,6 +66,7 @@ export const useAppStore = create<AppState>()(
       partialize: (state) => ({
         theme: state.theme,
         lang: state.lang,
+        reducedMotion: state.reducedMotion,
         hasBooted: state.hasBooted,
       }),
     },
