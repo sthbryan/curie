@@ -7,7 +7,7 @@ pub use skills::{
     check_global_skill_updates, list_global_skills, ExplorePage, SkillExploreResult, SkillInfo,
     SkillInstallResult, SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
-pub use update::AppUpdateInfo;
+pub use update::{AppUpdateInfo, InstallResult};
 
 #[tauri::command]
 fn get_locale() -> String {
@@ -18,6 +18,7 @@ fn get_locale() -> String {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             get_locale,
             node::detect_node,
@@ -30,6 +31,7 @@ pub fn run() {
             skills::add_skill,
             skills::remove_skills,
             update::check_app_update,
+            update::install_app_update,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
