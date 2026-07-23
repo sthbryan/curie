@@ -1,7 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import {
@@ -11,9 +12,10 @@ import {
   STEP_ORDER,
   type Stage,
 } from "@/components/types";
-import { useT } from "@/i18n";
+import { t as rawT, useT } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
 import { cn } from "@/lib/cn";
+import { lang } from "@/store/system";
 
 type Props = {
   onComplete: (node: NodeInfo) => void;
@@ -26,6 +28,7 @@ export function Setup({ onComplete }: Props) {
   const [step, setStep] = useState<InstallStep>("checking");
   const [manualOpen, setManualOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const notifiedInstall = useRef(false);
 
   useEffect(() => {
     if (stage !== "installing") return;
@@ -47,6 +50,13 @@ export function Setup({ onComplete }: Props) {
     };
   }, [stage]);
 
+  useEffect(() => {
+    if (stage === "done" && !notifiedInstall.current) {
+      notifiedInstall.current = true;
+      toast.success(rawT(lang.value, "toast.nodeInstalled"));
+    }
+  }, [stage]);
+
   async function handleInstall() {
     setStage("installing");
     setStep("checking");
@@ -63,6 +73,7 @@ export function Setup({ onComplete }: Props) {
     try {
       const node = await invoke<NodeInfo>("detect_node");
       if (node.installed) {
+        toast.success(rawT(lang.value, "toast.setupComplete"));
         onComplete(node);
         loadGlobalSkills().catch(() => {
           // store handles error state
