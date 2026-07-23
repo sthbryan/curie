@@ -20,14 +20,17 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
       aria-current={active ? "page" : undefined}
       title={label}
       className={cn(
-        "relative flex h-11 w-full items-center overflow-hidden rounded-sm px-2.5 text-left transition-colors duration-150",
+        "relative flex h-11 w-full items-center overflow-hidden rounded-sm px-2.5 text-left transition-colors duration-150 group",
         active ? "bg-surface-tint text-fg" : "text-fg-3 hover:bg-surface-hover hover:text-fg",
       )}
     >
       <Icon
         size={16}
         strokeWidth={1.5}
-        className={cn("shrink-0 transition-colors duration-150", active ? "text-fg" : "text-fg-3")}
+        className={cn(
+          "shrink-0 transition-colors group-hover:text-fg",
+          active ? "text-fg" : "text-fg-3",
+        )}
       />
 
       <AnimatePresence initial={false}>
@@ -42,7 +45,7 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
           >
             <span
               className={cn(
-                "font-mono leading-none tabular-nums text-micro",
+                "font-mono leading-none tabular-nums text-micro!",
                 active ? "text-fg-3" : "text-fg-4",
               )}
             >
@@ -50,7 +53,7 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
             </span>
             <span
               className={cn(
-                "font-mono uppercase leading-none tracking-label text-mono",
+                "font-mono uppercase leading-none tracking-label text-micro! transition-colors group-hover:text-fg",
                 active ? "font-bold text-fg" : "text-fg-2",
               )}
             >
