@@ -1,6 +1,6 @@
 import type { Lang } from "../i18n";
 import { t } from "../i18n";
-import { useAppStore } from "../store/app";
+import { useUiStore } from "../store/ui";
 import { Button } from "./Button";
 import type { ErrorBoundaryFallbackProps } from "./ErrorBoundary";
 
@@ -12,7 +12,7 @@ type Props = ErrorBoundaryFallbackProps & {
 
 function resolveLang(): Lang {
   try {
-    return useAppStore.getState().lang;
+    return useUiStore.getState().lang;
   } catch {
     const raw = document.documentElement.lang || navigator.language || "en";
     return raw.toLowerCase().startsWith("es") ? "es" : "en";
