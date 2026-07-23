@@ -1,8 +1,8 @@
+import { useReducedMotionConfig } from "motion/react";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { useAsymptoticProgress } from "@/lib/useAsymptoticProgress";
-import { useSystemStore } from "@/store/system";
 
 type Props = {
   active: boolean;
@@ -17,12 +17,8 @@ type Props = {
  * label when reduced motion is on.
  */
 export function ActionProgress({ active, labelKey, lang, className = "" }: Props) {
-  const reducedMotion = useSystemStore((s) => s.reducedMotion);
-  const prefersReduced =
-    reducedMotion === "true" ||
-    (reducedMotion === "system" &&
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const shouldReduceMotion = useReducedMotionConfig();
+  const prefersReduced = shouldReduceMotion === true;
 
   const pct = useAsymptoticProgress(active && !prefersReduced);
 
