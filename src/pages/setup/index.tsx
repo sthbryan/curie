@@ -11,16 +11,16 @@ import {
   STEP_ORDER,
   type Stage,
 } from "@/components/types";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
 import { cn } from "@/lib/cn";
-import { lang } from "@/store/system";
 
 type Props = {
   onComplete: (node: NodeInfo) => void;
 };
 
 export function Setup({ onComplete }: Props) {
+  const t = useT();
   const [stage, setStage] =
     useState<Extract<Stage, "setup" | "installing" | "done" | "error">>("setup");
   const [step, setStep] = useState<InstallStep>("checking");
@@ -69,11 +69,11 @@ export function Setup({ onComplete }: Props) {
         });
       } else {
         setStage("error");
-        setErrorMsg(t(lang.value, "stages.error"));
+        setErrorMsg(t("stages.error"));
       }
     } catch {
       setStage("error");
-      setErrorMsg(t(lang.value, "stages.error"));
+      setErrorMsg(t("stages.error"));
     }
   }
 
@@ -87,9 +87,9 @@ export function Setup({ onComplete }: Props) {
       <main className="flex min-w-0 flex-1 flex-col">
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-10 pt-16 pb-8">
           <section className="flex flex-col gap-6">
-            <Label className="text-fg-3">{t(lang.value, "setup.progressEyebrow")}</Label>
+            <Label className="text-fg-3">{t("setup.progressEyebrow")}</Label>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-              {t(lang.value, `stages.${step}`)}
+              {t(`stages.${step}`)}
             </h2>
           </section>
 
@@ -124,7 +124,7 @@ export function Setup({ onComplete }: Props) {
                       "text-fg-4": !isDone && !isCurrent,
                     })}
                   >
-                    {t(lang.value, `stages.${s}`)}
+                    {t(`stages.${s}`)}
                   </span>
                 </div>
               );
@@ -139,18 +139,16 @@ export function Setup({ onComplete }: Props) {
     return (
       <main className="flex min-w-0 flex-1 flex-col items-center justify-center px-10">
         <div className="flex w-full max-w-2xl flex-col items-center gap-8 text-center">
-          <Label className="text-success">{t(lang.value, "setup.doneEyebrow")}</Label>
+          <Label className="text-success">{t("setup.doneEyebrow")}</Label>
           <div className="flex flex-col gap-3">
             <h1 className="font-display text-display font-bold leading-none tracking-display">✓</h1>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-              {t(lang.value, "setup.doneTitle")}
+              {t("setup.doneTitle")}
             </h2>
-            <p className="font-body text-base text-fg-3 max-w-md mx-auto">
-              {t(lang.value, "setup.doneHint")}
-            </p>
+            <p className="font-body text-base text-fg-3 max-w-md mx-auto">{t("setup.doneHint")}</p>
           </div>
           <Button size="xl" variant="primary" className="px-8" onClick={handleContinue}>
-            {t(lang.value, "setup.continue")}
+            {t("setup.continue")}
           </Button>
         </div>
       </main>
@@ -161,21 +159,21 @@ export function Setup({ onComplete }: Props) {
     return (
       <main className="flex min-w-0 flex-1 flex-col items-center justify-center px-10">
         <div className="flex w-full max-w-2xl flex-col items-center gap-8 text-center">
-          <Label className="text-accent">{t(lang.value, "setup.errorEyebrow")}</Label>
+          <Label className="text-accent">{t("setup.errorEyebrow")}</Label>
           <div className="flex flex-col gap-3">
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-              {t(lang.value, "stages.error")}
+              {t("stages.error")}
             </h2>
             <p className="font-body text-sm text-fg-3 max-w-md mx-auto">
-              {errorMsg || t(lang.value, "setup.errorHint")}
+              {errorMsg || t("setup.errorHint")}
             </p>
           </div>
           <div className="flex items-center gap-3">
             <Button size="xl" variant="primary" onClick={handleRetry}>
-              {t(lang.value, "setup.retry")}
+              {t("setup.retry")}
             </Button>
             <Button size="xl" variant="outline" onClick={() => setManualOpen(true)}>
-              {t(lang.value, "setup.manual")}
+              {t("setup.manual")}
             </Button>
           </div>
         </div>
@@ -187,31 +185,25 @@ export function Setup({ onComplete }: Props) {
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-10 pt-16 pb-8">
         <section className="flex flex-col gap-3">
-          <Label className="text-fg-3">{t(lang.value, "setup.eyebrow")}</Label>
+          <Label className="text-fg-3">{t("setup.eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg max-w-xl">
-            {t(lang.value, "setup.title")}
+            {t("setup.title")}
           </h2>
-          <p className="font-body text-base text-fg-3 max-w-xl">
-            {t(lang.value, "setup.subtitle")}
-          </p>
+          <p className="font-body text-base text-fg-3 max-w-xl">{t("setup.subtitle")}</p>
         </section>
 
         <hr className="border-0 border-t border-border" />
 
         <section className="flex flex-col gap-5">
-          <Label>{t(lang.value, "setup.checklist")}</Label>
+          <Label>{t("setup.checklist")}</Label>
           <div className="flex flex-col gap-0">
             <div className="flex items-start gap-5 border border-border bg-surface-tint p-5">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-border-strong font-display text-lg font-bold text-fg">
                 ⬢
               </span>
               <div className="flex flex-col gap-1">
-                <span className="font-body text-sm font-bold text-fg">
-                  {t(lang.value, "setup.toolName")}
-                </span>
-                <span className="font-body text-sm text-fg-3">
-                  {t(lang.value, "setup.toolDesc")}
-                </span>
+                <span className="font-body text-sm font-bold text-fg">{t("setup.toolName")}</span>
+                <span className="font-body text-sm text-fg-3">{t("setup.toolDesc")}</span>
               </div>
               <div className="flex-1" />
               <span className="font-mono uppercase tracking-label text-micro text-success">
@@ -222,10 +214,10 @@ export function Setup({ onComplete }: Props) {
         </section>
 
         <section className="flex flex-col gap-5">
-          <p className="font-body text-base text-fg-2">{t(lang.value, "setup.prompt")}</p>
+          <p className="font-body text-base text-fg-2">{t("setup.prompt")}</p>
           <div className="flex items-center gap-3">
             <Button size="hero" variant="primary" className="px-8 gap-3" onClick={handleInstall}>
-              <span>{t(lang.value, "setup.cta")}</span>
+              <span>{t("setup.cta")}</span>
               <span>→</span>
             </Button>
             <Button
@@ -234,7 +226,7 @@ export function Setup({ onComplete }: Props) {
               className="px-6"
               onClick={() => setManualOpen((o) => !o)}
             >
-              {t(lang.value, "setup.manual")}
+              {t("setup.manual")}
               <span className="ml-2">{manualOpen ? "▴" : "▾"}</span>
             </Button>
           </div>
@@ -242,9 +234,9 @@ export function Setup({ onComplete }: Props) {
 
         {manualOpen && (
           <section className="flex flex-col gap-4 border-t border-border pt-6">
-            <Label>{t(lang.value, "setup.manualHint")}</Label>
+            <Label>{t("setup.manualHint")}</Label>
             <pre className="border border-border bg-surface p-4 font-mono text-mono text-fg-2 overflow-x-auto rounded-sm">
-              {t(lang.value, "setup.manualCommand")}
+              {t("setup.manualCommand")}
             </pre>
             <a
               href="https://volta.sh"
@@ -256,7 +248,7 @@ export function Setup({ onComplete }: Props) {
               }}
               className="self-start font-mono uppercase tracking-label text-mono text-fg-3 hover:text-fg transition-colors duration-150 cursor-pointer"
             >
-              {t(lang.value, "setup.manualLink")}
+              {t("setup.manualLink")}
             </a>
           </section>
         )}

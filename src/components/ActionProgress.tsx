@@ -1,8 +1,7 @@
 import { useReducedMotionConfig } from "motion/react";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { useAsymptoticProgress } from "@/lib/useAsymptoticProgress";
-import { lang } from "@/store/system";
 
 type Props = {
   active: boolean;
@@ -11,6 +10,7 @@ type Props = {
 };
 
 export function ActionProgress({ active, labelKey, className = "" }: Props) {
+  const t = useT();
   const shouldReduceMotion = useReducedMotionConfig();
   const prefersReduced = shouldReduceMotion === true;
 
@@ -27,7 +27,7 @@ export function ActionProgress({ active, labelKey, className = "" }: Props) {
         )}
         aria-live="polite"
       >
-        {t(lang.value, labelKey)}
+        {t(labelKey)}
       </span>
     );
   }
@@ -42,7 +42,7 @@ export function ActionProgress({ active, labelKey, className = "" }: Props) {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={pct}
-      aria-label={t(lang.value, labelKey)}
+      aria-label={t(labelKey)}
     >
       <div
         className="absolute inset-y-0 left-0 bg-fg/20 transition-[width] duration-150 ease-out"

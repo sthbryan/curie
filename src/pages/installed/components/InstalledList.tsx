@@ -10,12 +10,11 @@ import { IconButton } from "@/components/IconButton";
 import type { ColumnDef } from "@/components/Table";
 import { Table } from "@/components/Table";
 import type { SkillInfo } from "@/components/types";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { filterSkills, formatRelative, skillTimestamp, updateNameSet } from "@/lib/skills";
 import { skills, skillUpdates } from "@/store/skills";
-import { lang } from "@/store/system";
 import type { SortField } from "../store/store";
 import {
   agentFilter,
@@ -70,6 +69,7 @@ function sortSkills(
 }
 
 export function InstalledList() {
+  const t = useT();
   const updateNames = useMemo(() => updateNameSet(skillUpdates.value), [skillUpdates.value]);
   const filtered = useMemo(
     () =>
@@ -114,7 +114,7 @@ export function InstalledList() {
     (): ColumnDef<SkillInfo>[] => [
       {
         key: "name",
-        header: t(lang.value, "installed.colName"),
+        header: t("installed.colName"),
         sortable: true,
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (skill) => (
@@ -128,13 +128,13 @@ export function InstalledList() {
       },
       {
         key: "source",
-        header: t(lang.value, "installed.colSource"),
+        header: t("installed.colSource"),
         sortable: true,
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (skill) => (
           <>
             <span className="font-mono text-mono text-fg-2 truncate">
-              {skill.source ?? t(lang.value, "installed.local")}
+              {skill.source ?? t("installed.local")}
             </span>
             <span className="font-mono text-micro text-fg-4 truncate" title={skill.path}>
               {skill.path}
@@ -144,13 +144,13 @@ export function InstalledList() {
       },
       {
         key: "agents",
-        header: t(lang.value, "installed.colAgents"),
+        header: t("installed.colAgents"),
         sortable: true,
         cellClassName: "min-w-0 flex flex-wrap gap-1.5",
         cell: (skill) =>
           skill.agents.length === 0 ? (
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t(lang.value, "installed.noAgents")}
+              {t("installed.noAgents")}
             </span>
           ) : (
             skill.agents.map((agent) => <AgentBadge key={`${skill.name}-${agent}`} label={agent} />)
@@ -158,7 +158,7 @@ export function InstalledList() {
       },
       {
         key: "updated",
-        header: t(lang.value, "installed.colWhen"),
+        header: t("installed.colWhen"),
         sortable: true,
         headerClassName: "text-right",
         cellClassName: "text-right",
@@ -179,7 +179,7 @@ export function InstalledList() {
       },
       {
         key: "actions",
-        header: t(lang.value, "installed.colActions"),
+        header: t("installed.colActions"),
         headerClassName: "text-right",
         cellClassName: "flex h-7 items-center justify-end gap-1",
         cell: (skill) => {
@@ -199,7 +199,7 @@ export function InstalledList() {
                     <IconButton
                       variant="accent"
                       size="sm"
-                      label={t(lang.value, "installed.updateOne")}
+                      label={t("installed.updateOne")}
                       onClick={() => onUpdate(skill.name)}
                       disabled={actionBusy}
                     >
@@ -211,7 +211,7 @@ export function InstalledList() {
                   <IconButton
                     variant="danger"
                     size="sm"
-                    label={t(lang.value, "installed.remove")}
+                    label={t("installed.remove")}
                     onClick={() => setConfirmRemove(skill.name)}
                     disabled={actionBusy}
                   >
@@ -224,7 +224,7 @@ export function InstalledList() {
         },
       },
     ],
-    [lang.value, updateNames, actionBusy, onUpdate, onRemove],
+    [updateNames, actionBusy, onUpdate, onRemove],
   );
 
   return (
@@ -235,18 +235,18 @@ export function InstalledList() {
             {...fadeUp(0.08)}
             className="flex flex-col gap-4 border border-border-strong bg-surface-tint px-5 py-8"
           >
-            <span className="font-body text-sm text-fg">{t(lang.value, "installed.empty")}</span>
-            <p className="font-body text-sm text-fg-3">{t(lang.value, "installed.emptyHint")}</p>
+            <span className="font-body text-sm text-fg">{t("installed.empty")}</span>
+            <p className="font-body text-sm text-fg-3">{t("installed.emptyHint")}</p>
             <div>
               <Button size="lg" variant="primary" onClick={onInstall}>
-                {t(lang.value, "installed.install")}
+                {t("installed.install")}
               </Button>
             </div>
           </motion.div>
         </Case>
         <Case condition={sorted.length === 0}>
           <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
-            <p className="font-body text-sm text-fg-3">{t(lang.value, "installed.noMatches")}</p>
+            <p className="font-body text-sm text-fg-3">{t("installed.noMatches")}</p>
           </motion.div>
         </Case>
         <Default>
@@ -265,13 +265,13 @@ export function InstalledList() {
 
       <ConfirmDialog
         open={confirmRemove !== null}
-        title={t(lang.value, "installed.removeTitle")}
-        description={t(lang.value, "installed.removeBody")}
+        title={t("installed.removeTitle")}
+        description={t("installed.removeBody")}
         detail={confirmRemove ?? undefined}
-        confirmLabel={t(lang.value, "installed.removeConfirm")}
-        cancelLabel={t(lang.value, "installed.removeCancel")}
+        confirmLabel={t("installed.removeConfirm")}
+        cancelLabel={t("installed.removeCancel")}
         busy={removingSkill.value !== null}
-        busyLabel={t(lang.value, "installed.removing")}
+        busyLabel={t("installed.removing")}
         onCancel={() => {
           if (!removingSkill.value) setConfirmRemove(null);
         }}

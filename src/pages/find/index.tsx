@@ -3,17 +3,17 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { skills } from "@/store/skills";
-import { lang } from "@/store/system";
 import { ResultsPanel } from "./components/ResultsPanel";
 import { useFindActions } from "./hooks/useFindActions";
 
 const DEBOUNCE_MS = 280;
 
 export function Find() {
+  const t = useT();
   const {
     results: findResults,
     loading: findLoading,
@@ -60,20 +60,20 @@ export function Find() {
   const showEmpty = !showHint && !findLoading && !findError && findResults.length === 0;
   const showResults = !showHint && !findLoading && findResults.length > 0;
 
-  let statusLabel = t(lang.value, "find.packageHint");
-  if (findLoading) statusLabel = t(lang.value, "find.searching");
-  else if (showResults) statusLabel = t(lang.value, "find.results", { n: findResults.length });
+  let statusLabel = t("find.packageHint");
+  if (findLoading) statusLabel = t("find.searching");
+  else if (showResults) statusLabel = t("find.results", { n: findResults.length });
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
         <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3">
-            <Label>{t(lang.value, "find.eyebrow")}</Label>
+            <Label>{t("find.eyebrow")}</Label>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-              {t(lang.value, "find.title")}
+              {t("find.title")}
             </h2>
-            <p className="font-body text-sm text-fg-3 max-w-lg">{t(lang.value, "find.subtitle")}</p>
+            <p className="font-body text-sm text-fg-3 max-w-lg">{t("find.subtitle")}</p>
           </div>
 
           <When condition={Boolean(findError || installError)}>
@@ -81,8 +81,8 @@ export function Find() {
               <div className="min-w-0 flex flex-col gap-1">
                 <span className="font-mono uppercase tracking-label text-micro text-accent">
                   <If condition={Boolean(findError)}>
-                    <Then>{t(lang.value, "find.error")}</Then>
-                    <Else>{t(lang.value, "find.installError")}</Else>
+                    <Then>{t("find.error")}</Then>
+                    <Else>{t("find.installError")}</Else>
                   </If>
                 </span>
                 <p className="font-body text-sm text-fg-3 break-all">{findError ?? installError}</p>
@@ -105,7 +105,7 @@ export function Find() {
         <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <label className="relative flex min-w-0 flex-1">
-              <span className="sr-only">{t(lang.value, "find.query")}</span>
+              <span className="sr-only">{t("find.query")}</span>
               <input
                 ref={inputRef}
                 type="search"
@@ -113,19 +113,19 @@ export function Find() {
                 onChange={(e) => {
                   setQuery(e.target.value);
                 }}
-                placeholder={t(lang.value, "find.queryPlaceholder")}
+                placeholder={t("find.queryPlaceholder")}
                 className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
               />
             </label>
             <label className="relative flex w-full sm:w-48 shrink-0">
-              <span className="sr-only">{t(lang.value, "find.owner")}</span>
+              <span className="sr-only">{t("find.owner")}</span>
               <input
                 type="text"
                 value={owner}
                 onChange={(e) => {
                   setOwner(e.target.value);
                 }}
-                placeholder={t(lang.value, "find.ownerPlaceholder")}
+                placeholder={t("find.ownerPlaceholder")}
                 spellCheck={false}
                 className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
               />
@@ -140,8 +140,8 @@ export function Find() {
               disabled={findLoading || qLen < 2}
             >
               <If condition={findLoading}>
-                <Then>{t(lang.value, "find.searching")}</Then>
-                <Else>{t(lang.value, "find.search")}</Else>
+                <Then>{t("find.searching")}</Then>
+                <Else>{t("find.search")}</Else>
               </If>
             </Button>
           </div>

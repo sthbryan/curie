@@ -6,17 +6,17 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import type { ExploreView } from "@/components/types";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { skills } from "@/store/skills";
-import { lang } from "@/store/system";
 import { ExploreList } from "./components/ExploreList";
 import { useExploreActions } from "./hooks/useExploreActions";
 
 const VIEWS: ExploreView[] = ["hot", "trending", "all-time"];
 
 export function Explore() {
+  const t = useT();
   const [, navigate] = useLocation();
   const {
     skills: exploreSkills,
@@ -50,10 +50,10 @@ export function Explore() {
   const installBusy = installingPackage !== null;
   const showEmpty = !loading && !error && exploreSkills.length === 0;
 
-  let statusLabel = t(lang.value, "explore.packageHint");
-  if (loading) statusLabel = t(lang.value, "explore.loading");
+  let statusLabel = t("explore.packageHint");
+  if (loading) statusLabel = t("explore.loading");
   else if (exploreSkills.length > 0) {
-    statusLabel = t(lang.value, "explore.showing", {
+    statusLabel = t("explore.showing", {
       n: exploreSkills.length,
       total: total || exploreSkills.length,
     });
@@ -70,19 +70,17 @@ export function Explore() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
         <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3">
-            <Label>{t(lang.value, "explore.eyebrow")}</Label>
+            <Label>{t("explore.eyebrow")}</Label>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="flex flex-col gap-2 min-w-0">
                 <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-                  {t(lang.value, "explore.title")}
+                  {t("explore.title")}
                 </h2>
-                <p className="font-body text-sm text-fg-3 max-w-lg">
-                  {t(lang.value, "explore.subtitle")}
-                </p>
+                <p className="font-body text-sm text-fg-3 max-w-lg">{t("explore.subtitle")}</p>
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button size="sm" variant="outline" onClick={() => navigate("/find")}>
-                  {t(lang.value, "explore.goFind")}
+                  {t("explore.goFind")}
                 </Button>
                 <Button
                   size="sm"
@@ -91,7 +89,7 @@ export function Explore() {
                     void openUrl("https://skills.sh");
                   }}
                 >
-                  {t(lang.value, "explore.openSite")}
+                  {t("explore.openSite")}
                 </Button>
               </div>
             </div>
@@ -102,8 +100,8 @@ export function Explore() {
               <div className="min-w-0 flex flex-col gap-1">
                 <span className="font-mono uppercase tracking-label text-micro text-accent">
                   <If condition={Boolean(error)}>
-                    <Then>{t(lang.value, "explore.error")}</Then>
-                    <Else>{t(lang.value, "explore.installError")}</Else>
+                    <Then>{t("explore.error")}</Then>
+                    <Else>{t("explore.installError")}</Else>
                   </If>
                 </span>
                 <p className="font-body text-sm text-fg-3 break-all">{error ?? installError}</p>
@@ -135,7 +133,7 @@ export function Explore() {
                   onClick={() => setView(v)}
                   disabled={loading && view === v}
                 >
-                  {t(lang.value, `explore.view.${v === "all-time" ? "allTime" : v}`)}
+                  {t(`explore.view.${v === "all-time" ? "allTime" : v}`)}
                 </Button>
               ))}
             </div>
@@ -144,7 +142,7 @@ export function Explore() {
                 {statusLabel}
               </span>
               <Button size="sm" variant="ghost" onClick={() => void load(view)} disabled={loading}>
-                {loading ? t(lang.value, "explore.refreshing") : t(lang.value, "explore.refresh")}
+                {loading ? t("explore.refreshing") : t("explore.refresh")}
               </Button>
             </div>
           </div>

@@ -1,28 +1,26 @@
 import { motion } from "motion/react";
 import { Label } from "@/components/Label";
 import type { Activity } from "@/components/types";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { listItem } from "@/lib/motion";
-import { lang } from "@/store/system";
 
 type Props = {
   event: Activity;
 };
 
 export function RecentRow({ event }: Props) {
+  const t = useT();
   return (
     <motion.div
       variants={listItem}
       className="flex items-baseline gap-3 border-b border-border py-3 first:border-t"
     >
       <span className="font-mono uppercase tracking-label text-micro text-fg-3 w-16 shrink-0">
-        {event.kind === "install"
-          ? t(lang.value, "home.kindInstall")
-          : t(lang.value, "home.kindUpdate")}
+        {event.kind === "install" ? t("home.kindInstall") : t("home.kindUpdate")}
       </span>
       <span className="font-mono text-mono text-fg grow truncate">{event.skill}</span>
       <Label className="text-micro w-28 truncate text-right">
-        {event.source ?? t(lang.value, "installed.local")}
+        {event.source ?? t("installed.local")}
       </Label>
       <Label className="text-micro w-20 text-right shrink-0">{event.when}</Label>
     </motion.div>

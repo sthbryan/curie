@@ -3,10 +3,9 @@ import { Compass, House, LayoutGrid, Search, Settings as SettingsIcon } from "lu
 import { motion, useReducedMotionConfig } from "motion/react";
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { duration, easeOut } from "@/lib/motion";
 import { reducedTransition } from "@/lib/transition";
-import { lang } from "@/store/system";
 import { NavItem } from "./NavItem";
 
 type NavKey = "home" | "skills" | "explore" | "find" | "custom";
@@ -24,6 +23,7 @@ const COLLAPSED_W = 50;
 const EXPANDED_W = 160;
 
 export function Sidebar() {
+  const t = useT();
   const [location, navigate] = useLocation();
   const [hovered, setHovered] = useState(false);
 
@@ -45,7 +45,7 @@ export function Sidebar() {
           <NavItem
             key={item.path}
             number={item.num}
-            label={t(lang.value, `nav.${item.key}`)}
+            label={t(`nav.${item.key}`)}
             icon={item.icon}
             active={location === item.path}
             expanded={hovered}
@@ -59,7 +59,7 @@ export function Sidebar() {
       <div className="border-t border-border px-2 py-3">
         <NavItem
           number="00"
-          label={t(lang.value, "nav.settings")}
+          label={t("nav.settings")}
           icon={SettingsIcon}
           active={location === "/settings"}
           expanded={hovered}

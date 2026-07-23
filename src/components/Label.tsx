@@ -1,6 +1,5 @@
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { lang } from "@/store/system";
 
 type Props = {
   children: string;
@@ -9,9 +8,10 @@ type Props = {
 };
 
 export function Label({ children, className = "", vars }: Props) {
+  const t = useT();
   return (
     <span className={cn("font-mono uppercase tracking-label text-micro text-fg-3", className)}>
-      {t(lang.value, children, vars)}
+      {t(children, vars)}
     </span>
   );
 }

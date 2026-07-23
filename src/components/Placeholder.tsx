@@ -1,6 +1,5 @@
 import { useLocation } from "wouter";
-import { t } from "@/i18n";
-import { lang } from "@/store/system";
+import { useT } from "@/i18n";
 import { Button } from "./Button";
 import type { View } from "./types";
 
@@ -9,6 +8,7 @@ type Props = {
 };
 
 export function Placeholder({ view }: Props) {
+  const t = useT();
   const [, navigate] = useLocation();
 
   return (
@@ -17,10 +17,10 @@ export function Placeholder({ view }: Props) {
         {view.toUpperCase()}
       </span>
       <span className="font-mono uppercase tracking-label text-mono text-fg-3">
-        {t(lang.value, "home.notBuilt")}
+        {t("home.notBuilt")}
       </span>
       <Button size="md" variant="outline" className="mt-4" onClick={() => navigate("/")}>
-        {t(lang.value, "home.back")}
+        {t("home.back")}
       </Button>
     </main>
   );

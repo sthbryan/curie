@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
 import { lang, node } from "@/store/system";
 
@@ -12,6 +12,7 @@ function Meta({ children, dim }: { children: ReactNode; dim?: boolean }) {
 }
 
 export function StatusBar() {
+  const t = useT();
   return (
     <footer className="shrink-0 flex h-9 items-center justify-between border-t border-border bg-surface px-5">
       <div className="flex min-w-0 items-center gap-2.5 font-mono uppercase tracking-label text-micro">
@@ -22,13 +23,13 @@ export function StatusBar() {
         {node.value?.installed ? (
           <>
             <Meta>
-              {t(lang.value, "status.node")} {node.value.version?.replace(/^v/, "") ?? "—"}
+              {t("status.node")} {node.value.version?.replace(/^v/, "") ?? "—"}
             </Meta>
             <Sep />
             <Meta dim>{node.value.manager ?? "system"}</Meta>
           </>
         ) : (
-          <Meta>{t(lang.value, "status.setupRequired")}</Meta>
+          <Meta>{t("status.setupRequired")}</Meta>
         )}
       </div>
 

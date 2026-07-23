@@ -1,5 +1,6 @@
 import en from "./i18n/en.json";
 import es from "./i18n/es.json";
+import { lang } from "./store/system";
 import type { Messages } from "./types/Messages";
 
 export type Lang = "en" | "es";
@@ -8,6 +9,11 @@ const messages: Record<Lang, Messages> = {
   en: en as Messages,
   es: es as Messages,
 };
+
+export function useT() {
+  const l = lang.value;
+  return (key: string, vars?: Record<string, string | number>): string => t(l, key, vars);
+}
 
 export function detectLang(locale: string): Lang {
   const l = locale.toLowerCase();

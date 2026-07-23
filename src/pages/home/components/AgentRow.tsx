@@ -1,8 +1,7 @@
 import { motion } from "motion/react";
 import type { AgentSummary } from "@/components/types";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { listItem } from "@/lib/motion";
-import { lang } from "@/store/system";
 
 type Props = {
   agent: AgentSummary;
@@ -14,6 +13,7 @@ function density(count: number, capacity: number): number {
 }
 
 export function AgentRow({ agent, capacity }: Props) {
+  const t = useT();
   return (
     <motion.div
       variants={listItem}
@@ -34,7 +34,7 @@ export function AgentRow({ agent, capacity }: Props) {
         {agent.count}
       </span>
       <span className="font-mono uppercase tracking-label text-micro w-14 text-right text-fg-4">
-        {agent.count === 1 ? t(lang.value, "home.skillWord") : t(lang.value, "home.skillsWord")}
+        {agent.count === 1 ? t("home.skillWord") : t("home.skillsWord")}
       </span>
     </motion.div>
   );

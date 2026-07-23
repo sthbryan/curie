@@ -7,11 +7,10 @@ import { Button } from "@/components/Button";
 import type { ColumnDef } from "@/components/Table";
 import { Table } from "@/components/Table";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
-import { t } from "@/i18n";
+import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { formatInstalls } from "@/lib/skills";
-import { lang } from "@/store/system";
 
 type Props = {
   view: ExploreView;
@@ -57,6 +56,7 @@ export function ExploreList({
   onInstall,
   onLoadMore,
 }: Props) {
+  const t = useT();
   const columns = useMemo(
     (): ColumnDef<SkillExploreResult>[] => [
       {
@@ -72,7 +72,7 @@ export function ExploreList({
       },
       {
         key: "name",
-        header: t(lang.value, "explore.colName"),
+        header: t("explore.colName"),
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (result) => (
           <>
@@ -83,7 +83,7 @@ export function ExploreList({
       },
       {
         key: "source",
-        header: t(lang.value, "explore.colSource"),
+        header: t("explore.colSource"),
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (result) => (
           <>
@@ -93,14 +93,14 @@ export function ExploreList({
               onClick={() => void openUrl(result.url)}
               className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
             >
-              {t(lang.value, "explore.open")}
+              {t("explore.open")}
             </button>
           </>
         ),
       },
       {
         key: "installs",
-        header: t(lang.value, installsColumnKey(view)),
+        header: t(installsColumnKey(view)),
         headerClassName: "text-right",
         cellClassName: "flex flex-col items-end gap-0.5",
         cell: (result) => {
@@ -130,7 +130,7 @@ export function ExploreList({
       },
       {
         key: "actions",
-        header: t(lang.value, "explore.colActions"),
+        header: t("explore.colActions"),
         headerClassName: "text-right",
         cellClassName: "flex justify-end",
         cell: (result) => {
@@ -138,7 +138,7 @@ export function ExploreList({
           const installing = installingPackage === result.package;
           return installed ? (
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t(lang.value, "explore.installed")}
+              {t("explore.installed")}
             </span>
           ) : installing ? (
             <ActionProgress active labelKey="explore.installing" />
@@ -149,13 +149,13 @@ export function ExploreList({
               onClick={() => onInstall(result.package)}
               disabled={installBusy}
             >
-              {t(lang.value, "explore.install")}
+              {t("explore.install")}
             </Button>
           );
         },
       },
     ],
-    [lang.value, view, installedPackages, installingPackage, installBusy, onInstall],
+    [view, installedPackages, installingPackage, installBusy, onInstall],
   );
 
   return (
@@ -176,8 +176,8 @@ export function ExploreList({
           {...fadeUp(0.08)}
           className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
         >
-          <span className="font-body text-sm text-fg">{t(lang.value, "explore.empty")}</span>
-          <p className="font-body text-sm text-fg-3">{t(lang.value, "explore.emptyHint")}</p>
+          <span className="font-body text-sm text-fg">{t("explore.empty")}</span>
+          <p className="font-body text-sm text-fg-3">{t("explore.emptyHint")}</p>
         </motion.div>
       </Case>
 
@@ -197,9 +197,7 @@ export function ExploreList({
               onClick={onLoadMore}
               disabled={loadingMore || installBusy}
             >
-              {loadingMore
-                ? t(lang.value, "explore.loadingMore")
-                : t(lang.value, "explore.loadMore")}
+              {loadingMore ? t("explore.loadingMore") : t("explore.loadMore")}
             </Button>
           </div>
         ) : null}
