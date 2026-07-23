@@ -187,7 +187,9 @@
   "status": {
     "node": "NODE",
     "agents": "AGENTES",
-    "setupRequired": "SETUP REQUERIDO"
+    "setupRequired": "SETUP REQUERIDO",
+    "appUpdateAvailable": "ACTUALIZACIÓN DISPONIBLE",
+    "appUpToDate": "ACTUALIZADO"
   },
   "settings": {
     "eyebrow": "PREFERENCIAS",
@@ -221,7 +223,16 @@
     "nodeMissing": "Node no detectado",
     "goToSetup": "VOLVER AL SETUP",
     "about": "ACERCA DE",
-    "aboutDescription": "Curie te ayuda a instalar, actualizar, eliminar y gestionar tus skills. Está construido con React, TypeScript y Tauri."
+    "aboutDescription": "Curie te ayuda a instalar, actualizar, eliminar y gestionar tus skills. Está construido con React, TypeScript y Tauri.",
+    "updateCheckBtn": "BUSCAR ACTUALIZACIONES",
+    "updateChecking": "BUSCANDO ACTUALIZACIONES…",
+    "updateAvailable": "ACTUALIZACIÓN DISPONIBLE",
+    "updateBrewHint": "Instalaste Curie con Homebrew. Ejecuta el comando de abajo para actualizar.",
+    "updateDirectHint": "Descarga la última versión desde GitHub para actualizar.",
+    "updateViewRelease": "VER RELEASE",
+    "updateCopyCmd": "COPIAR COMANDO",
+    "updateCopied": "Comando copiado al portapapeles",
+    "updateUpToDate": "Curie está actualizado"
   },
   "toast": {
     "installed": "Instalado {name}",
@@ -231,6 +242,8 @@
     "noUpdates": "Todas las skills están al día",
     "nodeInstalled": "Node instalado",
     "setupComplete": "Setup completado",
-    "refreshed": "Skills recargados"
+    "refreshed": "Skills recargados",
+    "appUpdate": "Hay una nueva versión de Curie disponible",
+    "appUpdateAction": "VER"
   }
 }
