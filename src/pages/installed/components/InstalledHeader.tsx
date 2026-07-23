@@ -54,7 +54,7 @@ export function InstalledHeader() {
           </p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 pt-1">
+        <div className="flex shrink-0 items-center gap-2">
           <When condition={updateNames.size > 0}>
             <Button
               size="sm"
@@ -63,7 +63,7 @@ export function InstalledHeader() {
               onClick={onUpdateAll}
               disabled={actionBusy || updatesLoading.value}
             >
-              <CircleFadingArrowUp size={15} />
+              <CircleFadingArrowUp size={14} />
               <If condition={updatingAll}>
                 <Then>{t(lang.value, "installed.updatingAll")}</Then>
                 <Else>{t(lang.value, "installed.updateAll")}</Else>
@@ -77,7 +77,7 @@ export function InstalledHeader() {
             disabled={skillsLoading.value || updatesLoading.value || actionBusy}
           >
             <RefreshCcw
-              size={15}
+              size={14}
               className={cn({ "animate-spin": skillsLoading.value || updatesLoading.value })}
             />
             <If condition={skillsLoading.value || updatesLoading.value}>
@@ -86,7 +86,7 @@ export function InstalledHeader() {
             </If>
           </Button>
           <Button size="sm" variant="primary" onClick={onInstall}>
-            <Plus size={15} />
+            <Plus size={14} />
             {t(lang.value, "installed.install")}
           </Button>
         </div>
