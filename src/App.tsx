@@ -1,5 +1,7 @@
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { type ReactNode, useEffect } from "react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { ErrorFallback } from "./components/ErrorFallback";
 import { Header } from "./components/Header";
 import { Placeholder } from "./components/Placeholder";
 import { Sidebar } from "./components/Sidebar";
@@ -16,6 +18,7 @@ import { useAppStore } from "./store/app";
 function MainContent() {
   const stage = useAppStore((s) => s.stage);
   const view = useAppStore((s) => s.view);
+  const setView = useAppStore((s) => s.setView);
   const completeSetup = useAppStore((s) => s.completeSetup);
 
   let content: ReactNode;
@@ -51,18 +54,25 @@ function MainContent() {
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={key}
-        className="flex min-h-0 min-w-0 flex-1 flex-col"
-        initial={pageTransition.initial}
-        animate={pageTransition.animate}
-        exit={pageTransition.exit}
-        transition={pageTransition.transition}
-      >
-        {content}
-      </motion.div>
-    </AnimatePresence>
+    <ErrorBoundary
+      resetKeys={[stage, view]}
+      fallback={({ error, reset }) => (
+        <ErrorFallback error={error} reset={reset} variant="page" onHome={() => setView("home")} />
+      )}
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={key}
+          className="flex min-h-0 min-w-0 flex-1 flex-col"
+          initial={pageTransition.initial}
+          animate={pageTransition.animate}
+          exit={pageTransition.exit}
+          transition={pageTransition.transition}
+        >
+          {content}
+        </motion.div>
+      </AnimatePresence>
+    </ErrorBoundary>
   );
 }
 
