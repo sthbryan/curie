@@ -30,6 +30,11 @@ export type SkillUpdateInfo = {
   checkable: boolean;
 };
 
+export type SkillUpdateResult = {
+  updated: string[];
+  message: string;
+};
+
 export type AgentSummary = {
   id: string;
   label: string;

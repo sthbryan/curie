@@ -1,8 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
-import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "../components/types";
+import type { NodeInfo, SkillInfo, SkillUpdateInfo, SkillUpdateResult } from "../components/types";
 import { detectLang } from "../i18n";
 import { useAppStore } from "../store/app";
+
+function errorMessage(e: unknown): string {
+  return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
+}
 
 export async function checkSkillUpdates() {
   const { setSkillUpdates, setUpdatesLoading, setUpdatesError } = useAppStore.getState();
@@ -12,8 +16,7 @@ export async function checkSkillUpdates() {
     const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates");
     setSkillUpdates(updates);
   } catch (e) {
-    const message = typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
-    setUpdatesError(message);
+    setUpdatesError(errorMessage(e));
   } finally {
     setUpdatesLoading(false);
   }
@@ -32,10 +35,28 @@ export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
       void checkSkillUpdates();
     }
   } catch (e) {
-    const message = typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
-    setSkillsError(message);
+    setSkillsError(errorMessage(e));
   } finally {
     setSkillsLoading(false);
+  }
+}
+
+/** Update one skill, or all outdated globals when `names` is omitted/empty. */
+export async function updateSkills(names?: string[]) {
+  const { setUpdatingSkill, setUpdateApplyError } = useAppStore.getState();
+  const token = names && names.length === 1 ? names[0]! : "*";
+  setUpdatingSkill(token);
+  setUpdateApplyError(null);
+  try {
+    await invoke<SkillUpdateResult>("update_skills", {
+      skills: names && names.length > 0 ? names : null,
+    });
+    await loadGlobalSkills({ checkUpdates: true });
+  } catch (e) {
+    setUpdateApplyError(errorMessage(e));
+    throw e;
+  } finally {
+    setUpdatingSkill(null);
   }
 }
 

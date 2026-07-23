@@ -25,6 +25,9 @@ export type AppState = {
   skillUpdates: SkillUpdateInfo[];
   updatesLoading: boolean;
   updatesError: string | null;
+  /** Skill name currently updating, or `"*"` for update-all. */
+  updatingSkill: string | null;
+  updateApplyError: string | null;
 
   setTheme: (theme: ThemeMode) => void;
   setLang: (lang: Lang) => void;
@@ -38,6 +41,8 @@ export type AppState = {
   setSkillUpdates: (updates: SkillUpdateInfo[]) => void;
   setUpdatesLoading: (loading: boolean) => void;
   setUpdatesError: (error: string | null) => void;
+  setUpdatingSkill: (name: string | null) => void;
+  setUpdateApplyError: (error: string | null) => void;
   markBooted: () => void;
   completeSetup: (node: NodeInfo) => void;
 };
@@ -58,6 +63,8 @@ export const useAppStore = create<AppState>()(
       skillUpdates: [],
       updatesLoading: false,
       updatesError: null,
+      updatingSkill: null,
+      updateApplyError: null,
 
       setTheme: (theme) => set({ theme }),
       setLang: (lang) => set({ lang }),
@@ -71,6 +78,8 @@ export const useAppStore = create<AppState>()(
       setSkillUpdates: (skillUpdates) => set({ skillUpdates, updatesError: null }),
       setUpdatesLoading: (updatesLoading) => set({ updatesLoading }),
       setUpdatesError: (updatesError) => set({ updatesError }),
+      setUpdatingSkill: (updatingSkill) => set({ updatingSkill }),
+      setUpdateApplyError: (updateApplyError) => set({ updateApplyError }),
       markBooted: () => set({ hasBooted: true }),
       completeSetup: (node) => set({ node, view: "home", stage: "home" }),
     }),
