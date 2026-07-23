@@ -1,37 +1,11 @@
 import { effect, signal } from "@preact/signals";
 import type { NodeInfo, ReducedMotionPref, Stage, ThemeMode } from "@/components/types";
 import type { Lang } from "@/i18n";
+import { loadPartial, savePartial } from "@/lib/persistence";
 
-const STORAGE_KEY = "curie.ui";
-type Persisted = {
-  theme: ThemeMode;
-  lang: Lang;
-  reducedMotion: ReducedMotionPref;
-  hasBooted: boolean;
-};
+const STORAGE_KEY = "curie.system";
 
-function loadPartial(fallback: Persisted): Persisted {
-  if (typeof localStorage === "undefined") return fallback;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return fallback;
-    const data = JSON.parse(raw) as Partial<Persisted>;
-    return { ...fallback, ...data };
-  } catch {
-    return fallback;
-  }
-}
-
-function savePartial(next: Persisted) {
-  if (typeof localStorage === "undefined") return;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  } catch {
-    // ignore
-  }
-}
-
-const initial = loadPartial({
+const initial = loadPartial(STORAGE_KEY, {
   theme: "dark",
   lang: "en",
   reducedMotion: "user",
@@ -85,7 +59,7 @@ export const systemStore = {
 };
 
 effect(() => {
-  savePartial({
+  savePartial(STORAGE_KEY, {
     theme: theme.value,
     lang: lang.value,
     reducedMotion: reducedMotion.value,
