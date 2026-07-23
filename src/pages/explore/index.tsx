@@ -3,6 +3,7 @@ import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { Else, If, Then, When } from "react-if";
+import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
@@ -69,7 +70,11 @@ export function Explore() {
     if (installError) dismissInstallError();
     if (error) void load(view);
   };
-  const handleRefresh = () => void load(view);
+  const tToast = useT();
+  const handleRefresh = async () => {
+    await load(view);
+    toast.success(tToast("toast.refreshed"));
+  };
   const handleLoadMore = () => {
     void loadMore();
   };
