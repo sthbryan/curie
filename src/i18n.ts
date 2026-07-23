@@ -105,6 +105,32 @@ export type Messages = {
     emptyHint: string;
     noMatches: string;
   };
+  find: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    query: string;
+    queryPlaceholder: string;
+    owner: string;
+    ownerPlaceholder: string;
+    search: string;
+    searching: string;
+    results: string;
+    colName: string;
+    colSource: string;
+    colInstalls: string;
+    colActions: string;
+    install: string;
+    installing: string;
+    installed: string;
+    open: string;
+    hint: string;
+    empty: string;
+    emptyHint: string;
+    error: string;
+    installError: string;
+    packageHint: string;
+  };
   status: {
     node: string;
     agents: string;
