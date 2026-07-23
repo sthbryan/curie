@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import { t } from "../i18n";
-import { useAppStore } from "../store/app";
+import { useUiStore } from "../store/ui";
 import { NavItem } from "./NavItem";
 
 type NavKey = "home" | "skills" | "explore" | "find";
@@ -13,7 +13,7 @@ const TOP_ITEMS: { path: string; key: NavKey; num: string }[] = [
 ];
 
 export function Sidebar() {
-  const lang = useAppStore((s) => s.lang);
+  const lang = useUiStore((s) => s.lang);
   const [location, navigate] = useLocation();
 
   return (
