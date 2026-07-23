@@ -33,6 +33,8 @@ describe("t", () => {
     expect(t("es", "home.status")).toBe("ESTADO · NPX SKILLS");
     expect(t("en", "app.ready")).toBe("READY");
     expect(t("es", "app.ready")).toBe("LISTO");
+    expect(t("en", "error.retry")).toBe("RETRY");
+    expect(t("es", "error.home")).toBe("IR AL INICIO");
   });
 
   it("resolves keys across all namespaces", () => {

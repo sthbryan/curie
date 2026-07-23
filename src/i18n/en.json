@@ -2,6 +2,15 @@
   "app": {
     "ready": "READY"
   },
+  "error": {
+    "eyebrow": "SOMETHING BROKE",
+    "title": "This view crashed",
+    "subtitle": "The rest of Curie is still running. Retry this screen or go home.",
+    "unknown": "Unknown error",
+    "retry": "RETRY",
+    "home": "GO HOME",
+    "reload": "RELOAD APP"
+  },
   "nav": {
     "home": "HOME",
     "skills": "SKILLS",

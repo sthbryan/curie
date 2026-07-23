@@ -7,6 +7,15 @@ export type Messages = {
   app: {
     ready: string;
   };
+  error: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    unknown: string;
+    retry: string;
+    home: string;
+    reload: string;
+  };
   nav: {
     home: string;
     skills: string;

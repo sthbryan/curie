@@ -2,6 +2,15 @@
   "app": {
     "ready": "LISTO"
   },
+  "error": {
+    "eyebrow": "ALGO FALLÓ",
+    "title": "Esta vista se rompió",
+    "subtitle": "El resto de Curie sigue activo. Reintenta esta pantalla o vuelve al inicio.",
+    "unknown": "Error desconocido",
+    "retry": "REINTENTAR",
+    "home": "IR AL INICIO",
+    "reload": "RECARGAR APP"
+  },
   "nav": {
     "home": "INICIO",
     "skills": "SKILLS",
