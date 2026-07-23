@@ -8,7 +8,9 @@ export type SkillsState = {
   skillUpdates: SkillUpdateInfo[];
   updatesLoading: boolean;
   updatesError: string | null;
+};
 
+export type SkillsActions = {
   setSkills: (skills: SkillInfo[]) => void;
   setSkillsLoading: (loading: boolean) => void;
   setSkillsError: (error: string | null) => void;
@@ -17,7 +19,9 @@ export type SkillsState = {
   setUpdatesError: (error: string | null) => void;
 };
 
-export const useSkillsStore = create<SkillsState>()((set) => ({
+export type SkillsStore = SkillsState & SkillsActions;
+
+export const useSkillsStore = create<SkillsStore>()((set) => ({
   skills: [],
   skillsLoading: false,
   skillsError: null,
