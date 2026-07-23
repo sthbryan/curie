@@ -1,5 +1,6 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { motion } from "motion/react";
+import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
 import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
@@ -34,82 +35,85 @@ export function ResultsPanel({
   installBusy,
   onInstall,
 }: Props) {
-  const columns: ColumnDef<SkillSearchResult>[] = [
-    {
-      key: "name",
-      header: t(lang.value, "find.colName"),
-      cellClassName: "min-w-0 flex flex-col gap-1",
-      cell: (result) => (
-        <>
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="font-mono text-mono text-fg truncate">{result.name}</span>
-            {installedPackages.has(result.package) && (
-              <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 border border-border-strong px-1.5 py-0.5 rounded-sm">
-                {t(lang.value, "find.installed")}
-              </span>
-            )}
-          </div>
-          <span className="font-mono text-micro text-fg-4 truncate" title={result.package}>
-            {result.package}
-          </span>
-        </>
-      ),
-    },
-    {
-      key: "source",
-      header: t(lang.value, "find.colSource"),
-      cellClassName: "min-w-0 flex flex-col gap-1",
-      cell: (result) => (
-        <>
-          <span className="font-mono text-mono text-fg-2 truncate">{result.source || "—"}</span>
-          <button
-            type="button"
-            onClick={() => void openUrl(result.url)}
-            className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
-          >
-            {t(lang.value, "find.open")}
-          </button>
-        </>
-      ),
-    },
-    {
-      key: "installs",
-      header: t(lang.value, "find.colInstalls"),
-      headerClassName: "text-right",
-      cellClassName: "text-right",
-      cell: (result) => (
-        <span className="font-mono uppercase tracking-label text-micro text-fg-3">
-          {formatInstalls(result.installs) || "—"}
-        </span>
-      ),
-    },
-    {
-      key: "actions",
-      header: t(lang.value, "find.colActions"),
-      headerClassName: "text-right",
-      cellClassName: "flex justify-end",
-      cell: (result) => {
-        const installed = installedPackages.has(result.package);
-        const installing = installingPackage === result.package;
-        return installed ? (
-          <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-            {t(lang.value, "find.installed")}
-          </span>
-        ) : installing ? (
-          <ActionProgress active labelKey="find.installing" />
-        ) : (
-          <Button
-            size="xs"
-            variant="primary"
-            onClick={() => onInstall(result.package)}
-            disabled={installBusy}
-          >
-            {t(lang.value, "find.install")}
-          </Button>
-        );
+  const columns = useMemo(
+    (): ColumnDef<SkillSearchResult>[] => [
+      {
+        key: "name",
+        header: t(lang.value, "find.colName"),
+        cellClassName: "min-w-0 flex flex-col gap-1",
+        cell: (result) => (
+          <>
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="font-mono text-mono text-fg truncate">{result.name}</span>
+              {installedPackages.has(result.package) && (
+                <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 border border-border-strong px-1.5 py-0.5 rounded-sm">
+                  {t(lang.value, "find.installed")}
+                </span>
+              )}
+            </div>
+            <span className="font-mono text-micro text-fg-4 truncate" title={result.package}>
+              {result.package}
+            </span>
+          </>
+        ),
       },
-    },
-  ];
+      {
+        key: "source",
+        header: t(lang.value, "find.colSource"),
+        cellClassName: "min-w-0 flex flex-col gap-1",
+        cell: (result) => (
+          <>
+            <span className="font-mono text-mono text-fg-2 truncate">{result.source || "—"}</span>
+            <button
+              type="button"
+              onClick={() => void openUrl(result.url)}
+              className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
+            >
+              {t(lang.value, "find.open")}
+            </button>
+          </>
+        ),
+      },
+      {
+        key: "installs",
+        header: t(lang.value, "find.colInstalls"),
+        headerClassName: "text-right",
+        cellClassName: "text-right",
+        cell: (result) => (
+          <span className="font-mono uppercase tracking-label text-micro text-fg-3">
+            {formatInstalls(result.installs) || "—"}
+          </span>
+        ),
+      },
+      {
+        key: "actions",
+        header: t(lang.value, "find.colActions"),
+        headerClassName: "text-right",
+        cellClassName: "flex justify-end",
+        cell: (result) => {
+          const installed = installedPackages.has(result.package);
+          const installing = installingPackage === result.package;
+          return installed ? (
+            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
+              {t(lang.value, "find.installed")}
+            </span>
+          ) : installing ? (
+            <ActionProgress active labelKey="find.installing" />
+          ) : (
+            <Button
+              size="xs"
+              variant="primary"
+              onClick={() => onInstall(result.package)}
+              disabled={installBusy}
+            >
+              {t(lang.value, "find.install")}
+            </Button>
+          );
+        },
+      },
+    ],
+    [lang.value, installedPackages, installingPackage, installBusy, onInstall],
+  );
 
   return (
     <Switch>
