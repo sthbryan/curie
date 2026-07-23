@@ -29,8 +29,8 @@ describe("detectLang", () => {
 
 describe("t", () => {
   it("resolves nested keys", () => {
-    expect(t("en", "home.status")).toBe("STATUS · GLOBAL");
-    expect(t("es", "home.status")).toBe("ESTADO · GLOBAL");
+    expect(t("en", "home.status")).toBe("STATUS · NPX SKILLS");
+    expect(t("es", "home.status")).toBe("ESTADO · NPX SKILLS");
     expect(t("en", "app.ready")).toBe("READY");
     expect(t("es", "app.ready")).toBe("LISTO");
   });
@@ -54,7 +54,7 @@ describe("t", () => {
   });
 
   it("interpolates multiple variables in one string", () => {
-    expect(t("en", "home.skillsCount", { n: 5 })).toBe("5 SKILLS");
+    expect(t("en", "home.active", { n: 5 })).toBe("5 ACTIVE");
     expect(t("es", "home.active", { n: 1 })).toBe("1 ACTIVAS");
   });
 

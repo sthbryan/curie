@@ -49,10 +49,8 @@ export type Messages = {
     skillsReady: string;
     skillsReadyOne: string;
     skillsNone: string;
-    globalScope: string;
     aiTools: string;
     active: string;
-    skillsCount: string;
     skillWord: string;
     skillsWord: string;
     recent: string;

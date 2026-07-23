@@ -69,28 +69,18 @@ export function Home() {
             <Label lang={lang}>
               {totalSkills > 0 ? t(lang, "home.status") : t(lang, "home.statusEmpty")}
             </Label>
-            <Label lang={lang} className="text-micro text-fg-4">
-              {t(lang, "home.globalScope")}
-            </Label>
           </div>
           <div className="flex items-baseline gap-5 pt-3">
             <span className="font-display text-display font-bold leading-none tracking-display">
               {totalSkills}
             </span>
-            <div className="flex flex-col gap-1">
-              <span className="font-body text-base text-fg-2 tracking-tight">
-                {totalSkills === 0
-                  ? t(lang, "home.skillsNone")
-                  : totalSkills === 1
-                    ? t(lang, "home.skillsReadyOne", { n: activeAgents })
-                    : t(lang, "home.skillsReady", { n: activeAgents })}
-              </span>
-              {totalSkills > 0 && (
-                <Label lang={lang} className="text-mono">
-                  {t(lang, "home.skillsCount", { n: totalSkills })}
-                </Label>
-              )}
-            </div>
+            <span className="font-body text-base text-fg-2 tracking-tight">
+              {totalSkills === 0
+                ? t(lang, "home.skillsNone")
+                : totalSkills === 1
+                  ? t(lang, "home.skillsReadyOne", { n: activeAgents })
+                  : t(lang, "home.skillsReady", { n: activeAgents })}
+            </span>
           </div>
         </section>
 
