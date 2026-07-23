@@ -1,6 +1,7 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { motion } from "motion/react";
 import { Else, If, Then, When } from "react-if";
+import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import type { Lang } from "@/i18n";
@@ -104,17 +105,21 @@ export function ExploreRow({
             </span>
           </Then>
           <Else>
-            <Button
-              size="xs"
-              variant="primary"
-              onClick={() => onInstall(result.package)}
-              disabled={installBusy}
-            >
-              <If condition={installing}>
-                <Then>{t(lang, "explore.installing")}</Then>
-                <Else>{t(lang, "explore.install")}</Else>
-              </If>
-            </Button>
+            <If condition={installing}>
+              <Then>
+                <ActionProgress active lang={lang} labelKey="explore.installing" />
+              </Then>
+              <Else>
+                <Button
+                  size="xs"
+                  variant="primary"
+                  onClick={() => onInstall(result.package)}
+                  disabled={installBusy}
+                >
+                  {t(lang, "explore.install")}
+                </Button>
+              </Else>
+            </If>
           </Else>
         </If>
       </div>

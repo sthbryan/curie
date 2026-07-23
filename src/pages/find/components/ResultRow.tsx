@@ -1,6 +1,7 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { motion } from "motion/react";
 import { Else, If, Then, When } from "react-if";
+import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
 import type { SkillSearchResult } from "@/components/types";
 import type { Lang } from "@/i18n";
@@ -67,17 +68,21 @@ export function ResultRow({ result, lang, installed, installing, installBusy, on
             </span>
           </Then>
           <Else>
-            <Button
-              size="xs"
-              variant="primary"
-              onClick={() => onInstall(result.package)}
-              disabled={installBusy}
-            >
-              <If condition={installing}>
-                <Then>{t(lang, "find.installing")}</Then>
-                <Else>{t(lang, "find.install")}</Else>
-              </If>
-            </Button>
+            <If condition={installing}>
+              <Then>
+                <ActionProgress active lang={lang} labelKey="find.installing" />
+              </Then>
+              <Else>
+                <Button
+                  size="xs"
+                  variant="primary"
+                  onClick={() => onInstall(result.package)}
+                  disabled={installBusy}
+                >
+                  {t(lang, "find.install")}
+                </Button>
+              </Else>
+            </If>
           </Else>
         </If>
       </div>
