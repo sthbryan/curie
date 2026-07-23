@@ -5,7 +5,7 @@ import type { SkillInfo } from "@/components/types";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { fadeUp, listStagger } from "@/lib/motion";
-import { SkillRow } from "./SkillRow";
+import { INSTALLED_GRID, SkillRow } from "./SkillRow";
 
 type Props = {
   lang: Lang;
@@ -15,7 +15,6 @@ type Props = {
   updatingSkill: string | null;
   removingSkill: string | null;
   actionBusy: boolean;
-  /** Key that triggers list re-mount when filters change. */
   listKey: string;
   onInstall: () => void;
   onUpdate: (name: string) => void;
@@ -60,7 +59,7 @@ export function InstalledList({
         <Default>
           <motion.div
             {...fadeUp(0.06)}
-            className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_5rem_minmax(7.5rem,auto)] gap-4 border-b border-border pb-2"
+            className={`grid ${INSTALLED_GRID} gap-4 border-b border-border pb-2`}
           >
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
               {t(lang, "installed.colName")}
