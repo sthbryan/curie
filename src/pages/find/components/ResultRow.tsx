@@ -1,6 +1,7 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { motion } from "motion/react";
 import { Else, If, Then, When } from "react-if";
+import { Button } from "../../../components/Button";
 import type { SkillSearchResult } from "../../../components/types";
 import type { Lang } from "../../../i18n";
 import { t } from "../../../i18n";
@@ -66,17 +67,17 @@ export function ResultRow({ result, lang, installed, installing, installBusy, on
             </span>
           </Then>
           <Else>
-            <button
-              type="button"
+            <Button
+              size="xs"
+              variant="primary"
               onClick={() => onInstall(result.package)}
               disabled={installBusy}
-              className="h-7 px-2.5 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-micro font-bold hover:opacity-90 disabled:opacity-50 transition-opacity duration-150"
             >
               <If condition={installing}>
                 <Then>{t(lang, "find.installing")}</Then>
                 <Else>{t(lang, "find.install")}</Else>
               </If>
-            </button>
+            </Button>
           </Else>
         </If>
       </div>
