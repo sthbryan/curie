@@ -5,7 +5,7 @@ export const easeOut: Transition["ease"] = [0.22, 1, 0.36, 1];
 export const duration = {
   fast: 0.16,
   base: 0.22,
-  slow: 0.32,
+  slow: 0.41,
 } as const;
 
 export const pageTransition = {
