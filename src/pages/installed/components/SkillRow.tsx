@@ -52,14 +52,7 @@ export function SkillRow({
       className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_5rem_minmax(7.5rem,auto)] items-start gap-4 border-b border-border py-4 first:border-t"
     >
       <div className="min-w-0 flex flex-col gap-1">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
-          <When condition={updateAvailable}>
-            <span className="shrink-0 font-mono uppercase tracking-label text-micro text-accent border border-accent/40 px-1.5 py-0.5 rounded-sm">
-              {t(lang, "installed.badgeUpdate")}
-            </span>
-          </When>
-        </div>
+        <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
         <span className="font-mono uppercase tracking-label text-micro text-fg-4 truncate">
           {skill.scope}
         </span>
@@ -95,10 +88,7 @@ export function SkillRow({
             updateAvailable ? "text-accent" : "text-fg-4"
           }`}
         >
-          <If condition={updateAvailable}>
-            <Then>{t(lang, "installed.badgeUpdate")}</Then>
-            <Else>{when ? formatRelative(when) : "—"}</Else>
-          </If>
+          {when ? formatRelative(when) : "—"}
         </span>
       </div>
 

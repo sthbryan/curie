@@ -107,7 +107,6 @@ export type Messages = {
     showing: string;
     filterAll: string;
     filterUpdates: string;
-    badgeUpdate: string;
     colName: string;
     colSource: string;
     colAgents: string;
