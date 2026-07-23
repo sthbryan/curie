@@ -1,5 +1,6 @@
 mod add;
 mod check;
+mod explore;
 mod find;
 mod list;
 mod lock;
@@ -10,12 +11,13 @@ mod update;
 
 pub use add::add_global_skill;
 pub use check::check_global_skill_updates;
+pub use explore::explore_skills as browse_skills;
 pub use find::find_skills as search_skills;
 pub use list::list_global_skills;
 pub use remove::remove_global_skills;
 pub use types::{
-    SkillInfo, SkillInstallResult, SkillRemoveResult, SkillSearchResult, SkillUpdateInfo,
-    SkillUpdateResult,
+    ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult, SkillRemoveResult,
+    SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
 pub use update::update_global_skills;
 
@@ -48,6 +50,14 @@ pub async fn find_skills(
     })
     .await
     .map_err(|e| format!("find task failed: {e}"))?
+}
+
+#[tauri::command]
+pub async fn explore_skills(view: String, page: Option<u32>) -> Result<ExplorePage, String> {
+    let page = page.unwrap_or(0);
+    tauri::async_runtime::spawn_blocking(move || browse_skills(&view, page))
+        .await
+        .map_err(|e| format!("explore task failed: {e}"))?
 }
 
 #[tauri::command]

@@ -44,6 +44,31 @@ pub struct SkillSearchResult {
     pub url: String,
 }
 
+/// Result from the skills.sh leaderboard browse API (`/api/skills/{view}/{page}`).
+#[derive(Serialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillExploreResult {
+    pub id: String,
+    pub name: String,
+    pub source: String,
+    pub installs: u64,
+    pub package: String,
+    pub url: String,
+    pub installs_yesterday: Option<u64>,
+    pub change: Option<i64>,
+    pub is_official: bool,
+}
+
+#[derive(Serialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ExplorePage {
+    pub skills: Vec<SkillExploreResult>,
+    pub total: u64,
+    pub has_more: bool,
+    pub page: u32,
+    pub view: String,
+}
+
 #[derive(Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SkillInstallResult {
@@ -72,6 +97,34 @@ pub(crate) struct SearchApiSkill {
     pub source: String,
     #[serde(default)]
     pub installs: u64,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct ExploreApiResponse {
+    #[serde(default)]
+    pub skills: Vec<ExploreApiSkill>,
+    #[serde(default)]
+    pub total: u64,
+    #[serde(default)]
+    pub has_more: bool,
+    pub page: Option<u32>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct ExploreApiSkill {
+    #[serde(default)]
+    pub source: String,
+    #[serde(default)]
+    pub skill_id: String,
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub installs: u64,
+    pub installs_yesterday: Option<u64>,
+    pub change: Option<i64>,
+    pub is_official: Option<bool>,
 }
 
 #[derive(Deserialize)]
