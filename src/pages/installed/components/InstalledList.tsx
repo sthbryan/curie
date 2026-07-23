@@ -110,119 +110,122 @@ export function InstalledList() {
 
   const listKey = `${agentFilter.value ?? "all"}:${query.value}:${updatesOnly.value ? "up" : "all"}:${sortKey.value}:${sortDir.value}`;
 
-  const columns: ColumnDef<SkillInfo>[] = [
-    {
-      key: "name",
-      header: t(lang.value, "installed.colName"),
-      sortable: true,
-      cellClassName: "min-w-0 flex flex-col gap-1",
-      cell: (skill) => (
-        <>
-          <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
-          <span className="font-mono uppercase tracking-label text-micro text-fg-4 truncate">
-            {skill.scope}
-          </span>
-        </>
-      ),
-    },
-    {
-      key: "source",
-      header: t(lang.value, "installed.colSource"),
-      sortable: true,
-      cellClassName: "min-w-0 flex flex-col gap-1",
-      cell: (skill) => (
-        <>
-          <span className="font-mono text-mono text-fg-2 truncate">
-            {skill.source ?? t(lang.value, "installed.local")}
-          </span>
-          <span className="font-mono text-micro text-fg-4 truncate" title={skill.path}>
-            {skill.path}
-          </span>
-        </>
-      ),
-    },
-    {
-      key: "agents",
-      header: t(lang.value, "installed.colAgents"),
-      sortable: true,
-      cellClassName: "min-w-0 flex flex-wrap gap-1.5",
-      cell: (skill) =>
-        skill.agents.length === 0 ? (
-          <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-            {t(lang.value, "installed.noAgents")}
-          </span>
-        ) : (
-          skill.agents.map((agent) => <AgentBadge key={`${skill.name}-${agent}`} label={agent} />)
-        ),
-    },
-    {
-      key: "updated",
-      header: t(lang.value, "installed.colWhen"),
-      sortable: true,
-      headerClassName: "text-right",
-      cellClassName: "text-right",
-      cell: (skill) => {
-        const when = skillTimestamp(skill);
-        const isUpdate = updateNames.has(skill.name);
-        return (
-          <span
-            className={cn(
-              "font-mono uppercase tracking-label text-micro",
-              isUpdate ? "text-accent" : "text-fg-4",
-            )}
-          >
-            {when ? formatRelative(when) : "—"}
-          </span>
-        );
-      },
-    },
-    {
-      key: "actions",
-      header: t(lang.value, "installed.colActions"),
-      headerClassName: "text-right",
-      cellClassName: "flex h-7 items-center justify-end gap-1",
-      cell: (skill) => {
-        const updating = updatingSkill.value === skill.name || updatingSkill.value === "*";
-        const removing = removingSkill.value === skill.name || removingSkill.value === "*";
-        const isBusy = updating || removing;
-        return (
+  const columns = useMemo(
+    (): ColumnDef<SkillInfo>[] => [
+      {
+        key: "name",
+        header: t(lang.value, "installed.colName"),
+        sortable: true,
+        cellClassName: "min-w-0 flex flex-col gap-1",
+        cell: (skill) => (
           <>
-            {isBusy ? (
-              <ActionProgress
-                active
-                labelKey={updating ? "installed.updatingOne" : "installed.removing"}
-              />
-            ) : (
-              <>
-                {updateNames.has(skill.name) ? (
+            <span className="font-mono text-mono text-fg truncate">{skill.name}</span>
+            <span className="font-mono uppercase tracking-label text-micro text-fg-4 truncate">
+              {skill.scope}
+            </span>
+          </>
+        ),
+      },
+      {
+        key: "source",
+        header: t(lang.value, "installed.colSource"),
+        sortable: true,
+        cellClassName: "min-w-0 flex flex-col gap-1",
+        cell: (skill) => (
+          <>
+            <span className="font-mono text-mono text-fg-2 truncate">
+              {skill.source ?? t(lang.value, "installed.local")}
+            </span>
+            <span className="font-mono text-micro text-fg-4 truncate" title={skill.path}>
+              {skill.path}
+            </span>
+          </>
+        ),
+      },
+      {
+        key: "agents",
+        header: t(lang.value, "installed.colAgents"),
+        sortable: true,
+        cellClassName: "min-w-0 flex flex-wrap gap-1.5",
+        cell: (skill) =>
+          skill.agents.length === 0 ? (
+            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
+              {t(lang.value, "installed.noAgents")}
+            </span>
+          ) : (
+            skill.agents.map((agent) => <AgentBadge key={`${skill.name}-${agent}`} label={agent} />)
+          ),
+      },
+      {
+        key: "updated",
+        header: t(lang.value, "installed.colWhen"),
+        sortable: true,
+        headerClassName: "text-right",
+        cellClassName: "text-right",
+        cell: (skill) => {
+          const when = skillTimestamp(skill);
+          const isUpdate = updateNames.has(skill.name);
+          return (
+            <span
+              className={cn(
+                "font-mono uppercase tracking-label text-micro",
+                isUpdate ? "text-accent" : "text-fg-4",
+              )}
+            >
+              {when ? formatRelative(when) : "—"}
+            </span>
+          );
+        },
+      },
+      {
+        key: "actions",
+        header: t(lang.value, "installed.colActions"),
+        headerClassName: "text-right",
+        cellClassName: "flex h-7 items-center justify-end gap-1",
+        cell: (skill) => {
+          const updating = updatingSkill.value === skill.name || updatingSkill.value === "*";
+          const removing = removingSkill.value === skill.name || removingSkill.value === "*";
+          const isBusy = updating || removing;
+          return (
+            <>
+              {isBusy ? (
+                <ActionProgress
+                  active
+                  labelKey={updating ? "installed.updatingOne" : "installed.removing"}
+                />
+              ) : (
+                <>
+                  {updateNames.has(skill.name) ? (
+                    <IconButton
+                      variant="accent"
+                      size="sm"
+                      label={t(lang.value, "installed.updateOne")}
+                      onClick={() => onUpdate(skill.name)}
+                      disabled={actionBusy}
+                    >
+                      <ArrowUp size={14} />
+                    </IconButton>
+                  ) : (
+                    <span className="inline-block h-7 w-7 shrink-0" aria-hidden />
+                  )}
                   <IconButton
-                    variant="accent"
+                    variant="danger"
                     size="sm"
-                    label={t(lang.value, "installed.updateOne")}
-                    onClick={() => onUpdate(skill.name)}
+                    label={t(lang.value, "installed.remove")}
+                    onClick={() => setConfirmRemove(skill.name)}
                     disabled={actionBusy}
                   >
-                    <ArrowUp size={14} />
+                    <X size={13} />
                   </IconButton>
-                ) : (
-                  <span className="inline-block h-7 w-7 shrink-0" aria-hidden />
-                )}
-                <IconButton
-                  variant="danger"
-                  size="sm"
-                  label={t(lang.value, "installed.remove")}
-                  onClick={() => setConfirmRemove(skill.name)}
-                  disabled={actionBusy}
-                >
-                  <X size={13} />
-                </IconButton>
-              </>
-            )}
-          </>
-        );
+                </>
+              )}
+            </>
+          );
+        },
       },
-    },
-  ];
+    ],
+    [lang.value, updateNames, actionBusy, onUpdate, onRemove],
+  );
 
   return (
     <section className="flex flex-col">
