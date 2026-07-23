@@ -106,7 +106,7 @@ describe("Explore", () => {
   });
 
   it("switches the view when a view button is clicked", async () => {
-    invokeMock.mockImplementation((cmd, args) => {
+    invokeMock.mockImplementation((_cmd, args) => {
       const view = (args as { view?: string })?.view ?? "hot";
       return Promise.resolve(page({ view: view as ExplorePage["view"] }));
     });

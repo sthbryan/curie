@@ -4,7 +4,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
-import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
+import type { SkillInfo } from "@/components/types";
 import { useSkillsStore } from "@/store/skills";
 import { useUiStore } from "@/store/ui";
 
