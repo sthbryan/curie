@@ -228,6 +228,9 @@
     "removed": "Removed {name}",
     "updated": "Updated",
     "updates": "{n} updates available",
-    "noUpdates": "All skills are up to date"
+    "noUpdates": "All skills are up to date",
+    "nodeInstalled": "Node installed",
+    "setupComplete": "Setup complete",
+    "refreshed": "Skills refreshed"
   }
 }

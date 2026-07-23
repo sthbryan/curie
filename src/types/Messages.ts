@@ -229,5 +229,8 @@ export type Messages = {
     updated: string;
     updates: string;
     noUpdates: string;
+    nodeInstalled: string;
+    setupComplete: string;
+    refreshed: string;
   };
 };
