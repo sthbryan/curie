@@ -1,5 +1,6 @@
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { type ReactNode, useEffect } from "react";
+import { Route, Switch, useLocation } from "wouter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ErrorFallback } from "./components/ErrorFallback";
 import { Header } from "./components/Header";
@@ -15,10 +16,34 @@ import { Settings } from "./pages/settings";
 import { Setup } from "./pages/setup";
 import { useAppStore } from "./store/app";
 
+function RoutedPages() {
+  const [location] = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location}
+        className="flex min-h-0 min-w-0 flex-1 flex-col"
+        initial={pageTransition.initial}
+        animate={pageTransition.animate}
+        exit={pageTransition.exit}
+        transition={pageTransition.transition}
+      >
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/installed" component={Installed} />
+          <Route path="/find" component={Find} />
+          <Route path="/settings" component={Settings} />
+          <Route path="/marketplace">
+            <Placeholder view="marketplace" />
+          </Route>
+        </Switch>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 function MainContent() {
   const stage = useAppStore((s) => s.stage);
-  const view = useAppStore((s) => s.view);
-  const setView = useAppStore((s) => s.setView);
   const completeSetup = useAppStore((s) => s.completeSetup);
 
   let content: ReactNode;
@@ -36,29 +61,23 @@ function MainContent() {
   } else if (stage === "setup") {
     key = "setup";
     content = <Setup onComplete={completeSetup} />;
-  } else if (view === "home") {
-    key = "home";
-    content = <Home />;
-  } else if (view === "installed") {
-    key = "installed";
-    content = <Installed />;
-  } else if (view === "search") {
-    key = "search";
-    content = <Find />;
-  } else if (view === "settings") {
-    key = "settings";
-    content = <Settings />;
   } else {
-    key = view;
-    content = <Placeholder view={view} />;
+    return (
+      <ErrorBoundary
+        resetKeys={[stage]}
+        fallback={({ error, reset }) => (
+          <ErrorFallback error={error} reset={reset} variant="page" onHome={() => history.back()} />
+        )}
+      >
+        <RoutedPages />
+      </ErrorBoundary>
+    );
   }
 
   return (
     <ErrorBoundary
-      resetKeys={[stage, view]}
-      fallback={({ error, reset }) => (
-        <ErrorFallback error={error} reset={reset} variant="page" onHome={() => setView("home")} />
-      )}
+      resetKeys={[stage]}
+      fallback={({ error, reset }) => <ErrorFallback error={error} reset={reset} variant="page" />}
     >
       <AnimatePresence mode="wait">
         <motion.div
