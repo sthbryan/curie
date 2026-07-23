@@ -19,34 +19,20 @@ const DEBOUNCE_MS = 280;
 export function Find() {
   const lang = useUiStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
-  const {
-    findQuery,
-    findOwner,
-    findResults,
-    findLoading,
-    findError,
-    installingPackage,
-    installError,
-    setInstallError,
-    setFindQuery,
-    setFindOwner,
-  } = useFindStore(
-    useShallow((s) => ({
-      findQuery: s.findQuery,
-      findOwner: s.findOwner,
-      findResults: s.findResults,
-      findLoading: s.findLoading,
-      findError: s.findError,
-      installingPackage: s.installingPackage,
-      installError: s.installError,
-      setInstallError: s.setInstallError,
-      setFindQuery: s.setFindQuery,
-      setFindOwner: s.setFindOwner,
-    })),
-  );
+  const { findResults, findLoading, findError, installingPackage, installError, setInstallError } =
+    useFindStore(
+      useShallow((s) => ({
+        findResults: s.findResults,
+        findLoading: s.findLoading,
+        findError: s.findError,
+        installingPackage: s.installingPackage,
+        installError: s.installError,
+        setInstallError: s.setInstallError,
+      })),
+    );
 
-  const [query, setQuery] = useState(findQuery);
-  const [owner, setOwner] = useState(findOwner);
+  const [query, setQuery] = useState("");
+  const [owner, setOwner] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const installBusy = installingPackage !== null;
 
@@ -130,7 +116,6 @@ export function Find() {
                 value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
-                  setFindQuery(e.target.value);
                 }}
                 placeholder={t(lang, "find.queryPlaceholder")}
                 className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
@@ -143,7 +128,6 @@ export function Find() {
                 value={owner}
                 onChange={(e) => {
                   setOwner(e.target.value);
-                  setFindOwner(e.target.value);
                 }}
                 placeholder={t(lang, "find.ownerPlaceholder")}
                 spellCheck={false}

@@ -23,11 +23,7 @@ let findRequestId = 0;
 export async function findSkills(query: string, owner?: string) {
   const q = query.trim();
   const o = owner?.trim() || null;
-  const { setFindQuery, setFindOwner, setFindResults, setFindLoading, setFindError } =
-    useFindStore.getState();
-
-  setFindQuery(query);
-  if (owner !== undefined) setFindOwner(owner);
+  const { setFindResults, setFindLoading, setFindError } = useFindStore.getState();
 
   if (q.length < 2) {
     findRequestId += 1;
