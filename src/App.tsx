@@ -15,7 +15,7 @@ import { Home } from "./pages/home";
 import { Installed } from "./pages/installed";
 import { Settings } from "./pages/settings";
 import { Setup } from "./pages/setup";
-import { useAppStore } from "./store/app";
+import { useUiStore } from "./store/ui";
 
 function RoutedPages() {
   const [location] = useLocation();
@@ -44,9 +44,9 @@ function RoutedPages() {
 }
 
 function MainContent() {
-  const stage = useAppStore((s) => s.stage);
-  const lang = useAppStore((s) => s.lang);
-  const completeSetup = useAppStore((s) => s.completeSetup);
+  const stage = useUiStore((s) => s.stage);
+  const lang = useUiStore((s) => s.lang);
+  const completeSetup = useUiStore((s) => s.completeSetup);
 
   let content: ReactNode;
   let key: string;
@@ -92,7 +92,7 @@ function MainContent() {
 }
 
 function AppShell() {
-  const stage = useAppStore((s) => s.stage);
+  const stage = useUiStore((s) => s.stage);
   const ready = stage === "home";
 
   return (
@@ -110,9 +110,9 @@ function AppShell() {
 function App() {
   useBoot();
 
-  const theme = useAppStore((s) => s.theme);
-  const lang = useAppStore((s) => s.lang);
-  const reducedMotion = useAppStore((s) => s.reducedMotion);
+  const theme = useUiStore((s) => s.theme);
+  const lang = useUiStore((s) => s.lang);
+  const reducedMotion = useUiStore((s) => s.reducedMotion);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
