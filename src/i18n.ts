@@ -99,6 +99,8 @@ export type Messages = {
     updateError: string;
     remove: string;
     removing: string;
+    removeTitle: string;
+    removeBody: string;
     removeConfirm: string;
     removeCancel: string;
     removeError: string;
