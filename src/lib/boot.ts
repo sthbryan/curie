@@ -44,7 +44,7 @@ export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
 /** Update one skill, or all outdated globals when `names` is omitted/empty. */
 export async function updateSkills(names?: string[]) {
   const { setUpdatingSkill, setUpdateApplyError } = useAppStore.getState();
-  const token = names && names.length === 1 ? names[0]! : "*";
+  const token = names?.length === 1 ? (names[0] ?? "*") : "*";
   setUpdatingSkill(token);
   setUpdateApplyError(null);
   try {
