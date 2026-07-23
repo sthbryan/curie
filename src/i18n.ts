@@ -115,6 +115,11 @@ export type Messages = {
     themeDawn: string;
     themeDawnHint: string;
     themeDesc: string;
+    reducedMotion: string;
+    reducedMotionSystem: string;
+    reducedMotionTrue: string;
+    reducedMotionFalse: string;
+    reducedMotionDesc: string;
     system: string;
     nodeVersion: string;
     nodeManager: string;
