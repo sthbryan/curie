@@ -119,6 +119,7 @@ export function SkillRow({
               <When condition={updateAvailable}>
                 <IconButton
                   variant="accent"
+                  size="sm"
                   label={t(lang, "installed.updateOne")}
                   onClick={() => onUpdate?.(skill.name)}
                   disabled={actionBusy}
@@ -131,6 +132,7 @@ export function SkillRow({
               </When>
               <IconButton
                 variant="danger"
+                size="sm"
                 label={t(lang, "installed.remove")}
                 onClick={() => setConfirmRemove(true)}
                 disabled={actionBusy}
