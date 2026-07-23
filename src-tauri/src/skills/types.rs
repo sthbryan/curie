@@ -31,6 +31,42 @@ pub struct SkillUpdateResult {
     pub message: String,
 }
 
+/// Result from the skills.sh search API (same source as `npx skills find`).
+#[derive(Serialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillSearchResult {
+    pub id: String,
+    pub name: String,
+    pub source: String,
+    pub installs: u64,
+    /// Install package for the CLI: `owner/repo@skill`.
+    pub package: String,
+    pub url: String,
+}
+
+#[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillInstallResult {
+    pub package: String,
+    pub message: String,
+}
+
+#[derive(Deserialize)]
+pub(crate) struct SearchApiResponse {
+    #[serde(default)]
+    pub skills: Vec<SearchApiSkill>,
+}
+
+#[derive(Deserialize)]
+pub(crate) struct SearchApiSkill {
+    pub id: String,
+    pub name: String,
+    #[serde(default)]
+    pub source: String,
+    #[serde(default)]
+    pub installs: u64,
+}
+
 #[derive(Deserialize)]
 pub(crate) struct CliSkill {
     pub name: String,

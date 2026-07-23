@@ -1,13 +1,19 @@
+mod add;
 mod check;
+mod find;
 mod list;
 mod lock;
 mod npx;
 mod types;
 mod update;
 
+pub use add::add_global_skill;
 pub use check::check_global_skill_updates;
+pub use find::find_skills as search_skills;
 pub use list::list_global_skills;
-pub use types::{SkillInfo, SkillUpdateInfo, SkillUpdateResult};
+pub use types::{
+    SkillInfo, SkillInstallResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
+};
 pub use update::update_global_skills;
 
 #[tauri::command]
@@ -27,4 +33,23 @@ pub async fn update_skills(skills: Option<Vec<String>>) -> Result<SkillUpdateRes
     tauri::async_runtime::spawn_blocking(move || update_global_skills(skills))
         .await
         .map_err(|e| format!("update task failed: {e}"))?
+}
+
+#[tauri::command]
+pub async fn find_skills(
+    query: String,
+    owner: Option<String>,
+) -> Result<Vec<SkillSearchResult>, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        search_skills(&query, owner.as_deref())
+    })
+    .await
+    .map_err(|e| format!("find task failed: {e}"))?
+}
+
+#[tauri::command]
+pub async fn add_skill(package: String) -> Result<SkillInstallResult, String> {
+    tauri::async_runtime::spawn_blocking(move || add_global_skill(&package))
+        .await
+        .map_err(|e| format!("add task failed: {e}"))?
 }

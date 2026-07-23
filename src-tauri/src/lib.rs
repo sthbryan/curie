@@ -3,7 +3,8 @@ mod skills;
 
 pub use node::{detect_node_info, install_node_impl, NodeInfo};
 pub use skills::{
-    check_global_skill_updates, list_global_skills, SkillInfo, SkillUpdateInfo, SkillUpdateResult,
+    check_global_skill_updates, list_global_skills, SkillInfo, SkillInstallResult,
+    SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
 
 #[tauri::command]
@@ -21,7 +22,9 @@ pub fn run() {
             node::install_node,
             skills::list_skills,
             skills::check_skill_updates,
-            skills::update_skills
+            skills::update_skills,
+            skills::find_skills,
+            skills::add_skill,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
