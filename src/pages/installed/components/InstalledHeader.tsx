@@ -21,7 +21,7 @@ import {
 } from "../store/store";
 
 export function InstalledHeader() {
-  const t = useT();
+  const t = useT("installed");
   const updateNames = useMemo(() => updateNameSet(skillUpdates.value), [skillUpdates.value]);
   const actionBusy = updatingSkill.value !== null || removingSkill.value !== null;
   const updatingAll = updatingSkill.value === "*";
@@ -42,15 +42,13 @@ export function InstalledHeader() {
     <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-6">
         <div className="flex flex-col gap-3">
-          <Label>{t("installed.eyebrow")}</Label>
+          <Label>{t("eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-            {t("installed.title")}
+            {t("title")}
           </h2>
           <p className="font-body text-sm text-fg-3 max-w-lg">
-            {t("installed.subtitle", { n: skills.value.length })}
-            {updateNames.size > 0
-              ? ` · ${t("installed.updatesHint", { n: updateNames.size })}`
-              : ""}
+            {t("subtitle", { n: skills.value.length })}
+            {updateNames.size > 0 ? ` · ${t("updatesHint", { n: updateNames.size })}` : ""}
           </p>
         </div>
 
@@ -65,8 +63,8 @@ export function InstalledHeader() {
             >
               <CircleFadingArrowUp size={14} />
               <If condition={updatingAll}>
-                <Then>{t("installed.updatingAll")}</Then>
-                <Else>{t("installed.updateAll")}</Else>
+                <Then>{t("updatingAll")}</Then>
+                <Else>{t("updateAll")}</Else>
               </If>
             </Button>
           </When>
@@ -81,13 +79,13 @@ export function InstalledHeader() {
               className={cn({ "animate-spin": skillsLoading.value || updatesLoading.value })}
             />
             <If condition={skillsLoading.value || updatesLoading.value}>
-              <Then>{t("installed.refreshing")}</Then>
-              <Else>{t("installed.refresh")}</Else>
+              <Then>{t("refreshing")}</Then>
+              <Else>{t("refresh")}</Else>
             </If>
           </Button>
           <Button size="sm" variant="primary" onClick={onInstall}>
             <Plus size={14} />
-            {t("installed.install")}
+            {t("install")}
           </Button>
         </div>
       </div>
@@ -97,8 +95,8 @@ export function InstalledHeader() {
           <div className="min-w-0 flex flex-col gap-1">
             <span className="font-mono uppercase tracking-label text-micro text-accent">
               <If condition={Boolean(updateApplyError.value)}>
-                <Then>{t("installed.updateError")}</Then>
-                <Else>{t("installed.removeError")}</Else>
+                <Then>{t("updateError")}</Then>
+                <Else>{t("removeError")}</Else>
               </If>
             </span>
             <p className="font-body text-sm text-fg-3 break-all">

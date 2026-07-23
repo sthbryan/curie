@@ -69,7 +69,7 @@ function sortSkills(
 }
 
 export function InstalledList() {
-  const t = useT();
+  const t = useT("installed");
   const updateNames = useMemo(() => updateNameSet(skillUpdates.value), [skillUpdates.value]);
   const filtered = useMemo(
     () =>
@@ -114,7 +114,7 @@ export function InstalledList() {
     (): ColumnDef<SkillInfo>[] => [
       {
         key: "name",
-        header: t("installed.colName"),
+        header: t("colName"),
         sortable: true,
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (skill) => (
@@ -128,13 +128,13 @@ export function InstalledList() {
       },
       {
         key: "source",
-        header: t("installed.colSource"),
+        header: t("colSource"),
         sortable: true,
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (skill) => (
           <>
             <span className="font-mono text-mono text-fg-2 truncate">
-              {skill.source ?? t("installed.local")}
+              {skill.source ?? t("local")}
             </span>
             <span className="font-mono text-micro text-fg-4 truncate" title={skill.path}>
               {skill.path}
@@ -144,13 +144,13 @@ export function InstalledList() {
       },
       {
         key: "agents",
-        header: t("installed.colAgents"),
+        header: t("colAgents"),
         sortable: true,
         cellClassName: "min-w-0 flex flex-wrap gap-1.5",
         cell: (skill) =>
           skill.agents.length === 0 ? (
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t("installed.noAgents")}
+              {t("noAgents")}
             </span>
           ) : (
             skill.agents.map((agent) => <AgentBadge key={`${skill.name}-${agent}`} label={agent} />)
@@ -158,7 +158,7 @@ export function InstalledList() {
       },
       {
         key: "updated",
-        header: t("installed.colWhen"),
+        header: t("colWhen"),
         sortable: true,
         headerClassName: "text-right",
         cellClassName: "text-right",
@@ -179,7 +179,7 @@ export function InstalledList() {
       },
       {
         key: "actions",
-        header: t("installed.colActions"),
+        header: t("colActions"),
         headerClassName: "text-right",
         cellClassName: "flex h-7 items-center justify-end gap-1",
         cell: (skill) => {
@@ -199,7 +199,7 @@ export function InstalledList() {
                     <IconButton
                       variant="accent"
                       size="sm"
-                      label={t("installed.updateOne")}
+                      label={t("updateOne")}
                       onClick={() => onUpdate(skill.name)}
                       disabled={actionBusy}
                     >
@@ -211,7 +211,7 @@ export function InstalledList() {
                   <IconButton
                     variant="danger"
                     size="sm"
-                    label={t("installed.remove")}
+                    label={t("remove")}
                     onClick={() => setConfirmRemove(skill.name)}
                     disabled={actionBusy}
                   >
@@ -235,18 +235,18 @@ export function InstalledList() {
             {...fadeUp(0.08)}
             className="flex flex-col gap-4 border border-border-strong bg-surface-tint px-5 py-8"
           >
-            <span className="font-body text-sm text-fg">{t("installed.empty")}</span>
-            <p className="font-body text-sm text-fg-3">{t("installed.emptyHint")}</p>
+            <span className="font-body text-sm text-fg">{t("empty")}</span>
+            <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
             <div>
               <Button size="lg" variant="primary" onClick={onInstall}>
-                {t("installed.install")}
+                {t("install")}
               </Button>
             </div>
           </motion.div>
         </Case>
         <Case condition={sorted.length === 0}>
           <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
-            <p className="font-body text-sm text-fg-3">{t("installed.noMatches")}</p>
+            <p className="font-body text-sm text-fg-3">{t("noMatches")}</p>
           </motion.div>
         </Case>
         <Default>
@@ -265,13 +265,13 @@ export function InstalledList() {
 
       <ConfirmDialog
         open={confirmRemove !== null}
-        title={t("installed.removeTitle")}
-        description={t("installed.removeBody")}
+        title={t("removeTitle")}
+        description={t("removeBody")}
         detail={confirmRemove ?? undefined}
-        confirmLabel={t("installed.removeConfirm")}
-        cancelLabel={t("installed.removeCancel")}
+        confirmLabel={t("removeConfirm")}
+        cancelLabel={t("removeCancel")}
         busy={removingSkill.value !== null}
-        busyLabel={t("installed.removing")}
+        busyLabel={t("removing")}
         onCancel={() => {
           if (!removingSkill.value) setConfirmRemove(null);
         }}

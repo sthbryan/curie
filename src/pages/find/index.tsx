@@ -13,7 +13,7 @@ import { useFindActions } from "./hooks/useFindActions";
 const DEBOUNCE_MS = 280;
 
 export function Find() {
-  const t = useT();
+  const t = useT("find");
   const {
     results: findResults,
     loading: findLoading,
@@ -60,20 +60,20 @@ export function Find() {
   const showEmpty = !showHint && !findLoading && !findError && findResults.length === 0;
   const showResults = !showHint && !findLoading && findResults.length > 0;
 
-  let statusLabel = t("find.packageHint");
-  if (findLoading) statusLabel = t("find.searching");
-  else if (showResults) statusLabel = t("find.results", { n: findResults.length });
+  let statusLabel = t("packageHint");
+  if (findLoading) statusLabel = t("searching");
+  else if (showResults) statusLabel = t("results", { n: findResults.length });
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
         <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3">
-            <Label>{t("find.eyebrow")}</Label>
+            <Label>{t("eyebrow")}</Label>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-              {t("find.title")}
+              {t("title")}
             </h2>
-            <p className="font-body text-sm text-fg-3 max-w-lg">{t("find.subtitle")}</p>
+            <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
           </div>
 
           <When condition={Boolean(findError || installError)}>
@@ -81,8 +81,8 @@ export function Find() {
               <div className="min-w-0 flex flex-col gap-1">
                 <span className="font-mono uppercase tracking-label text-micro text-accent">
                   <If condition={Boolean(findError)}>
-                    <Then>{t("find.error")}</Then>
-                    <Else>{t("find.installError")}</Else>
+                    <Then>{t("error")}</Then>
+                    <Else>{t("installError")}</Else>
                   </If>
                 </span>
                 <p className="font-body text-sm text-fg-3 break-all">{findError ?? installError}</p>
@@ -105,7 +105,7 @@ export function Find() {
         <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <label className="relative flex min-w-0 flex-1">
-              <span className="sr-only">{t("find.query")}</span>
+              <span className="sr-only">{t("query")}</span>
               <input
                 ref={inputRef}
                 type="search"
@@ -113,19 +113,19 @@ export function Find() {
                 onChange={(e) => {
                   setQuery(e.target.value);
                 }}
-                placeholder={t("find.queryPlaceholder")}
+                placeholder={t("queryPlaceholder")}
                 className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
               />
             </label>
             <label className="relative flex w-full sm:w-48 shrink-0">
-              <span className="sr-only">{t("find.owner")}</span>
+              <span className="sr-only">{t("owner")}</span>
               <input
                 type="text"
                 value={owner}
                 onChange={(e) => {
                   setOwner(e.target.value);
                 }}
-                placeholder={t("find.ownerPlaceholder")}
+                placeholder={t("ownerPlaceholder")}
                 spellCheck={false}
                 className="h-10 w-full border border-border-strong bg-bg px-3 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm"
               />
@@ -140,8 +140,8 @@ export function Find() {
               disabled={findLoading || qLen < 2}
             >
               <If condition={findLoading}>
-                <Then>{t("find.searching")}</Then>
-                <Else>{t("find.search")}</Else>
+                <Then>{t("searching")}</Then>
+                <Else>{t("search")}</Else>
               </If>
             </Button>
           </div>

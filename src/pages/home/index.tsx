@@ -24,7 +24,7 @@ import { Stat } from "./components/Stat";
 import { UpdateRow } from "./components/UpdateRow";
 
 export function Home() {
-  const t = useT();
+  const t = useT("home");
   const [, navigate] = useLocation();
   const { skills, skillsLoading, skillsError, skillUpdates, updatesLoading, updatesError } =
     skillsStore;
@@ -73,7 +73,7 @@ export function Home() {
                 totalSkills > 0 ? "bg-success" : "bg-fg-4",
               )}
             />
-            <Label>{totalSkills > 0 ? t("home.status") : t("home.statusEmpty")}</Label>
+            <Label>{totalSkills > 0 ? t("status") : t("statusEmpty")}</Label>
           </motion.div>
 
           <motion.div
@@ -82,10 +82,10 @@ export function Home() {
             initial="initial"
             animate="animate"
           >
-            <Stat label={t("home.statSkills")} value={totalSkills} />
-            <Stat label={t("home.statTools")} value={activeAgents} />
+            <Stat label={t("statSkills")} value={totalSkills} />
+            <Stat label={t("statTools")} value={activeAgents} />
             <Stat
-              label={t("home.statUpdates")}
+              label={t("statUpdates")}
               value={updatesLoading.value && skillUpdates.value.length === 0 ? "…" : updateCount}
               isLast
             />
@@ -93,7 +93,7 @@ export function Home() {
 
           <When condition={totalSkills === 0}>
             <motion.p {...fadeUp(0.08)} className="font-body text-sm text-fg-3">
-              {t("home.skillsNone")}
+              {t("skillsNone")}
             </motion.p>
           </When>
         </motion.section>
@@ -106,13 +106,13 @@ export function Home() {
         >
           <motion.div variants={staggerItem} className="flex flex-col gap-5">
             <div className="flex items-baseline justify-between">
-              <Label>{t("home.aiTools")}</Label>
-              <Label className="text-micro">{t("home.active", { n: activeAgents })}</Label>
+              <Label>{t("aiTools")}</Label>
+              <Label className="text-micro">{t("active", { n: activeAgents })}</Label>
             </div>
             <If condition={agents.length === 0}>
               <Then>
                 <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
-                  {t("home.skillsNone")}
+                  {t("skillsNone")}
                 </p>
               </Then>
               <Else>
@@ -133,12 +133,12 @@ export function Home() {
           <motion.div variants={staggerItem} className="flex flex-col gap-8">
             <div className="flex flex-col gap-5">
               <div className="flex items-baseline justify-between gap-3">
-                <Label>{t("home.updates")}</Label>
+                <Label>{t("updates")}</Label>
                 <div className="flex items-center gap-3">
                   <span className="font-mono uppercase tracking-label text-micro text-fg-3">
                     <If condition={updatesLoading.value && skillUpdates.value.length === 0}>
-                      <Then>{t("home.updatesChecking")}</Then>
-                      <Else>{t("home.updatesAvailable", { n: updateCount })}</Else>
+                      <Then>{t("updatesChecking")}</Then>
+                      <Else>{t("updatesAvailable", { n: updateCount })}</Else>
                     </If>
                   </span>
                   <Button
@@ -154,8 +154,8 @@ export function Home() {
                       className={cn("transition-transform", updatesLoading.value && "animate-spin")}
                     />
                     <If condition={updatesLoading.value}>
-                      <Then>{t("home.updatesChecking")}</Then>
-                      <Else>{t("home.updatesCheck")}</Else>
+                      <Then>{t("updatesChecking")}</Then>
+                      <Else>{t("updatesCheck")}</Else>
                     </If>
                   </Button>
                 </div>
@@ -164,19 +164,19 @@ export function Home() {
               <Switch>
                 <Case condition={Boolean(updatesError.value)}>
                   <p className="font-body text-sm text-fg-3 py-3 border-t border-border break-all">
-                    {t("home.updatesError")}
+                    {t("updatesError")}
                   </p>
                 </Case>
                 <Case condition={updatesLoading.value && skillUpdates.value.length === 0}>
                   <p className="font-body text-sm text-fg-3 py-3 border-t border-border animate-pulse">
-                    {t("home.updatesChecking")}
+                    {t("updatesChecking")}
                   </p>
                 </Case>
                 <Case condition={updateCount === 0}>
                   <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
                     <If condition={totalSkills === 0}>
-                      <Then>{t("home.skillsNone")}</Then>
-                      <Else>{t("home.noUpdates")}</Else>
+                      <Then>{t("skillsNone")}</Then>
+                      <Else>{t("noUpdates")}</Else>
                     </If>
                   </p>
                 </Case>
@@ -197,13 +197,13 @@ export function Home() {
 
             <div className="flex flex-col gap-5">
               <div className="flex items-baseline justify-between">
-                <Label>{t("home.recent")}</Label>
-                <Label className="text-micro">{t("home.events", { n: recent.length })}</Label>
+                <Label>{t("recent")}</Label>
+                <Label className="text-micro">{t("events", { n: recent.length })}</Label>
               </div>
               <If condition={recent.length === 0}>
                 <Then>
                   <p className="font-body text-sm text-fg-3 py-3 border-t border-border">
-                    {t("home.noRecent")}
+                    {t("noRecent")}
                   </p>
                 </Then>
                 <Else>
@@ -226,7 +226,7 @@ export function Home() {
         <hr className="border-0 border-t border-border" />
 
         <motion.section {...fadeUp(0.12)} className="flex flex-col gap-5">
-          <Label>{t("home.actions")}</Label>
+          <Label>{t("actions")}</Label>
           <div className="flex gap-3">
             <Button
               size="hero"
@@ -234,7 +234,7 @@ export function Home() {
               className="flex-1 justify-between"
               onClick={() => navigate("/find")}
             >
-              <span>{t("home.install")}</span>
+              <span>{t("install")}</span>
               <span>→</span>
             </Button>
             <Button
@@ -243,7 +243,7 @@ export function Home() {
               className="px-6 font-bold text-fg"
               onClick={() => navigate("/marketplace")}
             >
-              {t("home.exploreBtn")}
+              {t("exploreBtn")}
             </Button>
             <Button
               size="hero"
@@ -251,7 +251,7 @@ export function Home() {
               className="px-6"
               onClick={() => navigate("/installed")}
             >
-              {t("home.viewSkills")}
+              {t("viewSkills")}
             </Button>
           </div>
         </motion.section>

@@ -10,9 +10,10 @@ const messages: Record<Lang, Messages> = {
   es: es as Messages,
 };
 
-export function useT() {
+export function useT(ns?: string) {
   const l = lang.value;
-  return (key: string, vars?: Record<string, string | number>): string => t(l, key, vars);
+  return (key: string, vars?: Record<string, string | number>): string =>
+    t(l, ns ? `${ns}.${key}` : key, vars);
 }
 
 export function detectLang(locale: string): Lang {

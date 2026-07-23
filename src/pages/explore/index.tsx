@@ -16,7 +16,7 @@ import { useExploreActions } from "./hooks/useExploreActions";
 const VIEWS: ExploreView[] = ["hot", "trending", "all-time"];
 
 export function Explore() {
-  const t = useT();
+  const t = useT("explore");
   const [, navigate] = useLocation();
   const {
     skills: exploreSkills,
@@ -50,10 +50,10 @@ export function Explore() {
   const installBusy = installingPackage !== null;
   const showEmpty = !loading && !error && exploreSkills.length === 0;
 
-  let statusLabel = t("explore.packageHint");
-  if (loading) statusLabel = t("explore.loading");
+  let statusLabel = t("packageHint");
+  if (loading) statusLabel = t("loading");
   else if (exploreSkills.length > 0) {
-    statusLabel = t("explore.showing", {
+    statusLabel = t("showing", {
       n: exploreSkills.length,
       total: total || exploreSkills.length,
     });
@@ -70,17 +70,17 @@ export function Explore() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
         <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-3">
-            <Label>{t("explore.eyebrow")}</Label>
+            <Label>{t("eyebrow")}</Label>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="flex flex-col gap-2 min-w-0">
                 <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-                  {t("explore.title")}
+                  {t("title")}
                 </h2>
-                <p className="font-body text-sm text-fg-3 max-w-lg">{t("explore.subtitle")}</p>
+                <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button size="sm" variant="outline" onClick={() => navigate("/find")}>
-                  {t("explore.goFind")}
+                  {t("goFind")}
                 </Button>
                 <Button
                   size="sm"
@@ -89,7 +89,7 @@ export function Explore() {
                     void openUrl("https://skills.sh");
                   }}
                 >
-                  {t("explore.openSite")}
+                  {t("openSite")}
                 </Button>
               </div>
             </div>
@@ -100,8 +100,8 @@ export function Explore() {
               <div className="min-w-0 flex flex-col gap-1">
                 <span className="font-mono uppercase tracking-label text-micro text-accent">
                   <If condition={Boolean(error)}>
-                    <Then>{t("explore.error")}</Then>
-                    <Else>{t("explore.installError")}</Else>
+                    <Then>{t("error")}</Then>
+                    <Else>{t("installError")}</Else>
                   </If>
                 </span>
                 <p className="font-body text-sm text-fg-3 break-all">{error ?? installError}</p>
@@ -133,7 +133,7 @@ export function Explore() {
                   onClick={() => setView(v)}
                   disabled={loading && view === v}
                 >
-                  {t(`explore.view.${v === "all-time" ? "allTime" : v}`)}
+                  {t(`view.${v === "all-time" ? "allTime" : v}`)}
                 </Button>
               ))}
             </div>
@@ -142,7 +142,7 @@ export function Explore() {
                 {statusLabel}
               </span>
               <Button size="sm" variant="ghost" onClick={() => void load(view)} disabled={loading}>
-                {loading ? t("explore.refreshing") : t("explore.refresh")}
+                {loading ? t("refreshing") : t("refresh")}
               </Button>
             </div>
           </div>

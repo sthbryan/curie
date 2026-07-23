@@ -28,9 +28,9 @@ type Props = {
 };
 
 function installsColumnKey(view: ExploreView): string {
-  if (view === "hot") return "explore.colToday";
-  if (view === "trending") return "explore.colTrend";
-  return "explore.colInstalls";
+  if (view === "hot") return "colToday";
+  if (view === "trending") return "colTrend";
+  return "colInstalls";
 }
 
 function formatChange(change: number | null): string | null {
@@ -56,7 +56,7 @@ export function ExploreList({
   onInstall,
   onLoadMore,
 }: Props) {
-  const t = useT();
+  const t = useT("explore");
   const columns = useMemo(
     (): ColumnDef<SkillExploreResult>[] => [
       {
@@ -72,7 +72,7 @@ export function ExploreList({
       },
       {
         key: "name",
-        header: t("explore.colName"),
+        header: t("colName"),
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (result) => (
           <>
@@ -83,7 +83,7 @@ export function ExploreList({
       },
       {
         key: "source",
-        header: t("explore.colSource"),
+        header: t("colSource"),
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (result) => (
           <>
@@ -93,7 +93,7 @@ export function ExploreList({
               onClick={() => void openUrl(result.url)}
               className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
             >
-              {t("explore.open")}
+              {t("open")}
             </button>
           </>
         ),
@@ -130,7 +130,7 @@ export function ExploreList({
       },
       {
         key: "actions",
-        header: t("explore.colActions"),
+        header: t("colActions"),
         headerClassName: "text-right",
         cellClassName: "flex justify-end",
         cell: (result) => {
@@ -138,7 +138,7 @@ export function ExploreList({
           const installing = installingPackage === result.package;
           return installed ? (
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t("explore.installed")}
+              {t("installed")}
             </span>
           ) : installing ? (
             <ActionProgress active labelKey="explore.installing" />
@@ -149,7 +149,7 @@ export function ExploreList({
               onClick={() => onInstall(result.package)}
               disabled={installBusy}
             >
-              {t("explore.install")}
+              {t("install")}
             </Button>
           );
         },
@@ -176,8 +176,8 @@ export function ExploreList({
           {...fadeUp(0.08)}
           className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
         >
-          <span className="font-body text-sm text-fg">{t("explore.empty")}</span>
-          <p className="font-body text-sm text-fg-3">{t("explore.emptyHint")}</p>
+          <span className="font-body text-sm text-fg">{t("empty")}</span>
+          <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
         </motion.div>
       </Case>
 
@@ -197,7 +197,7 @@ export function ExploreList({
               onClick={onLoadMore}
               disabled={loadingMore || installBusy}
             >
-              {loadingMore ? t("explore.loadingMore") : t("explore.loadMore")}
+              {loadingMore ? t("loadingMore") : t("loadMore")}
             </Button>
           </div>
         ) : null}

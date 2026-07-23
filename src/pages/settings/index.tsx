@@ -16,29 +16,29 @@ import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
 
 const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
-  dark: { label: "settings.themeDark", hint: "settings.themeDarkHint" },
-  light: { label: "settings.themeLight", hint: "settings.themeLightHint" },
-  rose: { label: "settings.themeRose", hint: "settings.themeRoseHint" },
-  dawn: { label: "settings.themeDawn", hint: "settings.themeDawnHint" },
+  dark: { label: "themeDark", hint: "themeDarkHint" },
+  light: { label: "themeLight", hint: "themeLightHint" },
+  rose: { label: "themeRose", hint: "themeRoseHint" },
+  dawn: { label: "themeDawn", hint: "themeDawnHint" },
 };
 
 const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
-  user: "settings.reducedMotionSystem",
-  always: "settings.reducedMotionTrue",
-  never: "settings.reducedMotionFalse",
+  user: "reducedMotionSystem",
+  always: "reducedMotionTrue",
+  never: "reducedMotionFalse",
 };
 
 export function Settings() {
-  const t = useT();
+  const t = useT("settings");
   const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } = systemStore;
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-10 pt-12 pb-8">
         <section className="flex flex-col gap-3">
-          <Label>{t("settings.eyebrow")}</Label>
+          <Label>{t("eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-            {t("settings.title")}
+            {t("title")}
           </h2>
         </section>
 
@@ -46,24 +46,24 @@ export function Settings() {
 
         <section className="flex flex-col gap-1">
           <div className="flex items-baseline justify-between pb-4">
-            <Label>{t("settings.preferences")}</Label>
+            <Label>{t("preferences")}</Label>
           </div>
 
           <div className="flex flex-col gap-1">
-            <Row label={t("settings.language")}>
+            <Row label={t("language")}>
               <div className="flex items-center gap-3">
                 <span className="font-body text-sm text-fg-3 hidden sm:inline">
-                  {t(lang.value === "en" ? "settings.languageENFull" : "settings.languageESFull")}
+                  {t(lang.value === "en" ? "languageENFull" : "languageESFull")}
                 </span>
                 <div className="flex">
                   <ChoiceButton
                     active={lang.value === "en"}
-                    label={t("settings.languageEN")}
+                    label={t("languageEN")}
                     onClick={() => setLang("en")}
                   />
                   <ChoiceButton
                     active={lang.value === "es"}
-                    label={t("settings.languageES")}
+                    label={t("languageES")}
                     onClick={() => setLang("es")}
                     isLast
                   />
@@ -71,10 +71,10 @@ export function Settings() {
               </div>
             </Row>
 
-            <p className="font-body text-sm text-fg-3 pb-4 pl-0">{t("settings.languageDesc")}</p>
+            <p className="font-body text-sm text-fg-3 pb-4 pl-0">{t("languageDesc")}</p>
 
             <div className="flex flex-col gap-3 border-b border-border py-4">
-              <span className="font-body text-sm text-fg">{t("settings.theme")}</span>
+              <span className="font-body text-sm text-fg">{t("theme")}</span>
               <div className="grid grid-cols-2 gap-3">
                 {THEME_OPTIONS.map((opt) => (
                   <ThemeCard
@@ -90,9 +90,9 @@ export function Settings() {
               </div>
             </div>
 
-            <p className="font-body text-sm text-fg-3 pb-4 pl-0 pt-3">{t("settings.themeDesc")}</p>
+            <p className="font-body text-sm text-fg-3 pb-4 pl-0 pt-3">{t("themeDesc")}</p>
 
-            <Row label={t("settings.reducedMotion")}>
+            <Row label={t("reducedMotion")}>
               <div className="flex">
                 {REDUCED_MOTION_OPTIONS.map((opt, index) => (
                   <ChoiceButton
@@ -106,30 +106,28 @@ export function Settings() {
               </div>
             </Row>
 
-            <p className="font-body text-sm text-fg-3 pb-4 pl-0">
-              {t("settings.reducedMotionDesc")}
-            </p>
+            <p className="font-body text-sm text-fg-3 pb-4 pl-0">{t("reducedMotionDesc")}</p>
           </div>
         </section>
 
         <hr className="border-0 border-t border-border" />
 
         <section className="flex flex-col gap-5">
-          <Label>{t("settings.system")}</Label>
+          <Label>{t("system")}</Label>
 
           {node.value?.installed ? (
             <div className="flex flex-col">
               <SystemRow
-                label={t("settings.nodeVersion")}
+                label={t("nodeVersion")}
                 value={node.value.version?.replace(/^v/, "") ?? "—"}
               />
-              <SystemRow label={t("settings.nodeManager")} value={node.value.manager ?? "—"} />
-              <SystemRow label={t("settings.nodePath")} value={node.value.path ?? "—"} />
+              <SystemRow label={t("nodeManager")} value={node.value.manager ?? "—"} />
+              <SystemRow label={t("nodePath")} value={node.value.path ?? "—"} />
             </div>
           ) : (
             <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4">
-              <span className="font-body text-sm text-fg">{t("settings.nodeMissing")}</span>
-              <Label>{t("settings.goToSetup")}</Label>
+              <span className="font-body text-sm text-fg">{t("nodeMissing")}</span>
+              <Label>{t("goToSetup")}</Label>
             </div>
           )}
         </section>
@@ -137,9 +135,9 @@ export function Settings() {
         <hr className="border-0 border-t border-border" />
 
         <section className="flex flex-col gap-3">
-          <Label>{t("settings.about")}</Label>
+          <Label>{t("about")}</Label>
           <p className="font-body text-sm text-fg-2 max-w-md leading-relaxed">
-            {t("settings.aboutDescription")}
+            {t("aboutDescription")}
           </p>
           <p className="font-mono uppercase tracking-label text-micro text-fg-4 pt-2 flex items-center gap-2">
             <span>

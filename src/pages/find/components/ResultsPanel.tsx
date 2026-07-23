@@ -34,12 +34,12 @@ export function ResultsPanel({
   installBusy,
   onInstall,
 }: Props) {
-  const t = useT();
+  const t = useT("find");
   const columns = useMemo(
     (): ColumnDef<SkillSearchResult>[] => [
       {
         key: "name",
-        header: t("find.colName"),
+        header: t("colName"),
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (result) => (
           <>
@@ -47,7 +47,7 @@ export function ResultsPanel({
               <span className="font-mono text-mono text-fg truncate">{result.name}</span>
               {installedPackages.has(result.package) && (
                 <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 border border-border-strong px-1.5 py-0.5 rounded-sm">
-                  {t("find.installed")}
+                  {t("installed")}
                 </span>
               )}
             </div>
@@ -59,7 +59,7 @@ export function ResultsPanel({
       },
       {
         key: "source",
-        header: t("find.colSource"),
+        header: t("colSource"),
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (result) => (
           <>
@@ -69,14 +69,14 @@ export function ResultsPanel({
               onClick={() => void openUrl(result.url)}
               className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
             >
-              {t("find.open")}
+              {t("open")}
             </button>
           </>
         ),
       },
       {
         key: "installs",
-        header: t("find.colInstalls"),
+        header: t("colInstalls"),
         headerClassName: "text-right",
         cellClassName: "text-right",
         cell: (result) => (
@@ -87,7 +87,7 @@ export function ResultsPanel({
       },
       {
         key: "actions",
-        header: t("find.colActions"),
+        header: t("colActions"),
         headerClassName: "text-right",
         cellClassName: "flex justify-end",
         cell: (result) => {
@@ -95,7 +95,7 @@ export function ResultsPanel({
           const installing = installingPackage === result.package;
           return installed ? (
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t("find.installed")}
+              {t("installed")}
             </span>
           ) : installing ? (
             <ActionProgress active labelKey="find.installing" />
@@ -106,7 +106,7 @@ export function ResultsPanel({
               onClick={() => onInstall(result.package)}
               disabled={installBusy}
             >
-              {t("find.install")}
+              {t("install")}
             </Button>
           );
         },
@@ -119,7 +119,7 @@ export function ResultsPanel({
     <Switch>
       <Case condition={showHint}>
         <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
-          <p className="font-body text-sm text-fg-3">{t("find.hint")}</p>
+          <p className="font-body text-sm text-fg-3">{t("hint")}</p>
         </motion.div>
       </Case>
 
@@ -139,8 +139,8 @@ export function ResultsPanel({
           {...fadeUp(0.08)}
           className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
         >
-          <span className="font-body text-sm text-fg">{t("find.empty")}</span>
-          <p className="font-body text-sm text-fg-3">{t("find.emptyHint")}</p>
+          <span className="font-body text-sm text-fg">{t("empty")}</span>
+          <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
         </motion.div>
       </Case>
 
