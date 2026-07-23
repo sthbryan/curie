@@ -6,6 +6,7 @@ import { Sidebar } from "./components/Sidebar";
 import { StatusBar } from "./components/StatusBar";
 import { useBoot } from "./lib/boot";
 import { pageTransition, toMotionReducedMotion } from "./lib/motion";
+import { Find } from "./pages/find";
 import { Home } from "./pages/home";
 import { Installed } from "./pages/installed";
 import { Settings } from "./pages/settings";
@@ -38,6 +39,9 @@ function MainContent() {
   } else if (view === "installed") {
     key = "installed";
     content = <Installed />;
+  } else if (view === "search") {
+    key = "search";
+    content = <Find />;
   } else if (view === "settings") {
     key = "settings";
     content = <Settings />;
