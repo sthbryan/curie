@@ -15,21 +15,22 @@ import {
   maxAgentCount,
   summarizeAgents,
 } from "../../lib/skills";
-import { useAppStore } from "../../store/app";
+import { useSkillsStore } from "../../store/skills";
+import { useUiStore } from "../../store/ui";
 import { AgentRow } from "./components/AgentRow";
 import { RecentRow } from "./components/RecentRow";
 import { Stat } from "./components/Stat";
 import { UpdateRow } from "./components/UpdateRow";
 
 export function Home() {
-  const lang = useAppStore((s) => s.lang);
+  const lang = useUiStore((s) => s.lang);
   const [, navigate] = useLocation();
-  const skills = useAppStore((s) => s.skills);
-  const skillsLoading = useAppStore((s) => s.skillsLoading);
-  const skillsError = useAppStore((s) => s.skillsError);
-  const skillUpdates = useAppStore((s) => s.skillUpdates);
-  const updatesLoading = useAppStore((s) => s.updatesLoading);
-  const updatesError = useAppStore((s) => s.updatesError);
+  const skills = useSkillsStore((s) => s.skills);
+  const skillsLoading = useSkillsStore((s) => s.skillsLoading);
+  const skillsError = useSkillsStore((s) => s.skillsError);
+  const skillUpdates = useSkillsStore((s) => s.skillUpdates);
+  const updatesLoading = useSkillsStore((s) => s.updatesLoading);
+  const updatesError = useSkillsStore((s) => s.updatesError);
 
   const agents = useMemo(() => summarizeAgents(skills), [skills]);
   const recent = useMemo(() => buildRecentActivity(skills), [skills]);
