@@ -46,6 +46,8 @@ describe("t", () => {
     expect(t("es", "status.agents")).toBe("AGENTES");
     expect(t("en", "settings.themeRose")).toBe("ROSE");
     expect(t("es", "settings.themeDawn")).toBe("DAWN");
+    expect(t("en", "installed.title")).toBe("Skills");
+    expect(t("es", "installed.filterAll")).toBe("TODAS");
   });
 
   it("interpolates a single variable", () => {

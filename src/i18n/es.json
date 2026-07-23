@@ -64,6 +64,27 @@
     "notBuilt": "PANTALLA NO CONSTRUIDA",
     "back": "VOLVER AL INICIO"
   },
+  "installed": {
+    "eyebrow": "INSTALADAS · GLOBAL",
+    "title": "Skills",
+    "subtitle": "{n} skills globales gestionadas con npx skills",
+    "refresh": "ACTUALIZAR",
+    "refreshing": "ACTUALIZANDO…",
+    "install": "+ INSTALAR",
+    "search": "Buscar skills",
+    "searchPlaceholder": "Buscar por nombre, fuente o agente…",
+    "showing": "{n} DE {total}",
+    "filterAll": "TODAS",
+    "colName": "NOMBRE",
+    "colSource": "FUENTE",
+    "colAgents": "AGENTES",
+    "colWhen": "ACTUALIZADO",
+    "local": "local",
+    "noAgents": "SIN AGENTES",
+    "empty": "No hay skills globales instaladas",
+    "emptyHint": "Instala una skill con npx skills para verla aquí.",
+    "noMatches": "Ninguna skill coincide con este filtro"
+  },
   "status": {
     "node": "NODE",
     "agents": "AGENTES",

@@ -5,6 +5,7 @@ import { Sidebar } from "./components/Sidebar";
 import { StatusBar } from "./components/StatusBar";
 import { useBoot } from "./lib/boot";
 import { Home } from "./pages/Home";
+import { Installed } from "./pages/Installed";
 import { Settings } from "./pages/Settings";
 import { Setup } from "./pages/Setup";
 import { useAppStore } from "./store/app";
@@ -29,6 +30,7 @@ function MainContent() {
   }
 
   if (view === "home") return <Home />;
+  if (view === "installed") return <Installed />;
   if (view === "settings") return <Settings />;
   return <Placeholder view={view} />;
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SkillInfo } from "../components/types";
-import { buildRecentActivity, maxAgentCount, summarizeAgents } from "./skills";
+import { buildRecentActivity, filterSkills, maxAgentCount, summarizeAgents } from "./skills";
 
 const sample: SkillInfo[] = [
   {
@@ -49,5 +49,13 @@ describe("maxAgentCount", () => {
   it("returns at least 1", () => {
     expect(maxAgentCount([])).toBe(1);
     expect(maxAgentCount(summarizeAgents(sample))).toBe(2);
+  });
+});
+
+describe("filterSkills", () => {
+  it("filters by agent and query", () => {
+    expect(filterSkills(sample, "", "Zed")).toHaveLength(1);
+    expect(filterSkills(sample, "impec", null)[0]?.name).toBe("impeccable");
+    expect(filterSkills(sample, "missing", null)).toHaveLength(0);
   });
 });

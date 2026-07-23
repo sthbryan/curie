@@ -20,7 +20,7 @@ export function summarizeAgents(skills: SkillInfo[]): AgentSummary[] {
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
 }
 
-function formatRelative(iso: string, now = Date.now()): string {
+export function formatRelative(iso: string, now = Date.now()): string {
   const ms = Date.parse(iso);
   if (Number.isNaN(ms)) return iso;
 
@@ -86,4 +86,27 @@ export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] 
 
 export function maxAgentCount(agents: AgentSummary[]): number {
   return Math.max(1, ...agents.map((a) => a.count), 1);
+}
+
+export function filterSkills(
+  skills: SkillInfo[],
+  query: string,
+  agent: string | null,
+): SkillInfo[] {
+  const q = query.trim().toLowerCase();
+
+  return skills
+    .filter((skill) => {
+      if (agent && !skill.agents.some((a) => a === agent)) return false;
+      if (!q) return true;
+      const hay = [skill.name, skill.source ?? "", skill.path, ...skill.agents]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(q);
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function skillTimestamp(skill: SkillInfo): string | null {
+  return skill.updatedAt ?? skill.installedAt;
 }

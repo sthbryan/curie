@@ -69,6 +69,27 @@ export type Messages = {
     notBuilt: string;
     back: string;
   };
+  installed: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    refresh: string;
+    refreshing: string;
+    install: string;
+    search: string;
+    searchPlaceholder: string;
+    showing: string;
+    filterAll: string;
+    colName: string;
+    colSource: string;
+    colAgents: string;
+    colWhen: string;
+    local: string;
+    noAgents: string;
+    empty: string;
+    emptyHint: string;
+    noMatches: string;
+  };
   status: {
     node: string;
     agents: string;

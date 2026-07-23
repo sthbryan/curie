@@ -64,6 +64,27 @@
     "notBuilt": "SCREEN NOT YET BUILT",
     "back": "BACK TO HOME"
   },
+  "installed": {
+    "eyebrow": "INSTALLED · GLOBAL",
+    "title": "Skills",
+    "subtitle": "{n} global skills managed by npx skills",
+    "refresh": "REFRESH",
+    "refreshing": "REFRESHING…",
+    "install": "+ INSTALL",
+    "search": "Search skills",
+    "searchPlaceholder": "Search by name, source, or agent…",
+    "showing": "{n} OF {total}",
+    "filterAll": "ALL",
+    "colName": "NAME",
+    "colSource": "SOURCE",
+    "colAgents": "AGENTS",
+    "colWhen": "UPDATED",
+    "local": "local",
+    "noAgents": "NO AGENTS",
+    "empty": "No global skills installed",
+    "emptyHint": "Install a skill with npx skills to see it here.",
+    "noMatches": "No skills match this filter"
+  },
   "status": {
     "node": "NODE",
     "agents": "AGENTS",

@@ -3,7 +3,7 @@ import { useAppStore } from "../store/app";
 import type { View } from "./types";
 
 type Props = {
-  view: Exclude<View, "home" | "settings">;
+  view: Exclude<View, "home" | "installed" | "settings">;
 };
 
 export function Placeholder({ view }: Props) {
