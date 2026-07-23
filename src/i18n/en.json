@@ -1,6 +1,7 @@
 {
   "app": {
-    "ready": "READY"
+    "ready": "READY",
+    "loading": "LOADING"
   },
   "error": {
     "eyebrow": "SOMETHING WENT WRONG",
@@ -74,7 +75,6 @@
     "install": "INSTALL A SKILL",
     "exploreBtn": "EXPLORE",
     "viewSkills": "VIEW SKILLS",
-    "loading": "Loading skills…",
     "loadError": "Could not load global skills",
     "retry": "RETRY",
     "notBuilt": "SCREEN NOT YET BUILT",

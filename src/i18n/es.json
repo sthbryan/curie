@@ -1,6 +1,7 @@
 {
   "app": {
-    "ready": "LISTO"
+    "ready": "LISTO",
+    "loading": "CARGANDO"
   },
   "error": {
     "eyebrow": "ALGO SALIO MAL",
@@ -74,7 +75,6 @@
     "install": "INSTALAR SKILL",
     "exploreBtn": "EXPLORAR",
     "viewSkills": "VER SKILLS",
-    "loading": "Cargando skills…",
     "loadError": "No se pudieron cargar las skills globales",
     "retry": "REINTENTAR",
     "notBuilt": "PANTALLA NO CONSTRUIDA",
