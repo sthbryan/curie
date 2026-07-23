@@ -1,19 +1,14 @@
-import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
-import { Case, Default, Switch } from "react-if";
 import { useLocation } from "wouter";
-import { Button } from "../../components/Button";
 import { FullPageError } from "../../components/FullPageError";
 import { FullPageLoading } from "../../components/FullPageLoading";
-import { t } from "../../i18n";
 import { loadGlobalSkills, removeSkills, updateSkills } from "../../lib/boot";
-import { fadeUp, listStagger } from "../../lib/motion";
 import { filterSkills, summarizeAgents, updateNameSet } from "../../lib/skills";
 import { useSkillsStore } from "../../store/skills";
 import { useUiStore } from "../../store/ui";
 import { InstalledFilters } from "./components/InstalledFilters";
 import { InstalledHeader } from "./components/InstalledHeader";
-import { SkillRow } from "./components/SkillRow";
+import { InstalledList } from "./components/InstalledList";
 
 export function Installed() {
   const lang = useUiStore((s) => s.lang);
@@ -134,74 +129,19 @@ export function Installed() {
           }}
         />
 
-        <section className="flex flex-col">
-          <Switch>
-            <Case condition={skills.length === 0}>
-              <motion.div
-                {...fadeUp(0.08)}
-                className="flex flex-col gap-4 border border-border-strong bg-surface-tint px-5 py-8"
-              >
-                <span className="font-body text-sm text-fg">{t(lang, "installed.empty")}</span>
-                <p className="font-body text-sm text-fg-3">{t(lang, "installed.emptyHint")}</p>
-                <div>
-                  <Button size="lg" variant="primary" onClick={() => navigate("/find")}>
-                    {t(lang, "installed.install")}
-                  </Button>
-                </div>
-              </motion.div>
-            </Case>
-            <Case condition={filtered.length === 0}>
-              <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
-                <p className="font-body text-sm text-fg-3">{t(lang, "installed.noMatches")}</p>
-              </motion.div>
-            </Case>
-            <Default>
-              <motion.div
-                {...fadeUp(0.06)}
-                className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_5rem_minmax(7.5rem,auto)] gap-4 border-b border-border pb-2"
-              >
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-                  {t(lang, "installed.colName")}
-                </span>
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-                  {t(lang, "installed.colSource")}
-                </span>
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-                  {t(lang, "installed.colAgents")}
-                </span>
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
-                  {t(lang, "installed.colWhen")}
-                </span>
-                <span className="font-mono uppercase tracking-label text-micro text-fg-4 text-right">
-                  {t(lang, "installed.colActions")}
-                </span>
-              </motion.div>
-              <motion.div
-                key={`${agentFilter ?? "all"}:${query}:${updatesOnly ? "up" : "all"}`}
-                className="flex flex-col"
-                variants={listStagger}
-                initial="initial"
-                animate="animate"
-              >
-                <AnimatePresence mode="popLayout" initial={false}>
-                  {filtered.map((skill) => (
-                    <SkillRow
-                      key={`${skill.name}-${skill.path}`}
-                      skill={skill}
-                      lang={lang}
-                      updateAvailable={updateNames.has(skill.name)}
-                      updating={updatingSkill === skill.name || updatingSkill === "*"}
-                      removing={removingSkill === skill.name || removingSkill === "*"}
-                      actionBusy={actionBusy}
-                      onUpdate={handleUpdateOne}
-                      onRemove={handleRemoveOne}
-                    />
-                  ))}
-                </AnimatePresence>
-              </motion.div>
-            </Default>
-          </Switch>
-        </section>
+        <InstalledList
+          lang={lang}
+          skillsCount={skills.length}
+          filtered={filtered}
+          updateNames={updateNames}
+          updatingSkill={updatingSkill}
+          removingSkill={removingSkill}
+          actionBusy={actionBusy}
+          listKey={`${agentFilter ?? "all"}:${query}:${updatesOnly ? "up" : "all"}`}
+          onInstall={() => navigate("/find")}
+          onUpdate={handleUpdateOne}
+          onRemove={handleRemoveOne}
+        />
       </div>
     </main>
   );
