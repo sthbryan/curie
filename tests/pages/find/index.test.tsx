@@ -132,9 +132,7 @@ describe("Find", () => {
 
     expect(container?.textContent).toContain("not found");
 
-    const closeBtn = Array.from(container?.querySelectorAll("button") ?? []).find(
-      (b) => b.textContent?.trim() === "×",
-    );
+    const closeBtn = container?.querySelector('button[aria-label="Error"]') as HTMLButtonElement | null;
     expect(closeBtn).toBeDefined();
     await act(async () => {
       closeBtn?.click();

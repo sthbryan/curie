@@ -93,6 +93,7 @@ export function Find() {
                 size="xs"
                 variant="link"
                 className="shrink-0 px-0"
+                aria-label={t("error")}
                 onClick={() => {
                   if (installError) dismissInstallError();
                   if (findError) void runSearch(query, owner);
