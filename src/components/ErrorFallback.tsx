@@ -1,6 +1,7 @@
 import type { Lang } from "../i18n";
 import { t } from "../i18n";
 import { useAppStore } from "../store/app";
+import { Button } from "./Button";
 import type { ErrorBoundaryFallbackProps } from "./ErrorBoundary";
 
 type Props = ErrorBoundaryFallbackProps & {
@@ -38,33 +39,25 @@ export function ErrorFallback({ error, reset, variant = "page", onHome }: Props)
         {message}
       </p>
       <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
-        <button
-          type="button"
-          onClick={reset}
-          className="h-9 px-4 bg-fg text-bg rounded-sm font-mono uppercase tracking-label text-mono font-bold hover:opacity-90 transition-opacity duration-150"
-        >
+        <Button size="md" variant="primary" onClick={reset}>
           {t(lang, "error.retry")}
-        </button>
+        </Button>
         {onHome && (
-          <button
-            type="button"
+          <Button
+            size="md"
+            variant="outline"
             onClick={() => {
               onHome();
               reset();
             }}
-            className="h-9 px-4 border border-border-strong text-fg-2 rounded-sm font-mono uppercase tracking-label text-mono hover:border-fg-3 hover:text-fg transition-colors duration-150"
           >
             {t(lang, "error.home")}
-          </button>
+          </Button>
         )}
         {variant === "root" && (
-          <button
-            type="button"
-            onClick={() => window.location.reload()}
-            className="h-9 px-4 border border-border-strong text-fg-2 rounded-sm font-mono uppercase tracking-label text-mono hover:border-fg-3 hover:text-fg transition-colors duration-150"
-          >
+          <Button size="md" variant="outline" onClick={() => window.location.reload()}>
             {t(lang, "error.reload")}
-          </button>
+          </Button>
         )}
       </div>
     </div>
