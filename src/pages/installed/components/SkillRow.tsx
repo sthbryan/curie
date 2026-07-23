@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Else, If, Then, When } from "react-if";
+import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
 import type { SkillInfo } from "@/components/types";
 import type { Lang } from "@/i18n";
@@ -96,55 +97,66 @@ export function SkillRow({
       <div className="flex flex-wrap justify-end gap-1.5">
         <If condition={confirmRemove}>
           <Then>
-            <Button
-              size="xs"
-              variant="accent"
-              onClick={() => {
-                setConfirmRemove(false);
-                onRemove?.(skill.name);
-              }}
-              disabled={actionBusy}
-            >
-              <If condition={removing}>
-                <Then>{t(lang, "installed.removing")}</Then>
-                <Else>{t(lang, "installed.removeConfirm")}</Else>
-              </If>
-            </Button>
-            <Button
-              size="xs"
-              variant="outline"
-              className="text-fg-3"
-              onClick={() => setConfirmRemove(false)}
-              disabled={removing}
-            >
-              {t(lang, "installed.removeCancel")}
-            </Button>
+            <If condition={removing}>
+              <Then>
+                <ActionProgress active lang={lang} labelKey="installed.removing" />
+              </Then>
+              <Else>
+                <Button
+                  size="xs"
+                  variant="accent"
+                  onClick={() => {
+                    setConfirmRemove(false);
+                    onRemove?.(skill.name);
+                  }}
+                  disabled={actionBusy}
+                >
+                  {t(lang, "installed.removeConfirm")}
+                </Button>
+                <Button
+                  size="xs"
+                  variant="outline"
+                  className="text-fg-3"
+                  onClick={() => setConfirmRemove(false)}
+                >
+                  {t(lang, "installed.removeCancel")}
+                </Button>
+              </Else>
+            </If>
           </Then>
           <Else>
             <When condition={updateAvailable}>
-              <Button
-                size="xs"
-                variant="accent-outline"
-                onClick={() => onUpdate?.(skill.name)}
-                disabled={actionBusy}
-              >
-                <If condition={updating}>
-                  <Then>{t(lang, "installed.updatingOne")}</Then>
-                  <Else>{t(lang, "installed.updateOne")}</Else>
-                </If>
-              </Button>
-            </When>
-            <Button
-              size="xs"
-              variant="danger"
-              onClick={() => setConfirmRemove(true)}
-              disabled={actionBusy}
-            >
-              <If condition={removing}>
-                <Then>{t(lang, "installed.removing")}</Then>
-                <Else>{t(lang, "installed.remove")}</Else>
+              <If condition={updating}>
+                <Then>
+                  <ActionProgress active lang={lang} labelKey="installed.updatingOne" />
+                </Then>
+                <Else>
+                  <Button
+                    size="xs"
+                    variant="accent-outline"
+                    onClick={() => onUpdate?.(skill.name)}
+                    disabled={actionBusy}
+                  >
+                    {t(lang, "installed.updateOne")}
+                  </Button>
+                </Else>
               </If>
-            </Button>
+            </When>
+            <If condition={removing}>
+              <Then>
+                <ActionProgress active lang={lang} labelKey="installed.removing" />
+              </Then>
+              <Else>
+                <Button
+                  size="xs"
+                  variant="danger"
+                  onClick={() => setConfirmRemove(true)}
+                  disabled={actionBusy}
+                >
+                  {t(lang, "installed.remove")}
+                </Button>
+              </Else>
+            </If>
           </Else>
         </If>
       </div>
