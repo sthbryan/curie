@@ -3,16 +3,16 @@ import { Toaster as SonnerToaster } from "sonner";
 export function Toaster() {
   return (
     <SonnerToaster
-      position="bottom-left"
+      position="top-center"
       gap={8}
-      offset={16}
+      offset={24}
       toastOptions={{
         unstyled: true,
         classNames: {
           toast:
-            "flex items-start gap-3 border border-border bg-surface px-4 py-3 font-mono text-mono text-fg shadow-lg",
-          icon: "mt-0.5 shrink-0",
-          title: "text-fg",
+            "flex items-start gap-3 w-full max-w-sm border-l-2 border-l-accent border border-border-strong bg-surface-hover px-4 py-3 font-mono text-mono",
+          icon: "hidden",
+          title: "text-fg uppercase tracking-label",
           description: "text-fg-3",
         },
       }}
