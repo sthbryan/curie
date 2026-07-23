@@ -1,4 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { CloudDownload, Plus, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
@@ -46,7 +47,7 @@ export function ResultsPanel({
             <div className="flex min-w-0 items-center gap-2">
               <span className="font-mono text-mono text-fg truncate">{result.name}</span>
               {installedPackages.has(result.package) && (
-                <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3 border border-border-strong px-1.5 py-0.5 rounded-sm">
+                <span className="shrink-0 font-mono uppercase tracking-label text-[8px] text-fg-3 border border-border-strong px-1 py-px rounded-sm">
                   {t("installed")}
                 </span>
               )}
@@ -67,9 +68,10 @@ export function ResultsPanel({
             <button
               type="button"
               onClick={() => void openUrl(result.url)}
-              className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
+              className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left flex items-center gap-1"
             >
               {t("open")}
+              <SquareArrowOutUpRight size={10} />
             </button>
           </>
         ),
@@ -80,7 +82,8 @@ export function ResultsPanel({
         headerClassName: "text-right",
         cellClassName: "text-right",
         cell: (result) => (
-          <span className="font-mono uppercase tracking-label text-micro text-fg-3">
+          <span className="font-mono uppercase tracking-label text-micro text-fg-3 flex items-center justify-end gap-1">
+            <CloudDownload size={10} />
             {formatInstalls(result.installs) || "—"}
           </span>
         ),
@@ -106,6 +109,7 @@ export function ResultsPanel({
               onClick={() => onInstall(result.package)}
               disabled={installBusy}
             >
+              <Plus size={10} />
               {t("install")}
             </Button>
           );
