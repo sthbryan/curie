@@ -1,8 +1,11 @@
 import { MotionConfig } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { Toaster } from "@/components/Toaster";
+import { t } from "@/i18n";
 import { useBoot } from "@/lib/boot";
+import { skillUpdates } from "@/store/skills";
 import { lang, reducedMotion, theme } from "@/store/system";
 
 function App() {
@@ -14,6 +17,14 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = lang.value;
   }, [lang.value]);
+
+  const notifiedUpdates = useRef(false);
+  useEffect(() => {
+    if (skillUpdates.value.length > 0 && !notifiedUpdates.current) {
+      notifiedUpdates.current = true;
+      toast.success(t(lang.value, "home.updatesAvailable", { n: skillUpdates.value.length }));
+    }
+  });
 
   return (
     <MotionConfig reducedMotion={reducedMotion.value}>
