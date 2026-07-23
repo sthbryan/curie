@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Else, If, Switch, Then, When } from "react-if";
 import { useLocation } from "wouter";
+import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/Button";
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
@@ -25,12 +26,17 @@ import { UpdateRow } from "./components/UpdateRow";
 export function Home() {
   const lang = useUiStore((s) => s.lang);
   const [, navigate] = useLocation();
-  const skills = useSkillsStore((s) => s.skills);
-  const skillsLoading = useSkillsStore((s) => s.skillsLoading);
-  const skillsError = useSkillsStore((s) => s.skillsError);
-  const skillUpdates = useSkillsStore((s) => s.skillUpdates);
-  const updatesLoading = useSkillsStore((s) => s.updatesLoading);
-  const updatesError = useSkillsStore((s) => s.updatesError);
+  const { skills, skillsLoading, skillsError, skillUpdates, updatesLoading, updatesError } =
+    useSkillsStore(
+      useShallow((s) => ({
+        skills: s.skills,
+        skillsLoading: s.skillsLoading,
+        skillsError: s.skillsError,
+        skillUpdates: s.skillUpdates,
+        updatesLoading: s.updatesLoading,
+        updatesError: s.updatesError,
+      })),
+    );
 
   const agents = useMemo(() => summarizeAgents(skills), [skills]);
   const recent = useMemo(() => buildRecentActivity(skills), [skills]);

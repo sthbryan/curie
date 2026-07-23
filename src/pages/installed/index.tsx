@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useLocation } from "wouter";
+import { useShallow } from "zustand/react/shallow";
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { loadGlobalSkills, removeSkills, updateSkills } from "@/lib/boot";
@@ -13,17 +14,33 @@ import { InstalledList } from "./components/InstalledList";
 export function Installed() {
   const lang = useUiStore((s) => s.lang);
   const [, navigate] = useLocation();
-  const skills = useSkillsStore((s) => s.skills);
-  const skillsLoading = useSkillsStore((s) => s.skillsLoading);
-  const skillsError = useSkillsStore((s) => s.skillsError);
-  const skillUpdates = useSkillsStore((s) => s.skillUpdates);
-  const updatesLoading = useSkillsStore((s) => s.updatesLoading);
-  const updatingSkill = useSkillsStore((s) => s.updatingSkill);
-  const updateApplyError = useSkillsStore((s) => s.updateApplyError);
-  const setUpdateApplyError = useSkillsStore((s) => s.setUpdateApplyError);
-  const removingSkill = useSkillsStore((s) => s.removingSkill);
-  const removeError = useSkillsStore((s) => s.removeError);
-  const setRemoveError = useSkillsStore((s) => s.setRemoveError);
+  const {
+    skills,
+    skillsLoading,
+    skillsError,
+    skillUpdates,
+    updatesLoading,
+    updatingSkill,
+    updateApplyError,
+    setUpdateApplyError,
+    removingSkill,
+    removeError,
+    setRemoveError,
+  } = useSkillsStore(
+    useShallow((s) => ({
+      skills: s.skills,
+      skillsLoading: s.skillsLoading,
+      skillsError: s.skillsError,
+      skillUpdates: s.skillUpdates,
+      updatesLoading: s.updatesLoading,
+      updatingSkill: s.updatingSkill,
+      updateApplyError: s.updateApplyError,
+      setUpdateApplyError: s.setUpdateApplyError,
+      removingSkill: s.removingSkill,
+      removeError: s.removeError,
+      setRemoveError: s.setRemoveError,
+    })),
+  );
 
   const [query, setQuery] = useState("");
   const [agentFilter, setAgentFilter] = useState<string | null>(null);

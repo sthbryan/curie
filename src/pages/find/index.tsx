@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
+import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { t } from "@/i18n";
@@ -18,16 +19,31 @@ const DEBOUNCE_MS = 280;
 export function Find() {
   const lang = useUiStore((s) => s.lang);
   const skills = useSkillsStore((s) => s.skills);
-  const findQuery = useFindStore((s) => s.findQuery);
-  const findOwner = useFindStore((s) => s.findOwner);
-  const findResults = useFindStore((s) => s.findResults);
-  const findLoading = useFindStore((s) => s.findLoading);
-  const findError = useFindStore((s) => s.findError);
-  const installingPackage = useFindStore((s) => s.installingPackage);
-  const installError = useFindStore((s) => s.installError);
-  const setInstallError = useFindStore((s) => s.setInstallError);
-  const setFindQuery = useFindStore((s) => s.setFindQuery);
-  const setFindOwner = useFindStore((s) => s.setFindOwner);
+  const {
+    findQuery,
+    findOwner,
+    findResults,
+    findLoading,
+    findError,
+    installingPackage,
+    installError,
+    setInstallError,
+    setFindQuery,
+    setFindOwner,
+  } = useFindStore(
+    useShallow((s) => ({
+      findQuery: s.findQuery,
+      findOwner: s.findOwner,
+      findResults: s.findResults,
+      findLoading: s.findLoading,
+      findError: s.findError,
+      installingPackage: s.installingPackage,
+      installError: s.installError,
+      setInstallError: s.setInstallError,
+      setFindQuery: s.setFindQuery,
+      setFindOwner: s.setFindOwner,
+    })),
+  );
 
   const [query, setQuery] = useState(findQuery);
   const [owner, setOwner] = useState(findOwner);
