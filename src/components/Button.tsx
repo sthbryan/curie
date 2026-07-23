@@ -49,7 +49,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
   ref,
 ) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-sm font-mono uppercase tracking-label disabled:opacity-50";
+    "inline-flex items-center justify-center gap-2 rounded-sm font-mono uppercase tracking-label disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-1";
   const press = size === "xl" || size === "hero" ? "active:scale-[0.99]" : "";
   const visual = selected ? SELECTED : VARIANT[variant];
   return (
