@@ -7,6 +7,7 @@ import { Router } from "wouter";
 import type { SkillInfo } from "@/components/types";
 import { useSkillsStore } from "@/store/skills";
 import { useUiStore } from "@/store/ui";
+import { useInstalledActionsStore, useInstalledFiltersStore } from "./store";
 
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
@@ -64,6 +65,17 @@ beforeEach(() => {
     hasBooted: true,
     stage: "home",
     node: { installed: true, version: "20.0.0", path: "/usr/bin/node", manager: "volta" },
+  });
+  useInstalledActionsStore.setState({
+    updatingSkill: null,
+    updateApplyError: null,
+    removingSkill: null,
+    removeError: null,
+  });
+  useInstalledFiltersStore.setState({
+    query: "",
+    agentFilter: null,
+    updatesOnly: false,
   });
 });
 

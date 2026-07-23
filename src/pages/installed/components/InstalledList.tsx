@@ -1,44 +1,61 @@
 import { AnimatePresence, motion } from "motion/react";
+import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
+import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
-import type { SkillInfo } from "@/components/types";
-import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { fadeUp, listStagger } from "@/lib/motion";
+import { filterSkills, updateNameSet } from "@/lib/skills";
+import { useSkillsStore } from "@/store/skills";
+import { useUiStore } from "@/store/ui";
+import { useInstalledActionsStore, useInstalledFiltersStore } from "../store";
 import { INSTALLED_GRID, SkillRow } from "./SkillRow";
 
-type Props = {
-  lang: Lang;
-  skillsCount: number;
-  filtered: SkillInfo[];
-  updateNames: Set<string>;
-  updatingSkill: string | null;
-  removingSkill: string | null;
-  actionBusy: boolean;
-  listKey: string;
-  onInstall: () => void;
-  onUpdate: (name: string) => void;
-  onRemove: (name: string) => void;
-};
+export function InstalledList() {
+  const lang = useUiStore((s) => s.lang);
+  const skills = useSkillsStore((s) => s.skills);
+  const skillUpdates = useSkillsStore((s) => s.skillUpdates);
 
-export function InstalledList({
-  lang,
-  skillsCount,
-  filtered,
-  updateNames,
-  updatingSkill,
-  removingSkill,
-  actionBusy,
-  listKey,
-  onInstall,
-  onUpdate,
-  onRemove,
-}: Props) {
+  const query = useInstalledFiltersStore((s) => s.query);
+  const agentFilter = useInstalledFiltersStore((s) => s.agentFilter);
+  const updatesOnly = useInstalledFiltersStore((s) => s.updatesOnly);
+
+  const updatingSkill = useInstalledActionsStore((s) => s.updatingSkill);
+  const removingSkill = useInstalledActionsStore((s) => s.removingSkill);
+  const update = useInstalledActionsStore((s) => s.update);
+  const remove = useInstalledActionsStore((s) => s.remove);
+
+  const updateNames = useMemo(() => updateNameSet(skillUpdates), [skillUpdates]);
+  const filtered = useMemo(
+    () =>
+      filterSkills(skills, query, agentFilter, {
+        updatesOnly,
+        updateNames,
+      }),
+    [skills, query, agentFilter, updatesOnly, updateNames],
+  );
+  const actionBusy = updatingSkill !== null || removingSkill !== null;
+
+  const [, navigate] = useLocation();
+  const onInstall = () => navigate("/find");
+  const onUpdate = (name: string) => {
+    update([name]).catch(() => {
+      // store keeps updateApplyError
+    });
+  };
+  const onRemove = (name: string) => {
+    remove([name]).catch(() => {
+      // store keeps removeError
+    });
+  };
+
+  const listKey = `${agentFilter ?? "all"}:${query}:${updatesOnly ? "up" : "all"}`;
+
   return (
     <section className="flex flex-col">
       <Switch>
-        <Case condition={skillsCount === 0}>
+        <Case condition={skills.length === 0}>
           <motion.div
             {...fadeUp(0.08)}
             className="flex flex-col gap-4 border border-border-strong bg-surface-tint px-5 py-8"

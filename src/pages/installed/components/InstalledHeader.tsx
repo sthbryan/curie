@@ -1,42 +1,46 @@
 import { motion } from "motion/react";
+import { useMemo } from "react";
 import { Else, If, Then, When } from "react-if";
+import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
-import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
+import { loadGlobalSkills } from "@/lib/boot";
 import { fadeUp } from "@/lib/motion";
+import { updateNameSet } from "@/lib/skills";
+import { useSkillsStore } from "@/store/skills";
+import { useUiStore } from "@/store/ui";
+import { useInstalledActionsStore } from "../store";
 
-type Props = {
-  lang: Lang;
-  skillsCount: number;
-  updateCount: number;
-  actionBusy: boolean;
-  skillsLoading: boolean;
-  updatesLoading: boolean;
-  updatingAll: boolean;
-  updateApplyError: string | null;
-  removeError: string | null;
-  onUpdateAll: () => void;
-  onRefresh: () => void;
-  onInstall: () => void;
-  onDismissError: () => void;
-};
+export function InstalledHeader() {
+  const lang = useUiStore((s) => s.lang);
+  const skills = useSkillsStore((s) => s.skills);
+  const skillUpdates = useSkillsStore((s) => s.skillUpdates);
+  const skillsLoading = useSkillsStore((s) => s.skillsLoading);
+  const updatesLoading = useSkillsStore((s) => s.updatesLoading);
+  const updatingSkill = useInstalledActionsStore((s) => s.updatingSkill);
+  const removingSkill = useInstalledActionsStore((s) => s.removingSkill);
+  const updateApplyError = useInstalledActionsStore((s) => s.updateApplyError);
+  const removeError = useInstalledActionsStore((s) => s.removeError);
+  const update = useInstalledActionsStore((s) => s.update);
+  const dismissErrors = useInstalledActionsStore((s) => s.dismissErrors);
 
-export function InstalledHeader({
-  lang,
-  skillsCount,
-  updateCount,
-  actionBusy,
-  skillsLoading,
-  updatesLoading,
-  updatingAll,
-  updateApplyError,
-  removeError,
-  onUpdateAll,
-  onRefresh,
-  onInstall,
-  onDismissError,
-}: Props) {
+  const updateNames = useMemo(() => updateNameSet(skillUpdates), [skillUpdates]);
+  const actionBusy = updatingSkill !== null || removingSkill !== null;
+  const updatingAll = updatingSkill === "*";
+
+  const [, navigate] = useLocation();
+  const onInstall = () => navigate("/find");
+  const onRefresh = () => {
+    void loadGlobalSkills();
+  };
+  const onUpdateAll = () => {
+    const names = updateNames.size > 0 ? [...updateNames] : undefined;
+    update(names).catch(() => {
+      // store keeps updateApplyError
+    });
+  };
+
   return (
     <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-6">
@@ -46,13 +50,15 @@ export function InstalledHeader({
             {t(lang, "installed.title")}
           </h2>
           <p className="font-body text-sm text-fg-3 max-w-lg">
-            {t(lang, "installed.subtitle", { n: skillsCount })}
-            {updateCount > 0 ? ` · ${t(lang, "installed.updatesHint", { n: updateCount })}` : ""}
+            {t(lang, "installed.subtitle", { n: skills.length })}
+            {updateNames.size > 0
+              ? ` · ${t(lang, "installed.updatesHint", { n: updateNames.size })}`
+              : ""}
           </p>
         </div>
 
         <div className="flex shrink-0 items-center gap-2 pt-1">
-          <When condition={updateCount > 0}>
+          <When condition={updateNames.size > 0}>
             <Button
               size="md"
               variant="accent-outline"
@@ -96,7 +102,7 @@ export function InstalledHeader({
               {updateApplyError ?? removeError}
             </p>
           </div>
-          <Button size="xs" variant="link" className="shrink-0 px-0" onClick={onDismissError}>
+          <Button size="xs" variant="link" className="shrink-0 px-0" onClick={dismissErrors}>
             ×
           </Button>
         </div>
