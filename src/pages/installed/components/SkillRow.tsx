@@ -123,7 +123,7 @@ export function SkillRow({
                   onClick={() => onUpdate?.(skill.name)}
                   disabled={actionBusy}
                 >
-                  <ArrowUp />
+                  <ArrowUp size={14} />
                 </IconButton>
               </When>
               <When condition={!updateAvailable}>
@@ -135,7 +135,7 @@ export function SkillRow({
                 onClick={() => setConfirmRemove(true)}
                 disabled={actionBusy}
               >
-                <X />
+                <X size={13} />
               </IconButton>
             </Else>
           </If>
