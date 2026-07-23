@@ -5,7 +5,6 @@ export type Lang = "en" | "es";
 
 export type Messages = {
   app: {
-    version: string;
     ready: string;
   };
   nav: {
@@ -66,6 +65,7 @@ export type Messages = {
   status: {
     node: string;
     agents: string;
+    setupRequired: string;
   };
   settings: {
     eyebrow: string;

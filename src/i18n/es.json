@@ -1,6 +1,5 @@
 {
   "app": {
-    "version": "v0.1.0",
     "ready": "LISTO"
   },
   "nav": {
@@ -60,7 +59,8 @@
   },
   "status": {
     "node": "NODE",
-    "agents": "AGENTES"
+    "agents": "AGENTES",
+    "setupRequired": "SETUP REQUERIDO"
   },
   "settings": {
     "eyebrow": "PREFERENCIAS",
