@@ -4,6 +4,7 @@ import type {
   NodeInfo,
   ReducedMotionPref,
   SkillInfo,
+  SkillUpdateInfo,
   Stage,
   ThemeMode,
   View,
@@ -21,6 +22,9 @@ export type AppState = {
   skills: SkillInfo[];
   skillsLoading: boolean;
   skillsError: string | null;
+  skillUpdates: SkillUpdateInfo[];
+  updatesLoading: boolean;
+  updatesError: string | null;
 
   setTheme: (theme: ThemeMode) => void;
   setLang: (lang: Lang) => void;
@@ -31,6 +35,9 @@ export type AppState = {
   setSkills: (skills: SkillInfo[]) => void;
   setSkillsLoading: (loading: boolean) => void;
   setSkillsError: (error: string | null) => void;
+  setSkillUpdates: (updates: SkillUpdateInfo[]) => void;
+  setUpdatesLoading: (loading: boolean) => void;
+  setUpdatesError: (error: string | null) => void;
   markBooted: () => void;
   completeSetup: (node: NodeInfo) => void;
 };
@@ -48,6 +55,9 @@ export const useAppStore = create<AppState>()(
       skills: [],
       skillsLoading: false,
       skillsError: null,
+      skillUpdates: [],
+      updatesLoading: false,
+      updatesError: null,
 
       setTheme: (theme) => set({ theme }),
       setLang: (lang) => set({ lang }),
@@ -58,6 +68,9 @@ export const useAppStore = create<AppState>()(
       setSkills: (skills) => set({ skills, skillsError: null }),
       setSkillsLoading: (skillsLoading) => set({ skillsLoading }),
       setSkillsError: (skillsError) => set({ skillsError }),
+      setSkillUpdates: (skillUpdates) => set({ skillUpdates, updatesError: null }),
+      setUpdatesLoading: (updatesLoading) => set({ updatesLoading }),
+      setUpdatesError: (updatesError) => set({ updatesError }),
       markBooted: () => set({ hasBooted: true }),
       completeSetup: (node) => set({ node, view: "home", stage: "home" }),
     }),

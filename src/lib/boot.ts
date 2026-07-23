@@ -1,16 +1,36 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
-import type { NodeInfo, SkillInfo } from "../components/types";
+import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "../components/types";
 import { detectLang } from "../i18n";
 import { useAppStore } from "../store/app";
 
-export async function loadGlobalSkills() {
+export async function checkSkillUpdates() {
+  const { setSkillUpdates, setUpdatesLoading, setUpdatesError } = useAppStore.getState();
+  setUpdatesLoading(true);
+  setUpdatesError(null);
+  try {
+    const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates");
+    setSkillUpdates(updates);
+  } catch (e) {
+    const message = typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
+    setUpdatesError(message);
+  } finally {
+    setUpdatesLoading(false);
+  }
+}
+
+export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
+  const checkUpdates = options?.checkUpdates ?? true;
   const { setSkills, setSkillsLoading, setSkillsError } = useAppStore.getState();
   setSkillsLoading(true);
   setSkillsError(null);
   try {
     const skills = await invoke<SkillInfo[]>("list_skills");
     setSkills(skills);
+    if (checkUpdates) {
+      // Fire-and-forget so the list renders immediately.
+      void checkSkillUpdates();
+    }
   } catch (e) {
     const message = typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
     setSkillsError(message);
