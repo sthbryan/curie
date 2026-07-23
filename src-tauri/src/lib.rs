@@ -1,11 +1,13 @@
 mod node;
 mod skills;
+mod update;
 
 pub use node::{detect_node_info, install_node_impl, NodeInfo};
 pub use skills::{
     check_global_skill_updates, list_global_skills, ExplorePage, SkillExploreResult, SkillInfo,
     SkillInstallResult, SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
+pub use update::AppUpdateInfo;
 
 #[tauri::command]
 fn get_locale() -> String {
@@ -27,6 +29,7 @@ pub fn run() {
             skills::explore_skills,
             skills::add_skill,
             skills::remove_skills,
+            update::check_app_update,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
