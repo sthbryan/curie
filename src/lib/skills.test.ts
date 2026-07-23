@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
-import type { SkillInfo } from "../components/types";
-import { buildRecentActivity, filterSkills, maxAgentCount, summarizeAgents } from "./skills";
+import type { SkillInfo, SkillUpdateInfo } from "../components/types";
+import {
+  availableUpdates,
+  buildRecentActivity,
+  filterSkills,
+  maxAgentCount,
+  summarizeAgents,
+  updateNameSet,
+} from "./skills";
 
 const sample: SkillInfo[] = [
   {
@@ -24,6 +31,27 @@ const sample: SkillInfo[] = [
     sourceType: "github",
     installedAt: "2026-07-11T10:00:00.000Z",
     updatedAt: "2026-07-11T10:00:00.000Z",
+  },
+];
+
+const sampleUpdates: SkillUpdateInfo[] = [
+  {
+    name: "impeccable",
+    source: "pbakaus/impeccable",
+    updateAvailable: true,
+    checkable: true,
+  },
+  {
+    name: "find-skills",
+    source: "vercel-labs/skills",
+    updateAvailable: false,
+    checkable: true,
+  },
+  {
+    name: "local-only",
+    source: null,
+    updateAvailable: false,
+    checkable: false,
   },
 ];
 
@@ -57,5 +85,22 @@ describe("filterSkills", () => {
     expect(filterSkills(sample, "", "Zed")).toHaveLength(1);
     expect(filterSkills(sample, "impec", null)[0]?.name).toBe("impeccable");
     expect(filterSkills(sample, "missing", null)).toHaveLength(0);
+  });
+
+  it("filters updates-only and sorts update-available first", () => {
+    const names = updateNameSet(sampleUpdates);
+    const only = filterSkills(sample, "", null, { updatesOnly: true, updateNames: names });
+    expect(only.map((s) => s.name)).toEqual(["impeccable"]);
+
+    const all = filterSkills(sample, "", null, { updateNames: names });
+    expect(all[0]?.name).toBe("impeccable");
+  });
+});
+
+describe("availableUpdates", () => {
+  it("intersects update flags with installed skills", () => {
+    const rows = availableUpdates(sample, sampleUpdates);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.skill.name).toBe("impeccable");
   });
 });

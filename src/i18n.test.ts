@@ -58,12 +58,12 @@ describe("t", () => {
   });
 
   it("interpolates multiple variables in one string", () => {
-    expect(t("en", "home.events", { n: 5 })).toBe("5 EVENTS");
+    expect(t("en", "home.updatesAvailable", { n: 5 })).toBe("5 AVAILABLE");
     expect(t("es", "home.active", { n: 1 })).toBe("1 ACTIVAS");
   });
 
   it("interpolates repeated variables", () => {
-    expect(t("en", "home.events", { n: 12 })).toBe("12 EVENTS");
+    expect(t("en", "home.updatesAvailable", { n: 12 })).toBe("12 AVAILABLE");
   });
 
   it("returns key unchanged when path is missing", () => {
@@ -72,11 +72,11 @@ describe("t", () => {
   });
 
   it("ignores unknown variables in vars map", () => {
-    expect(t("en", "home.events", { n: 4, extra: "ignored" })).toBe("4 EVENTS");
+    expect(t("en", "home.updatesAvailable", { n: 4, extra: "ignored" })).toBe("4 AVAILABLE");
   });
 
   it("handles numeric vars correctly", () => {
-    expect(t("en", "home.events", { n: 0 })).toBe("0 EVENTS");
+    expect(t("en", "home.updatesAvailable", { n: 0 })).toBe("0 AVAILABLE");
   });
 });
 
