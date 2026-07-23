@@ -93,7 +93,7 @@ describe("system store (signals)", () => {
     setStage("setup");
     setNode(sampleNode);
 
-    const raw = localStorage.getItem("curie.ui");
+    const raw = localStorage.getItem("curie.system");
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw ?? "{}") as Record<string, unknown>;
     const persistedKeys = Object.keys(parsed).sort();
