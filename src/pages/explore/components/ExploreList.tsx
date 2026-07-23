@@ -1,4 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { CloudDownload, Plus, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
@@ -8,7 +9,6 @@ import type { ColumnDef } from "@/components/Table";
 import { Table } from "@/components/Table";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { useT } from "@/i18n";
-import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { formatInstalls } from "@/lib/skills";
 
@@ -31,13 +31,6 @@ function installsColumnKey(view: ExploreView): string {
   if (view === "hot") return "colToday";
   if (view === "trending") return "colTrend";
   return "colInstalls";
-}
-
-function formatChange(change: number | null): string | null {
-  if (change === null || change === undefined) return null;
-  if (change === 0) return "0";
-  const abs = formatInstalls(Math.abs(change)) || String(Math.abs(change));
-  return change > 0 ? `+${abs}` : `−${abs}`;
 }
 
 const EXPLORE_GRID = "grid-cols-[2.5rem_minmax(0,1.2fr)_minmax(0,1fr)_5.5rem_7rem]";
@@ -91,9 +84,10 @@ export function ExploreList({
             <button
               type="button"
               onClick={() => void openUrl(result.url)}
-              className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left"
+              className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left flex items-center gap-1"
             >
               {t("open")}
+              <SquareArrowOutUpRight size={10} />
             </button>
           </>
         ),
@@ -105,26 +99,11 @@ export function ExploreList({
         cellClassName: "flex flex-col items-end gap-0.5",
         cell: (result) => {
           const installs = formatInstalls(result.installs) || String(result.installs || 0);
-          const changeLabel = view === "hot" ? formatChange(result.change) : null;
-          const changeUp = (result.change ?? 0) > 0;
-          const changeDown = (result.change ?? 0) < 0;
           return (
-            <>
-              <span className="font-mono uppercase tracking-label text-micro text-fg-3">
-                {installs}
-              </span>
-              {changeLabel && (
-                <span
-                  className={cn("font-mono uppercase tracking-label text-micro", {
-                    "text-success": changeUp,
-                    "text-accent": changeDown,
-                    "text-fg-4": !changeUp && !changeDown,
-                  })}
-                >
-                  {changeLabel}
-                </span>
-              )}
-            </>
+            <span className="font-mono uppercase tracking-label text-micro text-fg-3 flex items-center gap-1">
+              <CloudDownload size={10} />
+              {installs}
+            </span>
           );
         },
       },
@@ -149,6 +128,7 @@ export function ExploreList({
               onClick={() => onInstall(result.package)}
               disabled={installBusy}
             >
+              <Plus size={10} />
               {t("install")}
             </Button>
           );

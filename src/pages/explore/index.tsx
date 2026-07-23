@@ -1,4 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { Else, If, Then, When } from "react-if";
@@ -7,6 +8,7 @@ import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import type { ExploreView } from "@/components/types";
 import { useT } from "@/i18n";
+import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { skills } from "@/store/skills";
@@ -80,6 +82,7 @@ export function Explore() {
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button size="sm" variant="outline" onClick={() => navigate("/find")}>
+                  <Search size={14} />
                   {t("goFind")}
                 </Button>
                 <Button
@@ -89,6 +92,7 @@ export function Explore() {
                     void openUrl("https://skills.sh");
                   }}
                 >
+                  <SquareArrowOutUpRight size={14} />
                   {t("openSite")}
                 </Button>
               </div>
@@ -127,7 +131,7 @@ export function Explore() {
               {VIEWS.map((v) => (
                 <Button
                   key={v}
-                  size="sm"
+                  size="xs"
                   variant="outline"
                   selected={view === v}
                   onClick={() => setView(v)}
@@ -141,7 +145,11 @@ export function Explore() {
               <span className="font-mono uppercase tracking-label text-micro text-fg-4">
                 {statusLabel}
               </span>
-              <Button size="sm" variant="ghost" onClick={() => void load(view)} disabled={loading}>
+              <Button size="xs" variant="ghost" onClick={() => void load(view)} disabled={loading}>
+                <RefreshCw
+                  size={10}
+                  className={cn("transition-transform", loading ? "animate-spin" : "")}
+                />
                 {loading ? t("refreshing") : t("refresh")}
               </Button>
             </div>
