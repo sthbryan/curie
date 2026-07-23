@@ -16,6 +16,7 @@
     "skills": "SKILLS",
     "explore": "EXPLORE",
     "find": "FIND",
+    "custom": "CUSTOM",
     "settings": "SETTINGS"
   },
   "setup": {

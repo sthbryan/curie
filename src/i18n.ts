@@ -21,6 +21,7 @@ export type Messages = {
     skills: string;
     explore: string;
     find: string;
+    custom: string;
     settings: string;
   };
   setup: {
