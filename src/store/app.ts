@@ -8,7 +8,6 @@ import type {
   SkillUpdateInfo,
   Stage,
   ThemeMode,
-  View,
 } from "../components/types";
 import type { Lang } from "../i18n";
 
@@ -17,7 +16,6 @@ export type AppState = {
   lang: Lang;
   reducedMotion: ReducedMotionPref;
   hasBooted: boolean;
-  view: View;
   stage: Extract<Stage, "loading" | "setup" | "home">;
   node: NodeInfo | null;
   skills: SkillInfo[];
@@ -42,7 +40,6 @@ export type AppState = {
   setTheme: (theme: ThemeMode) => void;
   setLang: (lang: Lang) => void;
   setReducedMotion: (pref: ReducedMotionPref) => void;
-  setView: (view: View) => void;
   setStage: (stage: Extract<Stage, "loading" | "setup" | "home">) => void;
   setNode: (node: NodeInfo | null) => void;
   setSkills: (skills: SkillInfo[]) => void;
@@ -73,7 +70,6 @@ export const useAppStore = create<AppState>()(
       lang: "en",
       reducedMotion: "system",
       hasBooted: false,
-      view: "home",
       stage: "loading",
       node: null,
       skills: [],
@@ -97,7 +93,6 @@ export const useAppStore = create<AppState>()(
       setTheme: (theme) => set({ theme }),
       setLang: (lang) => set({ lang }),
       setReducedMotion: (reducedMotion) => set({ reducedMotion }),
-      setView: (view) => set({ view }),
       setStage: (stage) => set({ stage }),
       setNode: (node) => set({ node }),
       setSkills: (skills) => set({ skills, skillsError: null }),
@@ -118,7 +113,7 @@ export const useAppStore = create<AppState>()(
       setRemovingSkill: (removingSkill) => set({ removingSkill }),
       setRemoveError: (removeError) => set({ removeError }),
       markBooted: () => set({ hasBooted: true }),
-      completeSetup: (node) => set({ node, view: "home", stage: "home" }),
+      completeSetup: (node) => set({ node, stage: "home" }),
     }),
     {
       name: "curie.app",
