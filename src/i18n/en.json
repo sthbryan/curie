@@ -151,7 +151,7 @@
     "url": {
       "eyebrow": "OPTION 01 · FROM GITHUB",
       "title": "Install from a GitHub URL",
-      "subtitle": "Paste a repository URL, a tree path, or an owner/repo handle. Curie forwards it to `npx skills add`.",
+      "subtitle": "Paste a link. Done.",
       "label": "GitHub URL or package",
       "placeholder": "https://github.com/owner/repo or owner/repo@skill",
       "submit": "INSTALL",
@@ -163,7 +163,7 @@
     "md": {
       "eyebrow": "OPTION 02 · FROM A .MD",
       "title": "Create a custom skill",
-      "subtitle": "Drop a SKILL.md, give it a name, hit save. We park it at ~/.curie/custom-skills/<name>/ and run npx skills add for you.",
+      "subtitle": "Write it. Name it. Save it. Yours.",
       "nameLabel": "Skill name",
       "namePlaceholder": "my-skill",
       "contentLabel": "SKILL.md content",
