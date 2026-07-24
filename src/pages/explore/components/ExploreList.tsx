@@ -78,19 +78,24 @@ export function ExploreList({
         key: "source",
         header: t("colSource"),
         cellClassName: "min-w-0 flex flex-col gap-1",
-        cell: (result) => (
-          <>
-            <span className="font-mono text-mono text-fg-2 truncate">{result.source || "—"}</span>
-            <button
-              type="button"
-              onClick={() => void openUrl(result.url)}
-              className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left flex items-center gap-1"
-            >
-              {t("open")}
-              <SquareArrowOutUpRight size={10} />
-            </button>
-          </>
-        ),
+        cell: (result) => {
+          const handleOpen = () => {
+            void openUrl(result.url);
+          };
+          return (
+            <>
+              <span className="font-mono text-mono text-fg-2 truncate">{result.source || "—"}</span>
+              <button
+                type="button"
+                onClick={handleOpen}
+                className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left flex items-center gap-1"
+              >
+                {t("open")}
+                <SquareArrowOutUpRight size={10} />
+              </button>
+            </>
+          );
+        },
       },
       {
         key: "installs",
@@ -115,6 +120,11 @@ export function ExploreList({
         cell: (result) => {
           const installed = installedPackages.has(result.package);
           const installing = installingPackage === result.package;
+
+          const handleInstallPackage = () => {
+            onInstall(result.package);
+          };
+
           return installed ? (
             <span className="font-mono uppercase tracking-label text-micro text-fg-4">
               {t("installed")}
@@ -125,7 +135,7 @@ export function ExploreList({
             <Button
               size="xs"
               variant="primary"
-              onClick={() => onInstall(result.package)}
+              onClick={handleInstallPackage}
               disabled={installBusy}
             >
               <Plus size={10} />

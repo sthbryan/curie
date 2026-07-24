@@ -1,5 +1,12 @@
 import type { LucideIcon } from "lucide-react";
-import { Compass, House, LayoutGrid, Search, Settings as SettingsIcon } from "lucide-react";
+import {
+  Compass,
+  FileCode,
+  House,
+  LayoutGrid,
+  Search,
+  Settings as SettingsIcon,
+} from "lucide-react";
 import { motion, useReducedMotionConfig } from "motion/react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -15,8 +22,7 @@ const TOP_ITEMS: { path: string; key: NavKey; num: string; icon: LucideIcon }[] 
   { path: "/installed", key: "skills", num: "02", icon: LayoutGrid },
   { path: "/marketplace", key: "explore", num: "03", icon: Compass },
   { path: "/find", key: "find", num: "04", icon: Search },
-  // TODO: disabled for now, will be re-enabled when we have a custom skill feature
-  // { path: "/custom", key: "custom", num: "05", icon: FileCode },
+  { path: "/custom", key: "custom", num: "05", icon: FileCode },
 ];
 
 const COLLAPSED_W = 50;
@@ -43,17 +49,22 @@ export function Sidebar() {
       className="flex shrink-0 flex-col border-r border-border bg-surface"
     >
       <div className="flex flex-col gap-0.5 px-2 pt-4 pb-2">
-        {TOP_ITEMS.map((item) => (
-          <NavItem
-            key={item.path}
-            number={item.num}
-            label={t(`nav.${item.key}`)}
-            icon={item.icon}
-            active={location === item.path}
-            expanded={hovered}
-            onClick={() => navigate(item.path)}
-          />
-        ))}
+        {TOP_ITEMS.map((item) => {
+          const handleNavItem = () => {
+            navigate(item.path);
+          };
+          return (
+            <NavItem
+              key={item.path}
+              number={item.num}
+              label={t(`nav.${item.key}`)}
+              icon={item.icon}
+              active={location === item.path}
+              expanded={hovered}
+              onClick={handleNavItem}
+            />
+          );
+        })}
       </div>
 
       <div className="flex-1" />

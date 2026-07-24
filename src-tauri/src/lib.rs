@@ -4,8 +4,9 @@ mod update;
 
 pub use node::{detect_node_info, install_node_impl, NodeInfo};
 pub use skills::{
-    check_global_skill_updates, list_global_skills, ExplorePage, SkillExploreResult, SkillInfo,
-    SkillInstallResult, SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
+    check_global_skill_updates, list_global_skills, CustomSkillSaveResult, ExplorePage,
+    SkillExploreResult, SkillInfo, SkillInstallResult, SkillRemoveResult, SkillSearchResult,
+    SkillUpdateInfo, SkillUpdateResult,
 };
 pub use update::{AppUpdateInfo, InstallResult};
 
@@ -30,6 +31,7 @@ pub fn run() {
             skills::explore_skills,
             skills::add_skill,
             skills::remove_skills,
+            skills::save_custom_skill,
             update::check_app_update,
             update::install_app_update,
         ])

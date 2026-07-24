@@ -1,9 +1,6 @@
 use super::npx::run_skills_command;
 use super::types::SkillInstallResult;
 
-/// Install a skill package globally via `npx skills add <package> -g -y`.
-///
-/// Package format matches find results: `owner/repo@skill` or `owner/repo`.
 pub fn add_global_skill(package: &str) -> Result<SkillInstallResult, String> {
     let package = package.trim();
     if package.is_empty() {

@@ -186,6 +186,14 @@ export function InstalledList() {
           const updating = updatingSkill.value === skill.name || updatingSkill.value === "*";
           const removing = removingSkill.value === skill.name || removingSkill.value === "*";
           const isBusy = updating || removing;
+
+          const handleUpdateSkill = () => {
+            onUpdate(skill.name);
+          };
+          const handleAskRemove = () => {
+            setConfirmRemove(skill.name);
+          };
+
           return (
             <>
               {isBusy ? (
@@ -200,7 +208,7 @@ export function InstalledList() {
                       variant="accent"
                       size="sm"
                       label={t("updateOne")}
-                      onClick={() => onUpdate(skill.name)}
+                      onClick={handleUpdateSkill}
                       disabled={actionBusy}
                     >
                       <ArrowUp size={14} />
@@ -212,7 +220,7 @@ export function InstalledList() {
                     variant="danger"
                     size="sm"
                     label={t("remove")}
-                    onClick={() => setConfirmRemove(skill.name)}
+                    onClick={handleAskRemove}
                     disabled={actionBusy}
                   >
                     <X size={13} />

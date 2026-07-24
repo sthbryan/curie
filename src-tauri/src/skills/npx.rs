@@ -20,7 +20,6 @@ pub(crate) fn resolve_npx_bin() -> PathBuf {
     PathBuf::from("npx")
 }
 
-/// Run `npx --yes skills <args…>` with Node on PATH and telemetry disabled.
 pub(crate) fn run_skills_command(args: &[&str]) -> Result<Output, String> {
     let node = resolve_node_bin();
     let npx = resolve_npx_bin();
@@ -38,8 +37,12 @@ pub(crate) fn run_skills_command(args: &[&str]) -> Result<Output, String> {
         }
     }
 
-    cmd.output()
-        .map_err(|e| format!("Failed to run skills {}: {e}", args.first().unwrap_or(&"command")))
+    cmd.output().map_err(|e| {
+        format!(
+            "Failed to run skills {}: {e}",
+            args.first().unwrap_or(&"command")
+        )
+    })
 }
 
 pub(crate) fn extract_json_array(raw: &str) -> Option<&str> {

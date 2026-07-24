@@ -110,17 +110,22 @@ export function Settings() {
             <div className="flex flex-col gap-3 border-b border-border py-4">
               <span className="font-body text-sm text-fg">{t("theme")}</span>
               <div className="grid grid-cols-2 gap-3">
-                {THEME_OPTIONS.map((opt) => (
-                  <ThemeCard
-                    key={opt.id}
-                    id={opt.id}
-                    active={theme.value === opt.id}
-                    label={t(THEME_LABEL[opt.id].label)}
-                    hint={t(THEME_LABEL[opt.id].hint)}
-                    swatches={opt.swatches}
-                    onClick={() => setTheme(opt.id)}
-                  />
-                ))}
+                {THEME_OPTIONS.map((opt) => {
+                  const handlePickTheme = () => {
+                    setTheme(opt.id);
+                  };
+                  return (
+                    <ThemeCard
+                      key={opt.id}
+                      id={opt.id}
+                      active={theme.value === opt.id}
+                      label={t(THEME_LABEL[opt.id].label)}
+                      hint={t(THEME_LABEL[opt.id].hint)}
+                      swatches={opt.swatches}
+                      onClick={handlePickTheme}
+                    />
+                  );
+                })}
               </div>
             </div>
 
@@ -128,15 +133,20 @@ export function Settings() {
 
             <Row label={t("reducedMotion")}>
               <div className="flex">
-                {REDUCED_MOTION_OPTIONS.map((opt, index) => (
-                  <ChoiceButton
-                    key={opt}
-                    active={reducedMotion.value === opt}
-                    label={t(REDUCED_MOTION_LABEL[opt])}
-                    onClick={() => setReducedMotion(opt)}
-                    isLast={index === REDUCED_MOTION_OPTIONS.length - 1}
-                  />
-                ))}
+                {REDUCED_MOTION_OPTIONS.map((opt, index) => {
+                  const handlePickMotion = () => {
+                    setReducedMotion(opt);
+                  };
+                  return (
+                    <ChoiceButton
+                      key={opt}
+                      active={reducedMotion.value === opt}
+                      label={t(REDUCED_MOTION_LABEL[opt])}
+                      onClick={handlePickMotion}
+                      isLast={index === REDUCED_MOTION_OPTIONS.length - 1}
+                    />
+                  );
+                })}
               </div>
             </Row>
 

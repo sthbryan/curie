@@ -3,7 +3,6 @@ use super::types::{ExploreApiResponse, ExplorePage, SkillExploreResult};
 const SEARCH_API_BASE: &str = "https://skills.sh";
 const VALID_VIEWS: &[&str] = &["hot", "trending", "all-time"];
 
-/// Browse the skills.sh leaderboard (same data as the Explore tab on skills.sh).
 pub fn explore_skills(view: &str, page: u32) -> Result<ExplorePage, String> {
     let view = view.trim();
     if !VALID_VIEWS.contains(&view) {

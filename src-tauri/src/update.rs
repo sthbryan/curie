@@ -99,8 +99,6 @@ fn check_app_update_impl() -> Result<AppUpdateInfo, String> {
 pub struct InstallResult {
     pub success: bool,
     pub message: String,
-    /// Fallback URL the frontend should open if in-app install fails
-    /// (e.g. signed artifact missing, network down, key mismatch).
     pub fallback_url: Option<String>,
 }
 
