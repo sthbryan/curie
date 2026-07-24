@@ -33,8 +33,21 @@ describe("Custom", () => {
     expect(container?.textContent).toContain("Build your own skill");
   });
 
-  it("renders a back button", () => {
+  it("renders the new editorial subtitle", () => {
     mount(<Router><Custom /></Router>);
-    expect(container?.textContent).toContain("BACK TO HOME");
+    expect(container?.textContent).toContain("Authored by you. On your disk. Yours.");
+  });
+
+  it("renders the URL install form", () => {
+    mount(<Router><Custom /></Router>);
+    expect(container?.textContent).toContain("Install from a GitHub URL");
+    expect(container?.textContent).toContain("INSTALL");
+  });
+
+  it("renders the MD upload form", () => {
+    mount(<Router><Custom /></Router>);
+    expect(container?.textContent).toContain("Create a custom skill");
+    expect(container?.textContent).toContain("UPLOAD .MD");
+    expect(container?.textContent).toContain("SAVE SKILL");
   });
 });

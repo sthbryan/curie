@@ -145,7 +145,7 @@
   "custom": {
     "eyebrow": "CUSTOM · LOCAL",
     "title": "Build your own skill",
-    "subtitle": "Compose custom skills locally — instructions, prompts, and tools, all in one place.",
+    "subtitle": "Authored by you. On your disk. Yours.",
     "comingSoon": "COMING SOON",
     "body": "This area is still in development. Soon you'll be able to author custom skills, save them locally, and share them with your agents.",
     "url": {
@@ -163,7 +163,7 @@
     "md": {
       "eyebrow": "OPTION 02 · FROM A .MD",
       "title": "Create a custom skill",
-      "subtitle": "Paste or drop a SKILL.md — Curie saves it under ~/.curie/custom-skills/<name>/SKILL.md so npx skills can pick it up.",
+      "subtitle": "Drop a SKILL.md, give it a name, hit save. We park it at ~/.curie/custom-skills/<name>/.",
       "nameLabel": "Skill name",
       "namePlaceholder": "my-skill",
       "contentLabel": "SKILL.md content",

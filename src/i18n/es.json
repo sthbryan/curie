@@ -145,7 +145,7 @@
   "custom": {
     "eyebrow": "CUSTOM · LOCAL",
     "title": "Crea tu propia skill",
-    "subtitle": "Compón skills personalizadas en local — instrucciones, prompts y herramientas, todo en un solo lugar.",
+    "subtitle": "Escritas por ti. En tu disco. Tuyas.",
     "comingSoon": "PRÓXIMAMENTE",
     "body": "Esta área aún está en desarrollo. Pronto podrás crear skills personalizadas, guardarlas en local y compartirlas con tus agentes.",
     "url": {
@@ -163,7 +163,7 @@
     "md": {
       "eyebrow": "OPCIÓN 02 · DESDE UN .MD",
       "title": "Crea una skill personalizada",
-      "subtitle": "Pega o sube un SKILL.md — Curie lo guarda en ~/.curie/custom-skills/<name>/SKILL.md para que npx skills lo pueda usar.",
+      "subtitle": "Pega un SKILL.md, ponle nombre, dale a guardar. Lo metemos en ~/.curie/custom-skills/<name>/.",
       "nameLabel": "Nombre de la skill",
       "namePlaceholder": "mi-skill",
       "contentLabel": "Contenido de SKILL.md",

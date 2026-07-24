@@ -1,6 +1,4 @@
 import { motion } from "motion/react";
-import { useLocation } from "wouter";
-import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
@@ -10,10 +8,7 @@ import { useCustomActions } from "./hooks/useCustomActions";
 
 export function Custom() {
   const t = useT("custom");
-  const [, navigate] = useLocation();
   const actions = useCustomActions();
-
-  const handleGoHome = () => navigate("/");
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
