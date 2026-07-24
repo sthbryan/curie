@@ -1,5 +1,5 @@
 import { GitBranch, Plus, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
@@ -8,6 +8,8 @@ import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { type CustomActions, classifyInput } from "../hooks/useCustomActions";
 
+const SUCCESS_RESET_MS = 2500;
+
 type Props = {
   actions: CustomActions;
 };
@@ -15,11 +17,26 @@ type Props = {
 export function UrlInstallForm({ actions }: Props) {
   const t = useT("custom.url");
   const [value, setValue] = useState("");
+  const resetTimer = useRef<number | null>(null);
 
   const kind = classifyInput(value);
   const isReady = kind !== null;
   const busy = actions.installing;
   const showSuccess = actions.urlSuccess !== null && !actions.installError;
+
+  useEffect(() => {
+    if (!actions.urlSuccess) return;
+    const installed = actions.urlSuccess;
+    const handle = window.setTimeout(() => {
+      setValue((current) => (current.trim() === installed ? "" : current));
+      actions.dismissUrlSuccess();
+    }, SUCCESS_RESET_MS);
+    resetTimer.current = handle;
+    return () => {
+      window.clearTimeout(handle);
+      resetTimer.current = null;
+    };
+  }, [actions.urlSuccess, actions]);
 
   const handleSubmit = () => {
     if (!isReady || busy) return;
