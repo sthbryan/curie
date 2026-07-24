@@ -28,6 +28,7 @@ export type CustomActions = {
   urlSuccess: string | null;
   install: (target: string) => Promise<UrlKind | null>;
   dismissInstallError: () => void;
+  dismissUrlSuccess: () => void;
   saving: boolean;
   saveError: string | null;
   saved: CustomSkillSaveResult | null;
@@ -73,6 +74,10 @@ export function useCustomActions(): CustomActions {
     setInstallError(null);
   }, []);
 
+  const dismissUrlSuccess = useCallback(() => {
+    setUrlSuccess(null);
+  }, []);
+
   const save = useCallback(async (name: string, content: string) => {
     setSaving(true);
     setSaveError(null);
@@ -106,6 +111,7 @@ export function useCustomActions(): CustomActions {
     urlSuccess,
     install,
     dismissInstallError,
+    dismissUrlSuccess,
     saving,
     saveError,
     saved,
