@@ -1,5 +1,12 @@
 import type { LucideIcon } from "lucide-react";
-import { Compass, House, LayoutGrid, Search, Settings as SettingsIcon } from "lucide-react";
+import {
+  Compass,
+  FileCode,
+  House,
+  LayoutGrid,
+  Search,
+  Settings as SettingsIcon,
+} from "lucide-react";
 import { motion, useReducedMotionConfig } from "motion/react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -15,8 +22,7 @@ const TOP_ITEMS: { path: string; key: NavKey; num: string; icon: LucideIcon }[] 
   { path: "/installed", key: "skills", num: "02", icon: LayoutGrid },
   { path: "/marketplace", key: "explore", num: "03", icon: Compass },
   { path: "/find", key: "find", num: "04", icon: Search },
-  // TODO: disabled for now, will be re-enabled when we have a custom skill feature
-  // { path: "/custom", key: "custom", num: "05", icon: FileCode },
+  { path: "/custom", key: "custom", num: "05", icon: FileCode },
 ];
 
 const COLLAPSED_W = 50;
