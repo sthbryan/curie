@@ -187,7 +187,9 @@
   "status": {
     "node": "NODE",
     "agents": "AGENTS",
-    "setupRequired": "SETUP REQUIRED"
+    "setupRequired": "SETUP REQUIRED",
+    "appUpdateAvailable": "UPDATE AVAILABLE",
+    "appUpToDate": "UP TO DATE"
   },
   "settings": {
     "eyebrow": "PREFERENCES",
@@ -221,7 +223,16 @@
     "nodeMissing": "Node not detected",
     "goToSetup": "GO BACK TO SETUP",
     "about": "ABOUT",
-    "aboutDescription": "Curie helps you install, update, delete, and manage your skills. It is built with React, TypeScript, and Tauri."
+    "aboutDescription": "Curie helps you install, update, delete, and manage your skills. It is built with React, TypeScript, and Tauri.",
+    "updateCheckBtn": "CHECK FOR UPDATES",
+    "updateChecking": "CHECKING FOR UPDATES…",
+    "updateAvailable": "UPDATE AVAILABLE",
+    "updateUpToDate": "Curie is up to date",
+    "updateInstall": "UPDATE NOW",
+    "updateInstalling": "INSTALLING…",
+    "updateInstallSuccess": "Update installed — restarting…",
+    "updateInstallFailed": "Could not install update automatically",
+    "updateOpenFallback": "OPEN GITHUB"
   },
   "toast": {
     "installed": "Installed {name}",
@@ -231,6 +242,8 @@
     "noUpdates": "All skills are up to date",
     "nodeInstalled": "Node installed",
     "setupComplete": "Setup complete",
-    "refreshed": "Skills refreshed"
+    "refreshed": "Skills refreshed",
+    "appUpdate": "A new version of Curie is available",
+    "appUpdateAction": "VIEW"
   }
 }

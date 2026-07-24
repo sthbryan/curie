@@ -1,6 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
-import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "@/components/types";
+import type {
+  AppUpdateInfo,
+  InstallResult,
+  NodeInfo,
+  SkillInfo,
+  SkillUpdateInfo,
+} from "@/components/types";
 import { detectLang } from "@/i18n";
 import {
   setSkills,
@@ -11,9 +17,43 @@ import {
   setUpdatesLoading,
 } from "@/store/skills";
 import { hasBooted, markBooted, setLang, setNode, setStage } from "@/store/system";
+import {
+  setAppInstallRunning,
+  setAppUpdate,
+  setAppUpdateError,
+  setAppUpdateLoading,
+} from "@/store/update";
 
 function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
+}
+
+export async function checkAppUpdate() {
+  setAppUpdateLoading(true);
+  setAppUpdateError(null);
+  try {
+    const info = await invoke<AppUpdateInfo>("check_app_update");
+    setAppUpdate(info);
+  } catch (e) {
+    setAppUpdateError(errorMessage(e));
+  } finally {
+    setAppUpdateLoading(false);
+  }
+}
+
+export async function installAppUpdate(): Promise<InstallResult | null> {
+  setAppInstallRunning(true);
+  try {
+    return await invoke<InstallResult>("install_app_update");
+  } catch (e) {
+    return {
+      success: false,
+      message: errorMessage(e),
+      fallbackUrl: "https://github.com/sthbryan/curie/releases/latest",
+    };
+  } finally {
+    setAppInstallRunning(false);
+  }
 }
 
 export async function checkSkillUpdates() {
@@ -67,6 +107,7 @@ export function useBoot() {
         setStage(info.installed ? "home" : "setup");
         if (info.installed) {
           await loadGlobalSkills();
+          void checkAppUpdate();
         }
       } catch {
         if (!cancelled) setStage("setup");

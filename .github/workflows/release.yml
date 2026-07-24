@@ -10,11 +10,10 @@ permissions:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    outputs:
-      version: ${{ steps.version.outputs.value }}
     steps:
       - uses: actions/checkout@v4
 
@@ -26,9 +25,10 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Extract version
-        id: version
-        run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
 
       - name: Install system deps (Linux)
         if: runner.os == 'Linux'
@@ -41,47 +41,17 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev
 
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: src-tauri
-
       - name: Install JS deps
         run: bun install --frozen-lockfile
 
-      - name: Build Tauri
-        run: bun run tauri build
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: Build, sign and upload release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          name: bundle-${{ runner.os }}
-          path: src-tauri/target/release/bundle/
-
-  release:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: bundle-*
-          merge-multiple: true
-
-      - name: List bundles
-        run: find . -type f \( -name "*.dmg" -o -name "*.AppImage" -o -name "*.deb" -o -name "*.tar*" \) -o -type d -name "*.app" | sort
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: Curie ${{ github.ref_name }}
-          tag_name: ${{ github.ref_name }}
-          generate_release_notes: true
-          fail_on_unmatched_files: true
-          files: |
-            **/*.dmg
-            **/*.AppImage
-            **/*.deb
-            **/*.tar.*
+          tagName: ${{ github.ref_name }}
+          releaseName: "Curie ${{ github.ref_name }}"
+          releaseDraft: true
+          prerelease: false

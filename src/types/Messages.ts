@@ -188,6 +188,8 @@ export type Messages = {
     node: string;
     agents: string;
     setupRequired: string;
+    appUpdateAvailable: string;
+    appUpToDate: string;
   };
   settings: {
     eyebrow: string;
@@ -222,6 +224,15 @@ export type Messages = {
     goToSetup: string;
     about: string;
     aboutDescription: string;
+    updateCheckBtn: string;
+    updateChecking: string;
+    updateAvailable: string;
+    updateUpToDate: string;
+    updateInstall: string;
+    updateInstalling: string;
+    updateInstallSuccess: string;
+    updateInstallFailed: string;
+    updateOpenFallback: string;
   };
   toast: {
     installed: string;
@@ -232,5 +243,7 @@ export type Messages = {
     nodeInstalled: string;
     setupComplete: string;
     refreshed: string;
+    appUpdate: string;
+    appUpdateAction: string;
   };
 };

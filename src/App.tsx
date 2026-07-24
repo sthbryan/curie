@@ -1,15 +1,18 @@
 import { MotionConfig } from "motion/react";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { useLocation } from "wouter";
 import { AppShell } from "@/components/AppShell";
 import { Toaster } from "@/components/Toaster";
 import { t } from "@/i18n";
 import { useBoot } from "@/lib/boot";
 import { skillUpdates } from "@/store/skills";
 import { lang, reducedMotion, theme } from "@/store/system";
+import { appUpdate } from "@/store/update";
 
 function App() {
   useBoot();
+  const [, navigate] = useLocation();
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme.value);
   }, [theme.value]);
@@ -24,6 +27,21 @@ function App() {
       notifiedUpdates.current = true;
       const n = skillUpdates.value.filter((u) => u.updateAvailable).length;
       if (n > 0) toast.success(t(lang.value, "toast.updates", { n }));
+    }
+  });
+
+  const notifiedAppUpdate = useRef(false);
+  useEffect(() => {
+    if (appUpdate.value?.updateAvailable && !notifiedAppUpdate.current) {
+      notifiedAppUpdate.current = true;
+      toast.info(t(lang.value, "toast.appUpdate"), {
+        action: {
+          label: t(lang.value, "toast.appUpdateAction"),
+          onClick: () => {
+            navigate("/settings");
+          },
+        },
+      });
     }
   });
 

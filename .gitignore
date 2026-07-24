@@ -20,6 +20,9 @@ bun.lockb
 src-tauri/target
 src-tauri/gen
 
+# Tauri signing keys (private — keep secret!)
+src-tauri/tauri-signing.key
+
 # Local context (notes only — not in git)
 NOTES.md
 DECISIONS.md
