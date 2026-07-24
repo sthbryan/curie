@@ -137,18 +137,23 @@ export function Explore() {
         <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex flex-wrap gap-2">
-              {VIEWS.map((v) => (
-                <Button
-                  key={v}
-                  size="xs"
-                  variant="outline"
-                  selected={view === v}
-                  onClick={() => setView(v)}
-                  disabled={loading && view === v}
-                >
-                  {t(`view.${v === "all-time" ? "allTime" : v}`)}
-                </Button>
-              ))}
+              {VIEWS.map((v) => {
+                const handlePickView = () => {
+                  setView(v);
+                };
+                return (
+                  <Button
+                    key={v}
+                    size="xs"
+                    variant="outline"
+                    selected={view === v}
+                    onClick={handlePickView}
+                    disabled={loading && view === v}
+                  >
+                    {t(`view.${v === "all-time" ? "allTime" : v}`)}
+                  </Button>
+                );
+              })}
             </div>
             <div className="flex items-center gap-3">
               <span className="font-mono uppercase tracking-label text-micro text-fg-4">
