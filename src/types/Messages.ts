@@ -149,6 +149,35 @@ export type Messages = {
     comingSoon: string;
     body: string;
     back: string;
+    url: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      label: string;
+      placeholder: string;
+      submit: string;
+      installing: string;
+      hint: string;
+      error: string;
+      success: string;
+    };
+    md: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      nameLabel: string;
+      namePlaceholder: string;
+      contentLabel: string;
+      contentPlaceholder: string;
+      fileButton: string;
+      fileLoaded: string;
+      submit: string;
+      saving: string;
+      hint: string;
+      error: string;
+      success: string;
+      savedAt: string;
+    };
   };
   explore: {
     eyebrow: string;

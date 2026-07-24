@@ -148,7 +148,36 @@
     "subtitle": "Compón skills personalizadas en local — instrucciones, prompts y herramientas, todo en un solo lugar.",
     "comingSoon": "PRÓXIMAMENTE",
     "body": "Esta área aún está en desarrollo. Pronto podrás crear skills personalizadas, guardarlas en local y compartirlas con tus agentes.",
-    "back": "VOLVER AL INICIO"
+    "back": "VOLVER AL INICIO",
+    "url": {
+      "eyebrow": "OPCIÓN 01 · DESDE GITHUB",
+      "title": "Instala desde una URL de GitHub",
+      "subtitle": "Pega una URL de repositorio, un tree path o un owner/repo. Curie lo reenvía a `npx skills add`.",
+      "label": "URL de GitHub o package",
+      "placeholder": "https://github.com/owner/repo o owner/repo@skill",
+      "submit": "INSTALAR",
+      "installing": "INSTALANDO",
+      "hint": "Detecta URLs de github.com, handles owner/repo y referencias owner/repo@skill.",
+      "error": "Falló la instalación",
+      "success": "Instalado {target}"
+    },
+    "md": {
+      "eyebrow": "OPCIÓN 02 · DESDE UN .MD",
+      "title": "Crea una skill personalizada",
+      "subtitle": "Pega o sube un SKILL.md — Curie lo guarda en ~/.curie/custom-skills/<name>/SKILL.md para que npx skills lo pueda usar.",
+      "nameLabel": "Nombre de la skill",
+      "namePlaceholder": "mi-skill",
+      "contentLabel": "Contenido de SKILL.md",
+      "contentPlaceholder": "---\nname: mi-skill\ndescription: qué hace\n---\n\n# Mi skill\n\n…",
+      "fileButton": "SUBIR .MD",
+      "fileLoaded": "Cargado {name}",
+      "submit": "GUARDAR SKILL",
+      "saving": "GUARDANDO",
+      "hint": "El nombre acepta letras, dígitos, guiones, puntos y guiones bajos. El cuerpo del .md no puede estar vacío.",
+      "error": "Falló el guardado",
+      "success": "Guardado {name}",
+      "savedAt": "Guardado en {path}"
+    }
   },
   "explore": {
     "eyebrow": "EXPLORAR · SKILLS.SH",

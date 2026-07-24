@@ -148,7 +148,36 @@
     "subtitle": "Compose custom skills locally — instructions, prompts, and tools, all in one place.",
     "comingSoon": "COMING SOON",
     "body": "This area is still in development. Soon you'll be able to author custom skills, save them locally, and share them with your agents.",
-    "back": "BACK TO HOME"
+    "back": "BACK TO HOME",
+    "url": {
+      "eyebrow": "OPTION 01 · FROM GITHUB",
+      "title": "Install from a GitHub URL",
+      "subtitle": "Paste a repository URL, a tree path, or an owner/repo handle. Curie forwards it to `npx skills add`.",
+      "label": "GitHub URL or package",
+      "placeholder": "https://github.com/owner/repo or owner/repo@skill",
+      "submit": "INSTALL",
+      "installing": "INSTALLING",
+      "hint": "Detects github.com URLs, owner/repo handles, and owner/repo@skill references.",
+      "error": "Install failed",
+      "success": "Installed {target}"
+    },
+    "md": {
+      "eyebrow": "OPTION 02 · FROM A .MD",
+      "title": "Create a custom skill",
+      "subtitle": "Paste or drop a SKILL.md — Curie saves it under ~/.curie/custom-skills/<name>/SKILL.md so npx skills can pick it up.",
+      "nameLabel": "Skill name",
+      "namePlaceholder": "my-skill",
+      "contentLabel": "SKILL.md content",
+      "contentPlaceholder": "---\nname: my-skill\ndescription: what it does\n---\n\n# My skill\n\n…",
+      "fileButton": "UPLOAD .MD",
+      "fileLoaded": "Loaded {name}",
+      "submit": "SAVE SKILL",
+      "saving": "SAVING",
+      "hint": "Skill name accepts letters, digits, dashes, dots, and underscores. The .md body must not be empty.",
+      "error": "Save failed",
+      "success": "Saved {name}",
+      "savedAt": "Saved to {path}"
+    }
   },
   "explore": {
     "eyebrow": "EXPLORE · SKILLS.SH",
