@@ -1,5 +1,6 @@
 mod add;
 mod check;
+mod custom;
 mod explore;
 mod find;
 mod list;
@@ -11,13 +12,14 @@ mod update;
 
 pub use add::add_global_skill;
 pub use check::check_global_skill_updates;
+pub use custom::write_custom_skill;
 pub use explore::explore_skills as browse_skills;
 pub use find::find_skills as search_skills;
 pub use list::list_global_skills;
 pub use remove::remove_global_skills;
 pub use types::{
-    ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult, SkillRemoveResult,
-    SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
+    CustomSkillSaveResult, ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult,
+    SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
 pub use update::update_global_skills;
 
@@ -72,4 +74,9 @@ pub async fn remove_skills(skills: Vec<String>) -> Result<SkillRemoveResult, Str
     tauri::async_runtime::spawn_blocking(move || remove_global_skills(&skills))
         .await
         .map_err(|e| format!("remove task failed: {e}"))?
+}
+
+#[tauri::command]
+pub fn save_custom_skill(name: String, content: String) -> Result<CustomSkillSaveResult, String> {
+    write_custom_skill(&name, &content)
 }
