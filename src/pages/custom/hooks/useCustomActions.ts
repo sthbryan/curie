@@ -1,5 +1,6 @@
+import { type Signal, signal } from "@preact/signals";
 import { invoke } from "@tauri-apps/api/core";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { toast } from "sonner";
 import type { CustomSkillSaveResult, SkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
@@ -23,86 +24,87 @@ export function classifyInput(input: string): UrlKind | null {
 }
 
 export type CustomActions = {
-  installing: boolean;
-  installError: string | null;
-  urlSuccess: string | null;
+  installing: Signal<boolean>;
+  installError: Signal<string | null>;
+  urlSuccess: Signal<string | null>;
   install: (target: string) => Promise<UrlKind | null>;
   dismissInstallError: () => void;
   dismissUrlSuccess: () => void;
-  saving: boolean;
-  saveError: string | null;
-  saved: CustomSkillSaveResult | null;
+  saving: Signal<boolean>;
+  saveError: Signal<string | null>;
+  saved: Signal<CustomSkillSaveResult | null>;
   save: (name: string, content: string) => Promise<void>;
   dismissSaveError: () => void;
   clearSaved: () => void;
 };
 
 export function useCustomActions(): CustomActions {
-  const [installing, setInstalling] = useState(false);
-  const [installError, setInstallError] = useState<string | null>(null);
-  const [urlSuccess, setUrlSuccess] = useState<string | null>(null);
+  const installing = signal(false);
+  const installError = signal<string | null>(null);
+  const urlSuccess = signal<string | null>(null);
 
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [saved, setSaved] = useState<CustomSkillSaveResult | null>(null);
+  const saving = signal(false);
+  const saveError = signal<string | null>(null);
+  const saved = signal<CustomSkillSaveResult | null>(null);
 
   const install = useCallback(async (target: string) => {
     const kind = classifyInput(target);
     if (!kind) {
-      setInstallError("expected a github.com URL or an owner/repo[@skill] package");
+      installError.value = "expected a github.com URL or an owner/repo[@skill] package";
       return null;
     }
-    setInstalling(true);
-    setInstallError(null);
-    setUrlSuccess(null);
+    installing.value = true;
+    installError.value = null;
+    urlSuccess.value = null;
     try {
       await invoke<SkillInstallResult>("add_skill", { package: target.trim() });
       const label = target.trim();
-      setUrlSuccess(label);
+      urlSuccess.value = label;
       toast.success(t(lang.value, "toast.installed", { name: label }));
       await loadGlobalSkills({ checkUpdates: true });
       return kind;
     } catch (e) {
-      setInstallError(errorMessage(e));
+      installError.value = errorMessage(e);
       return null;
     } finally {
-      setInstalling(false);
+      installing.value = false;
     }
   }, []);
 
   const dismissInstallError = useCallback(() => {
-    setInstallError(null);
+    installError.value = null;
   }, []);
 
   const dismissUrlSuccess = useCallback(() => {
-    setUrlSuccess(null);
+    urlSuccess.value = null;
   }, []);
 
   const save = useCallback(async (name: string, content: string) => {
-    setSaving(true);
-    setSaveError(null);
+    console.log("save", name, content);
+    saving.value = true;
+    saveError.value = null;
     try {
       const res = await invoke<CustomSkillSaveResult>("save_custom_skill", {
         name: name.trim(),
         content,
       });
-      setSaved(res);
-      setUrlSuccess(null);
+      saved.value = res;
+      urlSuccess.value = null;
       return;
     } catch (e) {
-      setSaveError(errorMessage(e));
+      saveError.value = errorMessage(e);
       throw e;
     } finally {
-      setSaving(false);
+      saving.value = false;
     }
   }, []);
 
   const dismissSaveError = useCallback(() => {
-    setSaveError(null);
+    saveError.value = null;
   }, []);
 
   const clearSaved = useCallback(() => {
-    setSaved(null);
+    saved.value = null;
   }, []);
 
   return {
