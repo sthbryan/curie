@@ -70,18 +70,23 @@ export function InstalledFilters() {
         >
           {t("filterAll")}
         </Button>
-        {agents.map((agent) => (
-          <Button
-            key={agent.id}
-            size="xs"
-            variant="outline"
-            selected={agentFilter.value === agent.label}
-            onClick={() => setAgentFilter(agentFilter.value === agent.label ? null : agent.label)}
-          >
-            {agent.label}
-            <span className="ml-2 opacity-60">{agent.count}</span>
-          </Button>
-        ))}
+        {agents.map((agent) => {
+          const handleToggleAgent = () => {
+            setAgentFilter(agentFilter.value === agent.label ? null : agent.label);
+          };
+          return (
+            <Button
+              key={agent.id}
+              size="xs"
+              variant="outline"
+              selected={agentFilter.value === agent.label}
+              onClick={handleToggleAgent}
+            >
+              {agent.label}
+              <span className="ml-2 opacity-60">{agent.count}</span>
+            </Button>
+          );
+        })}
       </div>
     </motion.section>
   );
