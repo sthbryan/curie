@@ -2,7 +2,6 @@ use super::lock::load_skill_lock;
 use super::types::{GitTreeResponse, SkillLockEntry, SkillUpdateInfo};
 use std::collections::HashMap;
 
-/// Strip `SKILL.md` from a lock skillPath to get the skill folder path in the repo tree.
 pub(crate) fn skill_folder_path(skill_path: &str) -> String {
     let mut path = skill_path.replace('\\', "/");
     let lower = path.to_ascii_lowercase();
@@ -192,10 +191,7 @@ pub fn check_global_skill_updates() -> Result<Vec<SkillUpdateInfo>, String> {
             let skill_path = entry.skill_path.as_deref().unwrap_or("");
             let local_hash = entry.skill_folder_hash.as_deref().unwrap_or("");
             let latest = latest_folder_hash(tree, skill_path);
-            let update_available = latest
-                .as_deref()
-                .map(|h| h != local_hash)
-                .unwrap_or(false);
+            let update_available = latest.as_deref().map(|h| h != local_hash).unwrap_or(false);
 
             results.push(SkillUpdateInfo {
                 name,
@@ -225,7 +221,10 @@ mod tests {
             skill_folder_path(".agents/skills/impeccable/SKILL.md"),
             ".agents/skills/impeccable"
         );
-        assert_eq!(skill_folder_path("nothing-design/skill.md"), "nothing-design");
+        assert_eq!(
+            skill_folder_path("nothing-design/skill.md"),
+            "nothing-design"
+        );
         assert_eq!(skill_folder_path("SKILL.md"), "");
     }
 
@@ -251,6 +250,9 @@ mod tests {
             Some("abc123")
         );
         assert_eq!(latest_folder_hash(&tree, "missing/SKILL.md"), None);
-        assert_eq!(latest_folder_hash(&tree, "SKILL.md").as_deref(), Some("root"));
+        assert_eq!(
+            latest_folder_hash(&tree, "SKILL.md").as_deref(),
+            Some("root")
+        );
     }
 }

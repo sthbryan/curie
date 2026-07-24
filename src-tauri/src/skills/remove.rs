@@ -1,7 +1,6 @@
 use super::npx::run_skills_command;
 use super::types::SkillRemoveResult;
 
-/// Remove one or more global skills via `npx skills remove -g -y [skills…]`.
 pub fn remove_global_skills(skills: &[String]) -> Result<SkillRemoveResult, String> {
     if skills.is_empty() {
         return Err("at least one skill name is required".into());

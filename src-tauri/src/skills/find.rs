@@ -4,7 +4,6 @@ const SEARCH_API_BASE: &str = "https://skills.sh";
 const DEFAULT_LIMIT: u32 = 20;
 const MIN_QUERY_LEN: usize = 2;
 
-/// Search the skills registry (same API as `npx skills find`).
 pub fn find_skills(query: &str, owner: Option<&str>) -> Result<Vec<SkillSearchResult>, String> {
     let q = query.trim();
     if q.len() < MIN_QUERY_LEN {
@@ -72,7 +71,11 @@ pub fn find_skills(query: &str, owner: Option<&str>) -> Result<Vec<SkillSearchRe
         })
         .collect();
 
-    results.sort_by(|a, b| b.installs.cmp(&a.installs).then_with(|| a.name.cmp(&b.name)));
+    results.sort_by(|a, b| {
+        b.installs
+            .cmp(&a.installs)
+            .then_with(|| a.name.cmp(&b.name))
+    });
     Ok(results)
 }
 
@@ -84,10 +87,11 @@ fn is_valid_github_owner(owner: &str) -> bool {
     if !bytes[0].is_ascii_alphanumeric() {
         return false;
     }
-    bytes.iter().all(|b| b.is_ascii_alphanumeric() || *b == b'-')
+    bytes
+        .iter()
+        .all(|b| b.is_ascii_alphanumeric() || *b == b'-')
 }
 
-/// Minimal URL-encoding for query values (RFC 3986 unreserved + encode rest).
 fn urlencoding_encode(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for b in s.bytes() {

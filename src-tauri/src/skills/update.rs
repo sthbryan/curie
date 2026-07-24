@@ -1,8 +1,6 @@
 use super::npx::run_skills_command;
 use super::types::SkillUpdateResult;
 
-/// Apply updates via `npx skills update -g -y [skills…]`.
-/// Empty list updates every outdated global skill the CLI tracks.
 pub fn update_global_skills(skills: Option<Vec<String>>) -> Result<SkillUpdateResult, String> {
     let names: Vec<String> = skills.unwrap_or_default();
     let mut args: Vec<&str> = vec!["update", "-g", "-y"];
