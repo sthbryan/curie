@@ -1,4 +1,4 @@
-import { FileUp, Save, X } from "lucide-react";
+import { FileUp, Save } from "lucide-react";
 import { useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
 import { Button } from "@/components/Button";
@@ -37,8 +37,7 @@ export function MdUploadForm({ actions }: Props) {
 
   const nameValid = isValidName(name);
   const contentValid = content.trim().length > 0;
-  const canSubmit = nameValid && contentValid && !actions.saving;
-  const showSaved = actions.saved !== null && !actions.saveError;
+  const canSubmit = nameValid && contentValid && actions.saveStatus.value.status !== "processing";
 
   const handleFile = async (file: File) => {
     const text = await file.text();
@@ -63,14 +62,21 @@ export function MdUploadForm({ actions }: Props) {
 
   const handleSubmit = () => {
     if (!canSubmit) return;
-    actions.save(name, content).catch(() => {});
+    void actions
+      .save(name, content)
+      .then(() => {
+        setName("");
+        setContent("");
+        setFileName(null);
+      })
+      .catch(() => {});
   };
 
   const handleReset = () => {
     setName("");
     setContent("");
     setFileName(null);
-    actions.clearSaved();
+    actions.cleanSaved();
   };
 
   return (
@@ -80,37 +86,6 @@ export function MdUploadForm({ actions }: Props) {
         <h3 className="font-display text-xl font-bold tracking-tight text-fg">{t("title")}</h3>
         <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
       </div>
-
-      <When condition={Boolean(actions.saveError)}>
-        <div className="flex items-start justify-between gap-4 border border-accent/30 bg-surface-tint px-4 py-3">
-          <div className="min-w-0 flex flex-col gap-1">
-            <span className="font-mono uppercase tracking-label text-micro text-accent">
-              {t("error")}
-            </span>
-            <p className="font-body text-sm text-fg-3 break-all">{actions.saveError}</p>
-          </div>
-          <Button
-            size="xs"
-            variant="link"
-            className="shrink-0 px-0"
-            aria-label={t("error")}
-            onClick={actions.dismissSaveError}
-          >
-            <X size={10} />
-          </Button>
-        </div>
-      </When>
-
-      <When condition={showSaved}>
-        <div className="flex flex-col gap-1 border border-success/30 bg-surface-tint px-4 py-3">
-          <span className="font-mono uppercase tracking-label text-micro text-success">
-            {t("success", { name: actions.saved?.name ?? "" })}
-          </span>
-          <p className="font-body text-xs text-fg-3 break-all">
-            {t("savedAt", { path: actions.saved?.path ?? "" })}
-          </p>
-        </div>
-      </When>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex flex-col gap-1.5 flex-1 min-w-0">
@@ -173,7 +148,7 @@ export function MdUploadForm({ actions }: Props) {
           spellCheck={false}
           rows={10}
           className={cn(
-            "w-full border border-border-strong bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm resize-y min-h-[180px]",
+            "w-full border border-border-strong bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm resize-y min-h-45",
           )}
         />
       </div>
@@ -181,11 +156,9 @@ export function MdUploadForm({ actions }: Props) {
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <p className="font-body text-xs text-fg-4 max-w-md">{t("hint")}</p>
         <div className="flex items-center gap-2">
-          <When condition={showSaved}>
-            <Button size="lg" variant="ghost" className="px-5" onClick={handleReset} type="button">
-              {t("fileButton")}
-            </Button>
-          </When>
+          <Button size="lg" variant="ghost" className="px-5" onClick={handleReset} type="button">
+            {t("fileButton")}
+          </Button>
           <Button
             size="lg"
             variant="primary"
@@ -194,7 +167,7 @@ export function MdUploadForm({ actions }: Props) {
             disabled={!canSubmit}
           >
             <Save size={14} />
-            <If condition={actions.saving}>
+            <If condition={actions.saveStatus.value.status === "processing"}>
               <Then>{t("saving")}</Then>
               <Else>{t("submit")}</Else>
             </If>
