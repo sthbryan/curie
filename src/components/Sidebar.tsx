@@ -49,17 +49,22 @@ export function Sidebar() {
       className="flex shrink-0 flex-col border-r border-border bg-surface"
     >
       <div className="flex flex-col gap-0.5 px-2 pt-4 pb-2">
-        {TOP_ITEMS.map((item) => (
-          <NavItem
-            key={item.path}
-            number={item.num}
-            label={t(`nav.${item.key}`)}
-            icon={item.icon}
-            active={location === item.path}
-            expanded={hovered}
-            onClick={() => navigate(item.path)}
-          />
-        ))}
+        {TOP_ITEMS.map((item) => {
+          const handleNavItem = () => {
+            navigate(item.path);
+          };
+          return (
+            <NavItem
+              key={item.path}
+              number={item.num}
+              label={t(`nav.${item.key}`)}
+              icon={item.icon}
+              active={location === item.path}
+              expanded={hovered}
+              onClick={handleNavItem}
+            />
+          );
+        })}
       </div>
 
       <div className="flex-1" />
