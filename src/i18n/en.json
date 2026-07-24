@@ -148,7 +148,6 @@
     "subtitle": "Compose custom skills locally — instructions, prompts, and tools, all in one place.",
     "comingSoon": "COMING SOON",
     "body": "This area is still in development. Soon you'll be able to author custom skills, save them locally, and share them with your agents.",
-    "back": "BACK TO HOME",
     "url": {
       "eyebrow": "OPTION 01 · FROM GITHUB",
       "title": "Install from a GitHub URL",

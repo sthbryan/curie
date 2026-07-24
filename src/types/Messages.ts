@@ -148,7 +148,6 @@ export type Messages = {
     subtitle: string;
     comingSoon: string;
     body: string;
-    back: string;
     url: {
       eyebrow: string;
       title: string;

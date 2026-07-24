@@ -46,15 +46,6 @@ export function Custom() {
 
           <MdUploadForm actions={actions} />
         </motion.section>
-
-        <motion.section
-          {...fadeUp(0.1)}
-          className="flex items-center justify-end gap-4 border-t border-border pt-6"
-        >
-          <Button size="sm" variant="ghost" onClick={handleGoHome}>
-            {t("back")}
-          </Button>
-        </motion.section>
       </div>
     </main>
   );
