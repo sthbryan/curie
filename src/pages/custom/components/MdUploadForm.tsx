@@ -57,6 +57,10 @@ export function MdUploadForm({ actions }: Props) {
     e.target.value = "";
   };
 
+  const handlePickFile = () => {
+    fileRef.current?.click();
+  };
+
   const handleSubmit = () => {
     if (!canSubmit) return;
     actions.save(name, content).catch(() => {});
@@ -142,7 +146,7 @@ export function MdUploadForm({ actions }: Props) {
           size="lg"
           variant="outline"
           className="px-5 shrink-0"
-          onClick={() => fileRef.current?.click()}
+          onClick={handlePickFile}
           type="button"
         >
           <FileUp size={14} />
