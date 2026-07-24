@@ -111,17 +111,14 @@ export function UrlInstallForm({ actions }: Props) {
         <Button
           size="lg"
           variant="primary"
-          className="px-5 shrink-0 sm:mt-[22px]"
+          className="px-5 shrink-0 sm:mt-5.5"
           onClick={handleSubmit}
           disabled={!isReady || busy}
         >
           <GitBranch size={14} />
           <If condition={busy}>
             <Then>{t("installing")}</Then>
-            <Else>
-              <Plus size={10} />
-              {t("submit")}
-            </Else>
+            <Else>{t("submit")}</Else>
           </If>
         </Button>
       </div>
