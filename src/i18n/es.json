@@ -170,6 +170,7 @@
       "contentPlaceholder": "---\nname: mi-skill\ndescription: qué hace\n---\n\n# Mi skill\n\n…",
       "fileButton": "SUBIR .MD",
       "fileLoaded": "Cargado {name}",
+      "clear": "LIMPIAR",
       "submit": "GUARDAR",
       "saving": "GUARDANDO",
       "hint": "El nombre acepta letras, dígitos, guiones, puntos y guiones bajos. El cuerpo del .md no puede estar vacío.",

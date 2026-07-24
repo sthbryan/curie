@@ -157,7 +157,7 @@ export function MdUploadForm({ actions }: Props) {
         <p className="font-body text-xs text-fg-4 max-w-md">{t("hint")}</p>
         <div className="flex items-center gap-2">
           <Button size="lg" variant="ghost" className="px-5" onClick={handleReset} type="button">
-            {t("fileButton")}
+            {t("clear")}
           </Button>
           <Button
             size="lg"

@@ -170,6 +170,7 @@ export type Messages = {
       contentPlaceholder: string;
       fileButton: string;
       fileLoaded: string;
+      clear: string;
       submit: string;
       saving: string;
       hint: string;

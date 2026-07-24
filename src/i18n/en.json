@@ -170,6 +170,7 @@
       "contentPlaceholder": "---\nname: my-skill\ndescription: what it does\n---\n\n# My skill\n\n…",
       "fileButton": "UPLOAD .MD",
       "fileLoaded": "Loaded {name}",
+      "clear": "CLEAR",
       "submit": "SAVE",
       "saving": "SAVING",
       "hint": "Skill name accepts letters, digits, dashes, dots, and underscores. The .md body must not be empty.",
