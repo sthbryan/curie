@@ -8,6 +8,7 @@ import type { CustomSkillSaveResult, SkillInstallResult } from "@/components/typ
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
 const toastSuccessMock = vi.fn();
+const toastErrorMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -18,7 +19,10 @@ vi.mock("@/lib/boot", () => ({
 }));
 
 vi.mock("sonner", () => ({
-  toast: { success: (...args: unknown[]) => toastSuccessMock(...args) },
+  toast: {
+    success: (...args: unknown[]) => toastSuccessMock(...args),
+    error: (...args: unknown[]) => toastErrorMock(...args),
+  },
 }));
 
 const { useCustomActions, classifyInput } = await import(
@@ -65,6 +69,7 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockReset();
   loadGlobalSkillsMock.mockResolvedValue(undefined);
   toastSuccessMock.mockReset();
+  toastErrorMock.mockReset();
 });
 
 afterEach(() => {
@@ -115,7 +120,7 @@ describe("useCustomActions.install", () => {
       const kind = await get().install("not a valid target");
       expect(kind).toBeNull();
     });
-    expect(get().installError).toMatch(/expected a github.com URL/);
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
     expect(invokeMock).not.toHaveBeenCalled();
     unmount();
   });
@@ -131,8 +136,6 @@ describe("useCustomActions.install", () => {
 
     expect(invokeMock).toHaveBeenCalledWith("add_skill", { package: "owner/repo@skill" });
     expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
-    expect(get().urlSuccess).toBe("owner/repo@skill");
-    expect(get().installError).toBeNull();
     expect(toastSuccessMock).toHaveBeenCalledTimes(1);
     unmount();
   });
@@ -161,29 +164,13 @@ describe("useCustomActions.install", () => {
       expect(kind).toBeNull();
     });
 
-    expect(get().installError).toBe("boom");
-    expect(get().urlSuccess).toBeNull();
-    unmount();
-  });
-
-  it("dismissInstallError clears the error", async () => {
-    invokeMock.mockRejectedValueOnce("nope");
-    const { get, unmount } = renderHook(() => useCustomActions());
-    await act(async () => {
-      await get().install("owner/repo").catch(() => {});
-    });
-    expect(get().installError).toBe("nope");
-
-    act(() => {
-      get().dismissInstallError();
-    });
-    expect(get().installError).toBeNull();
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
     unmount();
   });
 });
 
 describe("useCustomActions.save", () => {
-  it("invokes save_custom_skill and stores the result", async () => {
+  it("invokes save_custom_skill and shows a success toast", async () => {
     const saved: CustomSkillSaveResult = {
       name: "my-skill",
       path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
@@ -200,12 +187,11 @@ describe("useCustomActions.save", () => {
       name: "my-skill",
       content: "# content",
     });
-    expect(get().saved).toEqual(saved);
-    expect(get().saveError).toBeNull();
+    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
     unmount();
   });
 
-  it("surfaces save errors and rethrows", async () => {
+  it("surfaces save errors with a toast and rethrows", async () => {
     invokeMock.mockRejectedValueOnce("invalid name");
     const { get, unmount } = renderHook(() => useCustomActions());
 
@@ -213,28 +199,17 @@ describe("useCustomActions.save", () => {
       await expect(get().save("bad name", "x")).rejects.toBe("invalid name");
     });
 
-    expect(get().saveError).toBe("invalid name");
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
     unmount();
   });
 
-  it("clearSaved resets the saved state", async () => {
-    const saved: CustomSkillSaveResult = {
-      name: "x",
-      path: "/p",
-      message: "m",
-    };
-    invokeMock.mockResolvedValueOnce(saved);
+  it("cleanSaved resets the save status", async () => {
     const { get, unmount } = renderHook(() => useCustomActions());
 
-    await act(async () => {
-      await get().save("x", "y");
-    });
-    expect(get().saved).toEqual(saved);
-
     act(() => {
-      get().clearSaved();
+      get().cleanSaved();
     });
-    expect(get().saved).toBeNull();
+    expect(get().saveStatus.value.status).toBe("idle");
     unmount();
   });
 });

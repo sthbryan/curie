@@ -2,18 +2,10 @@
 
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
-import type { SkillInstallResult } from "@/components/types";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { CustomSkillSaveResult } from "@/components/types";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn();
 const toastSuccessMock = vi.fn();
 const toastErrorMock = vi.fn();
 
@@ -22,7 +14,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadGlobalSkills: vi.fn(),
 }));
 
 vi.mock("sonner", () => ({
@@ -32,12 +24,8 @@ vi.mock("sonner", () => ({
   },
 }));
 
-const { UrlInstallForm } = await import(
-  "@/pages/custom/components/UrlInstallForm"
-);
-const { useCustomActions } = await import(
-  "@/pages/custom/hooks/useCustomActions"
-);
+const { MdUploadForm } = await import("@/pages/custom/components/MdUploadForm");
+const { useCustomActions } = await import("@/pages/custom/hooks/useCustomActions");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -49,7 +37,7 @@ const lastActions: { current: ReturnType<typeof useCustomActions> | null } = {
 
 function Probe() {
   lastActions.current = useCustomActions();
-  return <UrlInstallForm actions={lastActions.current} />;
+  return <MdUploadForm actions={lastActions.current} />;
 }
 
 function mount() {
@@ -75,12 +63,16 @@ function unmount() {
   lastActions.current = null;
 }
 
-function getInput(): HTMLInputElement {
-  const input = container?.querySelector(
-    'input[type="text"]',
-  ) as HTMLInputElement | null;
-  if (!input) throw new Error("input not found");
+function getNameInput(): HTMLInputElement {
+  const input = container?.querySelector("#custom-md-name") as HTMLInputElement | null;
+  if (!input) throw new Error("name input not found");
   return input;
+}
+
+function getContentInput(): HTMLTextAreaElement {
+  const textarea = container?.querySelector("#custom-md-content") as HTMLTextAreaElement | null;
+  if (!textarea) throw new Error("content textarea not found");
+  return textarea;
 }
 
 function getButtonByText(text: string): HTMLButtonElement {
@@ -90,9 +82,8 @@ function getButtonByText(text: string): HTMLButtonElement {
   return found as HTMLButtonElement;
 }
 
-function setInputValue(value: string) {
+function setInputValue(input: HTMLInputElement | HTMLTextAreaElement, value: string) {
   act(() => {
-    const input = getInput();
     const proto = Object.getPrototypeOf(input);
     const setter = Object.getOwnPropertyDescriptor(proto, "value")?.set;
     if (setter) {
@@ -106,69 +97,63 @@ function setInputValue(value: string) {
 
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockReset();
-  loadGlobalSkillsMock.mockResolvedValue(undefined);
   toastSuccessMock.mockReset();
   toastErrorMock.mockReset();
-  vi.useFakeTimers();
 });
 
-afterEach(() => {
-  unmount();
-  vi.useRealTimers();
-});
+afterEach(unmount);
 
-describe("UrlInstallForm", () => {
-  it("keeps the install button disabled until the input looks like a URL or package", () => {
+describe("MdUploadForm", () => {
+  it("keeps save disabled until name and content are valid", () => {
     mount();
-    const installButton = getButtonByText("INSTALL");
-    expect(installButton.disabled).toBe(true);
+    const saveButton = getButtonByText("SAVE SKILL");
+    expect(saveButton.disabled).toBe(true);
 
-    setInputValue("owner/repo@skill");
-    expect(installButton.disabled).toBe(false);
+    setInputValue(getNameInput(), "my-skill");
+    setInputValue(getContentInput(), "# Skill content");
+    expect(saveButton.disabled).toBe(false);
   });
 
-  it("clears the input after a successful install", async () => {
-    invokeMock.mockResolvedValue({
-      package: "owner/repo",
-      message: "ok",
-    } as SkillInstallResult);
+  it("shows success via toast and clears the form inputs", async () => {
+    const saved: CustomSkillSaveResult = {
+      name: "my-skill",
+      path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
+      message: "Saved",
+    };
+    invokeMock.mockResolvedValueOnce(saved);
 
     mount();
-    setInputValue("owner/repo@skill");
+    setInputValue(getNameInput(), "my-skill");
+    setInputValue(getContentInput(), "# Skill content");
 
-    const installButton = getButtonByText("INSTALL");
-    expect(installButton.disabled).toBe(false);
-
+    const saveButton = getButtonByText("SAVE SKILL");
     await act(async () => {
-      installButton.click();
+      saveButton.click();
       await Promise.resolve();
       await Promise.resolve();
     });
 
     expect(toastSuccessMock).toHaveBeenCalledTimes(1);
-    expect(getInput().value).toBe("");
+    expect(getNameInput().value).toBe("");
+    expect(getContentInput().value).toBe("");
   });
 
-  it("does not clear the input if the user typed something new while the success was showing", async () => {
-    invokeMock.mockResolvedValue({
-      package: "owner/repo",
-      message: "ok",
-    } as SkillInstallResult);
+  it("surfaces save errors via toast and keeps the form inputs", async () => {
+    invokeMock.mockRejectedValueOnce("invalid name");
 
     mount();
-    setInputValue("owner/repo@skill");
+    setInputValue(getNameInput(), "my-skill");
+    setInputValue(getContentInput(), "# Skill content");
 
-    const installButton = getButtonByText("INSTALL");
+    const saveButton = getButtonByText("SAVE SKILL");
     await act(async () => {
-      installButton.click();
+      saveButton.click();
       await Promise.resolve();
       await Promise.resolve();
     });
 
-    setInputValue("vercel-labs/agent-skills@pdf");
-
-    expect(getInput().value).toBe("vercel-labs/agent-skills@pdf");
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
+    expect(getNameInput().value).toBe("my-skill");
+    expect(getContentInput().value).toBe("# Skill content");
   });
 });
