@@ -1,3 +1,4 @@
+import { signal } from "@preact/signals";
 import { GitBranch, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
@@ -16,10 +17,10 @@ type Props = {
 
 export function UrlInstallForm({ actions }: Props) {
   const t = useT("custom.url");
-  const [value, setValue] = useState("");
+  const url = signal("");
   const resetTimer = useRef<number | null>(null);
 
-  const kind = classifyInput(value);
+  const kind = classifyInput(url.value);
   const isReady = kind !== null;
   const busy = actions.installing;
   const showSuccess = actions.urlSuccess !== null && !actions.installError;
@@ -28,7 +29,7 @@ export function UrlInstallForm({ actions }: Props) {
     if (!actions.urlSuccess) return;
     const installed = actions.urlSuccess;
     const handle = window.setTimeout(() => {
-      setValue((current) => (current.trim() === installed ? "" : current));
+      if (url.value?.trim() === installed.value) url.value = "";
       actions.dismissUrlSuccess();
     }, SUCCESS_RESET_MS);
     resetTimer.current = handle;
@@ -40,7 +41,7 @@ export function UrlInstallForm({ actions }: Props) {
 
   const handleSubmit = () => {
     if (!isReady || busy) return;
-    void actions.install(value);
+    void actions.install(url.value.trim());
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -64,7 +65,7 @@ export function UrlInstallForm({ actions }: Props) {
             <span className="font-mono uppercase tracking-label text-micro text-accent">
               {t("error")}
             </span>
-            <p className="font-body text-sm text-fg-3 break-all">{actions.installError}</p>
+            <p className="font-body text-sm text-fg-3 break-all">{actions.installError.value}</p>
           </div>
           <Button
             size="xs"
@@ -81,7 +82,7 @@ export function UrlInstallForm({ actions }: Props) {
       <When condition={showSuccess}>
         <div className="flex items-center gap-3 border border-success/30 bg-surface-tint px-4 py-3">
           <span className="font-mono uppercase tracking-label text-micro text-success">
-            {t("success", { target: actions.urlSuccess ?? "" })}
+            {t("success", { target: actions.urlSuccess.value ?? "" })}
           </span>
         </div>
       </When>
@@ -98,8 +99,8 @@ export function UrlInstallForm({ actions }: Props) {
             id="custom-url-input"
             label={t("label")}
             type="text"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            value={url.value}
+            onChange={(e) => (url.value = e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t("placeholder")}
             spellCheck={false}
@@ -113,10 +114,10 @@ export function UrlInstallForm({ actions }: Props) {
           variant="primary"
           className="px-5 shrink-0 sm:mt-5.5"
           onClick={handleSubmit}
-          disabled={!isReady || busy}
+          disabled={!isReady || busy.value}
         >
           <GitBranch size={14} />
-          <If condition={busy}>
+          <If condition={busy.value}>
             <Then>{t("installing")}</Then>
             <Else>{t("submit")}</Else>
           </If>
