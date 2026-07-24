@@ -224,6 +224,16 @@ if (status.trim() && !allowDirty) {
 const existing = await $`git -C ${root} tag -l ${tag}`.text();
 if (existing.trim()) fail(`tag ${tag} already exists`);
 
+// Identifier sanity check — keep com.curie.app (brew cask expects it).
+// Changing it silently would break `brew upgrade` for existing users.
+const tauriCurrent = readJson(tauriPath);
+if (tauriCurrent.identifier !== "com.curie.app") {
+  fail(
+    `identifier is "${tauriCurrent.identifier}" but brew cask expects "com.curie.app". ` +
+      `Changing the bundle identifier breaks upgrades for users on previous versions.`,
+  );
+}
+
 console.log(`\n   ${paint(c.dim, "…")} writing version files`);
 pkg.version = next;
 writeJson(pkgPath, pkg);
