@@ -170,11 +170,13 @@ describe("useCustomActions.install", () => {
 });
 
 describe("useCustomActions.save", () => {
-  it("invokes save_custom_skill and shows a success toast", async () => {
+  it("invokes save_custom_skill, refreshes the list, and shows the installed toast when the backend reports installed", async () => {
     const saved: CustomSkillSaveResult = {
       name: "my-skill",
       path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
-      message: "Saved",
+      message: "Saved custom skill to /Users/me/.curie/custom-skills/my-skill",
+      installed: true,
+      installMessage: null,
     };
     invokeMock.mockResolvedValueOnce(saved);
     const { get, unmount } = renderHook(() => useCustomActions());
@@ -187,7 +189,34 @@ describe("useCustomActions.save", () => {
       name: "my-skill",
       content: "# content",
     });
+    expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
     expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastErrorMock).not.toHaveBeenCalled();
+    unmount();
+  });
+
+  it("does not refresh and shows a saved-toast plus install-error toast when the backend reports installed: false", async () => {
+    const saved: CustomSkillSaveResult = {
+      name: "my-skill",
+      path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
+      message: "Saved custom skill to /Users/me/.curie/custom-skills/my-skill",
+      installed: false,
+      installMessage: "agent not detected",
+    };
+    invokeMock.mockResolvedValueOnce(saved);
+    const { get, unmount } = renderHook(() => useCustomActions());
+
+    await act(async () => {
+      await get().save("my-skill", "# content");
+    });
+
+    expect(invokeMock).toHaveBeenCalledWith("save_custom_skill", {
+      name: "my-skill",
+      content: "# content",
+    });
+    expect(loadGlobalSkillsMock).not.toHaveBeenCalled();
+    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
     unmount();
   });
 

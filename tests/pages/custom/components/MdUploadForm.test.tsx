@@ -106,7 +106,7 @@ afterEach(unmount);
 describe("MdUploadForm", () => {
   it("keeps save disabled until name and content are valid", () => {
     mount();
-    const saveButton = getButtonByText("SAVE SKILL");
+    const saveButton = getButtonByText("SAVE");
     expect(saveButton.disabled).toBe(true);
 
     setInputValue(getNameInput(), "my-skill");
@@ -119,6 +119,8 @@ describe("MdUploadForm", () => {
       name: "my-skill",
       path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
       message: "Saved",
+      installed: true,
+      installMessage: null,
     };
     invokeMock.mockResolvedValueOnce(saved);
 
@@ -126,7 +128,7 @@ describe("MdUploadForm", () => {
     setInputValue(getNameInput(), "my-skill");
     setInputValue(getContentInput(), "# Skill content");
 
-    const saveButton = getButtonByText("SAVE SKILL");
+    const saveButton = getButtonByText("SAVE");
     await act(async () => {
       saveButton.click();
       await Promise.resolve();
@@ -145,7 +147,7 @@ describe("MdUploadForm", () => {
     setInputValue(getNameInput(), "my-skill");
     setInputValue(getContentInput(), "# Skill content");
 
-    const saveButton = getButtonByText("SAVE SKILL");
+    const saveButton = getButtonByText("SAVE");
     await act(async () => {
       saveButton.click();
       await Promise.resolve();

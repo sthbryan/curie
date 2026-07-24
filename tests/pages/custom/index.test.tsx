@@ -48,6 +48,6 @@ describe("Custom", () => {
     mount(<Router><Custom /></Router>);
     expect(container?.textContent).toContain("Create a custom skill");
     expect(container?.textContent).toContain("UPLOAD .MD");
-    expect(container?.textContent).toContain("SAVE SKILL");
+    expect(container?.textContent).toContain("SAVE");
   });
 });

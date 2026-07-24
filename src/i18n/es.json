@@ -163,19 +163,20 @@
     "md": {
       "eyebrow": "OPCIÓN 02 · DESDE UN .MD",
       "title": "Crea una skill personalizada",
-      "subtitle": "Pega un SKILL.md, ponle nombre, dale a guardar. Lo metemos en ~/.curie/custom-skills/<name>/.",
+      "subtitle": "Pega un SKILL.md, ponle nombre, dale a guardar. Lo guardamos en ~/.curie/custom-skills/<name>/ y corremos npx skills add por ti.",
       "nameLabel": "Nombre de la skill",
       "namePlaceholder": "mi-skill",
       "contentLabel": "Contenido de SKILL.md",
       "contentPlaceholder": "---\nname: mi-skill\ndescription: qué hace\n---\n\n# Mi skill\n\n…",
       "fileButton": "SUBIR .MD",
       "fileLoaded": "Cargado {name}",
-      "submit": "GUARDAR SKILL",
+      "submit": "GUARDAR",
       "saving": "GUARDANDO",
       "hint": "El nombre acepta letras, dígitos, guiones, puntos y guiones bajos. El cuerpo del .md no puede estar vacío.",
       "error": "Falló el guardado",
-      "success": "Guardado {name}",
-      "savedAt": "Guardado en {path}"
+      "successInstalled": "Instalado {name}",
+      "successSaved": "Guardado {name} en {path}",
+      "installError": "Falló la instalación: {message}"
     }
   },
   "explore": {

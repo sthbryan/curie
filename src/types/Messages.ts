@@ -174,8 +174,9 @@ export type Messages = {
       saving: string;
       hint: string;
       error: string;
-      success: string;
-      savedAt: string;
+      successInstalled: string;
+      successSaved: string;
+      installError: string;
     };
   };
   explore: {

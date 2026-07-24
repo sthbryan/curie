@@ -68,7 +68,13 @@ export function useCustomActions(): CustomActions {
         name: name.trim(),
         content,
       });
-      toast.success(t(lang.value, "custom.md.success", { name: res.name }));
+      if (res.installed) {
+        toast.success(t(lang.value, "custom.md.successInstalled", { name: res.name }));
+        await loadGlobalSkills({ checkUpdates: true });
+      } else {
+        toast.success(t(lang.value, "custom.md.successSaved", { name: res.name, path: res.path }));
+        toast.error(t(lang.value, "custom.md.installError", { message: res.installMessage ?? "" }));
+      }
       return;
     } catch (e) {
       toast.error(errorMessage(e));

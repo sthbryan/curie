@@ -1,3 +1,4 @@
+use super::npx::run_skills_command;
 use super::types::CustomSkillSaveResult;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -27,10 +28,36 @@ pub fn write_custom_skill(name: &str, content: &str) -> Result<CustomSkillSaveRe
     let file = base.join("SKILL.md");
     fs::write(&file, content).map_err(|e| format!("could not write {}: {e}", file.display()))?;
 
+    let path_string = file.to_string_lossy().to_string();
+    let base_string = base.to_string_lossy().to_string();
+
+    let (installed, install_message) = match run_skills_command(&["add", &base_string, "-g", "-y"])
+    {
+        Ok(output) => {
+            if output.status.success() {
+                (true, None)
+            } else {
+                let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+                let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+                let detail = if !stderr.is_empty() {
+                    stderr
+                } else if !stdout.is_empty() {
+                    stdout
+                } else {
+                    format!("skills add exited with status {}", output.status)
+                };
+                (false, Some(detail))
+            }
+        }
+        Err(e) => (false, Some(e)),
+    };
+
     Ok(CustomSkillSaveResult {
         name: name.to_string(),
-        path: file.to_string_lossy().to_string(),
-        message: format!("Saved custom skill to {}", file.display()),
+        path: path_string,
+        message: format!("Saved custom skill to {base_string}"),
+        installed,
+        install_message,
     })
 }
 

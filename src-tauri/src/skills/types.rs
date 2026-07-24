@@ -86,6 +86,8 @@ pub struct CustomSkillSaveResult {
     pub name: String,
     pub path: String,
     pub message: String,
+    pub installed: bool,
+    pub install_message: Option<String>,
 }
 
 #[derive(Deserialize)]
