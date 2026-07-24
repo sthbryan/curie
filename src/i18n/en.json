@@ -151,7 +151,7 @@
     "url": {
       "eyebrow": "OPTION 01 · FROM GITHUB",
       "title": "Install from a GitHub URL",
-      "subtitle": "Paste a link. Done.",
+      "subtitle": "A GitHub link or a package. We install it.",
       "label": "GitHub URL or package",
       "placeholder": "https://github.com/owner/repo or owner/repo@skill",
       "submit": "INSTALL",
@@ -163,7 +163,7 @@
     "md": {
       "eyebrow": "OPTION 02 · FROM A .MD",
       "title": "Create a custom skill",
-      "subtitle": "Write it. Name it. Save it. Yours.",
+      "subtitle": "Your SKILL.md. On your disk. Ready to use.",
       "nameLabel": "Skill name",
       "namePlaceholder": "my-skill",
       "contentLabel": "SKILL.md content",
