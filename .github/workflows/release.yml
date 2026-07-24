@@ -29,6 +29,8 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
+          cache-all-crates: true
+          cache-on-failure: true
 
       - name: Install system deps (Linux)
         if: runner.os == 'Linux'
