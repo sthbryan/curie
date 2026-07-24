@@ -90,6 +90,14 @@ export type SkillRemoveResult = {
   message: string;
 };
 
+export type CustomSkillSaveResult = {
+  name: string;
+  path: string;
+  message: string;
+};
+
+export type CustomSourceKind = "url" | "file";
+
 export type AgentSummary = {
   id: string;
   label: string;
