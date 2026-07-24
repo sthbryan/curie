@@ -93,6 +93,14 @@ export function Setup({ onComplete }: Props) {
     setErrorMsg("");
   }
 
+  function handleOpenManual() {
+    setManualOpen(true);
+  }
+
+  function handleToggleManual() {
+    setManualOpen((o) => !o);
+  }
+
   if (stage === "installing") {
     return (
       <main className="flex min-w-0 flex-1 flex-col">
@@ -183,7 +191,7 @@ export function Setup({ onComplete }: Props) {
             <Button size="xl" variant="primary" onClick={handleRetry}>
               {t("retry")}
             </Button>
-            <Button size="xl" variant="outline" onClick={() => setManualOpen(true)}>
+            <Button size="xl" variant="outline" onClick={handleOpenManual}>
               {t("manual")}
             </Button>
           </div>
@@ -231,12 +239,7 @@ export function Setup({ onComplete }: Props) {
               <span>{t("cta")}</span>
               <span>→</span>
             </Button>
-            <Button
-              size="hero"
-              variant="ghost"
-              className="px-6"
-              onClick={() => setManualOpen((o) => !o)}
-            >
+            <Button size="hero" variant="ghost" className="px-6" onClick={handleToggleManual}>
               {t("manual")}
               <span className="ml-2">{manualOpen ? "▴" : "▾"}</span>
             </Button>
