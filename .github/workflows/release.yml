@@ -2,7 +2,6 @@ name: Release
 
 on:
   push:
-    branches: [main]
     tags: ["v*"]
 
 permissions:
@@ -45,10 +44,7 @@ jobs:
       - name: Install JS deps
         run: bun install --frozen-lockfile
 
-      # Tag push: sign + publish draft release.
-      # Branch push to main: build only, verify bundles compile cleanly.
       - name: Build, sign and upload release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,6 +56,3 @@ jobs:
           releaseDraft: true
           prerelease: false
 
-      - name: Verify bundles compile (main only)
-        if: github.ref == 'refs/heads/main'
-        run: bun run tauri build
