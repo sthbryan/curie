@@ -138,24 +138,30 @@ describe("LocalSkillForm", () => {
     expect(getContentInput().value).toBe(VALID_CONTENT);
   });
 
-  it("blocks install and says what the frontmatter is missing", () => {
+  it("blocks install and says what is missing in plain words", () => {
     fillForm("# Just a body");
     expect(getButtonByText("INSTALL").disabled).toBe(true);
-    expect(container?.textContent).toContain("needs a frontmatter block");
+    expect(container?.textContent).toContain("has to start with a block between --- lines");
 
     fillForm("---\nname: my-skill\n---\n# Body");
     expect(getButtonByText("INSTALL").disabled).toBe(true);
-    expect(container?.textContent).toContain("missing: description");
+    expect(container?.textContent).toContain("missing the skill's description");
+
+    fillForm("---\ndescription: what it does\n---\n# Body");
+    expect(container?.textContent).toContain("missing the skill's name");
+
+    fillForm("---\nfoo: bar\n---\n# Body");
+    expect(container?.textContent).toContain("missing the skill's name and description");
 
     fillForm();
     expect(getButtonByText("INSTALL").disabled).toBe(false);
   });
 
-  it("blocks install when the frontmatter name could not be a directory", () => {
+  it("blocks install when the name could not be a directory", () => {
     fillForm("---\nname: my skill\ndescription: x\n---\n# Body");
 
     expect(getButtonByText("INSTALL").disabled).toBe(true);
-    expect(container?.textContent).toContain('"my skill" only takes letters');
+    expect(container?.textContent).toContain('"my skill" won\'t work as a name');
   });
 
   it("empties the form from the CLEAR affordance", () => {

@@ -179,17 +179,19 @@
       "contentPlaceholder": "---\nname: mi-skill\ndescription: qué hace\n---\n\n# Mi skill\n\n…",
       "fileButton": "SUBIR .MD",
       "fileLoaded": "Cargado {name}",
-      "hint": "El contenido necesita frontmatter con name y description.",
+      "hint": "El nombre y la descripción los tomamos del bloque entre --- que va arriba del archivo.",
       "clear": "VACIAR",
       "submit": "INSTALAR",
       "installing": "GUARDANDO",
-      "frontmatterMissing": "El SKILL.md necesita un bloque de frontmatter con name y description.",
-      "frontmatterFields": "Al frontmatter le falta: {fields}.",
       "toastLoading": "INSTALANDO",
       "toastSuccess": "INSTALADA",
       "toastError": "NO SE PUDO INSTALAR",
-      "frontmatterName": "\"{name}\" solo acepta letras, números, guiones, puntos y guiones bajos.",
-      "ready": "LISTA PARA INSTALAR COMO {name}"
+      "ready": "LISTA PARA INSTALAR COMO {name}",
+      "blockMissing": "El archivo tiene que empezar con un bloque entre --- que le dé un nombre y una descripción a la skill.",
+      "nameMissing": "Al bloque de arriba le falta el nombre de la skill.",
+      "descriptionMissing": "Al bloque de arriba le falta la descripción de la skill.",
+      "bothMissing": "Al bloque de arriba le faltan el nombre y la descripción de la skill.",
+      "nameInvalid": "\"{name}\" no sirve como nombre: usá letras, números, guiones y puntos, sin espacios."
     }
   },
   "explore": {

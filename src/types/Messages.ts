@@ -180,9 +180,11 @@ export type Messages = {
       fileButton: string;
       fileLoaded: string;
       hint: string;
-      frontmatterMissing: string;
-      frontmatterFields: string;
-      frontmatterName: string;
+      blockMissing: string;
+      nameMissing: string;
+      descriptionMissing: string;
+      bothMissing: string;
+      nameInvalid: string;
       ready: string;
       clear: string;
       submit: string;

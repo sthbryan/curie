@@ -4,11 +4,21 @@ import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { useLocalInstall } from "../hooks/useLocalInstall";
-import { checkFrontmatter } from "../lib/frontmatter";
+import { checkFrontmatter, type FrontmatterCheck } from "../lib/frontmatter";
 import { FieldLabel } from "./FieldLabel";
 import { FormSection } from "./FormSection";
 
 const CONTENT_ID = "custom-local-content";
+
+function warningFor(
+  check: Extract<FrontmatterCheck, { ok: false }>,
+  t: ReturnType<typeof useT>,
+): string {
+  if (check.reason === "block") return t("blockMissing");
+  if (check.reason === "name") return t("nameInvalid", { name: check.name });
+  if (check.missing.length > 1) return t("bothMissing");
+  return check.missing[0] === "name" ? t("nameMissing") : t("descriptionMissing");
+}
 
 export function LocalSkillForm() {
   const t = useT("custom.local");
@@ -21,14 +31,7 @@ export function LocalSkillForm() {
   const frontmatter = checkFrontmatter(content);
   const canInstall = hasContent && frontmatter.ok && !installing;
 
-  const warning =
-    !hasContent || frontmatter.ok
-      ? null
-      : frontmatter.reason === "block"
-        ? t("frontmatterMissing")
-        : frontmatter.reason === "fields"
-          ? t("frontmatterFields", { fields: frontmatter.missing.join(", ") })
-          : t("frontmatterName", { name: frontmatter.name });
+  const warning = !hasContent || frontmatter.ok ? null : warningFor(frontmatter, t);
 
   const reset = () => {
     setContent("");
