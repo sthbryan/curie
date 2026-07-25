@@ -10,7 +10,7 @@ import { lang } from "@/store/system";
 export type CustomActions = {
   installStatus: Signal<{ status: "idle" | "processing" }>;
   saveStatus: Signal<{ status: "idle" | "processing" }>;
-  install: (target: string) => Promise<UrlKind | null>;
+  install: (target: string, skillName?: string | null) => Promise<UrlKind | null>;
   save: (name: string, content: string) => Promise<void>;
   cleanSaved: () => void;
   cleanInstalled: () => void;
@@ -36,7 +36,7 @@ export function useCustomActions(): CustomActions {
   const installStatus = signal<{ status: "idle" | "processing" }>({ status: "idle" });
   const saveStatus = signal<{ status: "idle" | "processing" }>({ status: "idle" });
 
-  const install = useCallback(async (target: string) => {
+  const install = useCallback(async (target: string, skillName?: string | null) => {
     const kind = classifyInput(target);
     if (!kind) {
       const message = t(lang.value, "custom.url.errorInvalid");
@@ -44,9 +44,14 @@ export function useCustomActions(): CustomActions {
       return null;
     }
     installStatus.value = { status: "processing" };
+    const trimmed = target.trim();
+    const trimmedName = skillName?.trim() || null;
     try {
-      await invoke<SkillInstallResult>("add_skill", { package: target.trim() });
-      const label = target.trim();
+      await invoke<SkillInstallResult>("add_skill", {
+        package: trimmed,
+        skillName: trimmedName,
+      });
+      const label = trimmedName ?? trimmed;
       toast.success(t(lang.value, "toast.installed", { name: label }));
       await loadGlobalSkills({ checkUpdates: true });
       return kind;

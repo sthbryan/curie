@@ -158,7 +158,18 @@
       "installing": "INSTALANDO",
       "hint": "Detecta URLs de github.com, handles owner/repo y referencias owner/repo@skill.",
       "error": "Falló la instalación",
-      "success": "Instalado {target}"
+      "success": "Instalado {target}",
+      "urlDetected": "URL DETECTADA",
+      "packageDetected": "PACKAGE DETECTADO",
+      "checking": "VERIFICANDO",
+      "skillFound": "SKILL · {name}",
+      "skillsFound": "{count} SKILLS",
+      "skillsTruncated": "{visible} DE {total} SKILLS",
+      "noSkillsFound": "NO SE ENCONTRARON SKILLS",
+      "selectSkill": "SELECCIONAR SKILL",
+      "filterPlaceholder": "filtrar…",
+      "noMatches": "sin coincidencias",
+      "truncatedHint": "Mostrando {visible} de {total} skills. Ajustá la URL con un subpath para acotar."
     },
     "md": {
       "eyebrow": "OPCIÓN 02 · DESDE UN .MD",

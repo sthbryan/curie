@@ -159,6 +159,17 @@ export type Messages = {
       hint: string;
       error: string;
       success: string;
+      urlDetected: string;
+      packageDetected: string;
+      checking: string;
+      skillFound: string;
+      skillsFound: string;
+      skillsTruncated: string;
+      noSkillsFound: string;
+      selectSkill: string;
+      filterPlaceholder: string;
+      noMatches: string;
+      truncatedHint: string;
     };
     md: {
       eyebrow: string;

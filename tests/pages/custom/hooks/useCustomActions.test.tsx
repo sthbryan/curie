@@ -134,9 +134,27 @@ describe("useCustomActions.install", () => {
       expect(kind).toBe("package");
     });
 
-    expect(invokeMock).toHaveBeenCalledWith("add_skill", { package: "owner/repo@skill" });
+    expect(invokeMock).toHaveBeenCalledWith("add_skill", {
+      package: "owner/repo@skill",
+      skillName: null,
+    });
     expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
     expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    unmount();
+  });
+
+  it("forwards an optional skill name to add_skill", async () => {
+    invokeMock.mockResolvedValue({ package: "x", message: "ok" } as SkillInstallResult);
+    const { get, unmount } = renderHook(() => useCustomActions());
+
+    await act(async () => {
+      await get().install("owner/repo", "code-review-excellence");
+    });
+
+    expect(invokeMock).toHaveBeenCalledWith("add_skill", {
+      package: "owner/repo",
+      skillName: "code-review-excellence",
+    });
     unmount();
   });
 
@@ -151,6 +169,7 @@ describe("useCustomActions.install", () => {
 
     expect(invokeMock).toHaveBeenCalledWith("add_skill", {
       package: "https://github.com/owner/repo",
+      skillName: null,
     });
     unmount();
   });

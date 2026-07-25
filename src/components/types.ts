@@ -85,6 +85,19 @@ export type SkillInstallResult = {
   message: string;
 };
 
+export type DetectedSkill = {
+  name: string;
+  description: string;
+};
+
+export type SkillDetection = {
+  isSkill: boolean;
+  total: number;
+  truncated: boolean;
+  skills: DetectedSkill[];
+  refUsed: string | null;
+};
+
 export type SkillRemoveResult = {
   removed: string[];
   message: string;
