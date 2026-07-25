@@ -22,6 +22,20 @@ function errorMessage(e: unknown): string {
   return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
 }
 
+function repoLabel(input: string): string {
+  const v = input.trim();
+  const urlMatch = v.match(
+    /(?:https?:\/\/|git@|ssh:\/\/)[^/]+\/([^/?#]+)\/([^/?#]+?)(?:\.git)?(?:\/.*)?$/i,
+  );
+  if (urlMatch) return `${urlMatch[1]}/${urlMatch[2]}`;
+  const pkgMatch = v.match(/^([\w.-]+)\/([\w.-]+?)(?:@([\w.-]+))?$/);
+  if (pkgMatch) {
+    if (pkgMatch[3]) return `${pkgMatch[1]}/${pkgMatch[2]} · ${pkgMatch[3]}`;
+    return `${pkgMatch[1]}/${pkgMatch[2]}`;
+  }
+  return v;
+}
+
 export function classifyInput(input: string): UrlKind | null {
   const v = input.trim();
   if (!v) return null;
@@ -46,7 +60,10 @@ export function useCustomActions(): CustomActions {
     installStatus.value = { status: "processing" };
     const trimmed = target.trim();
     const trimmedName = skillName?.trim() || null;
-    const label = trimmedName ?? trimmed;
+    const label = repoLabel(trimmed);
+    const toastId = toast.loading(t(lang.value, "custom.url.promiseLoading", { target: label }), {
+      duration: Number.POSITIVE_INFINITY,
+    });
     const promise = invoke<SkillInstallResult>("add_skill", {
       package: trimmed,
       skillName: trimmedName,
@@ -54,11 +71,17 @@ export function useCustomActions(): CustomActions {
       await loadGlobalSkills({ checkUpdates: true });
       return res;
     });
-    toast.promise(promise, {
-      loading: t(lang.value, "custom.url.promiseLoading", { target: label }),
-      success: () => t(lang.value, "custom.url.promiseSuccess", { target: label }),
-      error: (e) => errorMessage(e),
-    });
+    promise.then(
+      () => {
+        toast.success(t(lang.value, "custom.url.promiseSuccess", { target: label }), {
+          id: toastId,
+          duration: 4000,
+        });
+      },
+      (e) => {
+        toast.error(errorMessage(e), { id: toastId, duration: 6000 });
+      },
+    );
     try {
       await promise;
       return kind;

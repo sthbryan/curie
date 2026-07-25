@@ -16,6 +16,7 @@ const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
 const toastSuccessMock = vi.fn();
 const toastErrorMock = vi.fn();
+const toastLoadingMock = vi.fn();
 const toastPromiseMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
@@ -30,6 +31,10 @@ vi.mock("sonner", () => ({
   toast: {
     success: (...args: unknown[]) => toastSuccessMock(...args),
     error: (...args: unknown[]) => toastErrorMock(...args),
+    loading: (...args: unknown[]) => {
+      toastLoadingMock(...args);
+      return "toast-id-1";
+    },
     promise: (...args: unknown[]) => toastPromiseMock(...args),
   },
 }));
@@ -112,6 +117,7 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockResolvedValue(undefined);
   toastSuccessMock.mockReset();
   toastErrorMock.mockReset();
+  toastLoadingMock.mockReset();
   toastPromiseMock.mockReset();
   vi.useFakeTimers();
 });
@@ -148,7 +154,8 @@ describe("UrlInstallForm", () => {
       for (let i = 0; i < 10; i++) await Promise.resolve();
     });
 
-    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
+    expect(toastLoadingMock).toHaveBeenCalledTimes(1);
+    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
     expect(getInput().value).toBe("");
   });
 
@@ -170,6 +177,6 @@ describe("UrlInstallForm", () => {
     setInputValue("vercel-labs/agent-skills@pdf");
 
     expect(getInput().value).toBe("vercel-labs/agent-skills@pdf");
-    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
+    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
   });
 });

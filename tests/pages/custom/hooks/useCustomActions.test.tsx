@@ -9,6 +9,7 @@ const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
 const toastSuccessMock = vi.fn();
 const toastErrorMock = vi.fn();
+const toastLoadingMock = vi.fn();
 const toastPromiseMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
@@ -23,6 +24,10 @@ vi.mock("sonner", () => ({
   toast: {
     success: (...args: unknown[]) => toastSuccessMock(...args),
     error: (...args: unknown[]) => toastErrorMock(...args),
+    loading: (...args: unknown[]) => {
+      toastLoadingMock(...args);
+      return "toast-id-1";
+    },
     promise: (...args: unknown[]) => toastPromiseMock(...args),
   },
 }));
@@ -72,6 +77,7 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockResolvedValue(undefined);
   toastSuccessMock.mockReset();
   toastErrorMock.mockReset();
+  toastLoadingMock.mockReset();
   toastPromiseMock.mockReset();
 });
 
@@ -128,7 +134,7 @@ describe("useCustomActions.install", () => {
     unmount();
   });
 
-  it("invokes add_skill, refreshes the global skills list, and fires a promise toast", async () => {
+  it("invokes add_skill, refreshes the global skills list, and shows a loading + success toast", async () => {
     invokeMock.mockResolvedValue({ package: "owner/repo", message: "ok" } as SkillInstallResult);
     const { get, unmount } = renderHook(() => useCustomActions());
 
@@ -142,14 +148,10 @@ describe("useCustomActions.install", () => {
       skillName: null,
     });
     expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
-    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
-    const [promise, opts] = toastPromiseMock.mock.calls[0];
-    expect(opts).toMatchObject({
-      loading: expect.any(String),
-      success: expect.any(Function),
-      error: expect.any(Function),
-    });
-    expect(promise).toBeInstanceOf(Promise);
+    expect(toastLoadingMock).toHaveBeenCalledTimes(1);
+    expect(toastLoadingMock.mock.calls[0][0]).toMatch(/owner\/repo/);
+    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastSuccessMock.mock.calls[0][0]).toMatch(/owner\/repo/);
     unmount();
   });
 
@@ -184,7 +186,7 @@ describe("useCustomActions.install", () => {
     unmount();
   });
 
-  it("surfaces install errors and resolves to a null kind", async () => {
+  it("surfaces install errors as a toast error and resolves to a null kind", async () => {
     invokeMock.mockRejectedValueOnce(new Error("boom"));
     const { get, unmount } = renderHook(() => useCustomActions());
 
@@ -193,10 +195,8 @@ describe("useCustomActions.install", () => {
       expect(kind).toBeNull();
     });
 
-    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
-    const [, opts] = toastPromiseMock.mock.calls[0];
-    const errorMessage = (opts as { error: (e: unknown) => string }).error(new Error("boom"));
-    expect(errorMessage).toBe("boom");
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
+    expect(toastErrorMock.mock.calls[0][0]).toBe("boom");
     unmount();
   });
 });
