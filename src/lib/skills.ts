@@ -55,7 +55,7 @@ export function formatRelative(iso: string, now = Date.now(), locale = "en"): st
   return format.format(0, "second");
 }
 
-export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] {
+export function buildRecentActivity(skills: SkillInfo[]): Activity[] {
   const events: Activity[] = [];
 
   for (const skill of skills) {
@@ -64,7 +64,6 @@ export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] 
         kind: "install",
         skill: skill.name,
         source: skill.source,
-        when: formatRelative(skill.installedAt),
         at: skill.installedAt,
       });
     }
@@ -79,7 +78,6 @@ export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] 
         kind: "update",
         skill: skill.name,
         source: skill.source,
-        when: formatRelative(skill.updatedAt),
         at: skill.updatedAt,
       });
     } else if (skill.updatedAt && !skill.installedAt) {
@@ -87,13 +85,12 @@ export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] 
         kind: "update",
         skill: skill.name,
         source: skill.source,
-        when: formatRelative(skill.updatedAt),
         at: skill.updatedAt,
       });
     }
   }
 
-  return events.sort((a, b) => Date.parse(b.at) - Date.parse(a.at)).slice(0, limit);
+  return events.sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
 }
 
 export function maxAgentCount(agents: AgentSummary[]): number {
