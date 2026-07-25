@@ -24,10 +24,10 @@ export function Toaster() {
           description: baseDescription,
           closeButton: baseCloseButton,
           loading: "border-info",
-          success: "border-success [--toast-dot:var(--color-success)]",
-          error: "border-error [--toast-dot:var(--color-error)]",
-          warning: "border-warning [--toast-dot:var(--color-warning)]",
-          info: "border-info [--toast-dot:var(--color-info)]",
+          success: "border-success",
+          error: "border-error",
+          warning: "border-warning",
+          info: "border-info",
         },
       }}
     />
