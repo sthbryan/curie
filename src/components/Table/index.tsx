@@ -1,9 +1,8 @@
-import { AnimatePresence, motion } from "motion/react";
-import { cn } from "@/lib/cn";
-import { listItem, listStagger } from "@/lib/motion";
 import { TableHeader } from "./TableHeader";
+import { TableRow } from "./TableRow";
 import { TableSkeleton } from "./TableSkeleton";
 import type { ColumnDef, SortDir, TableProps } from "./types";
+import { VirtualTableBody } from "./VirtualTableBody";
 
 export type { ColumnDef, SortDir, TableProps };
 
@@ -14,14 +13,31 @@ export function Table<T>({
   sortKey,
   sortDir,
   onSort,
-  bodyKey,
   getRowKey,
   loading = false,
   skeletonRows = 6,
+  rowHeight,
+  viewportClassName,
 }: TableProps<T>) {
   if (loading) {
     return (
       <TableSkeleton columns={columns} gridTemplate={gridTemplate} skeletonRows={skeletonRows} />
+    );
+  }
+
+  if (rowHeight) {
+    return (
+      <VirtualTableBody
+        columns={columns}
+        rows={rows}
+        gridTemplate={gridTemplate}
+        rowHeight={rowHeight}
+        getRowKey={getRowKey}
+        sortKey={sortKey}
+        sortDir={sortDir}
+        onSort={onSort}
+        viewportClassName={viewportClassName}
+      />
     );
   }
 
@@ -34,30 +50,17 @@ export function Table<T>({
         sortDir={sortDir}
         onSort={onSort}
       />
-      <motion.div
-        key={bodyKey}
-        className="flex flex-col"
-        variants={listStagger}
-        initial="initial"
-        animate="animate"
-      >
-        <AnimatePresence mode="popLayout" initial={false}>
-          {rows.map((row, i) => (
-            <motion.article
-              key={getRowKey(row)}
-              layout
-              variants={listItem}
-              className={cn("grid gap-4 border-b border-border py-4 first:border-t", gridTemplate)}
-            >
-              {columns.map((col) => (
-                <div key={col.key} className={cn(col.cellClassName)}>
-                  {col.cell(row, i)}
-                </div>
-              ))}
-            </motion.article>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      <div className="flex flex-col border-t border-border">
+        {rows.map((row, i) => (
+          <TableRow
+            key={getRowKey(row)}
+            row={row}
+            index={i}
+            columns={columns}
+            gridTemplate={gridTemplate}
+          />
+        ))}
+      </div>
     </>
   );
 }

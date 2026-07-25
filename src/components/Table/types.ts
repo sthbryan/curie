@@ -19,8 +19,9 @@ export type TableProps<T> = {
   sortKey?: string;
   sortDir?: SortDir;
   onSort?: (key: string) => void;
-  bodyKey?: string;
   getRowKey: (row: T) => string;
   loading?: boolean;
   skeletonRows?: number;
+  rowHeight?: number;
+  viewportClassName?: string;
 };
