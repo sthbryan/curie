@@ -29,8 +29,8 @@ describe("detectLang", () => {
 
 describe("t", () => {
   it("resolves nested keys", () => {
-    expect(t("en", "home.status")).toBe("HOME · SKILLS");
-    expect(t("es", "home.status")).toBe("INICIO · SKILLS");
+    expect(t("en", "home.eyebrow")).toBe("HOME · OVERVIEW");
+    expect(t("es", "home.eyebrow")).toBe("INICIO · RESUMEN");
     expect(t("en", "app.ready")).toBe("READY");
     expect(t("es", "app.ready")).toBe("LISTO");
     expect(t("en", "error.retry")).toBe("RETRY");
@@ -60,12 +60,12 @@ describe("t", () => {
   });
 
   it("interpolates multiple variables in one string", () => {
-    expect(t("en", "home.updatesAvailable", { n: 5 })).toBe("5 AVAILABLE");
+    expect(t("en", "home.events", { n: 5 })).toBe("5 EVENTS");
     expect(t("es", "home.active", { n: 1 })).toBe("1 ACTIVAS");
   });
 
   it("interpolates repeated variables", () => {
-    expect(t("en", "home.updatesAvailable", { n: 12 })).toBe("12 AVAILABLE");
+    expect(t("en", "home.more", { n: 12 })).toBe("+12 MORE");
   });
 
   it("returns key unchanged when path is missing", () => {
@@ -79,11 +79,11 @@ describe("t", () => {
   });
 
   it("ignores unknown variables in vars map", () => {
-    expect(t("en", "home.updatesAvailable", { n: 4, extra: "ignored" })).toBe("4 AVAILABLE");
+    expect(t("en", "home.events", { n: 4, extra: "ignored" })).toBe("4 EVENTS");
   });
 
   it("handles numeric vars correctly", () => {
-    expect(t("en", "home.updatesAvailable", { n: 0 })).toBe("0 AVAILABLE");
+    expect(t("en", "home.events", { n: 0 })).toBe("0 EVENTS");
   });
 });
 
