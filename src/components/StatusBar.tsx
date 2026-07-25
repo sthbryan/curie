@@ -16,8 +16,12 @@ function Sep() {
   return <span className="text-fg-4/80 select-none">·</span>;
 }
 
-function Meta({ children, dim }: { children: ReactNode; dim?: boolean }) {
-  return <span className={dim ? "text-fg-4" : "text-fg-3"}>{children}</span>;
+function Meta({ children, dim, title }: { children: ReactNode; dim?: boolean; title?: string }) {
+  return (
+    <span className={dim ? "text-fg-4" : "text-fg-3"} title={title}>
+      {children}
+    </span>
+  );
 }
 
 export function StatusBar() {
@@ -46,11 +50,10 @@ export function StatusBar() {
         <Sep />
         <If condition={current?.installed === true}>
           <Then>
-            <Meta dim>
-              <span title={current?.manager ?? undefined}>
-                {t("status.node")} {current?.version?.replace(/^v/, "") ?? "—"}
-              </span>
+            <Meta dim title={current?.path ?? undefined}>
+              {t("status.node")} {current?.version?.replace(/^v/, "") ?? "—"}
             </Meta>
+            <Meta dim>{current?.manager ?? "system"}</Meta>
           </Then>
           <Else>
             <span className="flex items-center gap-1.5 text-warning">

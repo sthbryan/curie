@@ -38,12 +38,12 @@ describe("StatusBar", () => {
     expect(container?.textContent).toContain("SETUP REQUIRED");
   });
 
-  it("renders node info when node is installed and keeps the manager in the title", () => {
+  it("renders node info when node is installed and keeps the path in the title", () => {
     node.value = { installed: true, version: "v22.0.0", manager: "volta", path: "/usr/local/bin/node" };
     mount(<StatusBar />);
     expect(container?.textContent).toContain("22.0.0");
-    expect(container?.textContent).not.toContain("volta");
-    expect(container?.querySelector("[title=volta]")).not.toBeNull();
+    expect(container?.textContent).toContain("volta");
+    expect(container?.querySelector('[title="/usr/local/bin/node"]')).not.toBeNull();
   });
 
   it("says nothing when the app is up to date", () => {
