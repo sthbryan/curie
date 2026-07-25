@@ -39,6 +39,14 @@
 
   --radius-sm: 2px;
   --radius-md: 4px;
+
+  --animate-bar-grow: bar-grow 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
 }
 
 :root[data-theme="light"] {
