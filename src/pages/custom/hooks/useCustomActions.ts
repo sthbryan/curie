@@ -46,18 +46,23 @@ export function useCustomActions(): CustomActions {
     installStatus.value = { status: "processing" };
     const trimmed = target.trim();
     const trimmedName = skillName?.trim() || null;
-    try {
-      await invoke<SkillInstallResult>("add_skill", {
-        package: trimmed,
-        skillName: trimmedName,
-      });
-      const label = trimmedName ?? trimmed;
-      toast.success(t(lang.value, "toast.installed", { name: label }));
+    const label = trimmedName ?? trimmed;
+    const promise = invoke<SkillInstallResult>("add_skill", {
+      package: trimmed,
+      skillName: trimmedName,
+    }).then(async (res) => {
       await loadGlobalSkills({ checkUpdates: true });
+      return res;
+    });
+    toast.promise(promise, {
+      loading: t(lang.value, "custom.url.promiseLoading", { target: label }),
+      success: () => t(lang.value, "custom.url.promiseSuccess", { target: label }),
+      error: (e) => errorMessage(e),
+    });
+    try {
+      await promise;
       return kind;
-    } catch (e) {
-      const message = errorMessage(e);
-      toast.error(message);
+    } catch {
       return null;
     } finally {
       setTimeout(() => {

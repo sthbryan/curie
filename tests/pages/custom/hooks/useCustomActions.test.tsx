@@ -9,6 +9,7 @@ const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
 const toastSuccessMock = vi.fn();
 const toastErrorMock = vi.fn();
+const toastPromiseMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -22,6 +23,7 @@ vi.mock("sonner", () => ({
   toast: {
     success: (...args: unknown[]) => toastSuccessMock(...args),
     error: (...args: unknown[]) => toastErrorMock(...args),
+    promise: (...args: unknown[]) => toastPromiseMock(...args),
   },
 }));
 
@@ -70,6 +72,7 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockResolvedValue(undefined);
   toastSuccessMock.mockReset();
   toastErrorMock.mockReset();
+  toastPromiseMock.mockReset();
 });
 
 afterEach(() => {
@@ -125,7 +128,7 @@ describe("useCustomActions.install", () => {
     unmount();
   });
 
-  it("invokes add_skill and refreshes the global skills list", async () => {
+  it("invokes add_skill, refreshes the global skills list, and fires a promise toast", async () => {
     invokeMock.mockResolvedValue({ package: "owner/repo", message: "ok" } as SkillInstallResult);
     const { get, unmount } = renderHook(() => useCustomActions());
 
@@ -139,7 +142,14 @@ describe("useCustomActions.install", () => {
       skillName: null,
     });
     expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
+    const [promise, opts] = toastPromiseMock.mock.calls[0];
+    expect(opts).toMatchObject({
+      loading: expect.any(String),
+      success: expect.any(Function),
+      error: expect.any(Function),
+    });
+    expect(promise).toBeInstanceOf(Promise);
     unmount();
   });
 
@@ -174,7 +184,7 @@ describe("useCustomActions.install", () => {
     unmount();
   });
 
-  it("surfaces install errors and clears the success state", async () => {
+  it("surfaces install errors and resolves to a null kind", async () => {
     invokeMock.mockRejectedValueOnce(new Error("boom"));
     const { get, unmount } = renderHook(() => useCustomActions());
 
@@ -183,7 +193,10 @@ describe("useCustomActions.install", () => {
       expect(kind).toBeNull();
     });
 
-    expect(toastErrorMock).toHaveBeenCalledTimes(1);
+    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
+    const [, opts] = toastPromiseMock.mock.calls[0];
+    const errorMessage = (opts as { error: (e: unknown) => string }).error(new Error("boom"));
+    expect(errorMessage).toBe("boom");
     unmount();
   });
 });

@@ -155,10 +155,13 @@ export type Messages = {
       label: string;
       placeholder: string;
       submit: string;
-      installing: string;
+      installWithCount: string;
+      installWithCountTruncated: string;
       hint: string;
       error: string;
       success: string;
+      promiseLoading: string;
+      promiseSuccess: string;
       urlDetected: string;
       packageDetected: string;
       checking: string;
@@ -166,10 +169,6 @@ export type Messages = {
       skillsFound: string;
       skillsTruncated: string;
       noSkillsFound: string;
-      selectSkill: string;
-      filterPlaceholder: string;
-      noMatches: string;
-      truncatedHint: string;
     };
     md: {
       eyebrow: string;

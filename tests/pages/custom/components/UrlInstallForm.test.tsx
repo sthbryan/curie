@@ -16,6 +16,7 @@ const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
 const toastSuccessMock = vi.fn();
 const toastErrorMock = vi.fn();
+const toastPromiseMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -29,6 +30,7 @@ vi.mock("sonner", () => ({
   toast: {
     success: (...args: unknown[]) => toastSuccessMock(...args),
     error: (...args: unknown[]) => toastErrorMock(...args),
+    promise: (...args: unknown[]) => toastPromiseMock(...args),
   },
 }));
 
@@ -110,6 +112,7 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockResolvedValue(undefined);
   toastSuccessMock.mockReset();
   toastErrorMock.mockReset();
+  toastPromiseMock.mockReset();
   vi.useFakeTimers();
 });
 
@@ -142,11 +145,10 @@ describe("UrlInstallForm", () => {
 
     await act(async () => {
       installButton.click();
-      await Promise.resolve();
-      await Promise.resolve();
+      for (let i = 0; i < 10; i++) await Promise.resolve();
     });
 
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
     expect(getInput().value).toBe("");
   });
 
@@ -162,13 +164,12 @@ describe("UrlInstallForm", () => {
     const installButton = getButtonByText("INSTALL");
     await act(async () => {
       installButton.click();
-      await Promise.resolve();
-      await Promise.resolve();
+      for (let i = 0; i < 10; i++) await Promise.resolve();
     });
 
     setInputValue("vercel-labs/agent-skills@pdf");
 
     expect(getInput().value).toBe("vercel-labs/agent-skills@pdf");
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
   });
 });

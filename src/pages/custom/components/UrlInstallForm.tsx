@@ -1,70 +1,31 @@
 import { GitBranch } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { Else, If, Then, When } from "react-if";
+import { useState } from "react";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
-import type { DetectedSkill } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { type CustomActions, classifyInput } from "../hooks/useCustomActions";
-import { useSkillDetection } from "../hooks/useSkillDetection";
+import { type DetectionState, useSkillDetection } from "../hooks/useSkillDetection";
 
 type Props = {
   actions: CustomActions;
 };
 
-const MAX_VISIBLE = 50;
-
 export function UrlInstallForm({ actions }: Props) {
   const t = useT("custom.url");
-  const [url, setUrl] = useState("");
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
-  const [filter, setFilter] = useState("");
-
-  const kind = classifyInput(url);
-  const isReady = kind !== null;
+  const [value, setValue] = useState("");
   const busy = actions.installStatus.value.status === "processing";
-  const trimmed = url.trim();
 
+  const kind = classifyInput(value);
+  const isReady = kind !== null;
+  const trimmed = value.trim();
   const detection = useSkillDetection(isReady ? trimmed : null);
-
-  const detectionKey = isReady ? trimmed : null;
-  useEffect(() => {
-    setSelectedSkill(null);
-    setFilter("");
-  }, [detectionKey]);
-
-  useEffect(() => {
-    if (detection.kind !== "ok") return;
-    const first = detection.detection.skills[0]?.name;
-    if (first && selectedSkill === null) {
-      setSelectedSkill(first);
-    }
-  }, [detection, selectedSkill]);
-
-  const visibleSkills = useMemo<DetectedSkill[]>(() => {
-    if (detection.kind !== "ok") return [];
-    if (!filter.trim()) return detection.detection.skills;
-    const q = filter.toLowerCase();
-    return detection.detection.skills.filter(
-      (s) => s.name.toLowerCase().includes(q) || s.description.toLowerCase().includes(q),
-    );
-  }, [detection, filter]);
-
-  const pickerState =
-    detection.kind === "ok" && detection.detection.skills.length > 1 ? detection.detection : null;
 
   const handleSubmit = () => {
     if (!isReady || busy) return;
-    const submitted = trimmed;
-    void actions.install(submitted, selectedSkill).then((result) => {
-      if (!result) return;
-      if (trimmed === submitted) {
-        setUrl("");
-        setSelectedSkill(null);
-        setFilter("");
-      }
+    void actions.install(trimmed, null).then((result) => {
+      if (result && trimmed === value.trim()) setValue("");
     });
   };
 
@@ -74,6 +35,8 @@ export function UrlInstallForm({ actions }: Props) {
       handleSubmit();
     }
   };
+
+  const buttonLabel = getButtonLabel(detection, t);
 
   return (
     <div className="flex flex-col gap-5">
@@ -95,8 +58,8 @@ export function UrlInstallForm({ actions }: Props) {
             id="custom-url-input"
             label={t("label")}
             type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            value={value}
+            onChange={(e) => setValue((e.target as HTMLInputElement).value)}
             onKeyDown={handleKeyDown}
             placeholder={t("placeholder")}
             spellCheck={false}
@@ -113,45 +76,36 @@ export function UrlInstallForm({ actions }: Props) {
           disabled={!isReady || busy}
         >
           <GitBranch size={14} />
-          <If condition={busy}>
-            <Then>{t("installing")}</Then>
-            <Else>{t("submit")}</Else>
-          </If>
+          {buttonLabel}
         </Button>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <DetectionChip detection={detection} fallbackKind={kind} />
-          <p className="font-body text-xs text-fg-4">{t("hint")}</p>
-        </div>
-
-        <If condition={pickerState !== null}>
-          <Then>
-            {pickerState ? (
-              <SkillPicker
-                skills={visibleSkills}
-                total={pickerState.total}
-                truncated={pickerState.truncated}
-                selected={selectedSkill}
-                onSelect={setSelectedSkill}
-                filter={filter}
-                onFilterChange={setFilter}
-                maxVisible={MAX_VISIBLE}
-              />
-            ) : null}
-          </Then>
-        </If>
+      <div className="flex items-center gap-3">
+        <DetectionChip detection={detection} fallbackKind={kind} />
+        <p className="font-body text-xs text-fg-4">{t("hint")}</p>
       </div>
     </div>
   );
+}
+
+function getButtonLabel(detection: DetectionState, t: ReturnType<typeof useT>): string {
+  if (detection.kind === "ok" && detection.detection.skills.length > 1) {
+    if (detection.detection.truncated) {
+      return t("installWithCountTruncated", {
+        visible: detection.detection.skills.length,
+        total: detection.detection.total,
+      });
+    }
+    return t("installWithCount", { count: detection.detection.total });
+  }
+  return t("submit");
 }
 
 function DetectionChip({
   detection,
   fallbackKind,
 }: {
-  detection: ReturnType<typeof useSkillDetection>;
+  detection: DetectionState;
   fallbackKind: "url" | "package" | null;
 }) {
   const t = useT("custom.url");
@@ -203,80 +157,5 @@ function DetectionChip({
     <span className={cn(base, fallbackKind ? "text-fg-3" : "text-fg-4")}>
       {fallbackKind ? (fallbackKind === "url" ? t("urlDetected") : t("packageDetected")) : "—"}
     </span>
-  );
-}
-
-function SkillPicker({
-  skills,
-  total,
-  truncated,
-  selected,
-  onSelect,
-  filter,
-  onFilterChange,
-  maxVisible,
-}: {
-  skills: DetectedSkill[];
-  total: number;
-  truncated: boolean;
-  selected: string | null;
-  onSelect: (name: string) => void;
-  filter: string;
-  onFilterChange: (v: string) => void;
-  maxVisible: number;
-}) {
-  const t = useT("custom.url");
-  const showFilter = truncated || total > maxVisible;
-  return (
-    <div className="flex flex-col gap-2 rounded-sm border border-border bg-surface/40 p-3">
-      <div className="flex items-center justify-between gap-3">
-        <span className="font-mono uppercase tracking-label text-micro text-fg-3">
-          {t("selectSkill")}
-        </span>
-        <When condition={showFilter}>
-          <input
-            type="text"
-            value={filter}
-            onChange={(e) => onFilterChange((e.target as HTMLInputElement).value)}
-            placeholder={t("filterPlaceholder")}
-            spellCheck={false}
-            autoCapitalize="off"
-            autoCorrect="off"
-            className="h-7 max-w-[180px] flex-1 border border-border-strong bg-bg px-2 font-mono text-micro text-fg placeholder:text-fg-4 focus:border-fg-3 focus:outline-none"
-          />
-        </When>
-      </div>
-      <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
-        <If condition={skills.length === 0}>
-          <Then>
-            <span className="font-mono text-micro text-fg-4">{t("noMatches")}</span>
-          </Then>
-          <Else>
-            {skills.map((s) => {
-              const isSelected = s.name === selected;
-              return (
-                <Button
-                  key={s.name}
-                  type="button"
-                  size="xs"
-                  variant="outline"
-                  selected={isSelected}
-                  onClick={() => onSelect(s.name)}
-                  title={s.description}
-                  className="max-w-[200px] truncate"
-                >
-                  {s.name}
-                </Button>
-              );
-            })}
-          </Else>
-        </If>
-      </div>
-      <When condition={truncated}>
-        <p className="font-body text-xs text-fg-4">
-          {t("truncatedHint", { visible: skills.length, total })}
-        </p>
-      </When>
-    </div>
   );
 }
