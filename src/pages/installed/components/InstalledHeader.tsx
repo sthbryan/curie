@@ -34,7 +34,7 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
   };
 
   return (
-    <section className="flex flex-wrap items-start justify-between gap-4">
+    <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-3">
         <Label>{t("eyebrow")}</Label>
         <h2 className="font-display text-heading font-bold tracking-tight text-fg">{t("title")}</h2>
@@ -44,7 +44,17 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
         </p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <Button size="sm" variant="primary" onClick={() => navigate("/find")}>
+          <Plus size={14} />
+          {t("install")}
+        </Button>
+
+        <Button size="sm" variant="outline" onClick={refresh} disabled={refreshing || actionBusy}>
+          <RefreshCcw size={14} className={cn(refreshing && "animate-spin")} />
+          {refreshing ? t("refreshing") : t("refresh")}
+        </Button>
+
         {outdated.size > 0 ? (
           <Button
             size="sm"
@@ -60,24 +70,17 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
           </Button>
         ) : null}
 
-        <Button size="sm" variant="outline" onClick={refresh} disabled={refreshing || actionBusy}>
-          <RefreshCcw size={14} className={cn(refreshing && "animate-spin")} />
-          {refreshing ? t("refreshing") : t("refresh")}
-        </Button>
-
-        <Button size="sm" variant="primary" onClick={() => navigate("/find")}>
-          <Plus size={14} />
-          {t("install")}
-        </Button>
-
         {skills.value.length > 0 ? (
-          <>
-            <span className="mx-1 h-5 w-px bg-border" aria-hidden />
-            <Button size="sm" variant="danger" onClick={onAskRemoveAll} disabled={actionBusy}>
-              <Trash2 size={14} />
-              {t("removeAllButton")}
-            </Button>
-          </>
+          <Button
+            size="sm"
+            variant="danger"
+            className="ml-auto"
+            onClick={onAskRemoveAll}
+            disabled={actionBusy}
+          >
+            <Trash2 size={14} />
+            {t("removeAllButton")}
+          </Button>
         ) : null}
       </div>
     </section>
