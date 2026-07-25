@@ -15,6 +15,7 @@ import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { filterSkills, formatRelative, skillTimestamp, updateNameSet } from "@/lib/skills";
 import { skills, skillUpdates } from "@/store/skills";
+import { lang } from "@/store/system";
 import type { SortField } from "../store/store";
 import {
   agentFilter,
@@ -172,7 +173,7 @@ export function InstalledList() {
                 isUpdate ? "text-accent" : "text-fg-4",
               )}
             >
-              {when ? formatRelative(when) : "—"}
+              {when ? formatRelative(when, Date.now(), lang.value) : "—"}
             </span>
           );
         },
