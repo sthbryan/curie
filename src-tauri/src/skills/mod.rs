@@ -18,7 +18,7 @@ pub use detect::{detect_global_skill, DetectedSkill, SkillDetection};
 pub use explore::explore_skills as browse_skills;
 pub use find::find_skills as search_skills;
 pub use list::list_global_skills;
-pub use remove::remove_global_skills;
+pub use remove::{remove_all_global_skills, remove_global_skills};
 pub use types::{
     CustomSkillInstallResult, ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult,
     SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
@@ -26,8 +26,10 @@ pub use types::{
 pub use update::update_global_skills;
 
 #[tauri::command]
-pub fn list_skills() -> Result<Vec<SkillInfo>, String> {
-    list_global_skills()
+pub async fn list_skills() -> Result<Vec<SkillInfo>, String> {
+    tauri::async_runtime::spawn_blocking(list_global_skills)
+        .await
+        .map_err(|e| format!("list task failed: {e}"))?
 }
 
 #[tauri::command]
@@ -84,6 +86,13 @@ pub async fn detect_skill(package: String) -> Result<SkillDetection, String> {
 #[tauri::command]
 pub async fn remove_skills(skills: Vec<String>) -> Result<SkillRemoveResult, String> {
     tauri::async_runtime::spawn_blocking(move || remove_global_skills(&skills))
+        .await
+        .map_err(|e| format!("remove task failed: {e}"))?
+}
+
+#[tauri::command]
+pub async fn remove_all_skills() -> Result<SkillRemoveResult, String> {
+    tauri::async_runtime::spawn_blocking(remove_all_global_skills)
         .await
         .map_err(|e| format!("remove task failed: {e}"))?
 }

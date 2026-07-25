@@ -21,8 +21,10 @@ pub async fn install_node(window: Window) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn detect_node() -> Result<NodeInfo, String> {
-    detect_node_info()
+pub async fn detect_node() -> Result<NodeInfo, String> {
+    tauri::async_runtime::spawn_blocking(detect_node_info)
+        .await
+        .map_err(|e| format!("node detection task failed: {e}"))?
 }
 
 fn emit_progress(window: &Window, stage: &str, message: &str, done: bool) {
