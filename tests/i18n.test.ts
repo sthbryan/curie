@@ -55,13 +55,13 @@ describe("t", () => {
   });
 
   it("interpolates a single variable", () => {
-    expect(t("en", "home.active", { n: 3 })).toBe("3 ACTIVE");
-    expect(t("es", "home.active", { n: 3 })).toBe("3 ACTIVAS");
+    expect(t("en", "home.events", { n: 3 })).toBe("3 EVENTS");
+    expect(t("es", "home.events", { n: 3 })).toBe("3 EVENTOS");
   });
 
   it("interpolates multiple variables in one string", () => {
     expect(t("en", "home.events", { n: 5 })).toBe("5 EVENTS");
-    expect(t("es", "home.active", { n: 1 })).toBe("1 ACTIVAS");
+    expect(t("es", "home.more", { n: 1 })).toBe("+1 MÁS");
   });
 
   it("interpolates repeated variables", () => {

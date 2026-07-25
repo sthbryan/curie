@@ -69,12 +69,11 @@ describe("Home", () => {
     expect(body).toMatch(/2\s*SKILLS/);
     expect(body).toContain("impeccable");
     expect(body).toContain("Codex");
-    expect(body).toContain("INSTALL A SKILL");
   });
 
-  it("invites the user to install when nothing is there yet", () => {
+  it("explains the empty state instead of showing counts", () => {
     const body = text(mount(<Home />));
     expect(body).toContain("No global skills installed yet");
-    expect(body).toContain("INSTALL A SKILL");
+    expect(body).not.toMatch(/0\s*SKILLS/);
   });
 });
