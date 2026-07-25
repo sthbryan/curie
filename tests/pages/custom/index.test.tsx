@@ -31,7 +31,7 @@ describe("Custom", () => {
   it("renders the title and what the screen is for", () => {
     mount(<Router><Custom /></Router>);
     expect(container?.textContent).toContain("Install skills from anywhere");
-    expect(container?.textContent).toContain("npx skills");
+    expect(container?.textContent).toContain("ready for your agents");
   });
 
   it("renders the remote install form", () => {

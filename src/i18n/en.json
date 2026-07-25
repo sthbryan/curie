@@ -145,7 +145,7 @@
   "custom": {
     "eyebrow": "CUSTOM · DIRECT INSTALL",
     "title": "Install skills from anywhere",
-    "subtitle": "A GitHub repo or a SKILL.md you wrote yourself. Either way it lands globally through npx skills, exactly like a skill from the registry.",
+    "subtitle": "A GitHub repo or a SKILL.md you wrote yourself. Either way the skill ends up installed and ready for your agents.",
     "divider": "OR",
     "remote": {
       "eyebrow": "OPTION 01 · FROM GITHUB",
