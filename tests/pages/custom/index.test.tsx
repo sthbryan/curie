@@ -28,26 +28,22 @@ afterEach(unmount);
 beforeEach(() => { lang.value = "en"; });
 
 describe("Custom", () => {
-  it("renders the title", () => {
+  it("renders the title and what the screen is for", () => {
     mount(<Router><Custom /></Router>);
-    expect(container?.textContent).toContain("Build your own skill");
+    expect(container?.textContent).toContain("Install skills from anywhere");
+    expect(container?.textContent).toContain("npx skills");
   });
 
-  it("renders the new editorial subtitle", () => {
+  it("renders the remote install form", () => {
     mount(<Router><Custom /></Router>);
-    expect(container?.textContent).toContain("Authored by you. On your disk. Yours.");
-  });
-
-  it("renders the URL install form", () => {
-    mount(<Router><Custom /></Router>);
-    expect(container?.textContent).toContain("Install from a GitHub URL");
+    expect(container?.textContent).toContain("Install from a repository");
     expect(container?.textContent).toContain("INSTALL");
   });
 
-  it("renders the MD upload form", () => {
+  it("renders the local skill form", () => {
     mount(<Router><Custom /></Router>);
-    expect(container?.textContent).toContain("Create a custom skill");
+    expect(container?.textContent).toContain("Write a skill by hand");
     expect(container?.textContent).toContain("UPLOAD .MD");
-    expect(container?.textContent).toContain("SAVE");
+    expect(container?.textContent).toContain("SAVE AND INSTALL");
   });
 });

@@ -25,17 +25,17 @@ vi.mock("sonner", () => ({
   },
 }));
 
-const { useSkillSave } = await import("@/pages/custom/hooks/useSkillSave");
+const { useLocalInstall } = await import("@/pages/custom/hooks/useLocalInstall");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
-const lastResult: { current: ReturnType<typeof useSkillSave> | null } = { current: null };
+const lastResult: { current: ReturnType<typeof useLocalInstall> | null } = { current: null };
 
 function mount() {
   function Probe() {
-    lastResult.current = useSkillSave();
+    lastResult.current = useLocalInstall();
     return null;
   }
   container = document.createElement("div");
@@ -46,7 +46,7 @@ function mount() {
   });
 }
 
-function get(): ReturnType<typeof useSkillSave> {
+function get(): ReturnType<typeof useLocalInstall> {
   if (!lastResult.current) throw new Error("hook not mounted");
   return lastResult.current;
 }
@@ -84,12 +84,12 @@ beforeEach(() => {
 
 afterEach(unmount);
 
-describe("useSkillSave", () => {
+describe("useLocalInstall", () => {
   it("saves, refreshes the list, and reports success when the backend installed the skill", async () => {
     invokeMock.mockResolvedValueOnce(saved);
 
     await act(async () => {
-      expect(await get().save("my-skill", "# content")).toBe(true);
+      expect(await get().install("my-skill", "# content")).toBe(true);
     });
 
     expect(invokeMock).toHaveBeenCalledWith("save_custom_skill", {
@@ -109,7 +109,7 @@ describe("useSkillSave", () => {
     });
 
     await act(async () => {
-      expect(await get().save("my-skill", "# content")).toBe(true);
+      expect(await get().install("my-skill", "# content")).toBe(true);
     });
 
     expect(loadGlobalSkillsMock).not.toHaveBeenCalled();
@@ -121,31 +121,31 @@ describe("useSkillSave", () => {
     invokeMock.mockRejectedValueOnce("invalid name");
 
     await act(async () => {
-      expect(await get().save("bad name", "x")).toBe(false);
+      expect(await get().install("bad name", "x")).toBe(false);
     });
 
     expect(toastErrorMock).toHaveBeenCalledTimes(1);
     expect(toastErrorMock.mock.calls[0][0]).toBe("invalid name");
   });
 
-  it("flags saving while the backend is working and clears it afterwards", async () => {
-    let resolveSave: ((v: CustomSkillSaveResult) => void) | null = null;
+  it("flags installing while the backend is working and clears it afterwards", async () => {
+    let resolveInstall: ((v: CustomSkillSaveResult) => void) | null = null;
     invokeMock.mockReturnValueOnce(
       new Promise<CustomSkillSaveResult>((resolve) => {
-        resolveSave = resolve;
+        resolveInstall = resolve;
       }),
     );
 
     let pending: Promise<boolean> | null = null;
     act(() => {
-      pending = get().save("my-skill", "# content");
+      pending = get().install("my-skill", "# content");
     });
-    expect(get().saving).toBe(true);
+    expect(get().installing).toBe(true);
 
     await act(async () => {
-      resolveSave?.(saved);
+      resolveInstall?.(saved);
       await pending;
     });
-    expect(get().saving).toBe(false);
+    expect(get().installing).toBe(false);
   });
 });

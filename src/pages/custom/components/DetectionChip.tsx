@@ -1,4 +1,3 @@
-import { LoaderCircle } from "lucide-react";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import type { DetectionState } from "../hooks/useSkillDetection";
@@ -13,7 +12,7 @@ type Props = {
 };
 
 export function DetectionChip({ phase, detection }: Props) {
-  const t = useT("custom.url");
+  const t = useT("custom.remote");
 
   if (phase === "empty") {
     return <span className={cn(BASE, "text-fg-4")}>{t("awaiting")}</span>;
@@ -28,11 +27,11 @@ export function DetectionChip({ phase, detection }: Props) {
     );
   }
 
-  if (phase === "checking" || phase === "installing") {
+  if (phase === "checking") {
     return (
       <span className={cn(BASE, "text-fg-3")}>
-        <LoaderCircle size={11} className="animate-spin" aria-hidden />
-        {phase === "installing" ? t("installing") : t("checking")}
+        <span className={cn(DOT, "bg-fg-3 animate-pulse")} aria-hidden />
+        {t("checking")}
       </span>
     );
   }

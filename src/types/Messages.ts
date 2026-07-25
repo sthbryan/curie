@@ -146,30 +146,32 @@ export type Messages = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    url: {
+    divider: string;
+    remote: {
       eyebrow: string;
       title: string;
       subtitle: string;
       label: string;
       placeholder: string;
+      hint: string;
       submit: string;
       installing: string;
       clear: string;
-      moreSkills: string;
-      hint: string;
       errorInvalid: string;
-      promiseLoading: string;
-      promiseSuccess: string;
-      checking: string;
+      toastLoading: string;
+      toastSuccess: string;
+      toastError: string;
       awaiting: string;
+      checking: string;
       invalidFormat: string;
       checkFailed: string;
+      noSkillsFound: string;
       skillFound: string;
       skillsFound: string;
       skillsTruncated: string;
-      noSkillsFound: string;
+      moreSkills: string;
     };
-    md: {
+    local: {
       eyebrow: string;
       title: string;
       subtitle: string;
@@ -179,10 +181,10 @@ export type Messages = {
       contentPlaceholder: string;
       fileButton: string;
       fileLoaded: string;
+      hint: string;
       clear: string;
       submit: string;
-      saving: string;
-      hint: string;
+      installing: string;
       successInstalled: string;
       successSaved: string;
       installError: string;

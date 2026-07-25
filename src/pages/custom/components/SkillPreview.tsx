@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function SkillPreview({ detection }: Props) {
-  const t = useT("custom.url");
+  const t = useT("custom.remote");
   const { skills, total } = detection;
   if (skills.length < 2) return null;
 

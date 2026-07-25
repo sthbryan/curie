@@ -24,7 +24,7 @@ vi.mock("sonner", () => ({
   },
 }));
 
-const { MdUploadForm } = await import("@/pages/custom/components/MdUploadForm");
+const { LocalSkillForm } = await import("@/pages/custom/components/LocalSkillForm");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -36,7 +36,7 @@ function mount() {
   document.body.appendChild(container);
   root = createRoot(container);
   act(() => {
-    root?.render(<MdUploadForm />);
+    root?.render(<LocalSkillForm />);
   });
 }
 
@@ -54,13 +54,13 @@ function unmount() {
 }
 
 function getNameInput(): HTMLInputElement {
-  const input = container?.querySelector("#custom-md-name") as HTMLInputElement | null;
+  const input = container?.querySelector("#custom-local-name") as HTMLInputElement | null;
   if (!input) throw new Error("name input not found");
   return input;
 }
 
 function getContentInput(): HTMLTextAreaElement {
-  const textarea = container?.querySelector("#custom-md-content") as HTMLTextAreaElement | null;
+  const textarea = container?.querySelector("#custom-local-content") as HTMLTextAreaElement | null;
   if (!textarea) throw new Error("content textarea not found");
   return textarea;
 }
@@ -90,9 +90,9 @@ function fillForm() {
   setInputValue(getContentInput(), "# Skill content");
 }
 
-async function clickSave() {
+async function clickInstall() {
   await act(async () => {
-    getButtonByText("SAVE").click();
+    getButtonByText("SAVE AND INSTALL").click();
     for (let i = 0; i < 10; i++) await Promise.resolve();
   });
 }
@@ -106,19 +106,19 @@ beforeEach(() => {
 
 afterEach(unmount);
 
-describe("MdUploadForm", () => {
-  it("keeps save disabled until name and content are valid", () => {
-    expect(getButtonByText("SAVE").disabled).toBe(true);
+describe("LocalSkillForm", () => {
+  it("keeps install disabled until name and content are valid", () => {
+    expect(getButtonByText("SAVE AND INSTALL").disabled).toBe(true);
 
     fillForm();
-    expect(getButtonByText("SAVE").disabled).toBe(false);
+    expect(getButtonByText("SAVE AND INSTALL").disabled).toBe(false);
   });
 
-  it("keeps save disabled for a name the backend would reject", () => {
+  it("keeps install disabled for a name the backend would reject", () => {
     setInputValue(getNameInput(), "-bad name");
     setInputValue(getContentInput(), "# Skill content");
 
-    expect(getButtonByText("SAVE").disabled).toBe(true);
+    expect(getButtonByText("SAVE AND INSTALL").disabled).toBe(true);
   });
 
   it("shows success via toast and clears the form inputs", async () => {
@@ -132,7 +132,7 @@ describe("MdUploadForm", () => {
     invokeMock.mockResolvedValueOnce(saved);
 
     fillForm();
-    await clickSave();
+    await clickInstall();
 
     expect(invokeMock).toHaveBeenCalledWith("save_custom_skill", {
       name: "my-skill",
@@ -147,7 +147,7 @@ describe("MdUploadForm", () => {
     invokeMock.mockRejectedValueOnce("invalid name");
 
     fillForm();
-    await clickSave();
+    await clickInstall();
 
     expect(toastErrorMock).toHaveBeenCalledTimes(1);
     expect(getNameInput().value).toBe("my-skill");

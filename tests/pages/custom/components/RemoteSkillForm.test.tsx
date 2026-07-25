@@ -8,7 +8,7 @@ import type { SkillDetection, SkillInstallResult } from "@/components/types";
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
 const toastErrorMock = vi.fn();
-const toastPromiseMock = vi.fn();
+const promiseToastMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -21,11 +21,14 @@ vi.mock("@/lib/boot", () => ({
 vi.mock("sonner", () => ({
   toast: {
     error: (...args: unknown[]) => toastErrorMock(...args),
-    promise: (...args: unknown[]) => toastPromiseMock(...args),
   },
 }));
 
-const { UrlInstallForm } = await import("@/pages/custom/components/UrlInstallForm");
+vi.mock("@/lib/toast", () => ({
+  promiseToast: (...args: unknown[]) => promiseToastMock(...args),
+}));
+
+const { RemoteSkillForm } = await import("@/pages/custom/components/RemoteSkillForm");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -37,7 +40,7 @@ function mount() {
   document.body.appendChild(container);
   root = createRoot(container);
   act(() => {
-    root?.render(<UrlInstallForm />);
+    root?.render(<RemoteSkillForm />);
   });
 }
 
@@ -55,7 +58,7 @@ function unmount() {
 }
 
 function getInput(): HTMLInputElement {
-  const input = container?.querySelector("#custom-url-input") as HTMLInputElement | null;
+  const input = container?.querySelector("#custom-remote-input") as HTMLInputElement | null;
   if (!input) throw new Error("input not found");
   return input;
 }
@@ -122,7 +125,7 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockReset();
   loadGlobalSkillsMock.mockResolvedValue(undefined);
   toastErrorMock.mockReset();
-  toastPromiseMock.mockReset();
+  promiseToastMock.mockReset();
   vi.useFakeTimers();
 });
 
@@ -131,7 +134,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("UrlInstallForm", () => {
+describe("RemoteSkillForm", () => {
   it("keeps the install button disabled while the input is unverified", async () => {
     mockBackend(detection(1));
     mount();
@@ -139,7 +142,7 @@ describe("UrlInstallForm", () => {
 
     setInputValue("owner/repo@skill");
     expect(getButtonByText("INSTALL").disabled).toBe(true);
-    expect(container?.textContent).toContain("CHECKING");
+    expect(container?.textContent).toContain("READING THE REPO");
 
     await settleDetection();
     expect(getButtonByText("INSTALL").disabled).toBe(false);
@@ -150,7 +153,7 @@ describe("UrlInstallForm", () => {
     mount();
     setInputValue("not a url");
 
-    expect(container?.textContent).toContain("UNRECOGNIZED FORMAT");
+    expect(container?.textContent).toContain("DOESN'T LOOK LIKE A REPO");
     expect(invokeMock).not.toHaveBeenCalled();
   });
 
@@ -161,7 +164,7 @@ describe("UrlInstallForm", () => {
     await settleDetection();
 
     expect(getButtonByText("INSTALL").disabled).toBe(true);
-    expect(container?.textContent).toContain("NO SKILLS FOUND");
+    expect(container?.textContent).toContain("THIS REPO HAS NO SKILLS");
   });
 
   it("surfaces a failed check without enabling install", async () => {
@@ -171,7 +174,7 @@ describe("UrlInstallForm", () => {
     await settleDetection();
 
     expect(getButtonByText("INSTALL").disabled).toBe(true);
-    expect(container?.textContent).toContain("CHECK FAILED");
+    expect(container?.textContent).toContain("COULD NOT READ THE REPO");
   });
 
   it("keeps a single INSTALL label and previews the detected skills", async () => {
@@ -183,7 +186,7 @@ describe("UrlInstallForm", () => {
     const installButton = getButtonByText("INSTALL");
     expect(installButton.disabled).toBe(false);
     expect(installButton.textContent).not.toMatch(/18/);
-    expect(container?.textContent).toContain("18 SKILLS");
+    expect(container?.textContent).toContain("18 SKILLS READY");
     expect(container?.textContent).toContain("skill-0");
     expect(container?.textContent).toContain("+12 MORE");
   });
@@ -199,7 +202,7 @@ describe("UrlInstallForm", () => {
       package: "owner/repo@skill",
       skillName: null,
     });
-    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
+    expect(promiseToastMock).toHaveBeenCalledTimes(1);
     expect(getInput().value).toBe("");
   });
 
@@ -213,20 +216,22 @@ describe("UrlInstallForm", () => {
     setInputValue("vercel-labs/agent-skills@pdf");
 
     expect(getInput().value).toBe("vercel-labs/agent-skills@pdf");
-    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
+    expect(promiseToastMock).toHaveBeenCalledTimes(1);
   });
 
-  it("clears the input from the CLEAR affordance", async () => {
+  it("clears the input from the affordance inside the field", async () => {
     mockBackend(detection(1));
     mount();
     setInputValue("owner/repo@skill");
     await settleDetection();
 
+    const clear = container?.querySelector('button[aria-label="Clear the field"]');
+    expect(clear).not.toBeNull();
     await act(async () => {
-      getButtonByText("CLEAR").click();
+      (clear as HTMLButtonElement).click();
     });
 
     expect(getInput().value).toBe("");
-    expect(container?.textContent).toContain("PASTE A LINK");
+    expect(container?.textContent).toContain("WAITING FOR A REPO");
   });
 });

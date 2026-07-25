@@ -7,36 +7,40 @@ import { loadGlobalSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
 import { lang } from "@/store/system";
 
-export type SkillSave = {
-  saving: boolean;
-  save: (name: string, content: string) => Promise<boolean>;
+export type LocalInstall = {
+  installing: boolean;
+  install: (name: string, content: string) => Promise<boolean>;
 };
 
-export function useSkillSave(): SkillSave {
-  const [saving, setSaving] = useState(false);
+export function useLocalInstall(): LocalInstall {
+  const [installing, setInstalling] = useState(false);
 
-  const save = useCallback(async (name: string, content: string) => {
-    setSaving(true);
+  const install = useCallback(async (name: string, content: string) => {
+    setInstalling(true);
     try {
       const res = await invoke<CustomSkillSaveResult>("save_custom_skill", {
         name: name.trim(),
         content,
       });
       if (res.installed) {
-        toast.success(t(lang.value, "custom.md.successInstalled", { name: res.name }));
+        toast.success(t(lang.value, "custom.local.successInstalled", { name: res.name }));
         await loadGlobalSkills({ checkUpdates: true });
       } else {
-        toast.success(t(lang.value, "custom.md.successSaved", { name: res.name, path: res.path }));
-        toast.error(t(lang.value, "custom.md.installError", { message: res.installMessage ?? "" }));
+        toast.success(
+          t(lang.value, "custom.local.successSaved", { name: res.name, path: res.path }),
+        );
+        toast.error(
+          t(lang.value, "custom.local.installError", { message: res.installMessage ?? "" }),
+        );
       }
       return true;
     } catch (e) {
       toast.error(errorMessage(e));
       return false;
     } finally {
-      setSaving(false);
+      setInstalling(false);
     }
   }, []);
 
-  return { saving, save };
+  return { installing, install };
 }

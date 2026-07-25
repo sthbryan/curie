@@ -8,7 +8,7 @@ import type { SkillInstallResult } from "@/components/types";
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
 const toastErrorMock = vi.fn();
-const toastPromiseMock = vi.fn();
+const promiseToastMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -21,21 +21,24 @@ vi.mock("@/lib/boot", () => ({
 vi.mock("sonner", () => ({
   toast: {
     error: (...args: unknown[]) => toastErrorMock(...args),
-    promise: (...args: unknown[]) => toastPromiseMock(...args),
   },
 }));
 
-const { useSkillInstall } = await import("@/pages/custom/hooks/useSkillInstall");
+vi.mock("@/lib/toast", () => ({
+  promiseToast: (...args: unknown[]) => promiseToastMock(...args),
+}));
+
+const { useRemoteInstall } = await import("@/pages/custom/hooks/useRemoteInstall");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
-const lastResult: { current: ReturnType<typeof useSkillInstall> | null } = { current: null };
+const lastResult: { current: ReturnType<typeof useRemoteInstall> | null } = { current: null };
 
 function mount() {
   function Probe() {
-    lastResult.current = useSkillInstall();
+    lastResult.current = useRemoteInstall();
     return null;
   }
   container = document.createElement("div");
@@ -46,7 +49,7 @@ function mount() {
   });
 }
 
-function get(): ReturnType<typeof useSkillInstall> {
+function get(): ReturnType<typeof useRemoteInstall> {
   if (!lastResult.current) throw new Error("hook not mounted");
   return lastResult.current;
 }
@@ -65,11 +68,11 @@ function unmount() {
   lastResult.current = null;
 }
 
-function promiseOptions() {
-  return toastPromiseMock.mock.calls[0][1] as {
-    loading: string;
-    success: () => string;
-    error: (e: unknown) => string;
+function toastCopy() {
+  return promiseToastMock.mock.calls[0][1] as {
+    loading: { label: string; detail?: string };
+    success: { label: string; detail?: string };
+    error: (e: unknown) => { label: string; detail?: string };
   };
 }
 
@@ -78,13 +81,13 @@ beforeEach(() => {
   loadGlobalSkillsMock.mockReset();
   loadGlobalSkillsMock.mockResolvedValue(undefined);
   toastErrorMock.mockReset();
-  toastPromiseMock.mockReset();
+  promiseToastMock.mockReset();
   mount();
 });
 
 afterEach(unmount);
 
-describe("useSkillInstall", () => {
+describe("useRemoteInstall", () => {
   it("rejects input that is not a URL or package without touching the backend", async () => {
     await act(async () => {
       expect(await get().install("not a valid target")).toBe(false);
@@ -92,7 +95,7 @@ describe("useSkillInstall", () => {
 
     expect(toastErrorMock).toHaveBeenCalledTimes(1);
     expect(invokeMock).not.toHaveBeenCalled();
-    expect(toastPromiseMock).not.toHaveBeenCalled();
+    expect(promiseToastMock).not.toHaveBeenCalled();
   });
 
   it("installs the target, refreshes the global skills list, and drives a toast.promise", async () => {
@@ -107,9 +110,9 @@ describe("useSkillInstall", () => {
       skillName: null,
     });
     expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
-    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
-    expect(promiseOptions().loading).toMatch(/owner\/repo/);
-    expect(promiseOptions().success()).toMatch(/owner\/repo/);
+    expect(promiseToastMock).toHaveBeenCalledTimes(1);
+    expect(toastCopy().loading.detail).toBe("owner/repo · skill");
+    expect(toastCopy().success.detail).toBe("owner/repo · skill");
   });
 
   it("accepts a full github URL", async () => {
@@ -132,7 +135,7 @@ describe("useSkillInstall", () => {
       expect(await get().install("owner/repo")).toBe(false);
     });
 
-    expect(promiseOptions().error(new Error("boom"))).toBe("boom");
+    expect(toastCopy().error(new Error("boom")).detail).toBe("boom");
   });
 
   it("flags installing while the backend is working and clears it afterwards", async () => {

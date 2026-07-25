@@ -1,28 +1,27 @@
 import { FileUp, LoaderCircle, Save } from "lucide-react";
 import { useRef, useState } from "react";
-import { When } from "react-if";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { useSkillSave } from "../hooks/useSkillSave";
+import { useLocalInstall } from "../hooks/useLocalInstall";
 import { isValidSkillName, slugifySkillName } from "../lib/skillName";
 import { FieldLabel } from "./FieldLabel";
 import { FormSection } from "./FormSection";
 
-const NAME_ID = "custom-md-name";
-const CONTENT_ID = "custom-md-content";
+const NAME_ID = "custom-local-name";
+const CONTENT_ID = "custom-local-content";
 
-export function MdUploadForm() {
-  const t = useT("custom.md");
+export function LocalSkillForm() {
+  const t = useT("custom.local");
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const { saving, save } = useSkillSave();
+  const { installing, install } = useLocalInstall();
 
   const nameValid = isValidSkillName(name);
-  const canSubmit = nameValid && content.trim().length > 0 && !saving;
+  const canInstall = nameValid && content.trim().length > 0 && !installing;
 
   const reset = () => {
     setName("");
@@ -44,8 +43,8 @@ export function MdUploadForm() {
   };
 
   const handleSubmit = () => {
-    if (!canSubmit) return;
-    void save(name, content).then((ok) => {
+    if (!canInstall) return;
+    void install(name, content).then((ok) => {
       if (ok) reset();
     });
   };
@@ -65,11 +64,11 @@ export function MdUploadForm() {
             spellCheck={false}
             autoCapitalize="off"
             autoCorrect="off"
-            disabled={saving}
+            disabled={installing}
             wrapperClassName="w-full"
             className={cn(
               "disabled:opacity-60",
-              name && !nameValid && "border-accent/60 focus:border-accent",
+              name && !nameValid && "border-warning/60 focus:border-warning",
             )}
           />
         </div>
@@ -86,16 +85,12 @@ export function MdUploadForm() {
           variant="outline"
           className="px-5 shrink-0"
           onClick={() => fileRef.current?.click()}
-          disabled={saving}
+          disabled={installing}
         >
           <FileUp size={14} aria-hidden />
           {t("fileButton")}
         </Button>
       </div>
-
-      <When condition={fileName !== null}>
-        <p className="font-body text-xs text-fg-3">{t("fileLoaded", { name: fileName ?? "" })}</p>
-      </When>
 
       <div className="flex flex-col gap-1.5">
         <FieldLabel htmlFor={CONTENT_ID}>{t("contentLabel")}</FieldLabel>
@@ -106,37 +101,39 @@ export function MdUploadForm() {
           placeholder={t("contentPlaceholder")}
           spellCheck={false}
           rows={10}
-          disabled={saving}
+          disabled={installing}
           className="w-full border border-border-strong bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm resize-y min-h-45 disabled:opacity-60"
         />
       </div>
 
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <p className="font-body text-xs text-fg-4 max-w-md">{t("hint")}</p>
+        <p className="font-body text-xs text-fg-4 max-w-md">
+          {fileName ? t("fileLoaded", { name: fileName }) : t("hint")}
+        </p>
         <div className="flex items-center gap-2">
           <Button
             size="lg"
             variant="ghost"
             className="px-5"
             onClick={reset}
-            disabled={saving || (!name && !content)}
+            disabled={installing || (!name && !content)}
           >
             {t("clear")}
           </Button>
           <Button
             size="lg"
             variant="primary"
-            className="px-5 min-w-32"
+            className="px-5 min-w-40"
             onClick={handleSubmit}
-            disabled={!canSubmit}
-            aria-busy={saving}
+            disabled={!canInstall}
+            aria-busy={installing}
           >
-            {saving ? (
+            {installing ? (
               <LoaderCircle size={14} className="animate-spin" aria-hidden />
             ) : (
               <Save size={14} aria-hidden />
             )}
-            {saving ? t("saving") : t("submit")}
+            {installing ? t("installing") : t("submit")}
           </Button>
         </div>
       </div>

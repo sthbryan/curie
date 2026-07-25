@@ -5,26 +5,27 @@ import type { SkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
+import { promiseToast } from "@/lib/toast";
 import { lang } from "@/store/system";
 import { classifyTarget, targetLabel } from "../lib/target";
 
-export type SkillInstall = {
+export type RemoteInstall = {
   installing: boolean;
   install: (target: string) => Promise<boolean>;
 };
 
-export function useSkillInstall(): SkillInstall {
+export function useRemoteInstall(): RemoteInstall {
   const [installing, setInstalling] = useState(false);
 
   const install = useCallback(async (target: string) => {
     const trimmed = target.trim();
     if (classifyTarget(trimmed) === null) {
-      toast.error(t(lang.value, "custom.url.errorInvalid"));
+      toast.error(t(lang.value, "custom.remote.errorInvalid"));
       return false;
     }
 
     setInstalling(true);
-    const label = targetLabel(trimmed);
+    const detail = targetLabel(trimmed);
     const promise = invoke<SkillInstallResult>("add_skill", {
       package: trimmed,
       skillName: null,
@@ -33,10 +34,13 @@ export function useSkillInstall(): SkillInstall {
       return res;
     });
 
-    toast.promise(promise, {
-      loading: t(lang.value, "custom.url.promiseLoading", { target: label }),
-      success: () => t(lang.value, "custom.url.promiseSuccess", { target: label }),
-      error: (e: unknown) => errorMessage(e),
+    promiseToast(promise, {
+      loading: { label: t(lang.value, "custom.remote.toastLoading"), detail },
+      success: { label: t(lang.value, "custom.remote.toastSuccess"), detail },
+      error: (e) => ({
+        label: t(lang.value, "custom.remote.toastError"),
+        detail: errorMessage(e),
+      }),
     });
 
     try {

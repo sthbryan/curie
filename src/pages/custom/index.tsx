@@ -2,8 +2,8 @@ import { motion } from "motion/react";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
-import { MdUploadForm } from "./components/MdUploadForm";
-import { UrlInstallForm } from "./components/UrlInstallForm";
+import { LocalSkillForm } from "./components/LocalSkillForm";
+import { RemoteSkillForm } from "./components/RemoteSkillForm";
 
 export function Custom() {
   const t = useT("custom");
@@ -23,15 +23,17 @@ export function Custom() {
           {...fadeUp(0.05)}
           className="flex flex-col gap-8 border border-border bg-surface-tint p-8"
         >
-          <UrlInstallForm />
+          <RemoteSkillForm />
 
           <div className="flex items-center gap-4">
             <span className="h-px flex-1 bg-border" />
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4">OR</span>
+            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
+              {t("divider")}
+            </span>
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <MdUploadForm />
+          <LocalSkillForm />
         </motion.section>
       </div>
     </main>
