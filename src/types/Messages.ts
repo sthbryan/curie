@@ -1,10 +1,12 @@
 export type Messages = {
   app: {
-    ready: string;
     loading: string;
     sortable: string;
     sortedAsc: string;
     sortedDesc: string;
+    loadingSkills: string;
+    checkingUpdates: string;
+    skillUpdates: string;
   };
   error: {
     eyebrow: string;

@@ -1,10 +1,12 @@
 {
   "app": {
-    "ready": "LISTO",
     "loading": "CARGANDO",
     "sortable": "ORDENABLE",
     "sortedAsc": "ORDENADO ASCENDENTE",
-    "sortedDesc": "ORDENADO DESCENDENTE"
+    "sortedDesc": "ORDENADO DESCENDENTE",
+    "loadingSkills": "CARGANDO SKILLS",
+    "checkingUpdates": "BUSCANDO ACTUALIZACIONES",
+    "skillUpdates": "{n} ACTUALIZACIONES"
   },
   "error": {
     "eyebrow": "ALGO SALIO MAL",
