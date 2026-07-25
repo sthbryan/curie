@@ -1,4 +1,4 @@
-import { GitBranch } from "lucide-react";
+import { GitBranch, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
@@ -118,7 +118,7 @@ function DetectionChip({
   if (detection.kind === "checking") {
     return (
       <span className={cn(base, "text-fg-3")}>
-        <span className="inline-block h-1 w-1 rounded-full bg-fg-3 animate-pulse" aria-hidden />
+        <LoaderCircle size={11} className="animate-spin" aria-hidden />
         {t("checking")}
       </span>
     );
