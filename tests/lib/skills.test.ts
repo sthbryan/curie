@@ -176,7 +176,7 @@ describe("formatRelative", () => {
   });
 
   it("formats sub-minute, sub-hour, sub-day, and sub-month deltas", () => {
-    expect(formatRelative("2026-07-22T11:59:30.000Z", now)).toBe("just now");
+    expect(formatRelative("2026-07-22T11:59:30.000Z", now)).toBe("now");
     expect(formatRelative("2026-07-22T11:55:00.000Z", now)).toBe("5m ago");
     expect(formatRelative("2026-07-22T10:00:00.000Z", now)).toBe("2h ago");
     expect(formatRelative("2026-07-21T12:00:00.000Z", now)).toBe("yesterday");
@@ -184,12 +184,18 @@ describe("formatRelative", () => {
   });
 
   it("clamps future deltas to 0", () => {
-    expect(formatRelative("2026-07-22T12:00:00.000Z", now)).toBe("just now");
+    expect(formatRelative("2026-07-22T12:00:00.000Z", now)).toBe("now");
   });
 
   it("formats months and years for long deltas", () => {
     expect(formatRelative("2026-01-22T12:00:00.000Z", now)).toBe("6mo ago");
     expect(formatRelative("2024-07-22T12:00:00.000Z", now)).toBe("2y ago");
+  });
+
+  it("speaks the requested locale", () => {
+    expect(formatRelative("2026-07-22T11:55:00.000Z", now, "es")).toBe("hace 5 min");
+    expect(formatRelative("2026-07-21T12:00:00.000Z", now, "es")).toBe("ayer");
+    expect(formatRelative("2024-07-22T12:00:00.000Z", now, "es")).toBe("hace 2 a");
   });
 });
 

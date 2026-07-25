@@ -119,7 +119,6 @@ export type Activity = {
   kind: "install" | "update";
   skill: string;
   source: string | null;
-  when: string;
   at: string;
 };
 

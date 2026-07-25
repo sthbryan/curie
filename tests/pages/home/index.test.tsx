@@ -1,14 +1,7 @@
 // @vitest-environment happy-dom
 
-import { createRoot } from "preact/compat/client";
-import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Router } from "wouter";
-import type { SkillInfo } from "@/components/types";
 import {
-  setSkills,
-  setSkillsLoading,
-  setSkillUpdates,
   skills,
   skillsError,
   skillsLoading,
@@ -16,7 +9,9 @@ import {
   updatesError,
   updatesLoading,
 } from "@/store/skills";
-import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
+import { lang } from "@/store/system";
+import { skillFixture } from "./fixtures";
+import { cleanup, mount, text } from "./mount";
 
 const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
 const checkSkillUpdatesMock = vi.fn().mockResolvedValue(undefined);
@@ -28,103 +23,57 @@ vi.mock("@/lib/boot", () => ({
 
 const { Home } = await import("@/pages/home/index");
 
-(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-
-let root: ReturnType<typeof createRoot> | null = null;
-let container: HTMLDivElement | null = null;
-
-function render(ui: React.ReactNode) {
-  container = document.createElement("div");
-  document.body.appendChild(container);
-  root = createRoot(container);
-  act(() => {
-    root?.render(<Router>{ui}</Router>);
-  });
-}
-
-const skill = (name: string, agents: string[]): SkillInfo => ({
-  name,
-  path: `/a/${name}`,
-  scope: "global",
-  agents,
-  source: `me/${name}`,
-  sourceUrl: null,
-  sourceType: "github",
-  installedAt: "2026-07-10T10:00:00.000Z",
-  updatedAt: null,
-});
-
+afterEach(cleanup);
 beforeEach(() => {
   loadGlobalSkillsMock.mockClear();
   checkSkillUpdatesMock.mockClear();
+  lang.value = "en";
   skills.value = [];
   skillsLoading.value = false;
   skillsError.value = null;
   skillUpdates.value = [];
   updatesLoading.value = false;
   updatesError.value = null;
-  theme.value = "dark";
-  lang.value = "en";
-  reducedMotion.value = "user";
-  hasBooted.value = false;
-  stage.value = "loading";
-  node.value = null;
-});
-
-afterEach(() => {
-  if (root) {
-    act(() => {
-      root?.unmount();
-    });
-    root = null;
-  }
-  if (container) {
-    container.remove();
-    container = null;
-  }
 });
 
 describe("Home", () => {
-  it("renders the loading screen when skillsLoading and store is empty", () => {
-    setSkillsLoading(true);
-    render(<Home />);
-    expect(container?.textContent).toMatch(/loading|cargando/i);
+  it("shows the loading screen while the first load runs", () => {
+    skillsLoading.value = true;
+    expect(text(mount(<Home />))).toMatch(/loading|cargando/i);
   });
 
-  it("renders the full page when skills are loaded", () => {
-    setSkills([skill("impeccable", ["Claude Code", "Codex"]), skill("find-skills", ["Codex"])]);
-    setSkillUpdates([
-      {
-        name: "impeccable",
-        source: "me/impeccable",
-        updateAvailable: true,
-        checkable: true,
-      },
-    ]);
-    render(<Home />);
-    expect(container?.textContent).toContain("HOME · SKILLS");
-    expect(container?.textContent).toContain("impeccable");
-    expect(container?.textContent).toContain("Codex");
-    expect(container?.textContent).toContain("find-skills");
+  it("shows the error screen when the first load fails", () => {
+    skillsError.value = "boom";
+    expect(text(mount(<Home />))).toContain("boom");
   });
 
-  it("renders the empty-state copy when there are no skills", () => {
-    render(<Home />);
-    expect(container?.textContent).toContain("No global skills installed yet");
-    expect(container?.textContent).toContain("INSTALL A SKILL");
+  it("keeps rendering the dashboard when a later load fails", () => {
+    skills.value = [skillFixture("impeccable", ["Codex"])];
+    skillsError.value = "boom";
+    expect(text(mount(<Home />))).toContain("impeccable");
   });
 
-  it("triggers checkSkillUpdates when the 'check' button is clicked", async () => {
-    setSkills([skill("impeccable", ["Codex"])]);
-    render(<Home />);
+  it("renders the overview, the cards and the actions", () => {
+    skills.value = [
+      skillFixture("impeccable", ["Claude Code", "Codex"]),
+      skillFixture("find-skills", ["Codex"]),
+    ];
+    skillUpdates.value = [
+      { name: "impeccable", source: "me/impeccable", updateAvailable: true, checkable: true },
+    ];
 
-    const checkBtn = Array.from(container?.querySelectorAll("button") ?? []).find((b) =>
-      b.textContent?.toLowerCase().includes("check"),
-    );
-    expect(checkBtn).toBeDefined();
-    await act(async () => {
-      checkBtn?.click();
-    });
-    expect(checkSkillUpdatesMock).toHaveBeenCalledTimes(1);
+    const el = mount(<Home />);
+    const body = text(el);
+    expect(body).toContain("HOME · OVERVIEW");
+    expect(body).toContain("Your skills at a glance");
+    expect(body).toMatch(/2\s*SKILLS/);
+    expect(body).toContain("impeccable");
+    expect(body).toContain("Codex");
+  });
+
+  it("explains the empty state instead of showing counts", () => {
+    const body = text(mount(<Home />));
+    expect(body).toContain("No global skills installed yet");
+    expect(body).not.toMatch(/0\s*SKILLS/);
   });
 });

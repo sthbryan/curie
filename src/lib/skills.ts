@@ -20,30 +20,42 @@ export function summarizeAgents(skills: SkillInfo[]): AgentSummary[] {
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
 }
 
-export function formatRelative(iso: string, now = Date.now()): string {
+const DAY = 86_400_000;
+
+const RELATIVE_UNITS: Array<[Intl.RelativeTimeFormatUnit, number]> = [
+  ["year", 365 * DAY],
+  ["month", 30 * DAY],
+  ["day", DAY],
+  ["hour", 3_600_000],
+  ["minute", 60_000],
+];
+
+const relativeFormatters = new Map<string, Intl.RelativeTimeFormat>();
+
+function relativeFormatter(locale: string): Intl.RelativeTimeFormat {
+  const cached = relativeFormatters.get(locale);
+  if (cached) return cached;
+  const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto", style: "narrow" });
+  relativeFormatters.set(locale, formatter);
+  return formatter;
+}
+
+export function formatRelative(iso: string, now = Date.now(), locale = "en"): string {
   const ms = Date.parse(iso);
   if (Number.isNaN(ms)) return iso;
 
   const delta = Math.max(0, now - ms);
-  const minutes = Math.floor(delta / 60_000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes}m ago`;
+  const format = relativeFormatter(locale);
 
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  for (const [unit, size] of RELATIVE_UNITS) {
+    const count = Math.floor(delta / size);
+    if (count >= 1) return format.format(-count, unit);
+  }
 
-  const days = Math.floor(hours / 24);
-  if (days === 1) return "yesterday";
-  if (days < 30) return `${days}d ago`;
-
-  const months = Math.floor(days / 30);
-  if (months < 12) return `${months}mo ago`;
-
-  const years = Math.floor(days / 365);
-  return `${years}y ago`;
+  return format.format(0, "second");
 }
 
-export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] {
+export function buildRecentActivity(skills: SkillInfo[]): Activity[] {
   const events: Activity[] = [];
 
   for (const skill of skills) {
@@ -52,7 +64,6 @@ export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] 
         kind: "install",
         skill: skill.name,
         source: skill.source,
-        when: formatRelative(skill.installedAt),
         at: skill.installedAt,
       });
     }
@@ -67,7 +78,6 @@ export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] 
         kind: "update",
         skill: skill.name,
         source: skill.source,
-        when: formatRelative(skill.updatedAt),
         at: skill.updatedAt,
       });
     } else if (skill.updatedAt && !skill.installedAt) {
@@ -75,13 +85,12 @@ export function buildRecentActivity(skills: SkillInfo[], limit = 8): Activity[] 
         kind: "update",
         skill: skill.name,
         source: skill.source,
-        when: formatRelative(skill.updatedAt),
         at: skill.updatedAt,
       });
     }
   }
 
-  return events.sort((a, b) => Date.parse(b.at) - Date.parse(a.at)).slice(0, limit);
+  return events.sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
 }
 
 export function maxAgentCount(agents: AgentSummary[]): number {

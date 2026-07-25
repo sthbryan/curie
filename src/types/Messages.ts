@@ -50,18 +50,17 @@ export type Messages = {
     error: string;
   };
   home: {
-    status: string;
-    statusEmpty: string;
+    eyebrow: string;
+    title: string;
+    more: string;
     skillsNone: string;
     statSkills: string;
     statTools: string;
     statUpdates: string;
     aiTools: string;
-    active: string;
     skillWord: string;
     skillsWord: string;
     updates: string;
-    updatesAvailable: string;
     updatesCheck: string;
     updatesChecking: string;
     updatesError: string;
@@ -71,10 +70,6 @@ export type Messages = {
     noRecent: string;
     kindInstall: string;
     kindUpdate: string;
-    actions: string;
-    install: string;
-    exploreBtn: string;
-    viewSkills: string;
     loadError: string;
     retry: string;
     notBuilt: string;
