@@ -146,8 +146,6 @@ export type Messages = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    comingSoon: string;
-    body: string;
     url: {
       eyebrow: string;
       title: string;
@@ -159,9 +157,7 @@ export type Messages = {
       clear: string;
       moreSkills: string;
       hint: string;
-      error: string;
       errorInvalid: string;
-      success: string;
       promiseLoading: string;
       promiseSuccess: string;
       checking: string;
@@ -187,7 +183,6 @@ export type Messages = {
       submit: string;
       saving: string;
       hint: string;
-      error: string;
       successInstalled: string;
       successSaved: string;
       installError: string;

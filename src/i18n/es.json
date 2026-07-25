@@ -146,8 +146,6 @@
     "eyebrow": "CUSTOM · LOCAL",
     "title": "Crea tu propia skill",
     "subtitle": "Escritas por ti. En tu disco. Tuyas.",
-    "comingSoon": "PRÓXIMAMENTE",
-    "body": "Esta área aún está en desarrollo. Pronto podrás crear skills personalizadas, guardarlas en local y compartirlas con tus agentes.",
     "url": {
       "eyebrow": "OPCIÓN 01 · DESDE GITHUB",
       "title": "Instala desde una URL de GitHub",
@@ -159,9 +157,7 @@
       "clear": "LIMPIAR",
       "moreSkills": "+{count} MÁS",
       "hint": "Detecta URLs de github.com, handles owner/repo y referencias owner/repo@skill.",
-      "error": "Falló la instalación",
       "errorInvalid": "No es una URL de GitHub ni un package válido",
-      "success": "Instalado {target}",
       "promiseLoading": "Instalando {target}…",
       "promiseSuccess": "Instalado {target}",
       "checking": "VERIFICANDO",
@@ -187,7 +183,6 @@
       "submit": "GUARDAR",
       "saving": "GUARDANDO",
       "hint": "El nombre acepta letras, dígitos, guiones, puntos y guiones bajos. El cuerpo del .md no puede estar vacío.",
-      "error": "Falló el guardado",
       "successInstalled": "Instalado {name}",
       "successSaved": "Guardado {name} en {path}",
       "installError": "Falló la instalación: {message}"

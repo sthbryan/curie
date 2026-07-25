@@ -146,8 +146,6 @@
     "eyebrow": "CUSTOM · LOCAL",
     "title": "Build your own skill",
     "subtitle": "Authored by you. On your disk. Yours.",
-    "comingSoon": "COMING SOON",
-    "body": "This area is still in development. Soon you'll be able to author custom skills, save them locally, and share them with your agents.",
     "url": {
       "eyebrow": "OPTION 01 · FROM GITHUB",
       "title": "Install from a GitHub URL",
@@ -159,9 +157,7 @@
       "clear": "CLEAR",
       "moreSkills": "+{count} MORE",
       "hint": "Detects github.com URLs, owner/repo handles, and owner/repo@skill references.",
-      "error": "Install failed",
       "errorInvalid": "Not a valid GitHub URL or package reference",
-      "success": "Installed {target}",
       "promiseLoading": "Installing {target}…",
       "promiseSuccess": "Installed {target}",
       "checking": "CHECKING",
@@ -187,7 +183,6 @@
       "submit": "SAVE",
       "saving": "SAVING",
       "hint": "Skill name accepts letters, digits, dashes, dots, and underscores. The .md body must not be empty.",
-      "error": "Save failed",
       "successInstalled": "Installed {name}",
       "successSaved": "Saved {name} to {path}",
       "installError": "Install failed: {message}"
