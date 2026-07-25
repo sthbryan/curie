@@ -15,6 +15,12 @@
   --color-accent-fg: #ffffff;
   --color-success: #84a07c;
   --color-success-fg: #0a0a0a;
+  --color-error: #c25c4f;
+  --color-error-fg: #0a0a0a;
+  --color-warning: #d4a84a;
+  --color-warning-fg: #0a0a0a;
+  --color-info: #6b95b8;
+  --color-info-fg: #0a0a0a;
 
   --font-display: "Doto", ui-monospace, monospace;
   --font-body: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -50,6 +56,12 @@
   --color-accent-fg: #fafaf8;
   --color-success: #5a7a52;
   --color-success-fg: #fafaf8;
+  --color-error: #a8443a;
+  --color-error-fg: #fafaf8;
+  --color-warning: #a88030;
+  --color-warning-fg: #fafaf8;
+  --color-info: #4a738f;
+  --color-info-fg: #fafaf8;
 }
 
 :root[data-theme="rose"] {
@@ -67,6 +79,12 @@
   --color-accent-fg: #191724;
   --color-success: #9ccfd8;
   --color-success-fg: #191724;
+  --color-error: #eb6f92;
+  --color-error-fg: #191724;
+  --color-warning: #f6c177;
+  --color-warning-fg: #191724;
+  --color-info: #7fb5d6;
+  --color-info-fg: #191724;
 }
 
 :root[data-theme="dawn"] {
@@ -84,6 +102,12 @@
   --color-accent-fg: #faf4ed;
   --color-success: #56949f;
   --color-success-fg: #faf4ed;
+  --color-error: #b4637a;
+  --color-error-fg: #faf4ed;
+  --color-warning: #ea9d34;
+  --color-warning-fg: #faf4ed;
+  --color-info: #286983;
+  --color-info-fg: #faf4ed;
 }
 
 @layer base {
