@@ -144,16 +144,15 @@ describe("Table", () => {
     );
 
     const buttons = container?.querySelectorAll("button");
-    expect(buttons?.length).toBe(2);
+    expect(buttons?.length).toBe(1);
 
-    const nameBtn = buttons?.[0];
     act(() => {
-      nameBtn?.click();
+      buttons?.[0]?.click();
     });
     expect(onSort).toHaveBeenCalledWith("name");
   });
 
-  it("does not call onSort for non-sortable columns", () => {
+  it("leaves non-sortable headers as plain text", () => {
     const onSort = vi.fn();
     mount(
       <Table
@@ -165,20 +164,20 @@ describe("Table", () => {
       />,
     );
 
-    const buttons = container?.querySelectorAll("button");
-    expect(buttons?.length).toBe(2);
-
-    const valueBtn = buttons?.[1];
-    act(() => {
-      valueBtn?.click();
-    });
+    expect(container?.querySelectorAll("button")?.length).toBe(0);
+    expect(container?.textContent).toContain("VALUE");
     expect(onSort).not.toHaveBeenCalled();
   });
 
-  it("shows sort indicator on active sort column", () => {
+  it("announces the direction of the active sort column", () => {
+    const sortableCols: ColumnDef<Item>[] = [
+      { key: "name", header: "NAME", sortable: true, cell: () => null },
+      { key: "value", header: "VALUE", sortable: true, cell: () => null },
+    ];
+
     mount(
       <Table
-        columns={columns}
+        columns={sortableCols}
         rows={rows}
         gridTemplate={GRID}
         getRowKey={(r) => r.id}
@@ -187,13 +186,17 @@ describe("Table", () => {
       />,
     );
 
-    expect(container?.textContent).toContain("↑");
+    const labels = Array.from(container?.querySelectorAll("button") ?? []).map((b) =>
+      b.getAttribute("aria-label"),
+    );
+    expect(labels[0]).toBe("NAME · SORTED ASCENDING");
+    expect(labels[1]).toBe("VALUE · SORTABLE");
   });
 
-  it("shows descending indicator", () => {
+  it("flips the announcement when sorting descending", () => {
     mount(
       <Table
-        columns={columns}
+        columns={[{ key: "value", header: "VALUE", sortable: true, cell: () => null }]}
         rows={rows}
         gridTemplate={GRID}
         getRowKey={(r) => r.id}
@@ -202,7 +205,9 @@ describe("Table", () => {
       />,
     );
 
-    expect(container?.textContent).toContain("↓");
+    expect(container?.querySelector("button")?.getAttribute("aria-label")).toBe(
+      "VALUE · SORTED DESCENDING",
+    );
   });
 
   it("renders skeleton when loading", () => {
@@ -256,7 +261,7 @@ describe("Table", () => {
     expect(secondCell?.className).toContain("text-right");
   });
 
-  it("applies headerClassName to header buttons", () => {
+  it("applies headerClassName to every header cell", () => {
     mount(
       <Table
         columns={columns}
@@ -266,9 +271,10 @@ describe("Table", () => {
       />,
     );
 
-    const buttons = container?.querySelectorAll("button");
-    const valueBtn = buttons?.[1];
-    expect(valueBtn?.className).toContain("text-right");
+    const header = container?.firstElementChild;
+    const cells = header?.querySelectorAll(":scope > *");
+    expect(cells?.length).toBe(2);
+    expect(cells?.[1]?.className).toContain("text-right");
   });
 
   it("renders empty when rows is empty", () => {
@@ -287,48 +293,20 @@ describe("Table", () => {
     expect(container?.textContent).toContain("VALUE");
   });
 
-  it("calls onSort when pressing Enter on a sortable header", () => {
-    const onSort = vi.fn();
-
+  it("sorts through a real button so the keyboard works natively", () => {
     mount(
       <Table
-        columns={[
-          { key: "x", header: "X", sortable: true, cell: () => null },
-        ]}
+        columns={[{ key: "x", header: "X", sortable: true, cell: () => null }]}
         rows={rows}
         gridTemplate={GRID}
         getRowKey={(r) => r.id}
-        onSort={onSort}
+        onSort={vi.fn()}
       />,
     );
 
     const btn = container?.querySelector("button");
-    act(() => {
-      btn?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
-    });
-    expect(onSort).toHaveBeenCalledWith("x");
-  });
-
-  it("calls onSort when pressing Space on a sortable header", () => {
-    const onSort = vi.fn();
-
-    mount(
-      <Table
-        columns={[
-          { key: "x", header: "X", sortable: true, cell: () => null },
-        ]}
-        rows={rows}
-        gridTemplate={GRID}
-        getRowKey={(r) => r.id}
-        onSort={onSort}
-      />,
-    );
-
-    const btn = container?.querySelector("button");
-    act(() => {
-      btn?.dispatchEvent(new KeyboardEvent("keydown", { key: " " }));
-    });
-    expect(onSort).toHaveBeenCalledWith("x");
+    expect(btn?.tagName).toBe("BUTTON");
+    expect(btn?.getAttribute("type")).toBe("button");
   });
 
   it("renders skeleton with custom skeleton content from column def", () => {
