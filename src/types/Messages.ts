@@ -58,7 +58,6 @@ export type Messages = {
     statTools: string;
     statUpdates: string;
     aiTools: string;
-    active: string;
     skillWord: string;
     skillsWord: string;
     updates: string;
@@ -71,10 +70,6 @@ export type Messages = {
     noRecent: string;
     kindInstall: string;
     kindUpdate: string;
-    actions: string;
-    install: string;
-    exploreBtn: string;
-    viewSkills: string;
     loadError: string;
     retry: string;
     notBuilt: string;
