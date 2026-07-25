@@ -50,8 +50,9 @@
     "error": "Something went wrong"
   },
   "home": {
-    "status": "HOME · SKILLS",
-    "statusEmpty": "HOME · SKILLS EMPTY",
+    "eyebrow": "HOME · OVERVIEW",
+    "title": "Your skills at a glance",
+    "more": "+{n} MORE",
     "skillsNone": "No global skills installed yet",
     "statSkills": "SKILLS",
     "statTools": "AI TOOLS",
@@ -61,7 +62,6 @@
     "skillWord": "SKILL",
     "skillsWord": "SKILLS",
     "updates": "UPDATES",
-    "updatesAvailable": "{n} AVAILABLE",
     "updatesCheck": "CHECK",
     "updatesChecking": "CHECKING…",
     "updatesError": "Could not check for skill updates",

@@ -50,8 +50,9 @@ export type Messages = {
     error: string;
   };
   home: {
-    status: string;
-    statusEmpty: string;
+    eyebrow: string;
+    title: string;
+    more: string;
     skillsNone: string;
     statSkills: string;
     statTools: string;
@@ -61,7 +62,6 @@ export type Messages = {
     skillWord: string;
     skillsWord: string;
     updates: string;
-    updatesAvailable: string;
     updatesCheck: string;
     updatesChecking: string;
     updatesError: string;
