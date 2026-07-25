@@ -3,14 +3,12 @@ import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
 import {
   availableUpdates,
   buildRecentActivity,
-  filterSkills,
   formatInstalls,
   formatRelative,
   isSearchResultInstalled,
   maxAgentCount,
   skillTimestamp,
   summarizeAgents,
-  updateNameSet,
 } from "@/lib/skills";
 
 const sample: SkillInfo[] = [
@@ -81,28 +79,6 @@ describe("maxAgentCount", () => {
   it("returns at least 1", () => {
     expect(maxAgentCount([])).toBe(1);
     expect(maxAgentCount(summarizeAgents(sample))).toBe(2);
-  });
-});
-
-describe("filterSkills", () => {
-  it("filters by agent and query", () => {
-    expect(filterSkills(sample, "", "Zed")).toHaveLength(1);
-    expect(filterSkills(sample, "impec", null)[0]?.name).toBe("impeccable");
-    expect(filterSkills(sample, "missing", null)).toHaveLength(0);
-  });
-
-  it("filters updates-only and sorts update-available first", () => {
-    const names = updateNameSet(sampleUpdates);
-    const only = filterSkills(sample, "", null, { updatesOnly: true, updateNames: names });
-    expect(only.map((s) => s.name)).toEqual(["impeccable"]);
-
-    const all = filterSkills(sample, "", null, { updateNames: names });
-    expect(all[0]?.name).toBe("impeccable");
-  });
-
-  it("falls back to name sort when updateNames is empty or all skills share status", () => {
-    const allNoUpdates = filterSkills(sample, "", null, { updateNames: new Set() });
-    expect(allNoUpdates.map((s) => s.name)).toEqual(["find-skills", "impeccable"]);
   });
 });
 
