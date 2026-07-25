@@ -31,8 +31,8 @@ describe("t", () => {
   it("resolves nested keys", () => {
     expect(t("en", "home.eyebrow")).toBe("HOME · OVERVIEW");
     expect(t("es", "home.eyebrow")).toBe("INICIO · RESUMEN");
-    expect(t("en", "app.ready")).toBe("READY");
-    expect(t("es", "app.ready")).toBe("LISTO");
+    expect(t("en", "app.loadingSkills")).toBe("LOADING SKILLS");
+    expect(t("es", "app.loadingSkills")).toBe("CARGANDO SKILLS");
     expect(t("en", "error.retry")).toBe("RETRY");
     expect(t("es", "error.home")).toBe("IR AL INICIO");
   });
