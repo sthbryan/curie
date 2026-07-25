@@ -51,6 +51,7 @@ export function RemoteSkillForm() {
             <Input
               id={INPUT_ID}
               label={t("label")}
+              hideLabel
               type="text"
               value={value}
               onChange={(e) => setValue((e.target as HTMLInputElement).value)}

@@ -111,7 +111,7 @@ export function Find() {
         </motion.section>
 
         <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
             <Input
               ref={inputRef}
               label={t("query")}
@@ -132,7 +132,7 @@ export function Find() {
             <Button
               size="lg"
               variant="primary"
-              className="px-4 shrink-0"
+              className="h-10 shrink-0 px-4"
               onClick={handleSearch}
               disabled={findLoading || qLen < 2}
             >
