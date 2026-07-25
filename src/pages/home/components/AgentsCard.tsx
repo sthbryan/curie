@@ -1,4 +1,3 @@
-import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 import { agentCapacity, agents, agentsShareCount, PREVIEW_LIMIT } from "../lib/derived";
 import { AgentBar } from "./AgentBar";
@@ -13,16 +12,13 @@ export function AgentsCard() {
 
   return (
     <section className="flex flex-col gap-5">
-      <CardHead
-        title={t("aiTools")}
-        meta={<Label className="text-micro">{t("active", { n: list.length })}</Label>}
-      />
+      <CardHead title={t("aiTools")} />
       {list.length === 0 ? (
         <EmptyNote>{t("skillsNone")}</EmptyNote>
       ) : agentsShareCount.value ? (
         <AgentChips agents={list} />
       ) : (
-        <div className="flex flex-col">
+        <div className="flex max-w-2xl flex-col">
           {list.slice(0, PREVIEW_LIMIT).map((agent) => (
             <AgentBar key={agent.id} agent={agent} capacity={agentCapacity.value} />
           ))}

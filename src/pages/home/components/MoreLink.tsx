@@ -16,7 +16,7 @@ export function MoreLink({ count, to }: Props) {
     <button
       type="button"
       onClick={() => navigate(to)}
-      className="border-b border-border py-3 text-left font-mono uppercase tracking-label text-micro text-fg-4 transition-colors hover:text-fg"
+      className="border-b border-border py-3 text-left font-mono uppercase tracking-label text-micro text-fg-3 transition-colors hover:text-fg"
     >
       {t("more", { n: count })}
     </button>
