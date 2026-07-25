@@ -1,7 +1,10 @@
 {
   "app": {
     "ready": "READY",
-    "loading": "LOADING"
+    "loading": "LOADING",
+    "sortable": "SORTABLE",
+    "sortedAsc": "SORTED ASCENDING",
+    "sortedDesc": "SORTED DESCENDING"
   },
   "error": {
     "eyebrow": "SOMETHING WENT WRONG",
@@ -102,14 +105,23 @@
     "filterUpdates": "UPDATES",
     "colName": "NAME",
     "colSource": "SOURCE",
-    "colAgents": "AGENTS",
+    "colAgents": "TOOLS",
     "colWhen": "UPDATED",
     "colActions": "ACTIONS",
     "local": "local",
-    "noAgents": "NO AGENTS",
+    "noAgents": "NO TOOLS",
     "empty": "No global skills installed",
     "emptyHint": "Install a skill with npx skills to see it here.",
-    "noMatches": "No skills match this filter"
+    "noMatches": "No skills match this filter",
+    "filterAgent": "TOOL",
+    "clearFilters": "CLEAR",
+    "agentsMore": "+{n}",
+    "removeAllButton": "REMOVE ALL",
+    "removeAllTitle": "REMOVE EVERY SKILL",
+    "removeAllBody": "This uninstalls all {n} global skills from every one of your tools. There is no undo.",
+    "removeAllConfirm": "REMOVE ALL",
+    "removeAllPhrase": "REMOVE",
+    "removeAllPhraseLabel": "TYPE {phrase} TO CONFIRM"
   },
   "find": {
     "eyebrow": "FIND · SKILLS.SH",
@@ -283,6 +295,7 @@
     "setupComplete": "Setup complete",
     "refreshed": "Skills refreshed",
     "appUpdate": "A new version of Curie is available",
-    "appUpdateAction": "VIEW"
+    "appUpdateAction": "VIEW",
+    "removedAll": "EVERY SKILL REMOVED"
   }
 }

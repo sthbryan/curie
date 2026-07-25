@@ -2,6 +2,9 @@ export type Messages = {
   app: {
     ready: string;
     loading: string;
+    sortable: string;
+    sortedAsc: string;
+    sortedDesc: string;
   };
   error: {
     eyebrow: string;
@@ -100,6 +103,15 @@ export type Messages = {
     showing: string;
     filterAll: string;
     filterUpdates: string;
+    filterAgent: string;
+    clearFilters: string;
+    agentsMore: string;
+    removeAllButton: string;
+    removeAllTitle: string;
+    removeAllBody: string;
+    removeAllConfirm: string;
+    removeAllPhrase: string;
+    removeAllPhraseLabel: string;
     colName: string;
     colSource: string;
     colAgents: string;
@@ -276,6 +288,7 @@ export type Messages = {
   toast: {
     installed: string;
     removed: string;
+    removedAll: string;
     updated: string;
     updates: string;
     noUpdates: string;

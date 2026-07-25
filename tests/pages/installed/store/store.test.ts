@@ -7,11 +7,17 @@ import {
   clearFilters,
   dismissErrors,
   query,
+  QUERY_DEBOUNCE_MS,
+  queryInput,
   remove,
+  removeAll,
   removeError,
   removingSkill,
   setAgentFilter,
   setQuery,
+  setSort,
+  sortDir,
+  sortKey,
   toggleUpdatesOnly,
   update,
   updateApplyError,
@@ -37,7 +43,10 @@ beforeEach(() => {
   updateApplyError.value = null;
   removingSkill.value = null;
   removeError.value = null;
+  queryInput.value = "";
   query.value = "";
+  sortKey.value = "updated";
+  sortDir.value = "desc";
   agentFilter.value = null;
   updatesOnly.value = false;
 });
@@ -130,16 +139,37 @@ describe("InstalledActions", () => {
   });
 });
 
-describe("InstalledFilters", () => {
+describe("filters", () => {
   it("starts empty", () => {
+    expect(queryInput.value).toBe("");
     expect(query.value).toBe("");
     expect(agentFilter.value).toBeNull();
     expect(updatesOnly.value).toBe(false);
   });
 
-  it("setQuery updates the query", () => {
+  it("shows the typed query at once but defers the one that filters", () => {
+    vi.useFakeTimers();
     setQuery("hello");
+    expect(queryInput.value).toBe("hello");
+    expect(query.value).toBe("");
+
+    vi.advanceTimersByTime(QUERY_DEBOUNCE_MS);
     expect(query.value).toBe("hello");
+    vi.useRealTimers();
+  });
+
+  it("only commits the last keystroke of a burst", () => {
+    vi.useFakeTimers();
+    setQuery("a");
+    vi.advanceTimersByTime(50);
+    setQuery("ab");
+    vi.advanceTimersByTime(50);
+    setQuery("abc");
+    expect(query.value).toBe("");
+
+    vi.advanceTimersByTime(QUERY_DEBOUNCE_MS);
+    expect(query.value).toBe("abc");
+    vi.useRealTimers();
   });
 
   it("setAgentFilter updates the agent filter", () => {
@@ -149,20 +179,82 @@ describe("InstalledFilters", () => {
     expect(agentFilter.value).toBeNull();
   });
 
-  it("toggleUpdatesOnly flips updatesOnly and clears agentFilter", () => {
+  it("keeps the tool filter when toggling updates so the two combine", () => {
     setAgentFilter("Claude Code");
     toggleUpdatesOnly();
     expect(updatesOnly.value).toBe(true);
-    expect(agentFilter.value).toBeNull();
+    expect(agentFilter.value).toBe("Claude Code");
+
+    toggleUpdatesOnly();
+    expect(updatesOnly.value).toBe(false);
   });
 
-  it("clearFilters resets agentFilter and updatesOnly but keeps query", () => {
+  it("clearFilters resets every filter including the query", () => {
+    vi.useFakeTimers();
     setQuery("foo");
     setAgentFilter("Codex");
     toggleUpdatesOnly();
+
     clearFilters();
-    expect(query.value).toBe("foo");
+    expect(queryInput.value).toBe("");
+    expect(query.value).toBe("");
     expect(agentFilter.value).toBeNull();
     expect(updatesOnly.value).toBe(false);
+
+    vi.advanceTimersByTime(QUERY_DEBOUNCE_MS);
+    expect(query.value).toBe("");
+    vi.useRealTimers();
+  });
+});
+
+describe("sort", () => {
+  it("starts on the newest first", () => {
+    expect(sortKey.value).toBe("updated");
+    expect(sortDir.value).toBe("desc");
+  });
+
+  it("flips the direction when the same column is picked again", () => {
+    setSort("updated");
+    expect(sortDir.value).toBe("asc");
+    setSort("updated");
+    expect(sortDir.value).toBe("desc");
+  });
+
+  it("opens text columns ascending and date columns descending", () => {
+    setSort("name");
+    expect(sortKey.value).toBe("name");
+    expect(sortDir.value).toBe("asc");
+
+    setSort("source");
+    expect(sortDir.value).toBe("asc");
+
+    setSort("updated");
+    expect(sortDir.value).toBe("desc");
+
+    setSort("agents");
+    expect(sortDir.value).toBe("desc");
+  });
+});
+
+describe("removeAll", () => {
+  it("wipes every skill, clears the filters and reloads", async () => {
+    setQuery("foo");
+    setAgentFilter("Codex");
+    invokeMock.mockResolvedValueOnce({ removed: [], message: "gone" });
+
+    await removeAll();
+
+    expect(invokeMock).toHaveBeenCalledWith("remove_all_skills");
+    expect(queryInput.value).toBe("");
+    expect(agentFilter.value).toBeNull();
+    expect(removingSkill.value).toBeNull();
+    expect(loadGlobalSkillsMock).toHaveBeenCalled();
+  });
+
+  it("keeps the failure in the banner and rethrows", async () => {
+    invokeMock.mockRejectedValueOnce("nope");
+    await expect(removeAll()).rejects.toBe("nope");
+    expect(removeError.value).toBe("nope");
+    expect(removingSkill.value).toBeNull();
   });
 });

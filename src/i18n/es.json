@@ -1,7 +1,10 @@
 {
   "app": {
     "ready": "LISTO",
-    "loading": "CARGANDO"
+    "loading": "CARGANDO",
+    "sortable": "ORDENABLE",
+    "sortedAsc": "ORDENADO ASCENDENTE",
+    "sortedDesc": "ORDENADO DESCENDENTE"
   },
   "error": {
     "eyebrow": "ALGO SALIO MAL",
@@ -102,14 +105,23 @@
     "filterUpdates": "ACTUALIZACIONES",
     "colName": "NOMBRE",
     "colSource": "FUENTE",
-    "colAgents": "AGENTES",
+    "colAgents": "HERRAMIENTAS",
     "colWhen": "ACTUALIZADO",
     "colActions": "ACCIONES",
     "local": "local",
-    "noAgents": "SIN AGENTES",
+    "noAgents": "SIN HERRAMIENTAS",
     "empty": "No hay skills globales instaladas",
     "emptyHint": "Instala una skill con npx skills para verla aquí.",
-    "noMatches": "Ninguna skill coincide con este filtro"
+    "noMatches": "Ninguna skill coincide con este filtro",
+    "filterAgent": "HERRAMIENTA",
+    "clearFilters": "LIMPIAR",
+    "agentsMore": "+{n}",
+    "removeAllButton": "BORRAR TODAS",
+    "removeAllTitle": "BORRAR TODAS LAS SKILLS",
+    "removeAllBody": "Se van a desinstalar las {n} skills globales de todas tus herramientas. No hay vuelta atrás.",
+    "removeAllConfirm": "BORRAR TODAS",
+    "removeAllPhrase": "BORRAR",
+    "removeAllPhraseLabel": "ESCRIBÍ {phrase} PARA CONFIRMAR"
   },
   "find": {
     "eyebrow": "BUSCAR · SKILLS.SH",
@@ -283,6 +295,7 @@
     "setupComplete": "Setup completado",
     "refreshed": "Skills recargados",
     "appUpdate": "Hay una nueva versión de Curie disponible",
-    "appUpdateAction": "VER"
+    "appUpdateAction": "VER",
+    "removedAll": "SE BORRARON TODAS LAS SKILLS"
   }
 }

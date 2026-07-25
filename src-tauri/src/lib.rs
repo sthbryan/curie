@@ -32,6 +32,7 @@ pub fn run() {
             skills::add_skill,
             skills::detect_skill,
             skills::remove_skills,
+            skills::remove_all_skills,
             skills::install_custom_skill,
             update::check_app_update,
             update::install_app_update,

@@ -176,7 +176,6 @@ export function Explore() {
             loading={loading}
             empty={showEmpty}
             skills={exploreSkills}
-            listKey={view}
             installedPackages={installedPackages}
             installingPackage={installingPackage}
             installBusy={installBusy}

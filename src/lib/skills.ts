@@ -97,39 +97,6 @@ export function maxAgentCount(agents: AgentSummary[]): number {
   return Math.max(1, ...agents.map((a) => a.count), 1);
 }
 
-export function filterSkills(
-  skills: SkillInfo[],
-  query: string,
-  agent: string | null,
-  options?: {
-    updatesOnly?: boolean;
-    updateNames?: Set<string>;
-  },
-): SkillInfo[] {
-  const q = query.trim().toLowerCase();
-  const updatesOnly = options?.updatesOnly ?? false;
-  const updateNames = options?.updateNames;
-
-  return skills
-    .filter((skill) => {
-      if (updatesOnly && updateNames && !updateNames.has(skill.name)) return false;
-      if (agent && !skill.agents.some((a) => a === agent)) return false;
-      if (!q) return true;
-      const hay = [skill.name, skill.source ?? "", skill.path, ...skill.agents]
-        .join(" ")
-        .toLowerCase();
-      return hay.includes(q);
-    })
-    .sort((a, b) => {
-      if (updateNames) {
-        const aUp = updateNames.has(a.name) ? 0 : 1;
-        const bUp = updateNames.has(b.name) ? 0 : 1;
-        if (aUp !== bUp) return aUp - bUp;
-      }
-      return a.name.localeCompare(b.name);
-    });
-}
-
 export function skillTimestamp(skill: SkillInfo): string | null {
   return skill.updatedAt ?? skill.installedAt;
 }

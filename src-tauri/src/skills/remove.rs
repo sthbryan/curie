@@ -1,3 +1,5 @@
+use std::process::Output;
+
 use super::npx::run_skills_command;
 use super::types::SkillRemoveResult;
 
@@ -17,7 +19,17 @@ pub fn remove_global_skills(skills: &[String]) -> Result<SkillRemoveResult, Stri
     let name_refs: Vec<&str> = skills.iter().map(String::as_str).collect();
     args.extend(name_refs.iter().copied());
 
-    let output = run_skills_command(&args)?;
+    finish(run_skills_command(&args)?, skills.to_vec())
+}
+
+pub fn remove_all_global_skills() -> Result<SkillRemoveResult, String> {
+    finish(
+        run_skills_command(&["remove", "--all", "-g", "-y"])?,
+        Vec::new(),
+    )
+}
+
+fn finish(output: Output, removed: Vec<String>) -> Result<SkillRemoveResult, String> {
     let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
     let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
 
@@ -35,12 +47,11 @@ pub fn remove_global_skills(skills: &[String]) -> Result<SkillRemoveResult, Stri
         stdout
     } else if !stderr.is_empty() {
         stderr
+    } else if removed.is_empty() {
+        "Removed every global skill".into()
     } else {
-        format!("Removed {}", skills.join(", "))
+        format!("Removed {}", removed.join(", "))
     };
 
-    Ok(SkillRemoveResult {
-        removed: skills.to_vec(),
-        message,
-    })
+    Ok(SkillRemoveResult { removed, message })
 }
