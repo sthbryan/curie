@@ -1,7 +1,10 @@
 use super::npx::run_skills_command;
 use super::types::SkillInstallResult;
 
-pub fn add_global_skill(package: &str) -> Result<SkillInstallResult, String> {
+pub fn add_global_skill(
+    package: &str,
+    skill_name: Option<&str>,
+) -> Result<SkillInstallResult, String> {
     let package = package.trim();
     if package.is_empty() {
         return Err("package is required".into());
@@ -10,7 +13,13 @@ pub fn add_global_skill(package: &str) -> Result<SkillInstallResult, String> {
         return Err("invalid package name".into());
     }
 
-    let output = run_skills_command(&["add", package, "-g", "-y"])?;
+    let mut args: Vec<&str> = vec!["add", package, "-g", "-y"];
+    if let Some(name) = skill_name.map(str::trim).filter(|n| !n.is_empty()) {
+        args.push("-s");
+        args.push(name);
+    }
+
+    let output = run_skills_command(&args)?;
     let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
     let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
 

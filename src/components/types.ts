@@ -85,20 +85,29 @@ export type SkillInstallResult = {
   message: string;
 };
 
+export type DetectedSkill = {
+  name: string;
+  description: string;
+};
+
+export type SkillDetection = {
+  isSkill: boolean;
+  total: number;
+  truncated: boolean;
+  skills: DetectedSkill[];
+  refUsed: string | null;
+};
+
 export type SkillRemoveResult = {
   removed: string[];
   message: string;
 };
 
-export type CustomSkillSaveResult = {
+export type CustomSkillInstallResult = {
   name: string;
   path: string;
   message: string;
-  installed: boolean;
-  installMessage: string | null;
 };
-
-export type CustomSourceKind = "url" | "file";
 
 export type AgentSummary = {
   id: string;

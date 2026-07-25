@@ -1,6 +1,7 @@
 mod add;
 mod check;
 mod custom;
+mod detect;
 mod explore;
 mod find;
 mod list;
@@ -12,13 +13,14 @@ mod update;
 
 pub use add::add_global_skill;
 pub use check::check_global_skill_updates;
-pub use custom::write_custom_skill;
+pub use custom::install_custom_skill as install_skill_from_content;
+pub use detect::{detect_global_skill, DetectedSkill, SkillDetection};
 pub use explore::explore_skills as browse_skills;
 pub use find::find_skills as search_skills;
 pub use list::list_global_skills;
 pub use remove::remove_global_skills;
 pub use types::{
-    CustomSkillSaveResult, ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult,
+    CustomSkillInstallResult, ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult,
     SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
 pub use update::update_global_skills;
@@ -63,10 +65,20 @@ pub async fn explore_skills(view: String, page: Option<u32>) -> Result<ExplorePa
 }
 
 #[tauri::command]
-pub async fn add_skill(package: String) -> Result<SkillInstallResult, String> {
-    tauri::async_runtime::spawn_blocking(move || add_global_skill(&package))
+pub async fn add_skill(
+    package: String,
+    skill_name: Option<String>,
+) -> Result<SkillInstallResult, String> {
+    tauri::async_runtime::spawn_blocking(move || add_global_skill(&package, skill_name.as_deref()))
         .await
         .map_err(|e| format!("add task failed: {e}"))?
+}
+
+#[tauri::command]
+pub async fn detect_skill(package: String) -> Result<SkillDetection, String> {
+    tauri::async_runtime::spawn_blocking(move || detect_global_skill(&package))
+        .await
+        .map_err(|e| format!("detect task failed: {e}"))?
 }
 
 #[tauri::command]
@@ -77,6 +89,11 @@ pub async fn remove_skills(skills: Vec<String>) -> Result<SkillRemoveResult, Str
 }
 
 #[tauri::command]
-pub fn save_custom_skill(name: String, content: String) -> Result<CustomSkillSaveResult, String> {
-    write_custom_skill(&name, &content)
+pub async fn install_custom_skill(
+    name: String,
+    content: String,
+) -> Result<CustomSkillInstallResult, String> {
+    tauri::async_runtime::spawn_blocking(move || install_skill_from_content(&name, &content))
+        .await
+        .map_err(|e| format!("install task failed: {e}"))?
 }

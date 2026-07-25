@@ -146,38 +146,52 @@ export type Messages = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    comingSoon: string;
-    body: string;
-    url: {
+    divider: string;
+    remote: {
       eyebrow: string;
       title: string;
       subtitle: string;
       label: string;
       placeholder: string;
+      hint: string;
       submit: string;
       installing: string;
-      hint: string;
-      error: string;
-      success: string;
+      clear: string;
+      errorInvalid: string;
+      toastLoading: string;
+      toastSuccess: string;
+      toastError: string;
+      awaiting: string;
+      checking: string;
+      invalidFormat: string;
+      checkFailed: string;
+      noSkillsFound: string;
+      skillFound: string;
+      skillsFound: string;
+      skillsTruncated: string;
+      moreSkills: string;
     };
-    md: {
+    local: {
       eyebrow: string;
       title: string;
       subtitle: string;
-      nameLabel: string;
-      namePlaceholder: string;
       contentLabel: string;
       contentPlaceholder: string;
       fileButton: string;
       fileLoaded: string;
+      hint: string;
+      blockMissing: string;
+      nameMissing: string;
+      descriptionMissing: string;
+      bothMissing: string;
+      nameInvalid: string;
+      ready: string;
       clear: string;
       submit: string;
-      saving: string;
-      hint: string;
-      error: string;
-      successInstalled: string;
-      successSaved: string;
-      installError: string;
+      installing: string;
+      toastLoading: string;
+      toastSuccess: string;
+      toastError: string;
     };
   };
   explore: {

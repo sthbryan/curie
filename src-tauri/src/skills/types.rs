@@ -82,12 +82,10 @@ pub struct SkillRemoveResult {
 
 #[derive(Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct CustomSkillSaveResult {
+pub struct CustomSkillInstallResult {
     pub name: String,
     pub path: String,
     pub message: String,
-    pub installed: bool,
-    pub install_message: Option<String>,
 }
 
 #[derive(Deserialize)]
