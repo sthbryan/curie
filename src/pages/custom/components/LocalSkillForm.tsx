@@ -5,6 +5,7 @@ import { Input } from "@/components/Input";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { useLocalInstall } from "../hooks/useLocalInstall";
+import { checkFrontmatter } from "../lib/frontmatter";
 import { isValidSkillName, slugifySkillName } from "../lib/skillName";
 import { FieldLabel } from "./FieldLabel";
 import { FormSection } from "./FormSection";
@@ -21,7 +22,16 @@ export function LocalSkillForm() {
   const { installing, install } = useLocalInstall();
 
   const nameValid = isValidSkillName(name);
-  const canInstall = nameValid && content.trim().length > 0 && !installing;
+  const hasContent = content.trim().length > 0;
+  const frontmatter = checkFrontmatter(content);
+  const canInstall = nameValid && hasContent && frontmatter.ok && !installing;
+
+  const frontmatterWarning =
+    hasContent && !frontmatter.ok
+      ? frontmatter.reason === "block"
+        ? t("frontmatterMissing")
+        : t("frontmatterFields", { fields: frontmatter.missing.join(", ") })
+      : null;
 
   const reset = () => {
     setName("");
@@ -102,13 +112,24 @@ export function LocalSkillForm() {
           spellCheck={false}
           rows={10}
           disabled={installing}
-          className="w-full border border-border-strong bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none focus:border-fg-3 rounded-sm resize-y min-h-45 disabled:opacity-60"
+          aria-invalid={frontmatterWarning !== null}
+          className={cn(
+            "w-full border bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none rounded-sm resize-y min-h-45 disabled:opacity-60",
+            frontmatterWarning
+              ? "border-warning/60 focus:border-warning"
+              : "border-border-strong focus:border-fg-3",
+          )}
         />
       </div>
 
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <p className="font-body text-xs text-fg-4 max-w-md">
-          {fileName ? t("fileLoaded", { name: fileName }) : t("hint")}
+        <p
+          className={cn(
+            "font-body text-xs max-w-md",
+            frontmatterWarning ? "text-warning" : "text-fg-4",
+          )}
+        >
+          {frontmatterWarning ?? (fileName ? t("fileLoaded", { name: fileName }) : t("hint"))}
         </p>
         <div className="flex items-center gap-2">
           <Button

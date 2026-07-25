@@ -181,13 +181,15 @@
       "contentPlaceholder": "---\nname: mi-skill\ndescription: qué hace\n---\n\n# Mi skill\n\n…",
       "fileButton": "SUBIR .MD",
       "fileLoaded": "Cargado {name}",
-      "hint": "El nombre acepta letras, números, guiones, puntos y guiones bajos. El contenido no puede estar vacío.",
+      "hint": "El nombre acepta letras, números, guiones, puntos y guiones bajos. El contenido necesita frontmatter con name y description.",
       "clear": "VACIAR",
-      "submit": "GUARDAR E INSTALAR",
+      "submit": "INSTALAR",
       "installing": "GUARDANDO",
-      "successInstalled": "Instalada {name}",
-      "successSaved": "Guardada {name} en {path}",
-      "installError": "No se pudo instalar: {message}"
+      "frontmatterMissing": "El SKILL.md necesita un bloque de frontmatter con name y description.",
+      "frontmatterFields": "Al frontmatter le falta: {fields}.",
+      "toastInstalled": "INSTALADA",
+      "toastNotInstalled": "GUARDADA, PERO SIN INSTALAR",
+      "toastFailed": "NO SE PUDO GUARDAR LA SKILL"
     }
   },
   "explore": {

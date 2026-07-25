@@ -181,13 +181,15 @@
       "contentPlaceholder": "---\nname: my-skill\ndescription: what it does\n---\n\n# My skill\n\n…",
       "fileButton": "UPLOAD .MD",
       "fileLoaded": "Loaded {name}",
-      "hint": "The name takes letters, digits, dashes, dots and underscores. The content cannot be empty.",
+      "hint": "The name takes letters, digits, dashes, dots and underscores. The content needs frontmatter with name and description.",
       "clear": "CLEAR",
-      "submit": "SAVE AND INSTALL",
+      "submit": "INSTALL",
       "installing": "SAVING",
-      "successInstalled": "Installed {name}",
-      "successSaved": "Saved {name} to {path}",
-      "installError": "Install failed: {message}"
+      "frontmatterMissing": "The SKILL.md needs a frontmatter block with name and description.",
+      "frontmatterFields": "The frontmatter is missing: {fields}.",
+      "toastInstalled": "INSTALLED",
+      "toastNotInstalled": "SAVED, BUT NOT INSTALLED",
+      "toastFailed": "COULD NOT SAVE THE SKILL"
     }
   },
   "explore": {

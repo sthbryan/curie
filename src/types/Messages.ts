@@ -182,12 +182,14 @@ export type Messages = {
       fileButton: string;
       fileLoaded: string;
       hint: string;
+      frontmatterMissing: string;
+      frontmatterFields: string;
       clear: string;
       submit: string;
       installing: string;
-      successInstalled: string;
-      successSaved: string;
-      installError: string;
+      toastInstalled: string;
+      toastNotInstalled: string;
+      toastFailed: string;
     };
   };
   explore: {

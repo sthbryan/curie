@@ -7,8 +7,9 @@ import type { CustomSkillSaveResult } from "@/components/types";
 
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
-const toastSuccessMock = vi.fn();
-const toastErrorMock = vi.fn();
+const successToastMock = vi.fn();
+const warningToastMock = vi.fn();
+const errorToastMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -18,11 +19,10 @@ vi.mock("@/lib/boot", () => ({
   loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
 }));
 
-vi.mock("sonner", () => ({
-  toast: {
-    success: (...args: unknown[]) => toastSuccessMock(...args),
-    error: (...args: unknown[]) => toastErrorMock(...args),
-  },
+vi.mock("@/lib/toast", () => ({
+  successToast: (...args: unknown[]) => successToastMock(...args),
+  warningToast: (...args: unknown[]) => warningToastMock(...args),
+  errorToast: (...args: unknown[]) => errorToastMock(...args),
 }));
 
 const { useLocalInstall } = await import("@/pages/custom/hooks/useLocalInstall");
@@ -77,15 +77,16 @@ beforeEach(() => {
   invokeMock.mockReset();
   loadGlobalSkillsMock.mockReset();
   loadGlobalSkillsMock.mockResolvedValue(undefined);
-  toastSuccessMock.mockReset();
-  toastErrorMock.mockReset();
+  successToastMock.mockReset();
+  warningToastMock.mockReset();
+  errorToastMock.mockReset();
   mount();
 });
 
 afterEach(unmount);
 
 describe("useLocalInstall", () => {
-  it("saves, refreshes the list, and reports success when the backend installed the skill", async () => {
+  it("saves, refreshes the list, and reports one success toast", async () => {
     invokeMock.mockResolvedValueOnce(saved);
 
     await act(async () => {
@@ -97,24 +98,37 @@ describe("useLocalInstall", () => {
       content: "# content",
     });
     expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
-    expect(toastErrorMock).not.toHaveBeenCalled();
+    expect(successToastMock).toHaveBeenCalledTimes(1);
+    expect(successToastMock.mock.calls[0][0].detail).toBe("my-skill");
+    expect(warningToastMock).not.toHaveBeenCalled();
+    expect(errorToastMock).not.toHaveBeenCalled();
   });
 
-  it("reports the saved path plus the install failure when the backend could not install", async () => {
+  it("reports a save that could not be installed as one warning carrying the reason", async () => {
     invokeMock.mockResolvedValueOnce({
       ...saved,
       installed: false,
-      installMessage: "agent not detected",
+      installMessage: "missing required frontmatter field(s): name, description",
     });
 
     await act(async () => {
-      expect(await get().install("my-skill", "# content")).toBe(true);
+      expect(await get().install("my-skill", "# content")).toBe(false);
     });
 
     expect(loadGlobalSkillsMock).not.toHaveBeenCalled();
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
-    expect(toastErrorMock).toHaveBeenCalledTimes(1);
+    expect(successToastMock).not.toHaveBeenCalled();
+    expect(warningToastMock).toHaveBeenCalledTimes(1);
+    expect(warningToastMock.mock.calls[0][0].detail).toContain("missing required frontmatter");
+  });
+
+  it("falls back to the saved path when the backend gives no reason", async () => {
+    invokeMock.mockResolvedValueOnce({ ...saved, installed: false, installMessage: null });
+
+    await act(async () => {
+      await get().install("my-skill", "# content");
+    });
+
+    expect(warningToastMock.mock.calls[0][0].detail).toBe(saved.path);
   });
 
   it("resolves to false and reports the error when the save fails", async () => {
@@ -124,8 +138,8 @@ describe("useLocalInstall", () => {
       expect(await get().install("bad name", "x")).toBe(false);
     });
 
-    expect(toastErrorMock).toHaveBeenCalledTimes(1);
-    expect(toastErrorMock.mock.calls[0][0]).toBe("invalid name");
+    expect(errorToastMock).toHaveBeenCalledTimes(1);
+    expect(errorToastMock.mock.calls[0][0].detail).toBe("invalid name");
   });
 
   it("flags installing while the backend is working and clears it afterwards", async () => {

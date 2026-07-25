@@ -44,6 +44,6 @@ describe("Custom", () => {
     mount(<Router><Custom /></Router>);
     expect(container?.textContent).toContain("Write a skill by hand");
     expect(container?.textContent).toContain("UPLOAD .MD");
-    expect(container?.textContent).toContain("SAVE AND INSTALL");
+    expect(container?.textContent).toContain("SKILL.md content");
   });
 });

@@ -6,8 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CustomSkillSaveResult } from "@/components/types";
 
 const invokeMock = vi.fn();
-const toastSuccessMock = vi.fn();
-const toastErrorMock = vi.fn();
+const successToastMock = vi.fn();
+const warningToastMock = vi.fn();
+const errorToastMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -17,11 +18,10 @@ vi.mock("@/lib/boot", () => ({
   loadGlobalSkills: vi.fn(),
 }));
 
-vi.mock("sonner", () => ({
-  toast: {
-    success: (...args: unknown[]) => toastSuccessMock(...args),
-    error: (...args: unknown[]) => toastErrorMock(...args),
-  },
+vi.mock("@/lib/toast", () => ({
+  successToast: (...args: unknown[]) => successToastMock(...args),
+  warningToast: (...args: unknown[]) => warningToastMock(...args),
+  errorToast: (...args: unknown[]) => errorToastMock(...args),
 }));
 
 const { LocalSkillForm } = await import("@/pages/custom/components/LocalSkillForm");
@@ -85,22 +85,27 @@ function setInputValue(input: HTMLInputElement | HTMLTextAreaElement, value: str
   });
 }
 
-function fillForm() {
+const VALID_CONTENT = ["---", "name: my-skill", "description: what it does", "---", "", "# Body"].join(
+  "\n",
+);
+
+function fillForm(content = VALID_CONTENT) {
   setInputValue(getNameInput(), "my-skill");
-  setInputValue(getContentInput(), "# Skill content");
+  setInputValue(getContentInput(), content);
 }
 
 async function clickInstall() {
   await act(async () => {
-    getButtonByText("SAVE AND INSTALL").click();
+    getButtonByText("INSTALL").click();
     for (let i = 0; i < 10; i++) await Promise.resolve();
   });
 }
 
 beforeEach(() => {
   invokeMock.mockReset();
-  toastSuccessMock.mockReset();
-  toastErrorMock.mockReset();
+  successToastMock.mockReset();
+  warningToastMock.mockReset();
+  errorToastMock.mockReset();
   mount();
 });
 
@@ -108,17 +113,17 @@ afterEach(unmount);
 
 describe("LocalSkillForm", () => {
   it("keeps install disabled until name and content are valid", () => {
-    expect(getButtonByText("SAVE AND INSTALL").disabled).toBe(true);
+    expect(getButtonByText("INSTALL").disabled).toBe(true);
 
     fillForm();
-    expect(getButtonByText("SAVE AND INSTALL").disabled).toBe(false);
+    expect(getButtonByText("INSTALL").disabled).toBe(false);
   });
 
   it("keeps install disabled for a name the backend would reject", () => {
     setInputValue(getNameInput(), "-bad name");
-    setInputValue(getContentInput(), "# Skill content");
+    setInputValue(getContentInput(), VALID_CONTENT);
 
-    expect(getButtonByText("SAVE AND INSTALL").disabled).toBe(true);
+    expect(getButtonByText("INSTALL").disabled).toBe(true);
   });
 
   it("shows success via toast and clears the form inputs", async () => {
@@ -136,9 +141,9 @@ describe("LocalSkillForm", () => {
 
     expect(invokeMock).toHaveBeenCalledWith("save_custom_skill", {
       name: "my-skill",
-      content: "# Skill content",
+      content: VALID_CONTENT,
     });
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(successToastMock).toHaveBeenCalledTimes(1);
     expect(getNameInput().value).toBe("");
     expect(getContentInput().value).toBe("");
   });
@@ -149,9 +154,22 @@ describe("LocalSkillForm", () => {
     fillForm();
     await clickInstall();
 
-    expect(toastErrorMock).toHaveBeenCalledTimes(1);
+    expect(errorToastMock).toHaveBeenCalledTimes(1);
     expect(getNameInput().value).toBe("my-skill");
-    expect(getContentInput().value).toBe("# Skill content");
+    expect(getContentInput().value).toBe(VALID_CONTENT);
+  });
+
+  it("blocks install and says what the frontmatter is missing", () => {
+    fillForm("# Just a body");
+    expect(getButtonByText("INSTALL").disabled).toBe(true);
+    expect(container?.textContent).toContain("needs a frontmatter block");
+
+    fillForm("---\nname: my-skill\n---\n# Body");
+    expect(getButtonByText("INSTALL").disabled).toBe(true);
+    expect(container?.textContent).toContain("missing: description");
+
+    fillForm();
+    expect(getButtonByText("INSTALL").disabled).toBe(false);
   });
 
   it("empties the form from the CLEAR affordance", () => {
