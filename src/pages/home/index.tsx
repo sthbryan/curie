@@ -33,12 +33,9 @@ export function Home() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-10 pt-12 pb-8">
         <HomeIntro />
 
-        <motion.div
-          {...fadeUp(0.05)}
-          className="grid grid-cols-1 gap-10 lg:grid-cols-[3fr_2fr] lg:gap-12"
-        >
+        <motion.div {...fadeUp(0.05)} className="flex flex-col gap-10">
           <AgentsCard />
-          <div className="flex flex-col gap-8">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12">
             <UpdatesCard />
             <RecentCard />
           </div>
