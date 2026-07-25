@@ -21,20 +21,23 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
       type="button"
       onClick={onClick}
       aria-current={active ? "page" : undefined}
-      title={label}
+      aria-label={label}
       className={cn(
-        "relative flex h-11 w-full items-center overflow-hidden rounded-sm px-2.5 text-left transition-colors duration-150 group",
+        "group relative flex h-11 w-full items-center overflow-hidden rounded-sm text-left transition-colors duration-150",
         active ? "bg-surface-tint text-fg" : "text-fg-3 hover:bg-surface-hover hover:text-fg",
       )}
     >
-      <Icon
-        size={16}
-        strokeWidth={1.5}
-        className={cn(
-          "shrink-0 transition-colors group-hover:text-fg",
-          active ? "text-fg" : "text-fg-3",
-        )}
-      />
+      {active ? (
+        <span className="absolute top-1/2 left-0 h-5 w-0.5 -translate-y-1/2 bg-fg" aria-hidden />
+      ) : null}
+
+      <span className="flex w-8.5 shrink-0 items-center justify-center">
+        <Icon
+          size={16}
+          strokeWidth={1.5}
+          className={cn("transition-colors group-hover:text-fg", active ? "text-fg" : "text-fg-3")}
+        />
+      </span>
 
       <AnimatePresence initial={false}>
         {expanded && (
@@ -47,7 +50,7 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
               shouldReduceMotion,
               transition: { duration: duration.base, ease: easeOut, delay: 0.06 },
             })}
-            className="absolute left-9 top-1/2 flex -translate-y-1/2 flex-col items-start whitespace-nowrap ml-0.5"
+            className="absolute top-1/2 left-9.5 flex -translate-y-1/2 items-baseline gap-2 whitespace-nowrap"
           >
             <span
               className={cn(
