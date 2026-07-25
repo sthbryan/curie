@@ -8,7 +8,6 @@ import { fadeUp } from "@/lib/motion";
 import { skillsError, skillsLoading } from "@/store/skills";
 import { AgentsCard } from "./components/AgentsCard";
 import { HomeIntro } from "./components/HomeIntro";
-import { QuickActions } from "./components/QuickActions";
 import { RecentCard } from "./components/RecentCard";
 import { UpdatesCard } from "./components/UpdatesCard";
 import { totalSkills } from "./lib/derived";
@@ -40,10 +39,6 @@ export function Home() {
             <RecentCard />
           </div>
         </motion.div>
-
-        <hr className="border-0 border-t border-border" />
-
-        <QuickActions />
       </div>
     </main>
   );
