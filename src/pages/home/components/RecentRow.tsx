@@ -23,10 +23,10 @@ export function RecentRow({ event, now }: Props) {
         aria-label={t(isInstall ? "home.kindInstall" : "home.kindUpdate")}
       />
       <span className="grow truncate font-mono text-mono text-fg">{event.skill}</span>
-      <span className="max-w-40 truncate font-mono uppercase tracking-label text-micro text-fg-3">
+      <span className="max-w-36 truncate font-mono uppercase tracking-label text-micro text-fg-3">
         {event.source ?? t("installed.local")}
       </span>
-      <span className="w-20 shrink-0 text-right font-mono uppercase tracking-label text-micro text-fg-4">
+      <span className="shrink-0 whitespace-nowrap text-right font-mono uppercase tracking-label text-micro text-fg-4">
         {formatRelative(event.at, now, lang.value)}
       </span>
     </div>
