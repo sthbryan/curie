@@ -49,12 +49,6 @@ function unmount() {
   }
 }
 
-function getNameInput(): HTMLInputElement {
-  const input = container?.querySelector("#custom-local-name") as HTMLInputElement | null;
-  if (!input) throw new Error("name input not found");
-  return input;
-}
-
 function getContentInput(): HTMLTextAreaElement {
   const textarea = container?.querySelector("#custom-local-content") as HTMLTextAreaElement | null;
   if (!textarea) throw new Error("content textarea not found");
@@ -86,7 +80,6 @@ const VALID_CONTENT = ["---", "name: my-skill", "description: what it does", "--
 );
 
 function fillForm(content = VALID_CONTENT) {
-  setInputValue(getNameInput(), "my-skill");
   setInputValue(getContentInput(), content);
 }
 
@@ -106,28 +99,25 @@ beforeEach(() => {
 afterEach(unmount);
 
 describe("LocalSkillForm", () => {
-  it("keeps install disabled until name and content are valid", () => {
+  it("keeps install disabled until the content carries a usable frontmatter", () => {
     expect(getButtonByText("INSTALL").disabled).toBe(true);
 
     fillForm();
     expect(getButtonByText("INSTALL").disabled).toBe(false);
   });
 
-  it("keeps install disabled for a name the backend would reject", () => {
-    setInputValue(getNameInput(), "-bad name");
-    setInputValue(getContentInput(), VALID_CONTENT);
-
-    expect(getButtonByText("INSTALL").disabled).toBe(true);
-  });
-
-  it("clears the form once the install succeeds", async () => {
+  it("takes the skill name from the frontmatter, with no name field to fill in", async () => {
     invokeMock.mockResolvedValueOnce({
       name: "my-skill",
       path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
       message: "Installed",
     } as CustomSkillInstallResult);
 
+    expect(container?.querySelector("#custom-local-name")).toBeNull();
+
     fillForm();
+    expect(container?.textContent).toContain("READY TO INSTALL AS my-skill");
+
     await clickInstall();
 
     expect(invokeMock).toHaveBeenCalledWith("install_custom_skill", {
@@ -135,7 +125,6 @@ describe("LocalSkillForm", () => {
       content: VALID_CONTENT,
     });
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
-    expect(getNameInput().value).toBe("");
     expect(getContentInput().value).toBe("");
   });
 
@@ -146,7 +135,6 @@ describe("LocalSkillForm", () => {
     await clickInstall();
 
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
-    expect(getNameInput().value).toBe("my-skill");
     expect(getContentInput().value).toBe(VALID_CONTENT);
   });
 
@@ -163,6 +151,13 @@ describe("LocalSkillForm", () => {
     expect(getButtonByText("INSTALL").disabled).toBe(false);
   });
 
+  it("blocks install when the frontmatter name could not be a directory", () => {
+    fillForm("---\nname: my skill\ndescription: x\n---\n# Body");
+
+    expect(getButtonByText("INSTALL").disabled).toBe(true);
+    expect(container?.textContent).toContain('"my skill" only takes letters');
+  });
+
   it("empties the form from the CLEAR affordance", () => {
     fillForm();
 
@@ -170,7 +165,6 @@ describe("LocalSkillForm", () => {
       getButtonByText("CLEAR").click();
     });
 
-    expect(getNameInput().value).toBe("");
     expect(getContentInput().value).toBe("");
   });
 });

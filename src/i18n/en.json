@@ -174,14 +174,12 @@
     "local": {
       "eyebrow": "OPTION 02 · YOUR OWN SKILL",
       "title": "Write a skill by hand",
-      "subtitle": "Paste your SKILL.md or upload it from disk. We save it on your machine and install it like any other skill.",
-      "nameLabel": "Skill name",
-      "namePlaceholder": "my-skill",
+      "subtitle": "Paste a SKILL.md or upload one from disk. Its frontmatter names the skill, and we install it like any other.",
       "contentLabel": "SKILL.md content",
       "contentPlaceholder": "---\nname: my-skill\ndescription: what it does\n---\n\n# My skill\n\n…",
       "fileButton": "UPLOAD .MD",
       "fileLoaded": "Loaded {name}",
-      "hint": "The name takes letters, digits, dashes, dots and underscores. The content needs frontmatter with name and description.",
+      "hint": "The content needs frontmatter with name and description.",
       "clear": "CLEAR",
       "submit": "INSTALL",
       "installing": "SAVING",
@@ -189,7 +187,9 @@
       "frontmatterFields": "The frontmatter is missing: {fields}.",
       "toastLoading": "INSTALLING",
       "toastSuccess": "INSTALLED",
-      "toastError": "INSTALL FAILED"
+      "toastError": "INSTALL FAILED",
+      "frontmatterName": "\"{name}\" only takes letters, digits, dashes, dots and underscores.",
+      "ready": "READY TO INSTALL AS {name}"
     }
   },
   "explore": {

@@ -1,49 +1,43 @@
 import { FileUp, LoaderCircle, Save } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { useLocalInstall } from "../hooks/useLocalInstall";
 import { checkFrontmatter } from "../lib/frontmatter";
-import { isValidSkillName, slugifySkillName } from "../lib/skillName";
 import { FieldLabel } from "./FieldLabel";
 import { FormSection } from "./FormSection";
 
-const NAME_ID = "custom-local-name";
 const CONTENT_ID = "custom-local-content";
 
 export function LocalSkillForm() {
   const t = useT("custom.local");
-  const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const { installing, install } = useLocalInstall();
 
-  const nameValid = isValidSkillName(name);
   const hasContent = content.trim().length > 0;
   const frontmatter = checkFrontmatter(content);
-  const canInstall = nameValid && hasContent && frontmatter.ok && !installing;
+  const canInstall = hasContent && frontmatter.ok && !installing;
 
-  const frontmatterWarning =
-    hasContent && !frontmatter.ok
-      ? frontmatter.reason === "block"
+  const warning =
+    !hasContent || frontmatter.ok
+      ? null
+      : frontmatter.reason === "block"
         ? t("frontmatterMissing")
-        : t("frontmatterFields", { fields: frontmatter.missing.join(", ") })
-      : null;
+        : frontmatter.reason === "fields"
+          ? t("frontmatterFields", { fields: frontmatter.missing.join(", ") })
+          : t("frontmatterName", { name: frontmatter.name });
 
   const reset = () => {
-    setName("");
     setContent("");
     setFileName(null);
   };
 
   const handleFile = async (file: File) => {
-    const text = await file.text();
-    setContent(text);
+    setContent(await file.text());
     setFileName(file.name);
-    if (!name) setName(slugifySkillName(file.name));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,57 +47,35 @@ export function LocalSkillForm() {
   };
 
   const handleSubmit = () => {
-    if (!canInstall) return;
-    void install(name, content).then((ok) => {
+    if (!canInstall || !frontmatter.ok) return;
+    void install(frontmatter.name, content).then((ok) => {
       if (ok) reset();
     });
   };
 
   return (
     <FormSection eyebrow={t("eyebrow")} title={t("title")} subtitle={t("subtitle")}>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-          <FieldLabel htmlFor={NAME_ID}>{t("nameLabel")}</FieldLabel>
-          <Input
-            id={NAME_ID}
-            label={t("nameLabel")}
-            type="text"
-            value={name}
-            onChange={(e) => setName((e.target as HTMLInputElement).value)}
-            placeholder={t("namePlaceholder")}
-            spellCheck={false}
-            autoCapitalize="off"
-            autoCorrect="off"
-            disabled={installing}
-            wrapperClassName="w-full"
-            className={cn(
-              "disabled:opacity-60",
-              name && !nameValid && "border-warning/60 focus:border-warning",
-            )}
-          />
-        </div>
-
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".md,text/markdown,text/plain"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <Button
-          size="lg"
-          variant="outline"
-          className="px-5 shrink-0"
-          onClick={() => fileRef.current?.click()}
-          disabled={installing}
-        >
-          <FileUp size={14} aria-hidden />
-          {t("fileButton")}
-        </Button>
-      </div>
-
       <div className="flex flex-col gap-1.5">
-        <FieldLabel htmlFor={CONTENT_ID}>{t("contentLabel")}</FieldLabel>
+        <div className="flex items-end justify-between gap-3">
+          <FieldLabel htmlFor={CONTENT_ID}>{t("contentLabel")}</FieldLabel>
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".md,text/markdown,text/plain"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          <Button
+            size="sm"
+            variant="outline"
+            className="shrink-0"
+            onClick={() => fileRef.current?.click()}
+            disabled={installing}
+          >
+            <FileUp size={12} aria-hidden />
+            {t("fileButton")}
+          </Button>
+        </div>
         <textarea
           id={CONTENT_ID}
           value={content}
@@ -112,10 +84,11 @@ export function LocalSkillForm() {
           spellCheck={false}
           rows={10}
           disabled={installing}
-          aria-invalid={frontmatterWarning !== null}
+          aria-invalid={warning !== null}
+          aria-describedby={`${CONTENT_ID}-status`}
           className={cn(
             "w-full border bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none rounded-sm resize-y min-h-45 disabled:opacity-60",
-            frontmatterWarning
+            warning
               ? "border-warning/60 focus:border-warning"
               : "border-border-strong focus:border-fg-3",
           )}
@@ -124,12 +97,16 @@ export function LocalSkillForm() {
 
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <p
-          className={cn(
-            "font-body text-xs max-w-md",
-            frontmatterWarning ? "text-warning" : "text-fg-4",
-          )}
+          id={`${CONTENT_ID}-status`}
+          aria-live="polite"
+          className={cn("font-body text-xs max-w-md", warning ? "text-warning" : "text-fg-4")}
         >
-          {frontmatterWarning ?? (fileName ? t("fileLoaded", { name: fileName }) : t("hint"))}
+          {warning ??
+            (frontmatter.ok
+              ? t("ready", { name: frontmatter.name })
+              : fileName
+                ? t("fileLoaded", { name: fileName })
+                : t("hint"))}
         </p>
         <div className="flex items-center gap-2">
           <Button
@@ -137,7 +114,7 @@ export function LocalSkillForm() {
             variant="ghost"
             className="px-5"
             onClick={reset}
-            disabled={installing || (!name && !content)}
+            disabled={installing || !hasContent}
           >
             {t("clear")}
           </Button>

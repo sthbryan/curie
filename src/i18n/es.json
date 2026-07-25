@@ -174,14 +174,12 @@
     "local": {
       "eyebrow": "OPCIÓN 02 · SKILL PROPIA",
       "title": "Escribir una skill a mano",
-      "subtitle": "Pegá tu SKILL.md o subilo desde el disco. La guardamos en tu equipo y la instalamos igual que las demás.",
-      "nameLabel": "Nombre de la skill",
-      "namePlaceholder": "mi-skill",
+      "subtitle": "Pegá un SKILL.md o subilo desde el disco. El frontmatter le da el nombre y la instalamos igual que las demás.",
       "contentLabel": "Contenido de SKILL.md",
       "contentPlaceholder": "---\nname: mi-skill\ndescription: qué hace\n---\n\n# Mi skill\n\n…",
       "fileButton": "SUBIR .MD",
       "fileLoaded": "Cargado {name}",
-      "hint": "El nombre acepta letras, números, guiones, puntos y guiones bajos. El contenido necesita frontmatter con name y description.",
+      "hint": "El contenido necesita frontmatter con name y description.",
       "clear": "VACIAR",
       "submit": "INSTALAR",
       "installing": "GUARDANDO",
@@ -189,7 +187,9 @@
       "frontmatterFields": "Al frontmatter le falta: {fields}.",
       "toastLoading": "INSTALANDO",
       "toastSuccess": "INSTALADA",
-      "toastError": "NO SE PUDO INSTALAR"
+      "toastError": "NO SE PUDO INSTALAR",
+      "frontmatterName": "\"{name}\" solo acepta letras, números, guiones, puntos y guiones bajos.",
+      "ready": "LISTA PARA INSTALAR COMO {name}"
     }
   },
   "explore": {

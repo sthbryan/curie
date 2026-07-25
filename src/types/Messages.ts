@@ -175,8 +175,6 @@ export type Messages = {
       eyebrow: string;
       title: string;
       subtitle: string;
-      nameLabel: string;
-      namePlaceholder: string;
       contentLabel: string;
       contentPlaceholder: string;
       fileButton: string;
@@ -184,6 +182,8 @@ export type Messages = {
       hint: string;
       frontmatterMissing: string;
       frontmatterFields: string;
+      frontmatterName: string;
+      ready: string;
       clear: string;
       submit: string;
       installing: string;

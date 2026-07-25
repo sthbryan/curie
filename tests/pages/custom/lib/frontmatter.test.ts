@@ -4,12 +4,15 @@ import { checkFrontmatter } from "@/pages/custom/lib/frontmatter";
 const valid = ["---", "name: my-skill", "description: what it does", "---", "", "# Body"].join("\n");
 
 describe("checkFrontmatter", () => {
-  it("accepts a block with both required fields", () => {
-    expect(checkFrontmatter(valid)).toEqual({ ok: true });
+  it("returns the skill name from a complete block", () => {
+    expect(checkFrontmatter(valid)).toEqual({ ok: true, name: "my-skill" });
   });
 
-  it("accepts leading blank lines around the block", () => {
-    expect(checkFrontmatter(`\n\n${valid}\n`)).toEqual({ ok: true });
+  it("tolerates blank lines, quotes and extra spacing around the name", () => {
+    expect(checkFrontmatter(`\n\n${valid}\n`)).toEqual({ ok: true, name: "my-skill" });
+    expect(
+      checkFrontmatter('---\nname:   "my-skill"  \ndescription: x\n---\n# Body'),
+    ).toEqual({ ok: true, name: "my-skill" });
   });
 
   it("reports a body with no frontmatter at all", () => {
@@ -41,6 +44,19 @@ describe("checkFrontmatter", () => {
       ok: false,
       reason: "fields",
       missing: ["description"],
+    });
+  });
+
+  it("rejects a name that cannot be a directory", () => {
+    expect(checkFrontmatter("---\nname: my skill\ndescription: x\n---\n# Body")).toEqual({
+      ok: false,
+      reason: "name",
+      name: "my skill",
+    });
+    expect(checkFrontmatter("---\nname: ../escape\ndescription: x\n---\n# Body")).toEqual({
+      ok: false,
+      reason: "name",
+      name: "../escape",
     });
   });
 });
