@@ -20,9 +20,10 @@ export function useSkillDetection(input: string | null): DetectionState {
       return;
     }
 
+    let cancelled = false;
     setState({ kind: "checking" });
+
     const handle = setTimeout(() => {
-      let cancelled = false;
       void (async () => {
         try {
           const detection = await invoke<SkillDetection>("detect_skill", {
@@ -40,12 +41,12 @@ export function useSkillDetection(input: string | null): DetectionState {
           setState({ kind: "error", message });
         }
       })();
-      return () => {
-        cancelled = true;
-      };
     }, DEBOUNCE_MS);
 
-    return () => clearTimeout(handle);
+    return () => {
+      cancelled = true;
+      clearTimeout(handle);
+    };
   }, [input]);
 
   return state;
