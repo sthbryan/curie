@@ -68,7 +68,7 @@ describe("promiseToast", () => {
     expect(toastPromiseMock.mock.calls[0][0]).toBe(promise);
   });
 
-  it("spins only while loading, and keeps the detail readable", () => {
+  it("keeps the detail readable next to the label", () => {
     promiseToast(Promise.resolve("done"), {
       loading: { label: "INSTALLING", detail: "MiniMax-AI/skills" },
       success: { label: "INSTALLED", detail: "MiniMax-AI/skills" },
@@ -77,21 +77,19 @@ describe("promiseToast", () => {
 
     const loading = render(options().loading);
     expect(loading.textContent).toContain("INSTALLING");
-    expect(loading.textContent).toContain("MiniMax-AI/skills");
-    expect(loading.querySelector(".animate-spin")).not.toBeNull();
     expect(loading.querySelector(".normal-case")?.textContent).toBe("MiniMax-AI/skills");
   });
 
-  it("drops the spinner once the promise settles", () => {
+  it("leaves the pending glyph to the toaster", () => {
     promiseToast(Promise.resolve("done"), {
       loading: { label: "INSTALLING" },
       success: { label: "INSTALLED", detail: "owner/repo" },
       error: (e) => ({ label: "INSTALL FAILED", detail: String(e) }),
     });
 
-    const success = render(options().success());
-    expect(success.textContent).toContain("INSTALLED");
-    expect(success.querySelector(".animate-spin")).toBeNull();
+    const loading = render(options().loading);
+    expect(loading.textContent).toContain("INSTALLING");
+    expect(loading.querySelector("svg")).toBeNull();
   });
 
   it("renders the mapped error detail", () => {
@@ -104,6 +102,5 @@ describe("promiseToast", () => {
     const failure = render(options().error(new Error("boom")));
     expect(failure.textContent).toContain("INSTALL FAILED");
     expect(failure.textContent).toContain("boom");
-    expect(failure.querySelector(".animate-spin")).toBeNull();
   });
 });

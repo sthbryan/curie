@@ -1,11 +1,15 @@
+import { Check, Info, LoaderCircle, TriangleAlert, X } from "lucide-react";
 import { Toaster as SonnerToaster } from "sonner";
 
+const ICON_SIZE = 13;
+
 const baseToast =
-  "flex items-start gap-3 w-full max-w-sm border-l-4 border-0 border border-border-strong bg-surface-hover pl-3 pr-9 py-3 font-mono text-mono shadow-lg";
-const baseTitle = "text-fg uppercase tracking-label flex min-w-0 items-center gap-2";
-const baseDescription = "text-fg-3 mt-1 normal-case tracking-normal";
+  "relative flex w-full max-w-sm items-start gap-2.5 border border-border-strong border-l-2 bg-surface-hover py-3 pl-3 pr-9 font-mono text-mono shadow-lg";
+const baseIcon = "relative flex h-4.5 w-4 shrink-0 items-center justify-center";
+const baseTitle = "flex min-w-0 items-center gap-2 text-fg uppercase tracking-label";
+const baseDescription = "mt-1 normal-case tracking-normal text-fg-3";
 const baseCloseButton =
-  "absolute top-3 right-2 inline-flex h-5 w-5 items-center justify-center text-fg-3 hover:text-fg transition-colors cursor-pointer";
+  "absolute top-3 right-2 inline-flex h-5 w-5 cursor-pointer items-center justify-center text-fg-3 transition-colors hover:text-fg";
 
 export function Toaster() {
   return (
@@ -14,20 +18,27 @@ export function Toaster() {
       gap={8}
       offset={24}
       closeButton
+      icons={{
+        loading: <LoaderCircle size={ICON_SIZE} className="animate-spin text-fg-3" aria-hidden />,
+        success: <Check size={ICON_SIZE} className="text-success" aria-hidden />,
+        error: <X size={ICON_SIZE} className="text-error" aria-hidden />,
+        warning: <TriangleAlert size={ICON_SIZE} className="text-warning" aria-hidden />,
+        info: <Info size={ICON_SIZE} className="text-info" aria-hidden />,
+      }}
       toastOptions={{
         unstyled: true,
         classNames: {
           toast: baseToast,
-          icon: "hidden",
-          content: "flex flex-col gap-1 min-w-0 flex-1",
+          icon: baseIcon,
+          content: "flex min-w-0 flex-1 flex-col gap-1",
           title: baseTitle,
           description: baseDescription,
           closeButton: baseCloseButton,
-          loading: "border-info",
-          success: "border-success",
-          error: "border-error",
-          warning: "border-warning",
-          info: "border-info",
+          loading: "border-l-fg-4",
+          success: "border-l-success",
+          error: "border-l-error",
+          warning: "border-l-warning",
+          info: "border-l-info",
         },
       }}
     />
