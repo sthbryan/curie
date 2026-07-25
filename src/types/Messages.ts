@@ -2,6 +2,9 @@ export type Messages = {
   app: {
     ready: string;
     loading: string;
+    sortable: string;
+    sortedAsc: string;
+    sortedDesc: string;
   };
   error: {
     eyebrow: string;

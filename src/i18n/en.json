@@ -1,7 +1,10 @@
 {
   "app": {
     "ready": "READY",
-    "loading": "LOADING"
+    "loading": "LOADING",
+    "sortable": "SORTABLE",
+    "sortedAsc": "SORTED ASCENDING",
+    "sortedDesc": "SORTED DESCENDING"
   },
   "error": {
     "eyebrow": "SOMETHING WENT WRONG",

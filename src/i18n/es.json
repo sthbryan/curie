@@ -1,7 +1,10 @@
 {
   "app": {
     "ready": "LISTO",
-    "loading": "CARGANDO"
+    "loading": "CARGANDO",
+    "sortable": "ORDENABLE",
+    "sortedAsc": "ORDENADO ASCENDENTE",
+    "sortedDesc": "ORDENADO DESCENDENTE"
   },
   "error": {
     "eyebrow": "ALGO SALIO MAL",
