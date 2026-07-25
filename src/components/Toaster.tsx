@@ -1,3 +1,4 @@
+import { LoaderCircle } from "lucide-react";
 import { Toaster as SonnerToaster } from "sonner";
 
 const baseToast =
@@ -14,15 +15,17 @@ export function Toaster() {
       gap={8}
       offset={24}
       closeButton
+      icons={{ loading: <LoaderCircle size={12} className="animate-spin" /> }}
       toastOptions={{
         unstyled: true,
         classNames: {
           toast: baseToast,
-          icon: "hidden",
+          icon: "hidden shrink-0 mt-0.5 text-fg-3",
           content: "flex flex-col gap-1 min-w-0 flex-1",
           title: baseTitle,
           description: baseDescription,
           closeButton: baseCloseButton,
+          loading: "border-info [&>[data-icon]]:!flex [&>[data-icon]]:items-center",
           success: "border-success [--toast-dot:var(--color-success)]",
           error: "border-error [--toast-dot:var(--color-error)]",
           warning: "border-warning [--toast-dot:var(--color-warning)]",
