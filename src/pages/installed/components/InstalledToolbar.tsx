@@ -12,7 +12,7 @@ export function InstalledToolbar() {
   const outdated = updateNames.value.size;
 
   return (
-    <section className="flex flex-wrap items-end gap-4">
+    <section className="flex flex-wrap items-end gap-3">
       <Input
         label={t("search")}
         type="search"
@@ -30,7 +30,7 @@ export function InstalledToolbar() {
           variant="outline"
           selected={updatesOnly.value}
           onClick={toggleUpdatesOnly}
-          className="h-9"
+          className="h-10"
         >
           {t("filterUpdates")}
           <span className="opacity-60">{outdated}</span>
@@ -38,13 +38,13 @@ export function InstalledToolbar() {
       ) : null}
 
       {hasFilters.value ? (
-        <Button size="sm" variant="ghost" onClick={clearFilters} className="h-9">
+        <Button size="sm" variant="ghost" onClick={clearFilters} className="h-10">
           <X size={12} />
           {t("clearFilters")}
         </Button>
       ) : null}
 
-      <span className="ml-auto pb-2.5 font-mono uppercase tracking-label text-micro text-fg-4">
+      <span className="ml-auto flex h-10 items-center border-l border-border pl-4 font-mono uppercase tracking-label text-micro text-fg-4">
         {t("showing", { n: visibleSkills.value.length, total: skills.value.length })}
       </span>
     </section>
