@@ -9,7 +9,7 @@ export function AppShell() {
 
   return (
     <div className="flex h-screen w-screen flex-col bg-bg text-fg">
-      {stage.value !== "loading" && <Header ready={ready} />}
+      {stage.value !== "loading" && <Header />}
       <div className="flex min-h-0 flex-1 overflow-hidden">
         {ready && <Sidebar />}
         <MainContent />
