@@ -1,6 +1,8 @@
-import { useEffect, useId, useRef } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/Button";
+import { duration, easeOut } from "@/lib/motion";
 
 type Props = {
   open: boolean;
@@ -11,9 +13,14 @@ type Props = {
   cancelLabel: string;
   busy?: boolean;
   busyLabel?: string;
+  confirmPhrase?: string;
+  confirmPhraseLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
 };
+
+const FOCUSABLE =
+  'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 export function ConfirmDialog(props: Props) {
   const {
@@ -25,85 +32,153 @@ export function ConfirmDialog(props: Props) {
     cancelLabel,
     busy = false,
     busyLabel,
+    confirmPhrase,
+    confirmPhraseLabel,
     onConfirm,
     onCancel,
   } = props;
 
   const titleId = useId();
   const descId = useId();
+  const phraseId = useId();
+  const panelRef = useRef<HTMLDivElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const [typed, setTyped] = useState("");
+
+  useEffect(() => {
+    if (!open) setTyped("");
+  }, [open]);
+
+  const unlocked = !confirmPhrase || typed.trim().toUpperCase() === confirmPhrase.toUpperCase();
 
   useEffect(() => {
     if (!open) return;
-    const prev = document.activeElement as HTMLElement | null;
+
+    const previous = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     cancelRef.current?.focus();
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !busy) onCancel();
+      if (e.key === "Escape" && !busy) {
+        onCancel();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const nodes = panelRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE);
+      if (!nodes || nodes.length === 0) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
+
     window.addEventListener("keydown", onKey);
     return () => {
       window.removeEventListener("keydown", onKey);
-      prev?.focus?.();
+      document.body.style.overflow = previousOverflow;
+      previous?.focus?.();
     };
   }, [open, busy, onCancel]);
+
+  if (typeof document === "undefined") return null;
 
   const handleCancel = () => {
     if (!busy) onCancel();
   };
 
-  if (!open || typeof document === "undefined") return null;
-
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6" role="presentation">
-      <button
-        type="button"
-        aria-label={cancelLabel}
-        className="absolute inset-0 bg-bg/70"
-        onClick={handleCancel}
-        tabIndex={-1}
-      />
-      <div
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={description || detail ? descId : undefined}
-        className="relative z-10 w-full max-w-sm border border-border-strong bg-surface px-5 py-5 shadow-none"
-      >
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <h2
-              id={titleId}
-              className="font-mono uppercase tracking-label text-mono font-bold text-fg"
-            >
-              {title}
-            </h2>
-            {description ? (
-              <p id={descId} className="font-body text-sm text-fg-3">
-                {description}
-                {detail ? (
-                  <>
-                    {" "}
-                    <span className="font-mono text-mono text-fg">{detail}</span>
-                  </>
-                ) : null}
-              </p>
-            ) : detail ? (
-              <p id={descId} className="font-mono text-mono text-fg">
-                {detail}
-              </p>
+    <AnimatePresence>
+      {open ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+          <motion.div
+            className="absolute inset-0 bg-bg/80 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: duration.fast }}
+            onClick={handleCancel}
+            aria-hidden
+          />
+          <motion.div
+            ref={panelRef}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            aria-describedby={description || detail ? descId : undefined}
+            className="relative z-10 flex w-full max-w-sm flex-col gap-5 border border-border-strong bg-surface px-5 py-5 shadow-2xl"
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: 4 }}
+            transition={{ duration: duration.base, ease: easeOut }}
+          >
+            <div className="flex flex-col gap-2">
+              <h2
+                id={titleId}
+                className="font-mono uppercase tracking-label text-mono font-bold text-fg"
+              >
+                {title}
+              </h2>
+              {description ? (
+                <p id={descId} className="font-body text-sm text-fg-3">
+                  {description}
+                </p>
+              ) : null}
+              {detail ? (
+                <span
+                  id={description ? undefined : descId}
+                  className="truncate border border-border bg-surface-tint px-2 py-1.5 font-mono text-mono text-fg"
+                >
+                  {detail}
+                </span>
+              ) : null}
+            </div>
+            {confirmPhrase ? (
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor={phraseId}
+                  className="font-mono uppercase tracking-label text-micro text-fg-3"
+                >
+                  {confirmPhraseLabel}
+                </label>
+                <input
+                  id={phraseId}
+                  type="text"
+                  value={typed}
+                  onInput={(e) => setTyped((e.target as HTMLInputElement).value)}
+                  disabled={busy}
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder={confirmPhrase}
+                  className="border border-border-strong bg-bg px-2.5 py-2 font-mono uppercase tracking-label text-mono text-fg outline-none placeholder:text-fg-4 focus:border-accent"
+                />
+              </div>
             ) : null}
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button ref={cancelRef} size="sm" variant="outline" onClick={onCancel} disabled={busy}>
-              {cancelLabel}
-            </Button>
-            <Button size="sm" variant="accent" onClick={onConfirm} disabled={busy}>
-              {busy && busyLabel ? busyLabel : confirmLabel}
-            </Button>
-          </div>
+            <div className="flex justify-end gap-2">
+              <Button
+                ref={cancelRef}
+                size="sm"
+                variant="outline"
+                onClick={handleCancel}
+                disabled={busy}
+              >
+                {cancelLabel}
+              </Button>
+              <Button size="sm" variant="accent" onClick={onConfirm} disabled={busy || !unlocked}>
+                {busy && busyLabel ? busyLabel : confirmLabel}
+              </Button>
+            </div>
+          </motion.div>
         </div>
-      </div>
-    </div>,
+      ) : null}
+    </AnimatePresence>,
     document.body,
   );
 }
