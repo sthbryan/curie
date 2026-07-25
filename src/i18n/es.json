@@ -241,8 +241,7 @@
     "node": "NODE",
     "agents": "AGENTES",
     "setupRequired": "SETUP REQUERIDO",
-    "appUpdateAvailable": "ACTUALIZACIÓN DISPONIBLE",
-    "appUpToDate": "ACTUALIZADO"
+    "appUpdateAvailable": "ACTUALIZACIÓN DISPONIBLE"
   },
   "settings": {
     "eyebrow": "PREFERENCIAS",

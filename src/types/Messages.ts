@@ -242,7 +242,6 @@ export type Messages = {
     agents: string;
     setupRequired: string;
     appUpdateAvailable: string;
-    appUpToDate: string;
   };
   settings: {
     eyebrow: string;
