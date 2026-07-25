@@ -187,9 +187,9 @@ export type Messages = {
       clear: string;
       submit: string;
       installing: string;
-      toastInstalled: string;
-      toastNotInstalled: string;
-      toastFailed: string;
+      toastLoading: string;
+      toastSuccess: string;
+      toastError: string;
     };
   };
   explore: {

@@ -187,9 +187,9 @@
       "installing": "SAVING",
       "frontmatterMissing": "The SKILL.md needs a frontmatter block with name and description.",
       "frontmatterFields": "The frontmatter is missing: {fields}.",
-      "toastInstalled": "INSTALLED",
-      "toastNotInstalled": "SAVED, BUT NOT INSTALLED",
-      "toastFailed": "COULD NOT SAVE THE SKILL"
+      "toastLoading": "INSTALLING",
+      "toastSuccess": "INSTALLED",
+      "toastError": "INSTALL FAILED"
     }
   },
   "explore": {

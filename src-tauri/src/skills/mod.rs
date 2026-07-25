@@ -13,14 +13,14 @@ mod update;
 
 pub use add::add_global_skill;
 pub use check::check_global_skill_updates;
-pub use custom::write_custom_skill;
+pub use custom::install_custom_skill as install_skill_from_content;
 pub use detect::{detect_global_skill, DetectedSkill, SkillDetection};
 pub use explore::explore_skills as browse_skills;
 pub use find::find_skills as search_skills;
 pub use list::list_global_skills;
 pub use remove::remove_global_skills;
 pub use types::{
-    CustomSkillSaveResult, ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult,
+    CustomSkillInstallResult, ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult,
     SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
 pub use update::update_global_skills;
@@ -89,11 +89,11 @@ pub async fn remove_skills(skills: Vec<String>) -> Result<SkillRemoveResult, Str
 }
 
 #[tauri::command]
-pub async fn save_custom_skill(
+pub async fn install_custom_skill(
     name: String,
     content: String,
-) -> Result<CustomSkillSaveResult, String> {
-    tauri::async_runtime::spawn_blocking(move || write_custom_skill(&name, &content))
+) -> Result<CustomSkillInstallResult, String> {
+    tauri::async_runtime::spawn_blocking(move || install_skill_from_content(&name, &content))
         .await
-        .map_err(|e| format!("save task failed: {e}"))?
+        .map_err(|e| format!("install task failed: {e}"))?
 }

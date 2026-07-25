@@ -103,15 +103,11 @@ export type SkillRemoveResult = {
   message: string;
 };
 
-export type CustomSkillSaveResult = {
+export type CustomSkillInstallResult = {
   name: string;
   path: string;
   message: string;
-  installed: boolean;
-  installMessage: string | null;
 };
-
-export type CustomSourceKind = "url" | "file";
 
 export type AgentSummary = {
   id: string;

@@ -33,15 +33,3 @@ export function promiseToast<T>(promise: Promise<T>, copy: PromiseToastCopy): vo
     error: (e: unknown) => line(copy.error(e)),
   });
 }
-
-export function successToast(copy: ToastCopy): void {
-  toast.success(line(copy));
-}
-
-export function warningToast(copy: ToastCopy): void {
-  toast.warning(line(copy), { duration: 8000 });
-}
-
-export function errorToast(copy: ToastCopy): void {
-  toast.error(line(copy), { duration: 8000 });
-}

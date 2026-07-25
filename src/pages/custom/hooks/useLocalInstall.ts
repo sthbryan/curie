@@ -1,10 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useState } from "react";
-import type { CustomSkillSaveResult } from "@/components/types";
+import type { CustomSkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
-import { errorToast, successToast, warningToast } from "@/lib/toast";
+import { promiseToast } from "@/lib/toast";
 import { lang } from "@/store/system";
 
 export type LocalInstall = {
@@ -17,28 +17,28 @@ export function useLocalInstall(): LocalInstall {
 
   const install = useCallback(async (name: string, content: string) => {
     setInstalling(true);
-    try {
-      const res = await invoke<CustomSkillSaveResult>("save_custom_skill", {
-        name: name.trim(),
-        content,
-      });
-
-      if (!res.installed) {
-        warningToast({
-          label: t(lang.value, "custom.local.toastNotInstalled"),
-          detail: res.installMessage ?? res.path,
-        });
-        return false;
-      }
-
-      successToast({ label: t(lang.value, "custom.local.toastInstalled"), detail: res.name });
+    const detail = name.trim();
+    const promise = invoke<CustomSkillInstallResult>("install_custom_skill", {
+      name: detail,
+      content,
+    }).then(async (res) => {
       await loadGlobalSkills({ checkUpdates: true });
-      return true;
-    } catch (e) {
-      errorToast({
-        label: t(lang.value, "custom.local.toastFailed"),
+      return res;
+    });
+
+    promiseToast(promise, {
+      loading: { label: t(lang.value, "custom.local.toastLoading"), detail },
+      success: { label: t(lang.value, "custom.local.toastSuccess"), detail },
+      error: (e) => ({
+        label: t(lang.value, "custom.local.toastError"),
         detail: errorMessage(e),
-      });
+      }),
+    });
+
+    try {
+      await promise;
+      return true;
+    } catch {
       return false;
     } finally {
       setInstalling(false);

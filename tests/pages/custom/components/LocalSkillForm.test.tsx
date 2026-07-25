@@ -3,12 +3,10 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { CustomSkillSaveResult } from "@/components/types";
+import type { CustomSkillInstallResult } from "@/components/types";
 
 const invokeMock = vi.fn();
-const successToastMock = vi.fn();
-const warningToastMock = vi.fn();
-const errorToastMock = vi.fn();
+const promiseToastMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -19,9 +17,7 @@ vi.mock("@/lib/boot", () => ({
 }));
 
 vi.mock("@/lib/toast", () => ({
-  successToast: (...args: unknown[]) => successToastMock(...args),
-  warningToast: (...args: unknown[]) => warningToastMock(...args),
-  errorToast: (...args: unknown[]) => errorToastMock(...args),
+  promiseToast: (...args: unknown[]) => promiseToastMock(...args),
 }));
 
 const { LocalSkillForm } = await import("@/pages/custom/components/LocalSkillForm");
@@ -103,9 +99,7 @@ async function clickInstall() {
 
 beforeEach(() => {
   invokeMock.mockReset();
-  successToastMock.mockReset();
-  warningToastMock.mockReset();
-  errorToastMock.mockReset();
+  promiseToastMock.mockReset();
   mount();
 });
 
@@ -126,35 +120,32 @@ describe("LocalSkillForm", () => {
     expect(getButtonByText("INSTALL").disabled).toBe(true);
   });
 
-  it("shows success via toast and clears the form inputs", async () => {
-    const saved: CustomSkillSaveResult = {
+  it("clears the form once the install succeeds", async () => {
+    invokeMock.mockResolvedValueOnce({
       name: "my-skill",
       path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
-      message: "Saved",
-      installed: true,
-      installMessage: null,
-    };
-    invokeMock.mockResolvedValueOnce(saved);
+      message: "Installed",
+    } as CustomSkillInstallResult);
 
     fillForm();
     await clickInstall();
 
-    expect(invokeMock).toHaveBeenCalledWith("save_custom_skill", {
+    expect(invokeMock).toHaveBeenCalledWith("install_custom_skill", {
       name: "my-skill",
       content: VALID_CONTENT,
     });
-    expect(successToastMock).toHaveBeenCalledTimes(1);
+    expect(promiseToastMock).toHaveBeenCalledTimes(1);
     expect(getNameInput().value).toBe("");
     expect(getContentInput().value).toBe("");
   });
 
-  it("surfaces save errors via toast and keeps the form inputs", async () => {
+  it("keeps the content when the install fails", async () => {
     invokeMock.mockRejectedValueOnce("invalid name");
 
     fillForm();
     await clickInstall();
 
-    expect(errorToastMock).toHaveBeenCalledTimes(1);
+    expect(promiseToastMock).toHaveBeenCalledTimes(1);
     expect(getNameInput().value).toBe("my-skill");
     expect(getContentInput().value).toBe(VALID_CONTENT);
   });
