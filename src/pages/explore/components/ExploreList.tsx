@@ -17,7 +17,6 @@ type Props = {
   loading: boolean;
   empty: boolean;
   skills: SkillExploreResult[];
-  listKey: string;
   installedPackages: Set<string>;
   installingPackage: string | null;
   installBusy: boolean;
@@ -40,7 +39,6 @@ export function ExploreList({
   loading,
   empty,
   skills,
-  listKey,
   installedPackages,
   installingPackage,
   installBusy,
@@ -176,7 +174,6 @@ export function ExploreList({
           columns={columns}
           rows={skills}
           gridTemplate={EXPLORE_GRID}
-          bodyKey={listKey}
           getRowKey={(r) => r.id}
         />
         {hasMore ? (

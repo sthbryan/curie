@@ -109,8 +109,6 @@ export function InstalledList() {
     remove([name]).catch(() => {});
   };
 
-  const listKey = `${agentFilter.value ?? "all"}:${query.value}:${updatesOnly.value ? "up" : "all"}:${sortKey.value}:${sortDir.value}`;
-
   const columns = useMemo(
     (): ColumnDef<SkillInfo>[] => [
       {
@@ -266,7 +264,6 @@ export function InstalledList() {
             sortKey={sortKey.value}
             sortDir={sortDir.value}
             onSort={(key) => setSort(key as SortField)}
-            bodyKey={listKey}
             getRowKey={(skill) => `${skill.name}-${skill.path}`}
           />
         </Default>
