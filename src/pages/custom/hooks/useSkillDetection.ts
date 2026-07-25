@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useState } from "react";
 import type { SkillDetection } from "@/components/types";
+import { errorMessage } from "@/lib/errors";
 
 export type DetectionState =
   | { kind: "idle" }
@@ -37,8 +38,7 @@ export function useSkillDetection(input: string | null): DetectionState {
           }
         } catch (e) {
           if (cancelled) return;
-          const message = e instanceof Error ? e.message : String(e);
-          setState({ kind: "error", message });
+          setState({ kind: "error", message: errorMessage(e) });
         }
       })();
     }, DEBOUNCE_MS);

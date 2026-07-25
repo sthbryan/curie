@@ -25,27 +25,18 @@ vi.mock("sonner", () => ({
 }));
 
 const { MdUploadForm } = await import("@/pages/custom/components/MdUploadForm");
-const { useCustomActions } = await import("@/pages/custom/hooks/useCustomActions");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
-const lastActions: { current: ReturnType<typeof useCustomActions> | null } = {
-  current: null,
-};
-
-function Probe() {
-  lastActions.current = useCustomActions();
-  return <MdUploadForm actions={lastActions.current} />;
-}
 
 function mount() {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
   act(() => {
-    root?.render(<Probe />);
+    root?.render(<MdUploadForm />);
   });
 }
 
@@ -60,7 +51,6 @@ function unmount() {
     container.remove();
     container = null;
   }
-  lastActions.current = null;
 }
 
 function getNameInput(): HTMLInputElement {
@@ -95,23 +85,40 @@ function setInputValue(input: HTMLInputElement | HTMLTextAreaElement, value: str
   });
 }
 
+function fillForm() {
+  setInputValue(getNameInput(), "my-skill");
+  setInputValue(getContentInput(), "# Skill content");
+}
+
+async function clickSave() {
+  await act(async () => {
+    getButtonByText("SAVE").click();
+    for (let i = 0; i < 10; i++) await Promise.resolve();
+  });
+}
+
 beforeEach(() => {
   invokeMock.mockReset();
   toastSuccessMock.mockReset();
   toastErrorMock.mockReset();
+  mount();
 });
 
 afterEach(unmount);
 
 describe("MdUploadForm", () => {
   it("keeps save disabled until name and content are valid", () => {
-    mount();
-    const saveButton = getButtonByText("SAVE");
-    expect(saveButton.disabled).toBe(true);
+    expect(getButtonByText("SAVE").disabled).toBe(true);
 
-    setInputValue(getNameInput(), "my-skill");
+    fillForm();
+    expect(getButtonByText("SAVE").disabled).toBe(false);
+  });
+
+  it("keeps save disabled for a name the backend would reject", () => {
+    setInputValue(getNameInput(), "-bad name");
     setInputValue(getContentInput(), "# Skill content");
-    expect(saveButton.disabled).toBe(false);
+
+    expect(getButtonByText("SAVE").disabled).toBe(true);
   });
 
   it("shows success via toast and clears the form inputs", async () => {
@@ -124,17 +131,13 @@ describe("MdUploadForm", () => {
     };
     invokeMock.mockResolvedValueOnce(saved);
 
-    mount();
-    setInputValue(getNameInput(), "my-skill");
-    setInputValue(getContentInput(), "# Skill content");
+    fillForm();
+    await clickSave();
 
-    const saveButton = getButtonByText("SAVE");
-    await act(async () => {
-      saveButton.click();
-      await Promise.resolve();
-      await Promise.resolve();
+    expect(invokeMock).toHaveBeenCalledWith("save_custom_skill", {
+      name: "my-skill",
+      content: "# Skill content",
     });
-
     expect(toastSuccessMock).toHaveBeenCalledTimes(1);
     expect(getNameInput().value).toBe("");
     expect(getContentInput().value).toBe("");
@@ -143,19 +146,22 @@ describe("MdUploadForm", () => {
   it("surfaces save errors via toast and keeps the form inputs", async () => {
     invokeMock.mockRejectedValueOnce("invalid name");
 
-    mount();
-    setInputValue(getNameInput(), "my-skill");
-    setInputValue(getContentInput(), "# Skill content");
-
-    const saveButton = getButtonByText("SAVE");
-    await act(async () => {
-      saveButton.click();
-      await Promise.resolve();
-      await Promise.resolve();
-    });
+    fillForm();
+    await clickSave();
 
     expect(toastErrorMock).toHaveBeenCalledTimes(1);
     expect(getNameInput().value).toBe("my-skill");
     expect(getContentInput().value).toBe("# Skill content");
+  });
+
+  it("empties the form from the CLEAR affordance", () => {
+    fillForm();
+
+    act(() => {
+      getButtonByText("CLEAR").click();
+    });
+
+    expect(getNameInput().value).toBe("");
+    expect(getContentInput().value).toBe("");
   });
 });
