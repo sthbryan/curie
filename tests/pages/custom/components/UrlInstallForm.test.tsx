@@ -10,7 +10,7 @@ import {
   it,
   vi,
 } from "vitest";
-import type { SkillInstallResult } from "@/components/types";
+import type { SkillDetection, SkillInstallResult } from "@/components/types";
 
 const invokeMock = vi.fn();
 const loadGlobalSkillsMock = vi.fn();
@@ -111,6 +111,35 @@ function setInputValue(value: string) {
   });
 }
 
+function detection(count: number): SkillDetection {
+  return {
+    isSkill: true,
+    total: count,
+    truncated: false,
+    skills: Array.from({ length: count }, (_, i) => ({
+      name: `skill-${i}`,
+      description: `desc ${i}`,
+    })),
+    refUsed: null,
+  };
+}
+
+function mockBackend(detected: SkillDetection | Error, install?: SkillInstallResult) {
+  invokeMock.mockImplementation((cmd: string) => {
+    if (cmd === "detect_skill") {
+      return detected instanceof Error ? Promise.reject(detected) : Promise.resolve(detected);
+    }
+    return Promise.resolve(install ?? ({ package: "owner/repo", message: "ok" } as SkillInstallResult));
+  });
+}
+
+async function settleDetection() {
+  await act(async () => {
+    vi.advanceTimersByTime(700);
+    for (let i = 0; i < 10; i++) await Promise.resolve();
+  });
+}
+
 beforeEach(() => {
   invokeMock.mockReset();
   loadGlobalSkillsMock.mockReset();
@@ -128,23 +157,45 @@ afterEach(() => {
 });
 
 describe("UrlInstallForm", () => {
-  it("keeps the install button disabled until the input looks like a URL or package", () => {
+  it("keeps the install button disabled while the input is unverified", async () => {
+    mockBackend(detection(1));
     mount();
     const installButton = getButtonByText("INSTALL");
     expect(installButton.disabled).toBe(true);
 
     setInputValue("owner/repo@skill");
+    expect(installButton.disabled).toBe(true);
+
+    await settleDetection();
     expect(installButton.disabled).toBe(false);
   });
 
-  it("clears the input after a successful install", async () => {
-    invokeMock.mockResolvedValue({
-      package: "owner/repo",
-      message: "ok",
-    } as SkillInstallResult);
-
+  it("keeps the install button disabled when the repo holds no skills", async () => {
+    mockBackend({ isSkill: false, total: 0, truncated: false, skills: [], refUsed: null });
     mount();
     setInputValue("owner/repo@skill");
+    await settleDetection();
+
+    expect(getButtonByText("INSTALL").disabled).toBe(true);
+  });
+
+  it("keeps a single INSTALL label when several skills are detected", async () => {
+    mockBackend(detection(18));
+    mount();
+    setInputValue("owner/repo");
+    await settleDetection();
+
+    const installButton = getButtonByText("INSTALL");
+    expect(installButton.disabled).toBe(false);
+    expect(installButton.textContent).not.toMatch(/18/);
+    expect(container?.textContent).toMatch(/18 SKILLS/);
+  });
+
+  it("clears the input after a successful install", async () => {
+    mockBackend(detection(1));
+    mount();
+    setInputValue("owner/repo@skill");
+    await settleDetection();
 
     const installButton = getButtonByText("INSTALL");
     expect(installButton.disabled).toBe(false);
@@ -154,19 +205,15 @@ describe("UrlInstallForm", () => {
       for (let i = 0; i < 10; i++) await Promise.resolve();
     });
 
-    expect(toastLoadingMock).toHaveBeenCalledTimes(1);
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
     expect(getInput().value).toBe("");
   });
 
   it("does not clear the input if the user typed something new while the success was showing", async () => {
-    invokeMock.mockResolvedValue({
-      package: "owner/repo",
-      message: "ok",
-    } as SkillInstallResult);
-
+    mockBackend(detection(1));
     mount();
     setInputValue("owner/repo@skill");
+    await settleDetection();
 
     const installButton = getButtonByText("INSTALL");
     await act(async () => {
@@ -177,6 +224,6 @@ describe("UrlInstallForm", () => {
     setInputValue("vercel-labs/agent-skills@pdf");
 
     expect(getInput().value).toBe("vercel-labs/agent-skills@pdf");
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
+    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
   });
 });

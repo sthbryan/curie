@@ -134,7 +134,7 @@ describe("useCustomActions.install", () => {
     unmount();
   });
 
-  it("invokes add_skill, refreshes the global skills list, and shows a loading + success toast", async () => {
+  it("invokes add_skill, refreshes the global skills list, and drives a toast.promise", async () => {
     invokeMock.mockResolvedValue({ package: "owner/repo", message: "ok" } as SkillInstallResult);
     const { get, unmount } = renderHook(() => useCustomActions());
 
@@ -148,10 +148,14 @@ describe("useCustomActions.install", () => {
       skillName: null,
     });
     expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
-    expect(toastLoadingMock).toHaveBeenCalledTimes(1);
-    expect(toastLoadingMock.mock.calls[0][0]).toMatch(/owner\/repo/);
-    expect(toastSuccessMock).toHaveBeenCalledTimes(1);
-    expect(toastSuccessMock.mock.calls[0][0]).toMatch(/owner\/repo/);
+    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
+
+    const options = toastPromiseMock.mock.calls[0][1] as {
+      loading: string;
+      success: () => string;
+    };
+    expect(options.loading).toMatch(/owner\/repo/);
+    expect(options.success()).toMatch(/owner\/repo/);
     unmount();
   });
 
@@ -186,7 +190,7 @@ describe("useCustomActions.install", () => {
     unmount();
   });
 
-  it("surfaces install errors as a toast error and resolves to a null kind", async () => {
+  it("surfaces install errors through the toast.promise error mapper and resolves to a null kind", async () => {
     invokeMock.mockRejectedValueOnce(new Error("boom"));
     const { get, unmount } = renderHook(() => useCustomActions());
 
@@ -195,8 +199,32 @@ describe("useCustomActions.install", () => {
       expect(kind).toBeNull();
     });
 
-    expect(toastErrorMock).toHaveBeenCalledTimes(1);
-    expect(toastErrorMock.mock.calls[0][0]).toBe("boom");
+    expect(toastPromiseMock).toHaveBeenCalledTimes(1);
+    const options = toastPromiseMock.mock.calls[0][1] as { error: (e: unknown) => string };
+    expect(options.error(new Error("boom"))).toBe("boom");
+    unmount();
+  });
+
+  it("keeps the install status processing while the install runs and resets it afterwards", async () => {
+    let resolveInstall: ((v: SkillInstallResult) => void) | null = null;
+    invokeMock.mockReturnValueOnce(
+      new Promise<SkillInstallResult>((resolve) => {
+        resolveInstall = resolve;
+      }),
+    );
+    const { get, unmount } = renderHook(() => useCustomActions());
+
+    let pending: Promise<unknown> | null = null;
+    act(() => {
+      pending = get().install("owner/repo");
+    });
+    expect(get().installStatus.value.status).toBe("processing");
+
+    await act(async () => {
+      resolveInstall?.({ package: "owner/repo", message: "ok" } as SkillInstallResult);
+      await pending;
+    });
+    expect(get().installStatus.value.status).toBe("idle");
     unmount();
   });
 });

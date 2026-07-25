@@ -1,6 +1,6 @@
 import { type Signal, signal } from "@preact/signals";
 import { invoke } from "@tauri-apps/api/core";
-import { useCallback } from "preact/hooks";
+import { useCallback, useMemo } from "preact/hooks";
 import { toast } from "sonner";
 import type { CustomSkillSaveResult, SkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
@@ -47,23 +47,25 @@ export function classifyInput(input: string): UrlKind | null {
 }
 
 export function useCustomActions(): CustomActions {
-  const installStatus = signal<{ status: "idle" | "processing" }>({ status: "idle" });
-  const saveStatus = signal<{ status: "idle" | "processing" }>({ status: "idle" });
+  const installStatus = useMemo(
+    () => signal<{ status: "idle" | "processing" }>({ status: "idle" }),
+    [],
+  );
+  const saveStatus = useMemo(
+    () => signal<{ status: "idle" | "processing" }>({ status: "idle" }),
+    [],
+  );
 
   const install = useCallback(async (target: string, skillName?: string | null) => {
     const kind = classifyInput(target);
     if (!kind) {
-      const message = t(lang.value, "custom.url.errorInvalid");
-      toast.error(message);
+      toast.error(t(lang.value, "custom.url.errorInvalid"));
       return null;
     }
     installStatus.value = { status: "processing" };
     const trimmed = target.trim();
     const trimmedName = skillName?.trim() || null;
     const label = repoLabel(trimmed);
-    const toastId = toast.loading(t(lang.value, "custom.url.promiseLoading", { target: label }), {
-      duration: Number.POSITIVE_INFINITY,
-    });
     const promise = invoke<SkillInstallResult>("add_skill", {
       package: trimmed,
       skillName: trimmedName,
@@ -71,26 +73,18 @@ export function useCustomActions(): CustomActions {
       await loadGlobalSkills({ checkUpdates: true });
       return res;
     });
-    promise.then(
-      () => {
-        toast.success(t(lang.value, "custom.url.promiseSuccess", { target: label }), {
-          id: toastId,
-          duration: 4000,
-        });
-      },
-      (e) => {
-        toast.error(errorMessage(e), { id: toastId, duration: 6000 });
-      },
-    );
+    toast.promise(promise, {
+      loading: t(lang.value, "custom.url.promiseLoading", { target: label }),
+      success: () => t(lang.value, "custom.url.promiseSuccess", { target: label }),
+      error: (e: unknown) => errorMessage(e),
+    });
     try {
       await promise;
       return kind;
     } catch {
       return null;
     } finally {
-      setTimeout(() => {
-        installStatus.value = { status: "idle" };
-      }, 2500);
+      installStatus.value = { status: "idle" };
     }
   }, []);
 
@@ -113,9 +107,7 @@ export function useCustomActions(): CustomActions {
       toast.error(errorMessage(e));
       throw e;
     } finally {
-      setTimeout(() => {
-        saveStatus.value = { status: "idle" };
-      }, 2500);
+      saveStatus.value = { status: "idle" };
     }
   }, []);
 
