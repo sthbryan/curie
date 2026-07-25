@@ -89,6 +89,11 @@ pub async fn remove_skills(skills: Vec<String>) -> Result<SkillRemoveResult, Str
 }
 
 #[tauri::command]
-pub fn save_custom_skill(name: String, content: String) -> Result<CustomSkillSaveResult, String> {
-    write_custom_skill(&name, &content)
+pub async fn save_custom_skill(
+    name: String,
+    content: String,
+) -> Result<CustomSkillSaveResult, String> {
+    tauri::async_runtime::spawn_blocking(move || write_custom_skill(&name, &content))
+        .await
+        .map_err(|e| format!("save task failed: {e}"))?
 }
