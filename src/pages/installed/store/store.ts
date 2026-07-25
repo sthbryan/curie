@@ -5,11 +5,8 @@ import type { SortDir } from "@/components/Table";
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
 import { t } from "@/i18n";
 import { loadGlobalSkills } from "@/lib/boot";
+import { errorMessage } from "@/lib/errors";
 import { lang } from "@/store/system";
-
-function errorMessage(e: unknown): string {
-  return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
-}
 
 // ─── Sorting ─────────────────────────────────────────────────────────────────
 

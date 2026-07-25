@@ -8,6 +8,7 @@ import type {
   SkillUpdateInfo,
 } from "@/components/types";
 import { detectLang } from "@/i18n";
+import { errorMessage } from "@/lib/errors";
 import {
   setSkills,
   setSkillsError,
@@ -23,10 +24,6 @@ import {
   setAppUpdateError,
   setAppUpdateLoading,
 } from "@/store/update";
-
-function errorMessage(e: unknown): string {
-  return typeof e === "string" ? e : e instanceof Error ? e.message : String(e);
-}
 
 export async function checkAppUpdate() {
   setAppUpdateLoading(true);
