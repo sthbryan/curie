@@ -14,7 +14,7 @@ export function ChoiceButton({ active, label, sublabel, onClick }: Props) {
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "-ml-px flex h-9 items-center justify-center gap-2 px-4 font-mono uppercase tracking-label text-mono transition-colors duration-150 first:ml-0",
+        "-ml-px flex h-8 items-center justify-center gap-2 px-4 font-mono uppercase tracking-label text-mono transition-colors duration-150 first:ml-0",
         {
           "relative bg-fg text-bg font-bold": active,
           "border border-border-strong text-fg-2 hover:border-fg-3 hover:text-fg": !active,
