@@ -49,7 +49,7 @@ export function Settings() {
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-10 pt-12 pb-8">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-10 pt-12 pb-8">
         <section className="flex flex-col gap-3">
           <Label>{t("eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg">
