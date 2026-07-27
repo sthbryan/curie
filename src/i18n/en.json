@@ -64,6 +64,7 @@
     "continue": "CONTINUE",
     "errorEyebrow": "SOMETHING FAILED",
     "errorTitle": "The install did not finish",
+    "errorOutput": "INSTALLER OUTPUT",
     "errorHint": "You can try again, or run the commands yourself.",
     "retry": "TRY AGAIN"
   },

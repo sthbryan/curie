@@ -1,4 +1,4 @@
-import { ArrowRight, Check, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
@@ -48,15 +48,11 @@ export function Setup({ onComplete }: Props) {
         subtitle={t("doneHint", { version: node?.version ?? "" })}
         eyebrowClassName="text-success"
       >
-        <div className="flex items-center gap-4">
-          <Button size="xl" variant="primary" className="px-8" onClick={() => void complete()}>
+        <div>
+          <Button size="lg" variant="primary" onClick={() => void complete()}>
             {t("continue")}
-            <ArrowRight size={13} strokeWidth={1.5} aria-hidden />
+            <ArrowRight size={12} strokeWidth={1.5} aria-hidden />
           </Button>
-          <span className="inline-flex items-center gap-2 font-mono uppercase tracking-label text-micro text-success">
-            <Check size={12} strokeWidth={2} aria-hidden />
-            {node?.version ?? ""}
-          </span>
         </div>
       </SetupShell>
     );
@@ -71,11 +67,10 @@ export function Setup({ onComplete }: Props) {
         eyebrowClassName="text-error"
       >
         <ErrorNotice
-          title={t("errorEyebrow")}
+          title={t("errorOutput")}
           message={error}
           retryLabel={t("retry")}
           onRetry={() => void retry()}
-          onDismiss={() => void retry()}
         />
         {plan ? <ManualPanel command={plan.command} showLink={!plan.manager} /> : null}
       </SetupShell>
@@ -87,22 +82,21 @@ export function Setup({ onComplete }: Props) {
       {plan ? <PlanCard plan={plan} /> : null}
 
       <section className="flex items-center gap-3">
-        <Button size="hero" variant="primary" className="gap-3 px-8" onClick={() => void start()}>
+        <Button size="lg" variant="primary" onClick={() => void start()}>
           {t("cta")}
-          <ArrowRight size={14} strokeWidth={1.5} aria-hidden />
+          <ArrowRight size={12} strokeWidth={1.5} aria-hidden />
         </Button>
         <Button
-          size="hero"
+          size="lg"
           variant="ghost"
-          className="px-6"
           aria-expanded={manualOpen}
           onClick={() => setManualOpen((open) => !open)}
         >
           {t("manual")}
           {manualOpen ? (
-            <ChevronUp size={13} strokeWidth={1.5} aria-hidden />
+            <ChevronUp size={12} strokeWidth={1.5} aria-hidden />
           ) : (
-            <ChevronDown size={13} strokeWidth={1.5} aria-hidden />
+            <ChevronDown size={12} strokeWidth={1.5} aria-hidden />
           )}
         </Button>
       </section>

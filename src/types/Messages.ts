@@ -64,6 +64,7 @@ export type Messages = {
     continue: string;
     errorEyebrow: string;
     errorTitle: string;
+    errorOutput: string;
     errorHint: string;
     retry: string;
   };

@@ -27,12 +27,8 @@ export function PlanCard({ plan }: Props) {
           <PlanRow
             icon={PackageCheck}
             title={t("managerTitle", { manager: managerLabel(found.id) })}
-            hint={
-              <>
-                {t("managerHint")}{" "}
-                <span className="font-mono text-mono text-fg-4">{found.path}</span>
-              </>
-            }
+            hint={t("managerHint")}
+            path={found.path}
             chip={t("reused")}
           />
         ) : (

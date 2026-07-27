@@ -64,6 +64,7 @@
     "continue": "CONTINUAR",
     "errorEyebrow": "ALGO FALLÓ",
     "errorTitle": "La instalación no terminó",
+    "errorOutput": "SALIDA DEL INSTALADOR",
     "errorHint": "Puedes intentar de nuevo o ejecutar los comandos tú mismo.",
     "retry": "REINTENTAR"
   },

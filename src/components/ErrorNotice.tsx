@@ -5,7 +5,7 @@ import { useT } from "@/i18n";
 type Props = {
   title: string;
   message: string;
-  onDismiss: () => void;
+  onDismiss?: () => void;
   onRetry?: () => void;
   retryLabel?: string;
 };
@@ -23,7 +23,7 @@ export function ErrorNotice({ title, message, onDismiss, onRetry, retryLabel }: 
           <TriangleAlert size={12} />
           {title}
         </span>
-        <p className="break-all font-body text-sm text-fg-3">{message}</p>
+        <p className="whitespace-pre-line break-all font-body text-sm text-fg-3">{message}</p>
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
@@ -33,9 +33,11 @@ export function ErrorNotice({ title, message, onDismiss, onRetry, retryLabel }: 
             {retryLabel ?? t("retry")}
           </Button>
         ) : null}
-        <Button size="xs" variant="ghost" aria-label={t("dismiss")} onClick={onDismiss}>
-          <X size={12} strokeWidth={1.5} />
-        </Button>
+        {onDismiss ? (
+          <Button size="xs" variant="ghost" aria-label={t("dismiss")} onClick={onDismiss}>
+            <X size={12} strokeWidth={1.5} />
+          </Button>
+        ) : null}
       </div>
     </div>
   );
