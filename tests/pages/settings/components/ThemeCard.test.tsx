@@ -37,6 +37,14 @@ describe("ThemeCard", () => {
     expect(btn?.getAttribute("aria-pressed")).toBe("true");
   });
 
+  it("previews the theme with its own colours", () => {
+    mount(<ThemeCard id="nord" active={false} label="Nord" hint="arctic" swatches={["#2e3440","#eceff4","#88c0d0"]} onClick={vi.fn()} />);
+    const preview = container?.querySelector("[aria-hidden]") as HTMLElement;
+    expect(preview.style.backgroundColor).toBe("#2e3440");
+    const accent = preview.lastElementChild as HTMLElement;
+    expect(accent.style.backgroundColor).toBe("#88c0d0");
+  });
+
   it("calls onClick when clicked", () => {
     const onClick = vi.fn();
     mount(<ThemeCard id="dark" active={false} label="Dark" hint="" swatches={["#000","#111","#222"]} onClick={onClick} />);

@@ -105,6 +105,18 @@ describe("Settings", () => {
     expect(theme.value).toBe("rose");
   });
 
+  it("offers every theme, nord included", () => {
+    render(<Settings />);
+    const cards = container?.querySelectorAll("[data-theme-option]");
+    expect(cards?.length).toBe(5);
+
+    const nord = container?.querySelector('[data-theme-option="nord"]') as HTMLButtonElement | null;
+    act(() => {
+      nord?.click();
+    });
+    expect(theme.value).toBe("nord");
+  });
+
   it("shows the system info block when node is installed", () => {
     setNode({
       installed: true,
