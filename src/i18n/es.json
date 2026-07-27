@@ -218,7 +218,7 @@
     "colSource": "FUENTE",
     "colInstalls": "INSTALLS",
     "colToday": "HOY",
-    "colTrend": "SCORE",
+    "colTrend": "CAMBIO",
     "colActions": "ACCIONES",
     "install": "INSTALAR",
     "installing": "INSTALANDO",

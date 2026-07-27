@@ -1,4 +1,3 @@
-import { CloudDownload } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
@@ -11,7 +10,7 @@ import { Table } from "@/components/Table";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
-import { formatInstalls } from "@/lib/skills";
+import { MetricCell } from "./MetricCell";
 
 type Props = {
   view: ExploreView;
@@ -86,15 +85,7 @@ export function ExploreList({
         header: t(installsColumnKey(view)),
         headerClassName: "text-right",
         cellClassName: "flex flex-col items-end gap-0.5",
-        cell: (result) => {
-          const installs = formatInstalls(result.installs) || String(result.installs || 0);
-          return (
-            <span className="font-mono uppercase tracking-label text-micro text-fg-3 flex items-center gap-1">
-              <CloudDownload size={10} />
-              {installs}
-            </span>
-          );
-        },
+        cell: (result) => <MetricCell view={view} result={result} />,
       },
       {
         key: "actions",
