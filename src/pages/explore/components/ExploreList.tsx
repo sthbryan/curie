@@ -33,6 +33,7 @@ function installsColumnKey(view: ExploreView): string {
 }
 
 const EXPLORE_GRID = "grid-cols-[2.5rem_minmax(0,1.2fr)_minmax(0,1fr)_5.5rem_7rem]";
+const ROW_HEIGHT = 61;
 
 export function ExploreList({
   view,
@@ -136,12 +137,14 @@ export function ExploreList({
           columns={columns}
           rows={skills}
           gridTemplate={EXPLORE_GRID}
+          rowHeight={ROW_HEIGHT}
           getRowKey={(r) => r.id}
+          viewportClassName="pr-1"
         />
         {hasMore ? (
-          <div className="flex justify-center pt-6">
+          <div className="flex shrink-0 justify-center border-t border-border pt-4">
             <Button
-              size="md"
+              size="sm"
               variant="outline"
               onClick={onLoadMore}
               disabled={loadingMore || installBusy}

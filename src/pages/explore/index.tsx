@@ -89,9 +89,9 @@ export function Explore() {
   };
 
   return (
-    <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
-        <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
+    <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-8 px-10 pt-12 pb-8">
+        <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>
             <div className="flex flex-wrap items-end justify-between gap-4">
@@ -134,7 +134,7 @@ export function Explore() {
 
         <motion.section
           {...fadeUp(0.05)}
-          className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4"
+          className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border pb-4"
         >
           <div className="flex">
             {VIEWS.map((v) => {
@@ -170,7 +170,7 @@ export function Explore() {
           </div>
         </motion.section>
 
-        <section className="flex flex-col">
+        <section className="flex min-h-0 flex-1 flex-col">
           <ExploreList
             view={view}
             loading={loading}

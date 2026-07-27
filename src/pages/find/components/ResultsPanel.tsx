@@ -26,6 +26,7 @@ type Props = {
 };
 
 const FIND_GRID = "grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_4.5rem_7rem]";
+const ROW_HEIGHT = 61;
 
 export function ResultsPanel({
   showHint,
@@ -130,7 +131,14 @@ export function ResultsPanel({
       </Case>
 
       <Case condition={results.length > 0}>
-        <Table columns={columns} rows={results} gridTemplate={FIND_GRID} getRowKey={(r) => r.id} />
+        <Table
+          columns={columns}
+          rows={results}
+          gridTemplate={FIND_GRID}
+          rowHeight={ROW_HEIGHT}
+          getRowKey={(r) => r.id}
+          viewportClassName="pr-1"
+        />
       </Case>
 
       <Default>{null}</Default>

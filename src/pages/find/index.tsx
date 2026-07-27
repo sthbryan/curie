@@ -92,9 +92,9 @@ export function Find() {
   else if (showResults) statusLabel = t("results", { n: findResults.length });
 
   return (
-    <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
-        <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
+    <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-8 px-10 pt-12 pb-8">
+        <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
@@ -123,7 +123,7 @@ export function Find() {
 
         <motion.section
           {...fadeUp(0.05)}
-          className="flex flex-wrap items-end gap-3 border-b border-border pb-4"
+          className="flex shrink-0 flex-wrap items-end gap-3 border-b border-border pb-4"
         >
           <Input
             ref={inputRef}
@@ -161,7 +161,7 @@ export function Find() {
           </span>
         </motion.section>
 
-        <section className="flex flex-col">
+        <section className="flex min-h-0 flex-1 flex-col">
           <ResultsPanel
             showHint={showHint}
             loading={findLoading}
