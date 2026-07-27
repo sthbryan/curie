@@ -42,8 +42,10 @@ describe("t", () => {
     expect(t("es", "nav.home")).toBe("INICIO");
     expect(t("en", "setup.cta")).toBe("DO IT FOR ME");
     expect(t("es", "setup.cta")).toBe("HAZLO POR MÍ");
-    expect(t("en", "stages.download")).toBe("Downloading Volta installer");
-    expect(t("es", "stages.download")).toBe("Descargando instalador de Volta");
+    expect(t("en", "setup.steps.volta")).toBe("Installing Volta");
+    expect(t("es", "setup.steps.volta")).toBe("Instalando Volta");
+    expect(t("en", "setup.steps.node", { manager: "fnm" })).toBe("Installing Node.js with fnm");
+    expect(t("es", "setup.steps.node", { manager: "fnm" })).toBe("Instalando Node.js con fnm");
     expect(t("en", "status.node")).toBe("NODE");
     expect(t("es", "status.agents")).toBe("AGENTES");
     expect(t("en", "settings.themeRose")).toBe("ROSE");
