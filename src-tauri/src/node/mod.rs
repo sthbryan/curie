@@ -1,6 +1,7 @@
 mod detect;
 mod install;
 mod manager;
+mod volta;
 
 pub use detect::{detect_node_info, NodeInfo};
 pub use install::{build_plan, install_node_impl, SetupPlan};

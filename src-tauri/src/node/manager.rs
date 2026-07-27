@@ -23,7 +23,8 @@ pub const MANAGERS: &[Manager] = &[
         id: "volta",
         binary: "volta",
         files: &["~/.volta/bin/volta"],
-        install: "volta install node",
+        install: "if command -v volta >/dev/null 2>&1; then volta install node; \
+                  else \"$HOME/.volta/bin/volta\" install node; fi",
     },
     Manager {
         id: "fnm",
@@ -161,10 +162,9 @@ mod tests {
 
     #[test]
     fn looks_up_managers_by_id() {
-        assert_eq!(
-            manager_by_id("volta").map(|m| m.install),
-            Some("volta install node")
-        );
+        assert!(manager_by_id("volta")
+            .map(|m| m.install.contains("volta\" install node"))
+            .unwrap_or(false));
         assert_eq!(
             manager_by_id("homebrew").map(|m| m.install),
             Some("brew install node")

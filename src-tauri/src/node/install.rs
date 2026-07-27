@@ -1,5 +1,6 @@
 use super::detect::detect_node_info;
 use super::manager::{detect_manager, manager_by_id, ManagerInfo, VOLTA_BOOTSTRAP};
+use super::volta::install_volta;
 use super::NodeInfo;
 use serde::Serialize;
 use std::process::Command;
@@ -78,7 +79,7 @@ where
         Some(found) => found.id,
         None => {
             on_progress("volta", "Installing Volta", false);
-            run(VOLTA_BOOTSTRAP)?;
+            install_volta()?;
             "volta".to_string()
         }
     };
