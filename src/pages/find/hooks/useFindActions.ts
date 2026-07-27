@@ -1,29 +1,21 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useRef, useState } from "react";
-import { toast } from "sonner";
-import type { SkillInstallResult, SkillSearchResult } from "@/components/types";
-import { t } from "@/i18n";
-import { loadGlobalSkills } from "@/lib/boot";
+import type { SkillSearchResult } from "@/components/types";
 import { errorMessage } from "@/lib/errors";
-import { lang } from "@/store/system";
+import { type SkillInstall, useSkillInstall } from "@/lib/useSkillInstall";
 
-export type FindActions = {
+export type FindActions = SkillInstall & {
   results: SkillSearchResult[];
   loading: boolean;
   error: string | null;
-  installing: string | null;
-  installError: string | null;
   search: (query: string, owner: string) => Promise<void>;
-  install: (pkg: string) => Promise<void>;
-  dismissInstallError: () => void;
 };
 
 export function useFindActions(): FindActions {
   const [results, setResults] = useState<SkillSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [installing, setInstalling] = useState<string | null>(null);
-  const [installError, setInstallError] = useState<string | null>(null);
+  const { installing, installError, install, dismissInstallError } = useSkillInstall();
 
   const latestSearchId = useRef(0);
 
@@ -55,25 +47,6 @@ export function useFindActions(): FindActions {
     } finally {
       if (id === latestSearchId.current) setLoading(false);
     }
-  }, []);
-
-  const install = useCallback(async (pkg: string) => {
-    setInstalling(pkg);
-    setInstallError(null);
-    try {
-      await invoke<SkillInstallResult>("add_skill", { package: pkg });
-      toast.success(t(lang.value, "toast.installed", { name: pkg }));
-      await loadGlobalSkills({ checkUpdates: true });
-    } catch (e) {
-      setInstallError(errorMessage(e));
-      throw e;
-    } finally {
-      setInstalling(null);
-    }
-  }, []);
-
-  const dismissInstallError = useCallback(() => {
-    setInstallError(null);
   }, []);
 
   return {

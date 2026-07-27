@@ -1,18 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useRef, useState } from "react";
-import { toast } from "sonner";
-import type {
-  ExplorePage,
-  ExploreView,
-  SkillExploreResult,
-  SkillInstallResult,
-} from "@/components/types";
-import { t } from "@/i18n";
-import { loadGlobalSkills } from "@/lib/boot";
+import type { ExplorePage, ExploreView, SkillExploreResult } from "@/components/types";
 import { errorMessage } from "@/lib/errors";
-import { lang } from "@/store/system";
+import { type SkillInstall, useSkillInstall } from "@/lib/useSkillInstall";
 
-export type ExploreActions = {
+export type ExploreActions = SkillInstall & {
   skills: SkillExploreResult[];
   view: ExploreView;
   total: number;
@@ -20,13 +12,9 @@ export type ExploreActions = {
   loading: boolean;
   loadingMore: boolean;
   error: string | null;
-  installing: string | null;
-  installError: string | null;
   setView: (view: ExploreView) => void;
   load: (view?: ExploreView) => Promise<void>;
   loadMore: () => Promise<void>;
-  install: (pkg: string) => Promise<void>;
-  dismissInstallError: () => void;
 };
 
 export function useExploreActions(initialView: ExploreView = "hot"): ExploreActions {
@@ -38,8 +26,7 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [installing, setInstalling] = useState<string | null>(null);
-  const [installError, setInstallError] = useState<string | null>(null);
+  const { installing, installError, install, dismissInstallError } = useSkillInstall();
 
   const latestLoadId = useRef(0);
   const viewRef = useRef(view);
@@ -105,25 +92,6 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
       if (id === latestLoadId.current) setLoadingMore(false);
     }
   }, [applyPage, hasMore, loading, loadingMore, page]);
-
-  const install = useCallback(async (pkg: string) => {
-    setInstalling(pkg);
-    setInstallError(null);
-    try {
-      await invoke<SkillInstallResult>("add_skill", { package: pkg });
-      toast.success(t(lang.value, "toast.installed", { name: pkg }));
-      await loadGlobalSkills({ checkUpdates: true });
-    } catch (e) {
-      setInstallError(errorMessage(e));
-      throw e;
-    } finally {
-      setInstalling(null);
-    }
-  }, []);
-
-  const dismissInstallError = useCallback(() => {
-    setInstallError(null);
-  }, []);
 
   return {
     skills,
