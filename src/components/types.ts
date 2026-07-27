@@ -1,4 +1,4 @@
-export type ThemeMode = "dark" | "light" | "rose" | "dawn" | "nord";
+export type ThemeMode = "dark" | "rose" | "nord" | "light" | "dawn" | "snow";
 export type ReducedMotionPref = "user" | "always" | "never";
 export type View = "home" | "installed" | "marketplace" | "search" | "settings";
 
@@ -139,8 +139,9 @@ export const THEME_OPTIONS: {
   swatches: [string, string, string];
 }[] = [
   { id: "dark", swatches: ["#0a0a0a", "#f5f5f3", "#d71921"] },
-  { id: "light", swatches: ["#fafaf8", "#18181b", "#c2151c"] },
   { id: "rose", swatches: ["#191724", "#e0def4", "#eb6f92"] },
-  { id: "dawn", swatches: ["#faf4ed", "#575279", "#b4637a"] },
   { id: "nord", swatches: ["#2e3440", "#eceff4", "#88c0d0"] },
+  { id: "light", swatches: ["#fafaf8", "#18181b", "#c2151c"] },
+  { id: "dawn", swatches: ["#faf4ed", "#575279", "#b4637a"] },
+  { id: "snow", swatches: ["#eceff4", "#2e3440", "#456590"] },
 ];
