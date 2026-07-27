@@ -85,7 +85,7 @@
   "installed": {
     "eyebrow": "INSTALADAS · GLOBAL",
     "title": "Skills",
-    "subtitle": "{n} skills globales gestionadas con npx skills",
+    "subtitle": "{n} skills instaladas globalmente",
     "updatesHint": "{n} con updates",
     "refresh": "REFRESCAR",
     "refreshing": "REFRESCANDO…",
@@ -115,7 +115,7 @@
     "local": "local",
     "noAgents": "SIN HERRAMIENTAS",
     "empty": "No hay skills globales instaladas",
-    "emptyHint": "Instala una skill con npx skills para verla aquí.",
+    "emptyHint": "Instala una skill para verla aquí.",
     "noMatches": "Ninguna skill coincide con este filtro",
     "filterAgent": "HERRAMIENTA",
     "clearFilters": "LIMPIAR",
@@ -239,7 +239,7 @@
     "emptyHint": "Prueba otro ranking o busca con Buscar",
     "error": "No se pudo cargar explorar",
     "installError": "Falló la instalación",
-    "packageHint": "Instala global con npx skills add -g -y"
+    "packageHint": "Se instalan globalmente en tu dispositivo"
   },
   "status": {
     "node": "NODE",

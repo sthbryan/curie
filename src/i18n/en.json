@@ -85,7 +85,7 @@
   "installed": {
     "eyebrow": "INSTALLED · GLOBAL",
     "title": "Skills",
-    "subtitle": "{n} global skills managed by npx skills",
+    "subtitle": "{n} skills installed globally",
     "updatesHint": "{n} with updates",
     "refresh": "REFRESH",
     "refreshing": "REFRESHING…",
@@ -115,7 +115,7 @@
     "local": "local",
     "noAgents": "NO TOOLS",
     "empty": "No global skills installed",
-    "emptyHint": "Install a skill with npx skills to see it here.",
+    "emptyHint": "Install a skill to see it here.",
     "noMatches": "No skills match this filter",
     "filterAgent": "TOOL",
     "clearFilters": "CLEAR",
@@ -239,7 +239,7 @@
     "emptyHint": "Try another board or search with Find",
     "error": "Could not load explore",
     "installError": "Install failed",
-    "packageHint": "Will install globally in your device"
+    "packageHint": "Installs globally on your device"
   },
   "status": {
     "node": "NODE",
