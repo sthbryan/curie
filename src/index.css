@@ -118,6 +118,29 @@
   --color-info-fg: #faf4ed;
 }
 
+:root[data-theme="nord"] {
+  --color-bg: #2e3440;
+  --color-surface: #333a47;
+  --color-surface-hover: #3b4252;
+  --color-surface-tint: #373e4c;
+  --color-border: #3b4252;
+  --color-border-strong: #4c566a;
+  --color-fg: #eceff4;
+  --color-fg-2: #d8dee9;
+  --color-fg-3: #97a1b4;
+  --color-fg-4: #7b8497;
+  --color-accent: #88c0d0;
+  --color-accent-fg: #2e3440;
+  --color-success: #a3be8c;
+  --color-success-fg: #2e3440;
+  --color-error: #bf616a;
+  --color-error-fg: #2e3440;
+  --color-warning: #ebcb8b;
+  --color-warning-fg: #2e3440;
+  --color-info: #81a1c1;
+  --color-info-fg: #2e3440;
+}
+
 @layer base {
   html,
   body,

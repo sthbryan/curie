@@ -1,4 +1,4 @@
-export type ThemeMode = "dark" | "light" | "rose" | "dawn";
+export type ThemeMode = "dark" | "light" | "rose" | "dawn" | "nord";
 export type ReducedMotionPref = "user" | "always" | "never";
 export type View = "home" | "installed" | "marketplace" | "search" | "settings";
 
@@ -142,4 +142,5 @@ export const THEME_OPTIONS: {
   { id: "light", swatches: ["#fafaf8", "#18181b", "#c2151c"] },
   { id: "rose", swatches: ["#191724", "#e0def4", "#eb6f92"] },
   { id: "dawn", swatches: ["#faf4ed", "#575279", "#b4637a"] },
+  { id: "nord", swatches: ["#2e3440", "#eceff4", "#88c0d0"] },
 ];
