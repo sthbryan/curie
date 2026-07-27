@@ -285,6 +285,11 @@ export type Messages = {
     updateInstallSuccess: string;
     updateInstallFailed: string;
     updateOpenFallback: string;
+    updates: string;
+    updateCheckedAt: string;
+    updateNeverChecked: string;
+    updateNeverCheckedHint: string;
+    updateFailed: string;
   };
   toast: {
     installed: string;

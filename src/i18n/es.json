@@ -284,7 +284,12 @@
     "updateInstalling": "INSTALANDO…",
     "updateInstallSuccess": "Actualización instalada — reiniciando…",
     "updateInstallFailed": "No se pudo instalar la actualización automáticamente",
-    "updateOpenFallback": "ABRIR GITHUB"
+    "updateOpenFallback": "ABRIR GITHUB",
+    "updates": "ACTUALIZACIONES",
+    "updateCheckedAt": "Comprobado {when}",
+    "updateNeverChecked": "Sin comprobar",
+    "updateNeverCheckedHint": "Comprobá si hay una versión más nueva.",
+    "updateFailed": "No se pudo buscar actualizaciones"
   },
   "toast": {
     "installed": "Instalado {name}",
