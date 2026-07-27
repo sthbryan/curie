@@ -95,9 +95,16 @@ function bumpCargoToml(path, version) {
 
 let stdinBuf = "";
 const decoder = new TextDecoder();
-const stdinReader = Bun.stdin.stream().getReader();
+let stdinReader = null;
+
+function closeStdin() {
+  if (!stdinReader) return;
+  stdinReader.cancel().catch(() => {});
+  stdinReader = null;
+}
 
 async function promptLine(question) {
+  stdinReader ??= Bun.stdin.stream().getReader();
   process.stdout.write(question);
   while (true) {
     const nl = stdinBuf.indexOf("\n");
@@ -204,6 +211,7 @@ if (bumpArg) {
 }
 
 const ok = await confirm(next, tag);
+closeStdin();
 if (!ok) {
   console.log(`\n   ${paint(c.dim, "aborted")}\n`);
   process.exit(0);
