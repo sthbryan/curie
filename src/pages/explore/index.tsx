@@ -137,7 +137,7 @@ export function Explore() {
           className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4"
         >
           <div className="flex">
-            {VIEWS.map((v, index) => {
+            {VIEWS.map((v) => {
               const handlePickView = () => {
                 setView(v);
               };
@@ -147,7 +147,6 @@ export function Explore() {
                   active={view === v}
                   label={t(`view.${v === "all-time" ? "allTime" : v}`)}
                   onClick={handlePickView}
-                  isLast={index === VIEWS.length - 1}
                 />
               );
             })}
