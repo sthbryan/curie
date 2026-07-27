@@ -3,7 +3,7 @@ import { Field } from "@/components/Field";
 import { cn } from "@/lib/cn";
 
 export const CONTROL_CLASS =
-  "h-10 w-full rounded-sm border border-border-strong bg-bg px-3 font-mono text-mono text-fg outline-none placeholder:text-fg-4 focus:border-fg-3";
+  "h-10 w-full rounded-sm border border-border-strong bg-bg px-3 font-mono text-mono text-fg outline-none placeholder:text-fg-4 focus:border-fg-3 [&::-webkit-search-cancel-button]:appearance-none";
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "className"> & {
   label: string;

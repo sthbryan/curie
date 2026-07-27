@@ -1,8 +1,11 @@
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { motion } from "motion/react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Else, If, Then, When } from "react-if";
+import { When } from "react-if";
+import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
@@ -16,6 +19,7 @@ const DEBOUNCE_MS = 280;
 
 export function Find() {
   const t = useT("find");
+  const [, navigate] = useLocation();
   const {
     results: findResults,
     loading: findLoading,
@@ -25,11 +29,13 @@ export function Find() {
     search: runSearch,
     install: runInstall,
     dismissInstallError,
+    dismissError,
   } = useFindActions();
 
   const [query, setQuery] = useState("");
   const [owner, setOwner] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const debounce = useRef(0);
   const installBusy = installingPackage !== null;
 
   useEffect(() => {
@@ -37,10 +43,10 @@ export function Find() {
   }, []);
 
   useEffect(() => {
-    const handle = window.setTimeout(() => {
+    debounce.current = window.setTimeout(() => {
       void runSearch(query, owner);
     }, DEBOUNCE_MS);
-    return () => window.clearTimeout(handle);
+    return () => window.clearTimeout(debounce.current);
   }, [query, owner, runSearch]);
 
   const installedPackages = useMemo(
@@ -57,12 +63,23 @@ export function Find() {
     });
   };
 
-  const handleDismissErrors = () => {
-    if (installError) dismissInstallError();
-    if (findError) void runSearch(query, owner);
-  };
   const handleSearch = () => {
+    window.clearTimeout(debounce.current);
     void runSearch(query, owner);
+  };
+
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    handleSearch();
+  };
+
+  const handleGoExplore = () => navigate("/marketplace");
+
+  const handleClear = () => {
+    setQuery("");
+    setOwner("");
+    inputRef.current?.focus();
   };
 
   const qLen = query.trim().length;
@@ -75,9 +92,9 @@ export function Find() {
   else if (showResults) statusLabel = t("results", { n: findResults.length });
 
   return (
-    <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
-        <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
+    <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-8 px-10 pt-12 pb-8">
+        <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>
             <h2 className="font-display text-heading font-bold tracking-tight text-fg">
@@ -86,72 +103,65 @@ export function Find() {
             <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
           </div>
 
-          <When condition={Boolean(findError || installError)}>
-            <div className="flex items-start justify-between gap-4 border border-accent/30 bg-surface-tint px-4 py-3">
-              <div className="min-w-0 flex flex-col gap-1">
-                <span className="font-mono uppercase tracking-label text-micro text-accent">
-                  <If condition={Boolean(findError)}>
-                    <Then>{t("error")}</Then>
-                    <Else>{t("installError")}</Else>
-                  </If>
-                </span>
-                <p className="font-body text-sm text-fg-3 break-all">{findError ?? installError}</p>
-              </div>
-              <Button
-                size="xs"
-                variant="link"
-                className="shrink-0 px-0"
-                aria-label={t("error")}
-                onClick={handleDismissErrors}
-              >
-                <X size={10} />
-              </Button>
-            </div>
+          <When condition={findError !== null}>
+            <ErrorNotice
+              title={t("error")}
+              message={findError ?? ""}
+              onRetry={handleSearch}
+              onDismiss={dismissError}
+            />
+          </When>
+
+          <When condition={installError !== null}>
+            <ErrorNotice
+              title={t("installError")}
+              message={installError ?? ""}
+              onDismiss={dismissInstallError}
+            />
           </When>
         </motion.section>
 
-        <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-            <Input
-              ref={inputRef}
-              label={t("query")}
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t("queryPlaceholder")}
-            />
-            <Input
-              label={t("owner")}
-              type="text"
-              value={owner}
-              onChange={(e) => setOwner(e.target.value)}
-              placeholder={t("ownerPlaceholder")}
-              spellCheck={false}
-              wrapperClassName="w-full sm:w-48 shrink-0"
-            />
-            <Button
-              size="lg"
-              variant="primary"
-              className="h-10 shrink-0 px-4"
-              onClick={handleSearch}
-              disabled={findLoading || qLen < 2}
-            >
-              <Search size={14} />
-              <If condition={findLoading}>
-                <Then>{t("searching")}</Then>
-                <Else>{t("search")}</Else>
-              </If>
-            </Button>
-          </div>
+        <motion.section
+          {...fadeUp(0.05)}
+          className="flex shrink-0 flex-wrap items-end gap-3 border-b border-border pb-4"
+        >
+          <Input
+            ref={inputRef}
+            label={t("query")}
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={t("queryPlaceholder")}
+            wrapperClassName="min-w-64 flex-1"
+          />
+          <Input
+            label={t("owner")}
+            type="text"
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={t("ownerPlaceholder")}
+            spellCheck={false}
+            wrapperClassName="w-full sm:w-48 shrink-0"
+          />
 
-          <div className="flex items-center justify-between gap-4">
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {statusLabel}
-            </span>
-          </div>
+          <When condition={qLen > 0 || owner.length > 0}>
+            <Button size="sm" variant="ghost" className="h-10" onClick={handleClear}>
+              <X size={12} />
+              {t("clear")}
+            </Button>
+          </When>
+
+          <span
+            aria-live="polite"
+            className="ml-auto flex h-10 items-center border-l border-border pl-4 font-mono uppercase tracking-label text-micro text-fg-4"
+          >
+            {statusLabel}
+          </span>
         </motion.section>
 
-        <section className="flex flex-col">
+        <section className="flex min-h-0 flex-1 flex-col">
           <ResultsPanel
             showHint={showHint}
             loading={findLoading}
@@ -161,6 +171,7 @@ export function Find() {
             installingPackage={installingPackage}
             installBusy={installBusy}
             onInstall={handleInstall}
+            onGoExplore={handleGoExplore}
           />
         </section>
       </div>

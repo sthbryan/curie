@@ -32,17 +32,17 @@ describe("ActionProgress", () => {
     expect(container?.textContent).toBe("");
   });
 
-  it("renders a progressbar when active", () => {
+  it("names what it is doing instead of inventing a percentage", () => {
     mount(<ActionProgress {...base} active={true} />);
-    const bar = container?.querySelector('[role="progressbar"]');
-    expect(bar).not.toBeNull();
-    expect(bar?.getAttribute("aria-valuemin")).toBe("0");
-    expect(bar?.getAttribute("aria-valuemax")).toBe("100");
-    expect(container?.textContent).toMatch(/\d+%/);
+    const status = container?.querySelector('[role="status"]');
+    expect(status).not.toBeNull();
+    expect(status?.getAttribute("aria-live")).toBe("polite");
+    expect(container?.textContent).toContain("UPDATING");
+    expect(container?.textContent).not.toMatch(/\d+%/);
   });
 
   it("applies className", () => {
     mount(<ActionProgress {...base} active={true} className="custom" />);
-    expect(container?.querySelector('[role="progressbar"]')?.classList.contains("custom")).toBe(true);
+    expect(container?.querySelector('[role="status"]')?.classList.contains("custom")).toBe(true);
   });
 });

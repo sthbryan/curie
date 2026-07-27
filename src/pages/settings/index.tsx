@@ -80,7 +80,6 @@ export function Settings() {
                     active={lang.value === "es"}
                     label={t("languageES")}
                     onClick={handleLangES}
-                    isLast
                   />
                 </div>
               </div>
@@ -114,7 +113,7 @@ export function Settings() {
 
             <Row label={t("reducedMotion")}>
               <div className="flex">
-                {REDUCED_MOTION_OPTIONS.map((opt, index) => {
+                {REDUCED_MOTION_OPTIONS.map((opt) => {
                   const handlePickMotion = () => {
                     setReducedMotion(opt);
                   };
@@ -124,7 +123,6 @@ export function Settings() {
                       active={reducedMotion.value === opt}
                       label={t(REDUCED_MOTION_LABEL[opt])}
                       onClick={handlePickMotion}
-                      isLast={index === REDUCED_MOTION_OPTIONS.length - 1}
                     />
                   );
                 })}

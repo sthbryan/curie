@@ -7,6 +7,8 @@ export type Messages = {
     loadingSkills: string;
     checkingUpdates: string;
     skillUpdates: string;
+    retry: string;
+    dismiss: string;
   };
   error: {
     eyebrow: string;
@@ -133,7 +135,8 @@ export type Messages = {
     queryPlaceholder: string;
     owner: string;
     ownerPlaceholder: string;
-    search: string;
+    clear: string;
+    goExplore: string;
     searching: string;
     results: string;
     colName: string;
@@ -145,6 +148,7 @@ export type Messages = {
     installed: string;
     open: string;
     hint: string;
+    hintExplore: string;
     empty: string;
     emptyHint: string;
     error: string;

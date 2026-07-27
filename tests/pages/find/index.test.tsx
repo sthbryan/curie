@@ -115,7 +115,7 @@ describe("Find", () => {
     expect(container?.textContent).toContain("impeccable");
   });
 
-  it("renders the error and dismisses it on close", async () => {
+  it("renders the error and dismisses it without searching again", async () => {
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "find_skills") return Promise.reject("not found");
       return Promise.resolve(undefined);
@@ -132,14 +132,76 @@ describe("Find", () => {
 
     expect(container?.textContent).toContain("not found");
 
-    const closeBtn = container?.querySelector('button[aria-label="Error"]') as HTMLButtonElement | null;
-    expect(closeBtn).toBeDefined();
+    const closeBtn = container?.querySelector(
+      'button[aria-label="Dismiss"]',
+    ) as HTMLButtonElement | null;
+    expect(closeBtn).not.toBeNull();
+
+    const callsBefore = invokeMock.mock.calls.length;
     await act(async () => {
       closeBtn?.click();
       await new Promise((r) => setTimeout(r, 320));
     });
-    // After close: installError is null, but findError is set so runSearch is re-invoked.
-    // The mock still rejects, so the error stays visible. We only assert the button is clickable.
-    expect(closeBtn).toBeDefined();
+
+    expect(container?.textContent).not.toContain("not found");
+    expect(invokeMock.mock.calls.length).toBe(callsBefore);
+  });
+
+  it("searches on Enter without waiting out the debounce", async () => {
+    invokeMock.mockResolvedValue([sample]);
+    render(<Find />);
+
+    const input = container?.querySelector('input[type="search"]') as HTMLInputElement | null;
+    act(() => {
+      if (input) setControlledValue(input, "impeccable");
+    });
+
+    await act(async () => {
+      input?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      await Promise.resolve();
+    });
+
+    expect(invokeMock).toHaveBeenCalledWith("find_skills", {
+      query: "impeccable",
+      owner: null,
+    });
+
+    // The debounce was cancelled, so waiting it out adds no second call.
+    const calls = invokeMock.mock.calls.filter(([cmd]) => cmd === "find_skills").length;
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 320));
+    });
+    expect(invokeMock.mock.calls.filter(([cmd]) => cmd === "find_skills").length).toBe(calls);
+  });
+
+  it("clears both fields at once", async () => {
+    invokeMock.mockResolvedValue([sample]);
+    render(<Find />);
+
+    const input = container?.querySelector('input[type="search"]') as HTMLInputElement | null;
+    act(() => {
+      if (input) setControlledValue(input, "impeccable");
+    });
+
+    const clear = Array.from(container?.querySelectorAll("button") ?? []).find((b) =>
+      b.textContent?.includes("CLEAR"),
+    );
+    expect(clear).toBeDefined();
+
+    await act(async () => {
+      clear?.click();
+      await new Promise((r) => setTimeout(r, 320));
+    });
+
+    expect(input?.value).toBe("");
+    expect(container?.textContent).toMatch(/type at least 2/i);
+  });
+
+  it("points an empty query at the rankings", () => {
+    render(<Find />);
+    const explore = Array.from(container?.querySelectorAll("button") ?? []).find((b) =>
+      b.textContent?.includes("EXPLORE"),
+    );
+    expect(explore).toBeDefined();
   });
 });

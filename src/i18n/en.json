@@ -6,7 +6,9 @@
     "sortedDesc": "SORTED DESCENDING",
     "loadingSkills": "LOADING SKILLS",
     "checkingUpdates": "CHECKING UPDATES",
-    "skillUpdates": "{n} UPDATES"
+    "skillUpdates": "{n} UPDATES",
+    "retry": "RETRY",
+    "dismiss": "Dismiss"
   },
   "error": {
     "eyebrow": "SOMETHING WENT WRONG",
@@ -83,7 +85,7 @@
   "installed": {
     "eyebrow": "INSTALLED · GLOBAL",
     "title": "Skills",
-    "subtitle": "{n} global skills managed by npx skills",
+    "subtitle": "{n} skills installed globally",
     "updatesHint": "{n} with updates",
     "refresh": "REFRESH",
     "refreshing": "REFRESHING…",
@@ -113,7 +115,7 @@
     "local": "local",
     "noAgents": "NO TOOLS",
     "empty": "No global skills installed",
-    "emptyHint": "Install a skill with npx skills to see it here.",
+    "emptyHint": "Install a skill to see it here.",
     "noMatches": "No skills match this filter",
     "filterAgent": "TOOL",
     "clearFilters": "CLEAR",
@@ -128,12 +130,11 @@
   "find": {
     "eyebrow": "FIND · SKILLS.SH",
     "title": "Find skills",
-    "subtitle": "Search the registry used by npx skills find",
+    "subtitle": "Search the skills registry",
     "query": "Search query",
     "queryPlaceholder": "typescript, react, design…",
     "owner": "Owner filter",
     "ownerPlaceholder": "owner (optional)",
-    "search": "SEARCH",
     "searching": "SEARCHING…",
     "results": "{n} RESULTS",
     "colName": "SKILL",
@@ -149,7 +150,10 @@
     "emptyHint": "Try a different query or clear the owner filter",
     "error": "Search failed",
     "installError": "Install failed",
-    "packageHint": "Installs globally with npx skills add -g -y"
+    "packageHint": "INSTALLS GLOBALLY",
+    "clear": "CLEAR",
+    "goExplore": "EXPLORE",
+    "hintExplore": "Or browse the rankings if you don't know what to look for yet"
   },
   "custom": {
     "eyebrow": "CUSTOM · DIRECT INSTALL",
@@ -216,7 +220,7 @@
     "colSource": "SOURCE",
     "colInstalls": "INSTALLS",
     "colToday": "TODAY",
-    "colTrend": "SCORE",
+    "colTrend": "CHANGE",
     "colActions": "ACTIONS",
     "install": "INSTALL",
     "installing": "INSTALLING",
@@ -235,7 +239,7 @@
     "emptyHint": "Try another board or search with Find",
     "error": "Could not load explore",
     "installError": "Install failed",
-    "packageHint": "Will install globally in your device"
+    "packageHint": "INSTALLS GLOBALLY"
   },
   "status": {
     "node": "NODE",

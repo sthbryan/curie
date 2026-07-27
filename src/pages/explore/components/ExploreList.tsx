@@ -1,16 +1,16 @@
-import { openUrl } from "@tauri-apps/plugin-opener";
-import { CloudDownload, Plus, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
-import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
+import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
+import { SkillNameCell } from "@/components/discovery/SkillNameCell";
+import { SkillSourceCell } from "@/components/discovery/SkillSourceCell";
 import type { ColumnDef } from "@/components/Table";
 import { Table } from "@/components/Table";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
-import { formatInstalls } from "@/lib/skills";
+import { MetricCell } from "./MetricCell";
 
 type Props = {
   view: ExploreView;
@@ -33,6 +33,7 @@ function installsColumnKey(view: ExploreView): string {
 }
 
 const EXPLORE_GRID = "grid-cols-[2.5rem_minmax(0,1.2fr)_minmax(0,1fr)_5.5rem_7rem]";
+const ROW_HEIGHT = 61;
 
 export function ExploreList({
   view,
@@ -66,81 +67,43 @@ export function ExploreList({
         header: t("colName"),
         cellClassName: "min-w-0 flex flex-col gap-1",
         cell: (result) => (
-          <>
-            <span className="font-mono text-mono text-fg truncate">{result.name}</span>
-            <span className="font-mono text-micro text-fg-4 truncate">{result.package}</span>
-          </>
+          <SkillNameCell
+            ns="explore"
+            name={result.name}
+            pkg={result.package}
+            installed={installedPackages.has(result.package)}
+            official={result.isOfficial}
+          />
         ),
       },
       {
         key: "source",
         header: t("colSource"),
         cellClassName: "min-w-0 flex flex-col gap-1",
-        cell: (result) => {
-          const handleOpen = () => {
-            void openUrl(result.url);
-          };
-          return (
-            <>
-              <span className="font-mono text-mono text-fg-2 truncate">{result.source || "—"}</span>
-              <button
-                type="button"
-                onClick={handleOpen}
-                className="w-fit font-mono uppercase tracking-label text-micro text-fg-4 hover:text-fg truncate text-left flex items-center gap-1"
-              >
-                {t("open")}
-                <SquareArrowOutUpRight size={10} />
-              </button>
-            </>
-          );
-        },
+        cell: (result) => <SkillSourceCell ns="explore" source={result.source} url={result.url} />,
       },
       {
         key: "installs",
         header: t(installsColumnKey(view)),
         headerClassName: "text-right",
         cellClassName: "flex flex-col items-end gap-0.5",
-        cell: (result) => {
-          const installs = formatInstalls(result.installs) || String(result.installs || 0);
-          return (
-            <span className="font-mono uppercase tracking-label text-micro text-fg-3 flex items-center gap-1">
-              <CloudDownload size={10} />
-              {installs}
-            </span>
-          );
-        },
+        cell: (result) => <MetricCell view={view} result={result} />,
       },
       {
         key: "actions",
         header: t("colActions"),
         headerClassName: "text-right",
         cellClassName: "flex justify-end",
-        cell: (result) => {
-          const installed = installedPackages.has(result.package);
-          const installing = installingPackage === result.package;
-
-          const handleInstallPackage = () => {
-            onInstall(result.package);
-          };
-
-          return installed ? (
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {t("installed")}
-            </span>
-          ) : installing ? (
-            <ActionProgress active labelKey="explore.installing" />
-          ) : (
-            <Button
-              size="xs"
-              variant="primary"
-              onClick={handleInstallPackage}
-              disabled={installBusy}
-            >
-              <Plus size={10} />
-              {t("install")}
-            </Button>
-          );
-        },
+        cell: (result) => (
+          <SkillInstallAction
+            ns="explore"
+            pkg={result.package}
+            installed={installedPackages.has(result.package)}
+            installing={installingPackage === result.package}
+            busy={installBusy}
+            onInstall={onInstall}
+          />
+        ),
       },
     ],
     [view, installedPackages, installingPackage, installBusy, onInstall],
@@ -174,20 +137,24 @@ export function ExploreList({
           columns={columns}
           rows={skills}
           gridTemplate={EXPLORE_GRID}
+          rowHeight={ROW_HEIGHT}
           getRowKey={(r) => r.id}
+          viewportClassName="pr-1"
+          footer={
+            hasMore ? (
+              <div className="flex justify-center py-6">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onLoadMore}
+                  disabled={loadingMore || installBusy}
+                >
+                  {loadingMore ? t("loadingMore") : t("loadMore")}
+                </Button>
+              </div>
+            ) : null
+          }
         />
-        {hasMore ? (
-          <div className="flex justify-center pt-6">
-            <Button
-              size="md"
-              variant="outline"
-              onClick={onLoadMore}
-              disabled={loadingMore || installBusy}
-            >
-              {loadingMore ? t("loadingMore") : t("loadMore")}
-            </Button>
-          </div>
-        ) : null}
       </Case>
 
       <Default>{null}</Default>

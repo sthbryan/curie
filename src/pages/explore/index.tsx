@@ -1,11 +1,13 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotionConfig } from "motion/react";
 import { useEffect, useMemo } from "react";
-import { Else, If, Then, When } from "react-if";
+import { When } from "react-if";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
+import { ChoiceButton } from "@/components/ChoiceButton";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import { Label } from "@/components/Label";
 import type { ExploreView } from "@/components/types";
 import { useT } from "@/i18n";
@@ -21,6 +23,7 @@ const VIEWS: ExploreView[] = ["hot", "trending", "all-time"];
 export function Explore() {
   const t = useT("explore");
   const [, navigate] = useLocation();
+  const shouldReduceMotion = useReducedMotionConfig();
   const {
     skills: exploreSkills,
     view,
@@ -36,6 +39,7 @@ export function Explore() {
     loadMore,
     install: runInstall,
     dismissInstallError,
+    dismissError,
   } = useExploreActions("hot");
 
   useEffect(() => {
@@ -66,9 +70,8 @@ export function Explore() {
   const handleOpenSite = () => {
     void openUrl("https://skills.sh");
   };
-  const handleDismissErrors = () => {
-    if (installError) dismissInstallError();
-    if (error) void load(view);
+  const handleRetry = () => {
+    void load(view);
   };
   const tToast = useT();
   const handleRefresh = async () => {
@@ -86,9 +89,9 @@ export function Explore() {
   };
 
   return (
-    <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-10 pt-12 pb-8">
-        <motion.section {...fadeUp(0)} className="flex flex-col gap-4">
+    <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-8 px-10 pt-12 pb-8">
+        <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>
             <div className="flex flex-wrap items-end justify-between gap-4">
@@ -111,66 +114,63 @@ export function Explore() {
             </div>
           </div>
 
-          <When condition={Boolean(error || installError)}>
-            <div className="flex items-start justify-between gap-4 border border-accent/30 bg-surface-tint px-4 py-3">
-              <div className="min-w-0 flex flex-col gap-1">
-                <span className="font-mono uppercase tracking-label text-micro text-accent">
-                  <If condition={Boolean(error)}>
-                    <Then>{t("error")}</Then>
-                    <Else>{t("installError")}</Else>
-                  </If>
-                </span>
-                <p className="font-body text-sm text-fg-3 break-all">{error ?? installError}</p>
-              </div>
-              <Button
-                size="xs"
-                variant="link"
-                className="shrink-0 px-0"
-                onClick={handleDismissErrors}
-              >
-                ×
-              </Button>
-            </div>
+          <When condition={error !== null}>
+            <ErrorNotice
+              title={t("error")}
+              message={error ?? ""}
+              onRetry={handleRetry}
+              onDismiss={dismissError}
+            />
+          </When>
+
+          <When condition={installError !== null}>
+            <ErrorNotice
+              title={t("installError")}
+              message={installError ?? ""}
+              onDismiss={dismissInstallError}
+            />
           </When>
         </motion.section>
 
-        <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex flex-wrap gap-2">
-              {VIEWS.map((v) => {
-                const handlePickView = () => {
-                  setView(v);
-                };
-                return (
-                  <Button
-                    key={v}
-                    size="xs"
-                    variant="outline"
-                    selected={view === v}
-                    onClick={handlePickView}
-                    disabled={loading && view === v}
-                  >
-                    {t(`view.${v === "all-time" ? "allTime" : v}`)}
-                  </Button>
-                );
-              })}
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-                {statusLabel}
-              </span>
-              <Button size="xs" variant="ghost" onClick={handleRefresh} disabled={loading}>
-                <RefreshCw
-                  size={10}
-                  className={cn("transition-transform", loading ? "animate-spin" : "")}
+        <motion.section
+          {...fadeUp(0.05)}
+          className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border pb-4"
+        >
+          <div className="flex">
+            {VIEWS.map((v) => {
+              const handlePickView = () => {
+                setView(v);
+              };
+              return (
+                <ChoiceButton
+                  key={v}
+                  active={view === v}
+                  label={t(`view.${v === "all-time" ? "allTime" : v}`)}
+                  onClick={handlePickView}
                 />
-                {loading ? t("refreshing") : t("refresh")}
-              </Button>
-            </div>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-4">
+            <span
+              aria-live="polite"
+              className="font-mono uppercase tracking-label text-micro text-fg-4"
+            >
+              {statusLabel}
+            </span>
+            <Button size="sm" variant="outline" onClick={handleRefresh} disabled={loading}>
+              <RefreshCw
+                size={11}
+                strokeWidth={1.5}
+                className={cn(loading && !shouldReduceMotion && "animate-spin")}
+              />
+              {loading ? t("refreshing") : t("refresh")}
+            </Button>
           </div>
         </motion.section>
 
-        <section className="flex flex-col">
+        <section className="flex min-h-0 flex-1 flex-col">
           <ExploreList
             view={view}
             loading={loading}

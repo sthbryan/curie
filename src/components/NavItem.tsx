@@ -31,7 +31,7 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
         <span className="absolute top-1/2 left-0 h-5 w-0.5 -translate-y-1/2 bg-fg" aria-hidden />
       ) : null}
 
-      <span className="flex w-8.5 shrink-0 items-center justify-center">
+      <span className="flex w-10 shrink-0 items-center justify-center">
         <Icon
           size={16}
           strokeWidth={1.5}

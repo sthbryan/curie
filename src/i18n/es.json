@@ -6,7 +6,9 @@
     "sortedDesc": "ORDENADO DESCENDENTE",
     "loadingSkills": "CARGANDO SKILLS",
     "checkingUpdates": "BUSCANDO ACTUALIZACIONES",
-    "skillUpdates": "{n} ACTUALIZACIONES"
+    "skillUpdates": "{n} ACTUALIZACIONES",
+    "retry": "REINTENTAR",
+    "dismiss": "Descartar"
   },
   "error": {
     "eyebrow": "ALGO SALIO MAL",
@@ -83,7 +85,7 @@
   "installed": {
     "eyebrow": "INSTALADAS · GLOBAL",
     "title": "Skills",
-    "subtitle": "{n} skills globales gestionadas con npx skills",
+    "subtitle": "{n} skills instaladas globalmente",
     "updatesHint": "{n} con updates",
     "refresh": "REFRESCAR",
     "refreshing": "REFRESCANDO…",
@@ -113,7 +115,7 @@
     "local": "local",
     "noAgents": "SIN HERRAMIENTAS",
     "empty": "No hay skills globales instaladas",
-    "emptyHint": "Instala una skill con npx skills para verla aquí.",
+    "emptyHint": "Instala una skill para verla aquí.",
     "noMatches": "Ninguna skill coincide con este filtro",
     "filterAgent": "HERRAMIENTA",
     "clearFilters": "LIMPIAR",
@@ -128,12 +130,11 @@
   "find": {
     "eyebrow": "BUSCAR · SKILLS.SH",
     "title": "Buscar skills",
-    "subtitle": "Busca skills en el registro de skills",
+    "subtitle": "Busca en el registro de skills",
     "query": "Consulta",
     "queryPlaceholder": "typescript, react, design…",
     "owner": "Filtro de owner",
     "ownerPlaceholder": "owner (opcional)",
-    "search": "BUSCAR",
     "searching": "BUSCANDO…",
     "results": "{n} RESULTADOS",
     "colName": "SKILL",
@@ -149,7 +150,10 @@
     "emptyHint": "Prueba otra consulta o quita el filtro de owner",
     "error": "Falló la búsqueda",
     "installError": "Falló la instalación",
-    "packageHint": "Se instalan globalmente en tu dispositivo"
+    "packageHint": "INSTALACIÓN GLOBAL",
+    "clear": "LIMPIAR",
+    "goExplore": "EXPLORAR",
+    "hintExplore": "O explora los rankings si aún no sabes qué buscar"
   },
   "custom": {
     "eyebrow": "CUSTOM · INSTALACIÓN DIRECTA",
@@ -216,7 +220,7 @@
     "colSource": "FUENTE",
     "colInstalls": "INSTALLS",
     "colToday": "HOY",
-    "colTrend": "SCORE",
+    "colTrend": "CAMBIO",
     "colActions": "ACCIONES",
     "install": "INSTALAR",
     "installing": "INSTALANDO",
@@ -235,7 +239,7 @@
     "emptyHint": "Prueba otro ranking o busca con Buscar",
     "error": "No se pudo cargar explorar",
     "installError": "Falló la instalación",
-    "packageHint": "Instala global con npx skills add -g -y"
+    "packageHint": "INSTALACIÓN GLOBAL"
   },
   "status": {
     "node": "NODE",
