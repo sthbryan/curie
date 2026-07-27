@@ -71,6 +71,7 @@ export function ExploreList({
             name={result.name}
             pkg={result.package}
             installed={installedPackages.has(result.package)}
+            official={result.isOfficial}
           />
         ),
       },
