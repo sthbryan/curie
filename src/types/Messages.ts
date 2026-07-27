@@ -266,6 +266,10 @@ export type Messages = {
     themeNordHint: string;
     themeSnow: string;
     themeSnowHint: string;
+    themeEmber: string;
+    themeEmberHint: string;
+    themeSand: string;
+    themeSandHint: string;
     themeDesc: string;
     reducedMotion: string;
     reducedMotionSystem: string;

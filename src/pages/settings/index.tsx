@@ -22,9 +22,11 @@ const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
   dark: { label: "themeDark", hint: "themeDarkHint" },
   rose: { label: "themeRose", hint: "themeRoseHint" },
   nord: { label: "themeNord", hint: "themeNordHint" },
+  ember: { label: "themeEmber", hint: "themeEmberHint" },
   light: { label: "themeLight", hint: "themeLightHint" },
   dawn: { label: "themeDawn", hint: "themeDawnHint" },
   snow: { label: "themeSnow", hint: "themeSnowHint" },
+  sand: { label: "themeSand", hint: "themeSandHint" },
 };
 
 const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
@@ -88,7 +90,7 @@ export function Settings() {
 
             <div className="flex flex-col gap-3 border-b border-border py-4">
               <span className="font-body text-sm text-fg">{t("theme")}</span>
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
                 {THEME_OPTIONS.map((opt) => {
                   const handlePickTheme = () => {
                     setTheme(opt.id);

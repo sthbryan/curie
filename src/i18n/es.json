@@ -293,7 +293,11 @@
     "themeNord": "NORD",
     "themeNordHint": "ÁRTICO",
     "themeSnow": "SNOW",
-    "themeSnowHint": "ÁRTICO · CLARO"
+    "themeSnowHint": "ÁRTICO · CLARO",
+    "themeEmber": "EMBER",
+    "themeEmberHint": "GRUVBOX",
+    "themeSand": "SAND",
+    "themeSandHint": "GRUVBOX · CLARO"
   },
   "toast": {
     "installed": "Instalado {name}",
