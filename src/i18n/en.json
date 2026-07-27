@@ -6,7 +6,9 @@
     "sortedDesc": "SORTED DESCENDING",
     "loadingSkills": "LOADING SKILLS",
     "checkingUpdates": "CHECKING UPDATES",
-    "skillUpdates": "{n} UPDATES"
+    "skillUpdates": "{n} UPDATES",
+    "retry": "RETRY",
+    "dismiss": "Dismiss"
   },
   "error": {
     "eyebrow": "SOMETHING WENT WRONG",

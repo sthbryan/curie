@@ -6,7 +6,9 @@
     "sortedDesc": "ORDENADO DESCENDENTE",
     "loadingSkills": "CARGANDO SKILLS",
     "checkingUpdates": "BUSCANDO ACTUALIZACIONES",
-    "skillUpdates": "{n} ACTUALIZACIONES"
+    "skillUpdates": "{n} ACTUALIZACIONES",
+    "retry": "REINTENTAR",
+    "dismiss": "Descartar"
   },
   "error": {
     "eyebrow": "ALGO SALIO MAL",

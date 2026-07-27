@@ -2,10 +2,11 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo } from "react";
-import { Else, If, Then, When } from "react-if";
+import { When } from "react-if";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import { Label } from "@/components/Label";
 import type { ExploreView } from "@/components/types";
 import { useT } from "@/i18n";
@@ -36,6 +37,7 @@ export function Explore() {
     loadMore,
     install: runInstall,
     dismissInstallError,
+    dismissError,
   } = useExploreActions("hot");
 
   useEffect(() => {
@@ -66,9 +68,8 @@ export function Explore() {
   const handleOpenSite = () => {
     void openUrl("https://skills.sh");
   };
-  const handleDismissErrors = () => {
-    if (installError) dismissInstallError();
-    if (error) void load(view);
+  const handleRetry = () => {
+    void load(view);
   };
   const tToast = useT();
   const handleRefresh = async () => {
@@ -111,26 +112,21 @@ export function Explore() {
             </div>
           </div>
 
-          <When condition={Boolean(error || installError)}>
-            <div className="flex items-start justify-between gap-4 border border-accent/30 bg-surface-tint px-4 py-3">
-              <div className="min-w-0 flex flex-col gap-1">
-                <span className="font-mono uppercase tracking-label text-micro text-accent">
-                  <If condition={Boolean(error)}>
-                    <Then>{t("error")}</Then>
-                    <Else>{t("installError")}</Else>
-                  </If>
-                </span>
-                <p className="font-body text-sm text-fg-3 break-all">{error ?? installError}</p>
-              </div>
-              <Button
-                size="xs"
-                variant="link"
-                className="shrink-0 px-0"
-                onClick={handleDismissErrors}
-              >
-                ×
-              </Button>
-            </div>
+          <When condition={error !== null}>
+            <ErrorNotice
+              title={t("error")}
+              message={error ?? ""}
+              onRetry={handleRetry}
+              onDismiss={dismissError}
+            />
+          </When>
+
+          <When condition={installError !== null}>
+            <ErrorNotice
+              title={t("installError")}
+              message={installError ?? ""}
+              onDismiss={dismissInstallError}
+            />
           </When>
         </motion.section>
 

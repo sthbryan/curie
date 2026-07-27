@@ -7,6 +7,8 @@ export type Messages = {
     loadingSkills: string;
     checkingUpdates: string;
     skillUpdates: string;
+    retry: string;
+    dismiss: string;
   };
   error: {
     eyebrow: string;

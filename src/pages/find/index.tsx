@@ -1,8 +1,9 @@
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Else, If, Then, When } from "react-if";
 import { Button } from "@/components/Button";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
@@ -25,6 +26,7 @@ export function Find() {
     search: runSearch,
     install: runInstall,
     dismissInstallError,
+    dismissError,
   } = useFindActions();
 
   const [query, setQuery] = useState("");
@@ -57,10 +59,6 @@ export function Find() {
     });
   };
 
-  const handleDismissErrors = () => {
-    if (installError) dismissInstallError();
-    if (findError) void runSearch(query, owner);
-  };
   const handleSearch = () => {
     void runSearch(query, owner);
   };
@@ -86,27 +84,21 @@ export function Find() {
             <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
           </div>
 
-          <When condition={Boolean(findError || installError)}>
-            <div className="flex items-start justify-between gap-4 border border-accent/30 bg-surface-tint px-4 py-3">
-              <div className="min-w-0 flex flex-col gap-1">
-                <span className="font-mono uppercase tracking-label text-micro text-accent">
-                  <If condition={Boolean(findError)}>
-                    <Then>{t("error")}</Then>
-                    <Else>{t("installError")}</Else>
-                  </If>
-                </span>
-                <p className="font-body text-sm text-fg-3 break-all">{findError ?? installError}</p>
-              </div>
-              <Button
-                size="xs"
-                variant="link"
-                className="shrink-0 px-0"
-                aria-label={t("error")}
-                onClick={handleDismissErrors}
-              >
-                <X size={10} />
-              </Button>
-            </div>
+          <When condition={findError !== null}>
+            <ErrorNotice
+              title={t("error")}
+              message={findError ?? ""}
+              onRetry={handleSearch}
+              onDismiss={dismissError}
+            />
+          </When>
+
+          <When condition={installError !== null}>
+            <ErrorNotice
+              title={t("installError")}
+              message={installError ?? ""}
+              onDismiss={dismissInstallError}
+            />
           </When>
         </motion.section>
 

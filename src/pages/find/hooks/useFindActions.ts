@@ -9,6 +9,7 @@ export type FindActions = SkillInstall & {
   loading: boolean;
   error: string | null;
   search: (query: string, owner: string) => Promise<void>;
+  dismissError: () => void;
 };
 
 export function useFindActions(): FindActions {
@@ -49,6 +50,10 @@ export function useFindActions(): FindActions {
     }
   }, []);
 
+  const dismissError = useCallback(() => {
+    setError(null);
+  }, []);
+
   return {
     results,
     loading,
@@ -58,5 +63,6 @@ export function useFindActions(): FindActions {
     search,
     install,
     dismissInstallError,
+    dismissError,
   };
 }

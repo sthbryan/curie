@@ -15,6 +15,7 @@ export type ExploreActions = SkillInstall & {
   setView: (view: ExploreView) => void;
   load: (view?: ExploreView) => Promise<void>;
   loadMore: () => Promise<void>;
+  dismissError: () => void;
 };
 
 export function useExploreActions(initialView: ExploreView = "hot"): ExploreActions {
@@ -93,6 +94,10 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
     }
   }, [applyPage, hasMore, loading, loadingMore, page]);
 
+  const dismissError = useCallback(() => {
+    setError(null);
+  }, []);
+
   return {
     skills,
     view,
@@ -108,5 +113,6 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
     loadMore,
     install,
     dismissInstallError,
+    dismissError,
   };
 }
