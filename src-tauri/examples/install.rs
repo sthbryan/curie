@@ -11,8 +11,8 @@ fn main() {
 
     println!();
     match result {
-        Ok(()) => {
-            println!("install completed.");
+        Ok(node) => {
+            println!("install completed: {}", node.version.as_deref().unwrap_or("?"));
             println!();
             println!("verify with:");
             println!("  cargo run --example check");

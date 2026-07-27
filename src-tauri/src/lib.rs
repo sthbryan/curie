@@ -2,7 +2,7 @@ mod node;
 mod skills;
 mod update;
 
-pub use node::{detect_node_info, install_node_impl, NodeInfo};
+pub use node::{build_plan, detect_node_info, install_node_impl, ManagerInfo, NodeInfo, SetupPlan};
 pub use skills::{
     check_global_skill_updates, list_global_skills, CustomSkillInstallResult, DetectedSkill,
     ExplorePage, SkillDetection, SkillExploreResult, SkillInfo, SkillInstallResult,
@@ -24,6 +24,7 @@ pub fn run() {
             get_locale,
             node::detect_node,
             node::install_node,
+            node::plan_node_setup,
             skills::list_skills,
             skills::check_skill_updates,
             skills::update_skills,

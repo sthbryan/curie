@@ -124,9 +124,19 @@ export type Activity = {
 
 export type Stage = "loading" | "setup" | "installing" | "done" | "error" | "home";
 
-export type InstallStep = "checking" | "download" | "node" | "done" | "error";
+export type SetupStep = "check" | "volta" | "node" | "verify" | "done";
 
-export const STEP_ORDER: InstallStep[] = ["checking", "download", "node", "done"];
+export type NodeManager = {
+  id: string;
+  path: string;
+};
+
+export type SetupPlan = {
+  node: NodeInfo;
+  manager: NodeManager | null;
+  steps: SetupStep[];
+  command: string;
+};
 
 export type ProgressEvent = {
   stage: string;

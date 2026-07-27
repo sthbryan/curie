@@ -2,7 +2,7 @@ use serde::Serialize;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, Debug, PartialEq)]
 pub struct NodeInfo {
     pub installed: bool,
     pub version: Option<String>,
@@ -25,15 +25,21 @@ pub fn detect_node_info() -> Result<NodeInfo, String> {
 pub fn find_node() -> Option<NodeInfo> {
     let home = dirs::home_dir().unwrap_or_default();
 
-    let candidates = [
+    let mut candidates = vec![
         home.join(".volta/bin/node"),
-        home.join(".nvm/current/bin/node"),
-        home.join(".fnm/current/bin/node"),
+        home.join(".fnm/aliases/default/bin/node"),
+        home.join(".local/share/fnm/aliases/default/bin/node"),
+        home.join(".local/share/mise/shims/node"),
+        home.join(".asdf/shims/node"),
+    ];
+    candidates.extend(nvm_node(&home));
+    candidates.extend([
         PathBuf::from("/opt/homebrew/bin/node"),
+        PathBuf::from("/home/linuxbrew/.linuxbrew/bin/node"),
         PathBuf::from("/usr/local/bin/node"),
         PathBuf::from("/usr/bin/node"),
         PathBuf::from("/bin/node"),
-    ];
+    ]);
 
     for path in &candidates {
         if let Some(info) = probe_path(path) {
@@ -103,6 +109,37 @@ printf '%s\n%s' "$p" "$v"
     })
 }
 
+fn nvm_node(home: &Path) -> Option<PathBuf> {
+    let versions = home.join(".nvm").join("versions").join("node");
+    let names: Vec<String> = std::fs::read_dir(&versions)
+        .ok()?
+        .filter_map(|entry| entry.ok())
+        .map(|entry| entry.file_name().to_string_lossy().to_string())
+        .collect();
+    Some(
+        versions
+            .join(newest_version(&names)?)
+            .join("bin")
+            .join("node"),
+    )
+}
+
+pub fn newest_version(names: &[String]) -> Option<String> {
+    names
+        .iter()
+        .filter_map(|name| parse_version(name).map(|parsed| (parsed, name)))
+        .max_by_key(|(parsed, _)| *parsed)
+        .map(|(_, name)| name.clone())
+}
+
+fn parse_version(name: &str) -> Option<(u32, u32, u32)> {
+    let mut parts = name.strip_prefix('v').unwrap_or(name).split('.');
+    let major = parts.next()?.parse().ok()?;
+    let minor = parts.next()?.parse().ok()?;
+    let patch = parts.next()?.parse().ok()?;
+    Some((major, minor, patch))
+}
+
 fn which_realpath(path: &Path) -> Option<PathBuf> {
     let output = Command::new("readlink").arg("-f").arg(path).output().ok()?;
     if output.status.success() {
@@ -131,7 +168,7 @@ pub fn detect_manager_from_path(path: &str) -> Option<String> {
     if p.contains("/mise/") || p.contains("/rtx/") {
         return Some("mise".into());
     }
-    if p.contains("/homebrew/") || p.contains("/cellar/") {
+    if p.contains("/homebrew/") || p.contains("/cellar/") || p.contains("linuxbrew/") {
         return Some("homebrew".into());
     }
     Some("system".into())
@@ -180,7 +217,9 @@ mod tests {
     #[test]
     fn detects_mise_via_rtx_legacy_path() {
         assert_eq!(
-            detect_manager_from_path("/Users/alice/.local/share/mise/installs/node/22.0.0/bin/node"),
+            detect_manager_from_path(
+                "/Users/alice/.local/share/mise/installs/node/22.0.0/bin/node"
+            ),
             Some("mise".into())
         );
         assert_eq!(
@@ -202,8 +241,23 @@ mod tests {
     }
 
     #[test]
+    fn detects_linuxbrew() {
+        assert_eq!(
+            detect_manager_from_path("/home/linuxbrew/.linuxbrew/bin/node"),
+            Some("homebrew".into())
+        );
+        assert_eq!(
+            detect_manager_from_path("/home/alice/.linuxbrew/bin/node"),
+            Some("homebrew".into())
+        );
+    }
+
+    #[test]
     fn falls_back_to_system_for_unknown_paths() {
-        assert_eq!(detect_manager_from_path("/usr/bin/node"), Some("system".into()));
+        assert_eq!(
+            detect_manager_from_path("/usr/bin/node"),
+            Some("system".into())
+        );
         assert_eq!(detect_manager_from_path("/bin/node"), Some("system".into()));
     }
 
@@ -235,6 +289,28 @@ mod tests {
             detect_manager_from_path("/Users/alice/.volta/bin/node"),
             Some("volta".into())
         );
+    }
+
+    #[test]
+    fn picks_the_newest_nvm_version_numerically() {
+        let names = ["v9.11.2", "v22.3.0", "v10.24.1"]
+            .map(String::from)
+            .to_vec();
+        assert_eq!(newest_version(&names), Some("v22.3.0".into()));
+    }
+
+    #[test]
+    fn compares_minor_and_patch_before_falling_back() {
+        let names = ["v20.1.9", "v20.2.0", "v20.2.1"].map(String::from).to_vec();
+        assert_eq!(newest_version(&names), Some("v20.2.1".into()));
+    }
+
+    #[test]
+    fn skips_entries_that_are_not_versions() {
+        let names = ["lts", ".DS_Store", "v18.0.0"].map(String::from).to_vec();
+        assert_eq!(newest_version(&names), Some("v18.0.0".into()));
+        assert_eq!(newest_version(&["alias".to_string()]), None);
+        assert_eq!(newest_version(&[]), None);
     }
 
     #[test]
