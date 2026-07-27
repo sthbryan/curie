@@ -1,10 +1,12 @@
 {
   "app": {
-    "ready": "READY",
     "loading": "LOADING",
     "sortable": "SORTABLE",
     "sortedAsc": "SORTED ASCENDING",
-    "sortedDesc": "SORTED DESCENDING"
+    "sortedDesc": "SORTED DESCENDING",
+    "loadingSkills": "LOADING SKILLS",
+    "checkingUpdates": "CHECKING UPDATES",
+    "skillUpdates": "{n} UPDATES"
   },
   "error": {
     "eyebrow": "SOMETHING WENT WRONG",
@@ -239,8 +241,7 @@
     "node": "NODE",
     "agents": "AGENTS",
     "setupRequired": "SETUP REQUIRED",
-    "appUpdateAvailable": "UPDATE AVAILABLE",
-    "appUpToDate": "UP TO DATE"
+    "appUpdateAvailable": "UPDATE AVAILABLE"
   },
   "settings": {
     "eyebrow": "PREFERENCES",

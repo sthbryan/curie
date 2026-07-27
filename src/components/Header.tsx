@@ -1,10 +1,7 @@
 import { useLocation } from "wouter";
+import { HeaderActivity } from "@/components/HeaderActivity";
 import { useT } from "@/i18n";
-import { cn } from "@/lib/cn";
-
-type Props = {
-  ready: boolean;
-};
+import { APP_NAME } from "@/lib/meta";
 
 const locationMap: Record<string, string> = {
   "/": "nav.home",
@@ -15,7 +12,7 @@ const locationMap: Record<string, string> = {
   "/settings": "nav.settings",
 };
 
-export function Header({ ready }: Props) {
+export function Header() {
   const t = useT();
   const [location] = useLocation();
 
@@ -23,29 +20,19 @@ export function Header({ ready }: Props) {
 
   return (
     <header
-      className="flex h-11 shrink-0 items-center justify-between border-b border-border bg-bg px-5 select-none"
+      className="flex h-9 shrink-0 items-center justify-between border-b border-border bg-bg px-5 select-none"
       style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
     >
-      <div
-        className="flex items-baseline gap-2.5"
-        style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-      >
-        <span className="font-display text-lg font-bold leading-none tracking-tight text-fg uppercase">
-          {t(currentLocation)}
+      <p className="flex items-baseline gap-2 font-mono uppercase tracking-label text-micro">
+        <span className="text-fg-4">{APP_NAME}</span>
+        <span aria-hidden className="text-fg-4/70">
+          /
         </span>
-      </div>
+        <span className="font-bold text-fg-2">{t(currentLocation)}</span>
+      </p>
 
-      <div
-        className="flex items-center gap-2"
-        style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-      >
-        <span
-          className={cn("inline-block h-1.5 w-1.5 rounded-full", ready ? "bg-success" : "bg-fg-4")}
-          aria-hidden
-        />
-        <span className="font-mono uppercase tracking-label text-micro text-fg-3">
-          {t("app.ready")}
-        </span>
+      <div style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
+        <HeaderActivity />
       </div>
     </header>
   );

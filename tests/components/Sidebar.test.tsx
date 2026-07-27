@@ -32,4 +32,21 @@ describe("Sidebar", () => {
     mount(<Router><Sidebar /></Router>);
     expect(container?.querySelector("nav")).not.toBeNull();
   });
+
+  it("keeps the rail out of the flow so the page never reflows", () => {
+    mount(<Router><Sidebar /></Router>);
+    const nav = container?.querySelector("nav");
+    expect(nav?.className).toContain("absolute");
+    expect((container?.firstElementChild as HTMLElement | null)?.style.width).toBe("50px");
+  });
+
+  it("reveals the labels when a nav item takes focus", () => {
+    mount(<Router><Sidebar /></Router>);
+    expect(container?.textContent).not.toContain("HOME");
+
+    const first = container?.querySelector("button") as HTMLButtonElement;
+    act(() => { first.focus(); });
+
+    expect(container?.textContent).toContain("HOME");
+  });
 });

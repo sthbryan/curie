@@ -1,10 +1,12 @@
 export type Messages = {
   app: {
-    ready: string;
     loading: string;
     sortable: string;
     sortedAsc: string;
     sortedDesc: string;
+    loadingSkills: string;
+    checkingUpdates: string;
+    skillUpdates: string;
   };
   error: {
     eyebrow: string;
@@ -240,7 +242,6 @@ export type Messages = {
     agents: string;
     setupRequired: string;
     appUpdateAvailable: string;
-    appUpToDate: string;
   };
   settings: {
     eyebrow: string;
