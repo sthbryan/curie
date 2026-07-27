@@ -13,6 +13,7 @@ export function ChoiceButton({ active, label, sublabel, onClick, isLast = false 
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={cn(
         "flex h-9 items-center justify-center gap-2 px-4 font-mono uppercase tracking-label text-mono transition-colors duration-150",
         {
