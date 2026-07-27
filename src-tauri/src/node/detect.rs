@@ -35,6 +35,7 @@ pub fn find_node() -> Option<NodeInfo> {
     candidates.extend(nvm_node(&home));
     candidates.extend([
         PathBuf::from("/opt/homebrew/bin/node"),
+        PathBuf::from("/home/linuxbrew/.linuxbrew/bin/node"),
         PathBuf::from("/usr/local/bin/node"),
         PathBuf::from("/usr/bin/node"),
         PathBuf::from("/bin/node"),
@@ -167,7 +168,7 @@ pub fn detect_manager_from_path(path: &str) -> Option<String> {
     if p.contains("/mise/") || p.contains("/rtx/") {
         return Some("mise".into());
     }
-    if p.contains("/homebrew/") || p.contains("/cellar/") {
+    if p.contains("/homebrew/") || p.contains("/cellar/") || p.contains("linuxbrew/") {
         return Some("homebrew".into());
     }
     Some("system".into())
@@ -235,6 +236,18 @@ mod tests {
         );
         assert_eq!(
             detect_manager_from_path("/opt/homebrew/Cellar/node/22.0.0/bin/node"),
+            Some("homebrew".into())
+        );
+    }
+
+    #[test]
+    fn detects_linuxbrew() {
+        assert_eq!(
+            detect_manager_from_path("/home/linuxbrew/.linuxbrew/bin/node"),
+            Some("homebrew".into())
+        );
+        assert_eq!(
+            detect_manager_from_path("/home/alice/.linuxbrew/bin/node"),
             Some("homebrew".into())
         );
     }

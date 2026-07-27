@@ -66,7 +66,12 @@ pub const MANAGERS: &[Manager] = &[
     Manager {
         id: "homebrew",
         binary: "brew",
-        files: &["/opt/homebrew/bin/brew", "/usr/local/bin/brew"],
+        files: &[
+            "/opt/homebrew/bin/brew",
+            "/usr/local/bin/brew",
+            "/home/linuxbrew/.linuxbrew/bin/brew",
+            "~/.linuxbrew/bin/brew",
+        ],
         install: "brew install node",
     },
 ];
