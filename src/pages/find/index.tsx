@@ -1,7 +1,8 @@
-import { Search } from "lucide-react";
+import { X } from "lucide-react";
 import { motion } from "motion/react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Else, If, Then, When } from "react-if";
+import { When } from "react-if";
 import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Input } from "@/components/Input";
@@ -32,6 +33,7 @@ export function Find() {
   const [query, setQuery] = useState("");
   const [owner, setOwner] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const debounce = useRef(0);
   const installBusy = installingPackage !== null;
 
   useEffect(() => {
@@ -39,10 +41,10 @@ export function Find() {
   }, []);
 
   useEffect(() => {
-    const handle = window.setTimeout(() => {
+    debounce.current = window.setTimeout(() => {
       void runSearch(query, owner);
     }, DEBOUNCE_MS);
-    return () => window.clearTimeout(handle);
+    return () => window.clearTimeout(debounce.current);
   }, [query, owner, runSearch]);
 
   const installedPackages = useMemo(
@@ -60,7 +62,20 @@ export function Find() {
   };
 
   const handleSearch = () => {
+    window.clearTimeout(debounce.current);
     void runSearch(query, owner);
+  };
+
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    handleSearch();
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    setOwner("");
+    inputRef.current?.focus();
   };
 
   const qLen = query.trim().length;
@@ -102,45 +117,44 @@ export function Find() {
           </When>
         </motion.section>
 
-        <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-            <Input
-              ref={inputRef}
-              label={t("query")}
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t("queryPlaceholder")}
-            />
-            <Input
-              label={t("owner")}
-              type="text"
-              value={owner}
-              onChange={(e) => setOwner(e.target.value)}
-              placeholder={t("ownerPlaceholder")}
-              spellCheck={false}
-              wrapperClassName="w-full sm:w-48 shrink-0"
-            />
-            <Button
-              size="lg"
-              variant="primary"
-              className="h-10 shrink-0 px-4"
-              onClick={handleSearch}
-              disabled={findLoading || qLen < 2}
-            >
-              <Search size={14} />
-              <If condition={findLoading}>
-                <Then>{t("searching")}</Then>
-                <Else>{t("search")}</Else>
-              </If>
-            </Button>
-          </div>
+        <motion.section
+          {...fadeUp(0.05)}
+          className="flex flex-wrap items-end gap-3 border-b border-border pb-4"
+        >
+          <Input
+            ref={inputRef}
+            label={t("query")}
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={t("queryPlaceholder")}
+            wrapperClassName="min-w-64 flex-1"
+          />
+          <Input
+            label={t("owner")}
+            type="text"
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={t("ownerPlaceholder")}
+            spellCheck={false}
+            wrapperClassName="w-full sm:w-48 shrink-0"
+          />
 
-          <div className="flex items-center justify-between gap-4">
-            <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-              {statusLabel}
-            </span>
-          </div>
+          <When condition={qLen > 0 || owner.length > 0}>
+            <Button size="sm" variant="ghost" className="h-10" onClick={handleClear}>
+              <X size={12} />
+              {t("clear")}
+            </Button>
+          </When>
+
+          <span
+            aria-live="polite"
+            className="ml-auto flex h-10 items-center border-l border-border pl-4 font-mono uppercase tracking-label text-micro text-fg-4"
+          >
+            {statusLabel}
+          </span>
         </motion.section>
 
         <section className="flex flex-col">

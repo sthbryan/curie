@@ -130,12 +130,11 @@
   "find": {
     "eyebrow": "FIND · SKILLS.SH",
     "title": "Find skills",
-    "subtitle": "Search the registry used by npx skills find",
+    "subtitle": "Search the skills registry",
     "query": "Search query",
     "queryPlaceholder": "typescript, react, design…",
     "owner": "Owner filter",
     "ownerPlaceholder": "owner (optional)",
-    "search": "SEARCH",
     "searching": "SEARCHING…",
     "results": "{n} RESULTS",
     "colName": "SKILL",
@@ -151,7 +150,9 @@
     "emptyHint": "Try a different query or clear the owner filter",
     "error": "Search failed",
     "installError": "Install failed",
-    "packageHint": "Installs globally with npx skills add -g -y"
+    "packageHint": "Installs globally on your device",
+    "clear": "CLEAR",
+    "goExplore": "EXPLORE"
   },
   "custom": {
     "eyebrow": "CUSTOM · DIRECT INSTALL",

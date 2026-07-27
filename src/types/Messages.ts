@@ -135,7 +135,8 @@ export type Messages = {
     queryPlaceholder: string;
     owner: string;
     ownerPlaceholder: string;
-    search: string;
+    clear: string;
+    goExplore: string;
     searching: string;
     results: string;
     colName: string;

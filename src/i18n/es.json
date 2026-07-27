@@ -130,12 +130,11 @@
   "find": {
     "eyebrow": "BUSCAR · SKILLS.SH",
     "title": "Buscar skills",
-    "subtitle": "Busca skills en el registro de skills",
+    "subtitle": "Busca en el registro de skills",
     "query": "Consulta",
     "queryPlaceholder": "typescript, react, design…",
     "owner": "Filtro de owner",
     "ownerPlaceholder": "owner (opcional)",
-    "search": "BUSCAR",
     "searching": "BUSCANDO…",
     "results": "{n} RESULTADOS",
     "colName": "SKILL",
@@ -151,7 +150,9 @@
     "emptyHint": "Prueba otra consulta o quita el filtro de owner",
     "error": "Falló la búsqueda",
     "installError": "Falló la instalación",
-    "packageHint": "Se instalan globalmente en tu dispositivo"
+    "packageHint": "Se instalan globalmente en tu dispositivo",
+    "clear": "LIMPIAR",
+    "goExplore": "EXPLORAR"
   },
   "custom": {
     "eyebrow": "CUSTOM · INSTALACIÓN DIRECTA",
