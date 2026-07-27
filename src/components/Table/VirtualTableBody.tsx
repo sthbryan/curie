@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useRef } from "react";
 import { cn } from "@/lib/cn";
 import { useVirtualRows } from "@/lib/useVirtualRows";
@@ -15,6 +16,7 @@ type Props<T> = {
   sortDir?: SortDir;
   onSort?: (key: string) => void;
   viewportClassName?: string;
+  footer?: ReactNode;
 };
 
 export function VirtualTableBody<T>({
@@ -27,6 +29,7 @@ export function VirtualTableBody<T>({
   sortDir,
   onSort,
   viewportClassName,
+  footer,
 }: Props<T>) {
   const viewport = useRef<HTMLDivElement>(null);
   const window = useVirtualRows({ count: rows.length, rowHeight, viewport });
@@ -54,6 +57,7 @@ export function VirtualTableBody<T>({
           />
         ))}
       </div>
+      {footer}
     </div>
   );
 }

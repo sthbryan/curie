@@ -24,4 +24,5 @@ export type TableProps<T> = {
   skeletonRows?: number;
   rowHeight?: number;
   viewportClassName?: string;
+  footer?: ReactNode;
 };

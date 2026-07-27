@@ -18,6 +18,7 @@ export function Table<T>({
   skeletonRows = 6,
   rowHeight,
   viewportClassName,
+  footer,
 }: TableProps<T>) {
   if (loading) {
     return (
@@ -37,6 +38,7 @@ export function Table<T>({
         sortDir={sortDir}
         onSort={onSort}
         viewportClassName={viewportClassName}
+        footer={footer}
       />
     );
   }
@@ -61,6 +63,7 @@ export function Table<T>({
           />
         ))}
       </div>
+      {footer}
     </>
   );
 }

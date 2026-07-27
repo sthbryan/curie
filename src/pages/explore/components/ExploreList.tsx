@@ -140,19 +140,21 @@ export function ExploreList({
           rowHeight={ROW_HEIGHT}
           getRowKey={(r) => r.id}
           viewportClassName="pr-1"
+          footer={
+            hasMore ? (
+              <div className="flex justify-center py-6">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onLoadMore}
+                  disabled={loadingMore || installBusy}
+                >
+                  {loadingMore ? t("loadingMore") : t("loadMore")}
+                </Button>
+              </div>
+            ) : null
+          }
         />
-        {hasMore ? (
-          <div className="flex shrink-0 justify-center border-t border-border pt-4">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={onLoadMore}
-              disabled={loadingMore || installBusy}
-            >
-              {loadingMore ? t("loadingMore") : t("loadMore")}
-            </Button>
-          </div>
-        ) : null}
       </Case>
 
       <Default>{null}</Default>
