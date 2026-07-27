@@ -291,7 +291,9 @@
     "updateNeverCheckedHint": "Check to see if a newer version is available.",
     "updateFailed": "Could not check for updates",
     "themeNord": "NORD",
-    "themeNordHint": "ARCTIC"
+    "themeNordHint": "ARCTIC",
+    "themeSnow": "SNOW",
+    "themeSnowHint": "ARCTIC · LIGHT"
   },
   "toast": {
     "installed": "Installed {name}",

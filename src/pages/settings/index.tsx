@@ -20,10 +20,11 @@ import { UpdateSection } from "./components/UpdateSection";
 
 const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
   dark: { label: "themeDark", hint: "themeDarkHint" },
-  light: { label: "themeLight", hint: "themeLightHint" },
   rose: { label: "themeRose", hint: "themeRoseHint" },
-  dawn: { label: "themeDawn", hint: "themeDawnHint" },
   nord: { label: "themeNord", hint: "themeNordHint" },
+  light: { label: "themeLight", hint: "themeLightHint" },
+  dawn: { label: "themeDawn", hint: "themeDawnHint" },
+  snow: { label: "themeSnow", hint: "themeSnowHint" },
 };
 
 const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
