@@ -150,7 +150,7 @@
     "emptyHint": "Prueba otra consulta o quita el filtro de owner",
     "error": "Falló la búsqueda",
     "installError": "Falló la instalación",
-    "packageHint": "Se instalan globalmente en tu dispositivo",
+    "packageHint": "INSTALACIÓN GLOBAL",
     "clear": "LIMPIAR",
     "goExplore": "EXPLORAR",
     "hintExplore": "O explora los rankings si aún no sabes qué buscar"
@@ -239,7 +239,7 @@
     "emptyHint": "Prueba otro ranking o busca con Buscar",
     "error": "No se pudo cargar explorar",
     "installError": "Falló la instalación",
-    "packageHint": "Se instalan globalmente en tu dispositivo"
+    "packageHint": "INSTALACIÓN GLOBAL"
   },
   "status": {
     "node": "NODE",

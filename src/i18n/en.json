@@ -150,7 +150,7 @@
     "emptyHint": "Try a different query or clear the owner filter",
     "error": "Search failed",
     "installError": "Install failed",
-    "packageHint": "Installs globally on your device",
+    "packageHint": "INSTALLS GLOBALLY",
     "clear": "CLEAR",
     "goExplore": "EXPLORE",
     "hintExplore": "Or browse the rankings if you don't know what to look for yet"
@@ -239,7 +239,7 @@
     "emptyHint": "Try another board or search with Find",
     "error": "Could not load explore",
     "installError": "Install failed",
-    "packageHint": "Installs globally on your device"
+    "packageHint": "INSTALLS GLOBALLY"
   },
   "status": {
     "node": "NODE",
