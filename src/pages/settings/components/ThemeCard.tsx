@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import type { ThemeMode } from "@/components/types";
 import { cn } from "@/lib/cn";
 
@@ -11,6 +12,8 @@ type Props = {
 };
 
 export function ThemeCard({ id, active, label, hint, swatches, onClick }: Props) {
+  const [bg, fg, accent] = swatches;
+
   return (
     <button
       type="button"
@@ -18,34 +21,45 @@ export function ThemeCard({ id, active, label, hint, swatches, onClick }: Props)
       aria-pressed={active}
       data-theme-option={id}
       className={cn(
-        "flex flex-col gap-3 border p-4 text-left transition-colors duration-150 rounded-sm",
-        {
-          "border-fg bg-surface-tint": active,
-          "border-border-strong hover:border-fg-3 hover:bg-surface-hover": !active,
-        },
+        "flex flex-col gap-2.5 rounded-sm border p-2.5 text-left transition-colors duration-150",
+        active
+          ? "border-fg bg-surface-tint"
+          : "border-border-strong hover:border-fg-3 hover:bg-surface-hover",
       )}
     >
-      <div className="flex items-center gap-1.5">
-        {swatches.map((color) => (
+      <span
+        className="flex h-13 w-full overflow-hidden rounded-sm border border-border-strong"
+        style={{ backgroundColor: bg }}
+        aria-hidden
+      >
+        <span className="w-2.5 shrink-0" style={{ backgroundColor: fg, opacity: 0.1 }} />
+        <span className="flex flex-1 flex-col justify-center gap-1.5 px-2">
           <span
-            key={`${id}-${color}`}
-            className="h-5 w-5 rounded-sm border border-border-strong"
-            style={{ backgroundColor: color }}
-            aria-hidden
+            className="h-0.5 w-3/5 rounded-full"
+            style={{ backgroundColor: fg, opacity: 0.7 }}
           />
-        ))}
-      </div>
-      <div className="flex flex-col gap-0.5">
+          <span
+            className="h-0.5 w-2/5 rounded-full"
+            style={{ backgroundColor: fg, opacity: 0.3 }}
+          />
+        </span>
+        <span className="m-2 h-2.5 w-2.5 shrink-0 self-start" style={{ backgroundColor: accent }} />
+      </span>
+
+      <span className="flex items-center gap-1.5">
         <span
           className={cn(
             "font-mono uppercase tracking-label text-mono",
-            active ? "text-fg font-bold" : "text-fg-2",
+            active ? "font-bold text-fg" : "text-fg-2",
           )}
         >
           {label}
         </span>
-        <span className="font-mono uppercase tracking-label text-micro text-fg-4">{hint}</span>
-      </div>
+        {active ? <Check size={11} className="text-fg" aria-hidden /> : null}
+        <span className="ml-auto truncate font-mono uppercase tracking-label text-micro text-fg-4">
+          {hint}
+        </span>
+      </span>
     </button>
   );
 }
