@@ -261,7 +261,7 @@
     "themeRose": "ROSE",
     "themeRoseHint": "ROSÉ PINE",
     "themeDawn": "DAWN",
-    "themeDawnHint": "ROSÉ PINE",
+    "themeDawnHint": "ROSÉ PINE · LIGHT",
     "themeDesc": "Choose the theme which best suits your environment and preferences.",
     "reducedMotion": "Reduce motion",
     "reducedMotionSystem": "SYSTEM",
@@ -289,7 +289,9 @@
     "updateCheckedAt": "Checked {when}",
     "updateNeverChecked": "Never checked",
     "updateNeverCheckedHint": "Check to see if a newer version is available.",
-    "updateFailed": "Could not check for updates"
+    "updateFailed": "Could not check for updates",
+    "themeNord": "NORD",
+    "themeNordHint": "ARCTIC"
   },
   "toast": {
     "installed": "Installed {name}",
