@@ -105,10 +105,18 @@ describe("Settings", () => {
     expect(theme.value).toBe("rose");
   });
 
-  it("offers every theme, nord included", () => {
+  it("offers every theme, darks before lights", () => {
     render(<Settings />);
     const cards = container?.querySelectorAll("[data-theme-option]");
-    expect(cards?.length).toBe(5);
+    expect(cards?.length).toBe(6);
+    expect([...(cards ?? [])].map((c) => c.getAttribute("data-theme-option"))).toEqual([
+      "dark",
+      "rose",
+      "nord",
+      "light",
+      "dawn",
+      "snow",
+    ]);
 
     const nord = container?.querySelector('[data-theme-option="nord"]') as HTMLButtonElement | null;
     act(() => {

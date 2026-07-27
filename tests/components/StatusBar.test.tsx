@@ -65,7 +65,7 @@ describe("StatusBar", () => {
 
     act(() => { button.click(); });
 
-    expect(theme.value).toBe("light");
+    expect(theme.value).toBe("rose");
   });
 
   it("toggles the language from the status bar", () => {
