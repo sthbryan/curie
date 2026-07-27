@@ -1,7 +1,6 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { Download, RotateCcw, SquareArrowOutUpRight } from "lucide-react";
-import { Case, Else, If, Switch, Then } from "react-if";
-import { toast } from "sonner";
+import { SquareArrowOutUpRight } from "lucide-react";
+import { Else, If, Then } from "react-if";
 import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
 import { Label } from "@/components/Label";
@@ -12,14 +11,12 @@ import {
   type ThemeMode,
 } from "@/components/types";
 import { useT } from "@/i18n";
-import { checkAppUpdate, installAppUpdate } from "@/lib/boot";
-import { cn } from "@/lib/cn";
-import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
+import { APP_NAME } from "@/lib/meta";
 import { systemStore } from "@/store/system";
-import { appInstallRunning, appUpdate, appUpdateLoading } from "@/store/update";
 import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
+import { UpdateSection } from "./components/UpdateSection";
 
 const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
   dark: { label: "themeDark", hint: "themeDarkHint" },
@@ -44,26 +41,6 @@ export function Settings() {
     void Promise.resolve(openUrl("https://github.com/sthbryan/curie")).catch(() => {
       // ignore
     });
-  };
-  const handleCheckUpdates = () => {
-    void checkAppUpdate();
-  };
-  const handleInstallUpdate = async () => {
-    const result = await installAppUpdate();
-    if (!result) return;
-    if (result.success) {
-      toast.success(t("updateInstallSuccess"));
-      return;
-    }
-    toast.error(result.message || t("updateInstallFailed"));
-    const fallback = result.fallbackUrl ?? appUpdate.value?.releaseUrl;
-    if (fallback) {
-      void Promise.resolve(openUrl(fallback)).catch(() => {});
-    }
-  };
-  const handleOpenRelease = () => {
-    const url = appUpdate.value?.releaseUrl;
-    if (url) void Promise.resolve(openUrl(url)).catch(() => {});
   };
 
   return (
@@ -181,15 +158,17 @@ export function Settings() {
 
         <hr className="border-0 border-t border-border" />
 
+        <UpdateSection />
+
+        <hr className="border-0 border-t border-border" />
+
         <section className="flex flex-col gap-3">
           <Label>{t("about")}</Label>
           <p className="font-body text-sm text-fg-2 max-w-md leading-relaxed">
             {t("aboutDescription")}
           </p>
           <p className="font-mono uppercase tracking-label text-micro text-fg-4 pt-2 flex items-center gap-2 flex-wrap">
-            <span>
-              {APP_NAME} · {APP_VERSION_LABEL}
-            </span>
+            <span>{APP_NAME}</span>
             <span className="text-fg-4">·</span>
             <Button
               size="xs"
@@ -200,64 +179,7 @@ export function Settings() {
               github.com/sthbryan/curie
               <SquareArrowOutUpRight size={10} strokeWidth={1.5} />
             </Button>
-            <span className="text-fg-4">·</span>
-            <Button
-              size="xs"
-              variant="link"
-              className="px-0 hover:underline cursor-pointer inline-flex items-center gap-1"
-              onClick={handleCheckUpdates}
-              disabled={appUpdateLoading.value}
-            >
-              <RotateCcw
-                size={10}
-                strokeWidth={1.5}
-                className={cn("transition-transform", appUpdateLoading.value && "animate-spin")}
-              />
-              <If condition={appUpdateLoading.value}>
-                <Then>{t("updateChecking")}</Then>
-                <Else>{t("updateCheckBtn")}</Else>
-              </If>
-            </Button>
           </p>
-
-          <Switch>
-            <Case condition={appUpdateLoading.value}>
-              <p className="font-body text-xs text-fg-4 pt-1">{t("updateChecking")}</p>
-            </Case>
-            <Case condition={Boolean(appUpdate.value?.updateAvailable)}>
-              <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4 mt-2">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono uppercase tracking-label text-micro text-accent">
-                    {t("updateAvailable")}
-                  </span>
-                  <span className="font-body text-sm text-fg-1">
-                    v{appUpdate.value?.latestVersion}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 pt-1">
-                  <Button
-                    size="xs"
-                    variant="accent"
-                    onClick={handleInstallUpdate}
-                    disabled={appInstallRunning.value}
-                  >
-                    <Download size={10} strokeWidth={1.5} />
-                    <If condition={appInstallRunning.value}>
-                      <Then>{t("updateInstalling")}</Then>
-                      <Else>{t("updateInstall")}</Else>
-                    </If>
-                  </Button>
-                  <Button size="xs" variant="outline" onClick={handleOpenRelease}>
-                    {t("updateOpenFallback")}
-                    <SquareArrowOutUpRight size={10} strokeWidth={1.5} />
-                  </Button>
-                </div>
-              </div>
-            </Case>
-            <Case condition={Boolean(appUpdate.value) && !appUpdate.value?.updateAvailable}>
-              <p className="font-body text-xs text-fg-4 pt-1">{t("updateUpToDate")}</p>
-            </Case>
-          </Switch>
         </section>
       </div>
     </main>
