@@ -164,7 +164,7 @@ async function confirm(next, tag) {
   console.log(`   ${paint(c.dim, "────")}`);
   console.log(`   version  ${paint(c.bold + c.green, next)}`);
   console.log(`   tag      ${paint(c.bold + c.cyan, tag)}`);
-  console.log(`   files    package.json · tauri.conf.json · Cargo.toml`);
+  console.log(`   files    package.json · tauri.conf.json · Cargo.toml · Cargo.lock`);
   console.log(
     `   git      commit + annotated tag${noPush ? paint(c.yellow, " (no push)") : " + push"}`,
   );
@@ -244,8 +244,19 @@ writeJson(tauriPath, tauri);
 
 bumpCargoToml(cargoPath, next);
 
+console.log(`   ${paint(c.dim, "…")} syncing Cargo.lock`);
+let lock = await $`cargo update --manifest-path ${cargoPath} --workspace --offline`
+  .quiet()
+  .nothrow();
+if (lock.exitCode !== 0) {
+  lock = await $`cargo update --manifest-path ${cargoPath} --workspace`.quiet().nothrow();
+}
+if (lock.exitCode !== 0) {
+  fail(`cargo could not refresh Cargo.lock:\n${lock.stderr.toString().trim()}`);
+}
+
 console.log(`   ${paint(c.dim, "…")} git commit`);
-await $`git -C ${root} add package.json src-tauri/tauri.conf.json src-tauri/Cargo.toml`;
+await $`git -C ${root} add package.json src-tauri/tauri.conf.json src-tauri/Cargo.toml src-tauri/Cargo.lock`;
 await $`git -C ${root} commit -m ${`chore(release): ${tag}`}`;
 
 console.log(`   ${paint(c.dim, "…")} tagging ${tag}`);
