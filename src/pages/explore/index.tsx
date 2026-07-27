@@ -1,11 +1,12 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotionConfig } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { When } from "react-if";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
+import { ChoiceButton } from "@/components/ChoiceButton";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Label } from "@/components/Label";
 import type { ExploreView } from "@/components/types";
@@ -22,6 +23,7 @@ const VIEWS: ExploreView[] = ["hot", "trending", "all-time"];
 export function Explore() {
   const t = useT("explore");
   const [, navigate] = useLocation();
+  const shouldReduceMotion = useReducedMotionConfig();
   const {
     skills: exploreSkills,
     view,
@@ -130,39 +132,42 @@ export function Explore() {
           </When>
         </motion.section>
 
-        <motion.section {...fadeUp(0.05)} className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex flex-wrap gap-2">
-              {VIEWS.map((v) => {
-                const handlePickView = () => {
-                  setView(v);
-                };
-                return (
-                  <Button
-                    key={v}
-                    size="xs"
-                    variant="outline"
-                    selected={view === v}
-                    onClick={handlePickView}
-                    disabled={loading && view === v}
-                  >
-                    {t(`view.${v === "all-time" ? "allTime" : v}`)}
-                  </Button>
-                );
-              })}
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="font-mono uppercase tracking-label text-micro text-fg-4">
-                {statusLabel}
-              </span>
-              <Button size="xs" variant="ghost" onClick={handleRefresh} disabled={loading}>
-                <RefreshCw
-                  size={10}
-                  className={cn("transition-transform", loading ? "animate-spin" : "")}
+        <motion.section
+          {...fadeUp(0.05)}
+          className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4"
+        >
+          <div className="flex">
+            {VIEWS.map((v, index) => {
+              const handlePickView = () => {
+                setView(v);
+              };
+              return (
+                <ChoiceButton
+                  key={v}
+                  active={view === v}
+                  label={t(`view.${v === "all-time" ? "allTime" : v}`)}
+                  onClick={handlePickView}
+                  isLast={index === VIEWS.length - 1}
                 />
-                {loading ? t("refreshing") : t("refresh")}
-              </Button>
-            </div>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-4">
+            <span
+              aria-live="polite"
+              className="font-mono uppercase tracking-label text-micro text-fg-4"
+            >
+              {statusLabel}
+            </span>
+            <Button size="sm" variant="outline" onClick={handleRefresh} disabled={loading}>
+              <RefreshCw
+                size={11}
+                strokeWidth={1.5}
+                className={cn(loading && !shouldReduceMotion && "animate-spin")}
+              />
+              {loading ? t("refreshing") : t("refresh")}
+            </Button>
           </div>
         </motion.section>
 
