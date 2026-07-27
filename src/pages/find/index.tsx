@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { When } from "react-if";
+import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Input } from "@/components/Input";
@@ -18,6 +19,7 @@ const DEBOUNCE_MS = 280;
 
 export function Find() {
   const t = useT("find");
+  const [, navigate] = useLocation();
   const {
     results: findResults,
     loading: findLoading,
@@ -71,6 +73,8 @@ export function Find() {
     event.preventDefault();
     handleSearch();
   };
+
+  const handleGoExplore = () => navigate("/marketplace");
 
   const handleClear = () => {
     setQuery("");
@@ -167,6 +171,7 @@ export function Find() {
             installingPackage={installingPackage}
             installBusy={installBusy}
             onInstall={handleInstall}
+            onGoExplore={handleGoExplore}
           />
         </section>
       </div>

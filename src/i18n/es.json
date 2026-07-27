@@ -152,7 +152,8 @@
     "installError": "Falló la instalación",
     "packageHint": "Se instalan globalmente en tu dispositivo",
     "clear": "LIMPIAR",
-    "goExplore": "EXPLORAR"
+    "goExplore": "EXPLORAR",
+    "hintExplore": "O explora los rankings si aún no sabes qué buscar"
   },
   "custom": {
     "eyebrow": "CUSTOM · INSTALACIÓN DIRECTA",

@@ -152,7 +152,8 @@
     "installError": "Install failed",
     "packageHint": "Installs globally on your device",
     "clear": "CLEAR",
-    "goExplore": "EXPLORE"
+    "goExplore": "EXPLORE",
+    "hintExplore": "Or browse the rankings if you don't know what to look for yet"
   },
   "custom": {
     "eyebrow": "CUSTOM · DIRECT INSTALL",

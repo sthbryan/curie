@@ -1,7 +1,8 @@
-import { CloudDownload } from "lucide-react";
+import { CloudDownload, Compass } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
+import { Button } from "@/components/Button";
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
 import { SkillNameCell } from "@/components/discovery/SkillNameCell";
 import { SkillSourceCell } from "@/components/discovery/SkillSourceCell";
@@ -21,6 +22,7 @@ type Props = {
   installingPackage: string | null;
   installBusy: boolean;
   onInstall: (pkg: string) => void;
+  onGoExplore: () => void;
 };
 
 const FIND_GRID = "grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_4.5rem_7rem]";
@@ -34,6 +36,7 @@ export function ResultsPanel({
   installingPackage,
   installBusy,
   onInstall,
+  onGoExplore,
 }: Props) {
   const t = useT("find");
   const columns = useMemo(
@@ -92,8 +95,16 @@ export function ResultsPanel({
   return (
     <Switch>
       <Case condition={showHint}>
-        <motion.div {...fadeUp(0.08)} className="border-t border-border py-8">
-          <p className="font-body text-sm text-fg-3">{t("hint")}</p>
+        <motion.div
+          {...fadeUp(0.08)}
+          className="flex flex-col items-start gap-3 border border-border-strong bg-surface-tint px-5 py-8"
+        >
+          <span className="font-body text-sm text-fg">{t("hint")}</span>
+          <p className="font-body text-sm text-fg-3">{t("hintExplore")}</p>
+          <Button size="sm" variant="outline" onClick={onGoExplore}>
+            <Compass size={12} strokeWidth={1.5} />
+            {t("goExplore")}
+          </Button>
         </motion.div>
       </Case>
 

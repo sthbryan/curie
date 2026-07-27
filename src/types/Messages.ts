@@ -148,6 +148,7 @@ export type Messages = {
     installed: string;
     open: string;
     hint: string;
+    hintExplore: string;
     empty: string;
     emptyHint: string;
     error: string;
