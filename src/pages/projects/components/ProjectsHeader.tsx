@@ -15,7 +15,7 @@ export function ProjectsHeader({ busy, onAdd }: Props) {
     <div className="flex items-end justify-between gap-6">
       <div className="flex min-w-0 flex-col gap-2">
         <Label>projects.eyebrow</Label>
-        <h2 className="font-display text-heading tracking-display text-fg">{t("title")}</h2>
+        <h2 className="font-display text-heading font-bold tracking-tight text-fg">{t("title")}</h2>
         <p className="font-body text-sm text-fg-3">{t("subtitle")}</p>
       </div>
 
