@@ -1,9 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
-const REGISTRY_DIR: &str = ".curie";
-const REGISTRY_FILE: &str = "projects.json";
 const REGISTRY_VERSION: u32 = 1;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -43,11 +41,6 @@ pub(crate) fn project_name(path: &Path) -> String {
         .map(|n| n.to_string_lossy().to_string())
         .filter(|n| !n.is_empty())
         .unwrap_or_else(|| path.to_string_lossy().to_string())
-}
-
-fn registry_path() -> Result<PathBuf, String> {
-    let home = dirs::home_dir().ok_or_else(|| "could not resolve home directory".to_string())?;
-    Ok(home.join(REGISTRY_DIR).join(REGISTRY_FILE))
 }
 
 pub(crate) fn read_registry(path: &Path) -> Vec<Project> {
@@ -107,14 +100,16 @@ pub async fn validate_project_path(path: String) -> Result<ProjectProbe, String>
 
 #[tauri::command]
 pub async fn read_projects() -> Result<Vec<Project>, String> {
-    tauri::async_runtime::spawn_blocking(|| Ok(read_registry(&registry_path()?)))
+    tauri::async_runtime::spawn_blocking(|| Ok(read_registry(&crate::paths::projects_file()?)))
         .await
         .map_err(|e| format!("read projects task failed: {e}"))?
 }
 
 #[tauri::command]
 pub async fn write_projects(projects: Vec<Project>) -> Result<(), String> {
-    tauri::async_runtime::spawn_blocking(move || write_registry(&registry_path()?, &projects))
+    tauri::async_runtime::spawn_blocking(move || {
+        write_registry(&crate::paths::projects_file()?, &projects)
+    })
         .await
         .map_err(|e| format!("write projects task failed: {e}"))?
 }
@@ -122,6 +117,7 @@ pub async fn write_projects(projects: Vec<Project>) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::PathBuf;
 
     fn temp_dir(tag: &str) -> PathBuf {
         let dir = std::env::temp_dir().join(format!("curie-reg-{tag}-{}", std::process::id()));

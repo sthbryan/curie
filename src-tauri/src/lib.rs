@@ -1,4 +1,5 @@
 mod node;
+mod paths;
 mod projects;
 mod skills;
 mod update;

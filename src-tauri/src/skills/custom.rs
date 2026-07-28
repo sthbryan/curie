@@ -2,9 +2,7 @@ use super::npx::run_skills_command;
 use super::scope::Scope;
 use super::types::CustomSkillInstallResult;
 use std::fs;
-use std::path::{Path, PathBuf};
-
-const CUSTOM_DIR: &str = ".curie/custom-skills";
+use std::path::Path;
 
 pub fn install_custom_skill_in(
     scope: &Scope,
@@ -24,10 +22,7 @@ pub fn install_custom_skill_in(
         return Err("skill content is empty".into());
     }
 
-    let home = dirs::home_dir().ok_or_else(|| "could not resolve home directory".to_string())?;
-    let base: PathBuf = [home.as_path(), Path::new(CUSTOM_DIR), Path::new(name)]
-        .iter()
-        .collect();
+    let base = crate::paths::custom_skills_dir()?.join(name);
     let file = base.join("SKILL.md");
 
     let existed = base.exists();
