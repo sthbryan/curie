@@ -49,6 +49,7 @@ export type ProjectProbe = {
   name: string;
   exists: boolean;
   isDir: boolean;
+  isReserved: boolean;
 };
 
 export type ProjectSummary = {

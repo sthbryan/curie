@@ -31,6 +31,11 @@ pub struct ProjectProbe {
     pub name: String,
     pub exists: bool,
     pub is_dir: bool,
+    pub is_reserved: bool,
+}
+
+pub(crate) fn is_reserved(path: &Path, home: Option<&Path>) -> bool {
+    path.parent().is_none() || home.map(|h| h == path).unwrap_or(false)
 }
 
 pub(crate) fn project_name(path: &Path) -> String {
@@ -93,6 +98,7 @@ pub async fn validate_project_path(path: String) -> Result<ProjectProbe, String>
             name: project_name(&resolved),
             exists: canonical.is_some(),
             is_dir: canonical.map(|p| p.is_dir()).unwrap_or(false),
+            is_reserved: is_reserved(&resolved, dirs::home_dir().as_deref()),
         })
     })
     .await
@@ -142,6 +148,15 @@ mod tests {
     #[test]
     fn falls_back_to_the_whole_path_at_the_root() {
         assert_eq!(project_name(Path::new("/")), "/");
+    }
+
+    #[test]
+    fn reserves_the_root_and_the_home_directory() {
+        let home = Path::new("/Users/someone");
+        assert!(is_reserved(Path::new("/"), Some(home)));
+        assert!(is_reserved(home, Some(home)));
+        assert!(!is_reserved(Path::new("/Users/someone/code"), Some(home)));
+        assert!(!is_reserved(Path::new("/code/don_camaron"), Some(home)));
     }
 
     #[test]

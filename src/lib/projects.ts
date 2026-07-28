@@ -94,8 +94,7 @@ export async function addProject(): Promise<Project | null> {
     return null;
   }
 
-  const home = probe.path.split("/").slice(0, 3).join("/");
-  if (probe.path === "/" || samePath(probe.path, home)) {
+  if (probe.isReserved) {
     toast.error(tr("projects.refused"), { description: probe.path });
     return null;
   }

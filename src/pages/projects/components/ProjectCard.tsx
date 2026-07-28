@@ -56,7 +56,11 @@ export function ProjectCard({ project, summary, active, onOpen, onForget }: Prop
             {project.path}
           </span>
         </div>
-        {active && !missing ? (
+        {missing ? (
+          <span className="shrink-0 border border-warning/50 px-1.5 py-0.5 font-mono uppercase tracking-label text-micro text-warning">
+            {t("missing")}
+          </span>
+        ) : active ? (
           <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3">
             {t("active")}
           </span>
