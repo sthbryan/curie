@@ -100,18 +100,15 @@ Curie works with the real skills ecosystem on your computer. It doesn’t invent
 
 **Next up**
 
-- [ ] Update detection  
-- [ ] Auto-update Curie  
-- [ ] Polished, signed installers  
+- [x] Update detection  
+- [x] Auto-update Curie  
+- [x] Polished, signed installers  
 
 **Later**
 
-- [ ] Per-project skills  
-- [ ] Skill author mode  
+- [x] Per-project skills  
+- [x] Skill author mode  
 - [ ] Team presets (share a stack)  
-
-Global skills first. Project scope after the everyday loop feels complete.
-
 ---
 
 <p align="center">
