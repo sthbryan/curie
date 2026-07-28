@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest something Curie should be able to do
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Curie's goal is to make agent skills clear and visual, without the terminal. Ideas that serve that are welcome.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do today, and where does Curie get in the way?
+      placeholder: |
+        I keep the same three skills in every project and I have to install them
+        one by one each time I add a project.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you have in mind
+      description: Rough is fine. Describe the screen or the flow, not the implementation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you do instead right now
+      description: The workaround you use today, if any — it usually says a lot about the real need.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and this is not already proposed
+          required: true

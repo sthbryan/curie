@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Installing Curie
+    url: https://github.com/sthbryan/curie/blob/main/INSTALL.md
+    about: Trouble downloading, opening or updating the app — start here.
+  - name: Finding skills
+    url: https://skills.sh
+    about: Looking for skills to install, or publishing your own.

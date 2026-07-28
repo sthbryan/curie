@@ -1,0 +1,88 @@
+name: Bug report
+description: Something in Curie does not work the way it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. The more precise the steps, the faster it gets fixed.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+      placeholder: |
+        I clicked UPDATE NOW in Settings. The toast said the update was installed,
+        but the app never restarted and kept running the old version.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps someone else can follow on a fresh install.
+      placeholder: |
+        1. Open Settings
+        2. Press CHECK FOR UPDATES
+        3. Press UPDATE NOW
+        4. Wait — nothing happens
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Curie version
+      description: Settings shows it at the top, next to the version label.
+      placeholder: v0.5.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Linux (.deb)
+        - Linux (AppImage)
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Where does it happen
+      description: Curie manages skills globally and per project.
+      options:
+        - Global scope
+        - A project scope
+        - Both
+        - Not related to a scope
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Screenshots or logs
+      description: |
+        Drag images straight into this field. Terminal output goes in a code block.
+        Skill problems are often visible in `~/.curie/projects.json` or the skill lock file.
+      placeholder: |
+        ```
+        paste any error output here
+        ```
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and this is not a duplicate
+          required: true
+        - label: I am on the latest release, or I checked that the problem is still there
