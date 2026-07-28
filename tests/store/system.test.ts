@@ -1,13 +1,24 @@
 // @vitest-environment happy-dom
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { NodeInfo } from "@/components/types";
-import {
+
+const invokeMock = vi.fn();
+
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: (...args: unknown[]) => invokeMock(...args),
+}));
+
+const {
+  applySettings,
   completeSetup,
+  flushSettings,
   hasBooted,
   lang,
   markBooted,
+  markHydrated,
   node,
   reducedMotion,
+  resetSettingsPersistence,
   setLang,
   setNode,
   setReducedMotion,
@@ -15,7 +26,7 @@ import {
   setTheme,
   stage,
   theme,
-} from "@/store/system";
+} = await import("@/store/system");
 
 const sampleNode: NodeInfo = {
   installed: true,
@@ -25,6 +36,9 @@ const sampleNode: NodeInfo = {
 };
 
 beforeEach(() => {
+  invokeMock.mockReset();
+  invokeMock.mockResolvedValue(undefined);
+  resetSettingsPersistence();
   localStorage.clear();
   theme.value = "dark";
   lang.value = "en";
@@ -100,5 +114,61 @@ describe("system store (signals)", () => {
     expect(persistedKeys).toEqual(["hasBooted", "lang", "reducedMotion", "theme"]);
     expect(parsed.stage).toBeUndefined();
     expect(parsed.node).toBeUndefined();
+  });
+});
+
+describe("settings file persistence", () => {
+  it("caches to localStorage but never writes the file before hydration", async () => {
+    setTheme("light");
+    await flushSettings();
+
+    expect(localStorage.getItem("curie.system")).toContain("light");
+    expect(invokeMock).not.toHaveBeenCalled();
+  });
+
+  it("applySettings hydrates every field without writing back", async () => {
+    applySettings({ theme: "nord", lang: "es", reducedMotion: "always", hasBooted: true });
+
+    expect(theme.value).toBe("nord");
+    expect(lang.value).toBe("es");
+    expect(reducedMotion.value).toBe("always");
+    expect(hasBooted.value).toBe(true);
+
+    await flushSettings();
+    expect(invokeMock).not.toHaveBeenCalled();
+  });
+
+  it("writes the file once hydrated", async () => {
+    markHydrated();
+    setTheme("light");
+
+    expect(localStorage.getItem("curie.system")).toContain("light");
+    await flushSettings();
+
+    expect(invokeMock).toHaveBeenCalledWith("write_settings", {
+      settings: { theme: "light", lang: "en", reducedMotion: "user", hasBooted: false },
+    });
+  });
+
+  it("coalesces a burst of changes into a single write", async () => {
+    markHydrated();
+    setTheme("light");
+    setLang("es");
+    setReducedMotion("always");
+    await flushSettings();
+
+    expect(invokeMock).toHaveBeenCalledTimes(1);
+    expect(invokeMock).toHaveBeenCalledWith("write_settings", {
+      settings: { theme: "light", lang: "es", reducedMotion: "always", hasBooted: false },
+    });
+  });
+
+  it("keeps the app running when the write fails", async () => {
+    invokeMock.mockRejectedValue("could not save settings");
+    markHydrated();
+    setTheme("light");
+
+    await expect(flushSettings()).resolves.toBeUndefined();
+    expect(theme.value).toBe("light");
   });
 });
