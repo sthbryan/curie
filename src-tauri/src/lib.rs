@@ -4,7 +4,7 @@ mod update;
 
 pub use node::{build_plan, detect_node_info, install_node_impl, ManagerInfo, NodeInfo, SetupPlan};
 pub use skills::{
-    check_global_skill_updates, list_skills_in, CustomSkillInstallResult, DetectedSkill,
+    check_skill_updates_in, list_skills_in, CustomSkillInstallResult, DetectedSkill,
     ExplorePage, SkillDetection, SkillExploreResult, SkillInfo, SkillInstallResult,
     SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };

@@ -5,7 +5,7 @@ use super::types::{CliSkill, SkillInfo};
 
 pub fn list_skills_in(scope: &Scope) -> Result<Vec<SkillInfo>, String> {
     let cli_skills = run_skills_list(scope)?;
-    let lock = load_skill_lock();
+    let lock = load_skill_lock(scope);
 
     Ok(cli_skills
         .into_iter()

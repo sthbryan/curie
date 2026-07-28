@@ -13,7 +13,7 @@ mod types;
 mod update;
 
 pub use add::add_skill_in;
-pub use check::check_global_skill_updates;
+pub use check::check_skill_updates_in;
 pub use custom::install_custom_skill_in;
 pub use detect::{detect_skill_in, DetectedSkill, SkillDetection};
 pub use explore::explore_skills as browse_skills;
@@ -36,7 +36,7 @@ pub async fn list_skills() -> Result<Vec<SkillInfo>, String> {
 
 #[tauri::command]
 pub async fn check_skill_updates() -> Result<Vec<SkillUpdateInfo>, String> {
-    tauri::async_runtime::spawn_blocking(check_global_skill_updates)
+    tauri::async_runtime::spawn_blocking(|| check_skill_updates_in(&Scope::Global))
         .await
         .map_err(|e| format!("update check task failed: {e}"))?
 }
