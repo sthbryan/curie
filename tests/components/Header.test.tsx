@@ -25,6 +25,10 @@ function unmount() {
   if (container) { container.remove(); container = null; }
 }
 
+function activityButton() {
+  return container?.querySelector("button:not([aria-label])") ?? null;
+}
+
 afterEach(unmount);
 beforeEach(() => {
   lang.value = "en";
@@ -49,7 +53,7 @@ describe("Header", () => {
 
   it("stays quiet when nothing is happening", () => {
     mount(<Router><Header /></Router>);
-    expect(container?.querySelector("button")).toBeNull();
+    expect(activityButton()).toBeNull();
   });
 
   it("offers a shortcut when skills are outdated", () => {
@@ -58,7 +62,7 @@ describe("Header", () => {
       { name: "shader-dev", source: null, updateAvailable: false, checkable: true },
     ];
     mount(<Router><Header /></Router>);
-    expect(container?.querySelector("button")?.textContent).toContain("1 UPDATES");
+    expect(activityButton()?.textContent).toContain("1 UPDATES");
   });
 
   it("hides the shortcut on the page that already shows it", () => {
@@ -67,6 +71,6 @@ describe("Header", () => {
       { name: "pr-review", source: null, updateAvailable: true, checkable: true },
     ];
     mount(<Router><Header /></Router>);
-    expect(container?.querySelector("button")).toBeNull();
+    expect(activityButton()).toBeNull();
   });
 });
