@@ -1,9 +1,10 @@
 use std::process::Output;
 
 use super::npx::run_skills_command;
+use super::scope::Scope;
 use super::types::SkillRemoveResult;
 
-pub fn remove_global_skills(skills: &[String]) -> Result<SkillRemoveResult, String> {
+pub fn remove_skills_in(scope: &Scope, skills: &[String]) -> Result<SkillRemoveResult, String> {
     if skills.is_empty() {
         return Err("at least one skill name is required".into());
     }
@@ -15,18 +16,25 @@ pub fn remove_global_skills(skills: &[String]) -> Result<SkillRemoveResult, Stri
         }
     }
 
-    let mut args: Vec<&str> = vec!["remove", "-g", "-y"];
+    let mut args: Vec<&str> = vec!["remove"];
+    if let Some(flag) = scope.flag() {
+        args.push(flag);
+    }
+    args.push("-y");
     let name_refs: Vec<&str> = skills.iter().map(String::as_str).collect();
     args.extend(name_refs.iter().copied());
 
-    finish(run_skills_command(&args)?, skills.to_vec())
+    finish(run_skills_command(&args, scope)?, skills.to_vec())
 }
 
-pub fn remove_all_global_skills() -> Result<SkillRemoveResult, String> {
-    finish(
-        run_skills_command(&["remove", "--all", "-g", "-y"])?,
-        Vec::new(),
-    )
+pub fn remove_all_skills_in(scope: &Scope) -> Result<SkillRemoveResult, String> {
+    let mut args: Vec<&str> = vec!["remove", "--all"];
+    if let Some(flag) = scope.flag() {
+        args.push(flag);
+    }
+    args.push("-y");
+
+    finish(run_skills_command(&args, scope)?, Vec::new())
 }
 
 fn finish(output: Output, removed: Vec<String>) -> Result<SkillRemoveResult, String> {
@@ -48,7 +56,7 @@ fn finish(output: Output, removed: Vec<String>) -> Result<SkillRemoveResult, Str
     } else if !stderr.is_empty() {
         stderr
     } else if removed.is_empty() {
-        "Removed every global skill".into()
+        "Removed every skill".into()
     } else {
         format!("Removed {}", removed.join(", "))
     };

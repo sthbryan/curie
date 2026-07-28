@@ -1,7 +1,9 @@
 use super::npx::run_skills_command;
+use super::scope::Scope;
 use super::types::SkillInstallResult;
 
-pub fn add_global_skill(
+pub fn add_skill_in(
+    scope: &Scope,
     package: &str,
     skill_name: Option<&str>,
 ) -> Result<SkillInstallResult, String> {
@@ -13,13 +15,17 @@ pub fn add_global_skill(
         return Err("invalid package name".into());
     }
 
-    let mut args: Vec<&str> = vec!["add", package, "-g", "-y"];
+    let mut args: Vec<&str> = vec!["add", package];
+    if let Some(flag) = scope.flag() {
+        args.push(flag);
+    }
+    args.push("-y");
     if let Some(name) = skill_name.map(str::trim).filter(|n| !n.is_empty()) {
         args.push("-s");
         args.push(name);
     }
 
-    let output = run_skills_command(&args)?;
+    let output = run_skills_command(&args, scope)?;
     let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
     let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
 

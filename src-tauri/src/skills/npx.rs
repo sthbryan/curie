@@ -1,3 +1,4 @@
+use super::scope::Scope;
 use crate::node::detect_node_info;
 use std::path::PathBuf;
 use std::process::{Command, Output};
@@ -20,13 +21,17 @@ pub(crate) fn resolve_npx_bin() -> PathBuf {
     PathBuf::from("npx")
 }
 
-pub(crate) fn run_skills_command(args: &[&str]) -> Result<Output, String> {
+pub(crate) fn run_skills_command(args: &[&str], scope: &Scope) -> Result<Output, String> {
     let node = resolve_node_bin();
     let npx = resolve_npx_bin();
     let mut cmd = Command::new(&npx);
     cmd.arg("--yes").arg("skills").args(args);
     cmd.env("DISABLE_TELEMETRY", "1")
         .env("npm_config_yes", "true");
+
+    if let Some(dir) = scope.cwd() {
+        cmd.current_dir(dir);
+    }
 
     if let Some(parent) = node.parent() {
         let path = std::env::var_os("PATH").unwrap_or_default();

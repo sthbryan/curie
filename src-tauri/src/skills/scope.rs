@@ -1,12 +1,12 @@
 use std::path::{Path, PathBuf};
 
-pub(crate) enum Scope {
+pub enum Scope {
     Global,
     Project(PathBuf),
 }
 
 impl Scope {
-    pub(crate) fn resolve(project_path: Option<String>) -> Result<Self, String> {
+    pub fn resolve(project_path: Option<String>) -> Result<Self, String> {
         let Some(raw) = project_path else {
             return Ok(Scope::Global);
         };
@@ -29,14 +29,14 @@ impl Scope {
         Ok(Scope::Project(canonical))
     }
 
-    pub(crate) fn cwd(&self) -> Option<&Path> {
+    pub fn cwd(&self) -> Option<&Path> {
         match self {
             Scope::Global => None,
             Scope::Project(path) => Some(path.as_path()),
         }
     }
 
-    pub(crate) fn flag(&self) -> Option<&'static str> {
+    pub fn flag(&self) -> Option<&'static str> {
         match self {
             Scope::Global => Some("-g"),
             Scope::Project(_) => None,

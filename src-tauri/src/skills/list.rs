@@ -1,9 +1,10 @@
 use super::lock::load_skill_lock;
 use super::npx::{extract_json_array, run_skills_command};
+use super::scope::Scope;
 use super::types::{CliSkill, SkillInfo};
 
-pub fn list_global_skills() -> Result<Vec<SkillInfo>, String> {
-    let cli_skills = run_skills_list_global()?;
+pub fn list_skills_in(scope: &Scope) -> Result<Vec<SkillInfo>, String> {
+    let cli_skills = run_skills_list(scope)?;
     let lock = load_skill_lock();
 
     Ok(cli_skills
@@ -25,8 +26,14 @@ pub fn list_global_skills() -> Result<Vec<SkillInfo>, String> {
         .collect())
 }
 
-fn run_skills_list_global() -> Result<Vec<CliSkill>, String> {
-    let output = run_skills_command(&["list", "-g", "--json"])?;
+fn run_skills_list(scope: &Scope) -> Result<Vec<CliSkill>, String> {
+    let mut args: Vec<&str> = vec!["list"];
+    if let Some(flag) = scope.flag() {
+        args.push(flag);
+    }
+    args.push("--json");
+
+    let output = run_skills_command(&args, scope)?;
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
