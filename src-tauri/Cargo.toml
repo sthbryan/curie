@@ -1,6 +1,6 @@
 [package]
 name = "curie"
-version = "0.4.0"
+version = "0.4.1"
 description = "Native manager for agent skills."
 authors = ["curie"]
 edition = "2021"
