@@ -6,9 +6,9 @@ mod update;
 pub use node::{build_plan, detect_node_info, install_node_impl, ManagerInfo, NodeInfo, SetupPlan};
 pub use projects::{Project, ProjectProbe};
 pub use skills::{
-    check_skill_updates_in, list_skills_in, CustomSkillInstallResult, DetectedSkill,
-    ExplorePage, SkillDetection, SkillExploreResult, SkillInfo, SkillInstallResult,
-    SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
+    check_skill_updates_in, list_skills_in, CustomSkillInstallResult, DetectedSkill, ExplorePage,
+    Scope, SkillDetection, SkillExploreResult, SkillInfo, SkillInstallResult, SkillRemoveResult,
+    SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
 pub use update::{AppUpdateInfo, InstallResult};
 

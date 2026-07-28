@@ -12,7 +12,10 @@ fn main() {
     println!();
     match result {
         Ok(node) => {
-            println!("install completed: {}", node.version.as_deref().unwrap_or("?"));
+            println!(
+                "install completed: {}",
+                node.version.as_deref().unwrap_or("?")
+            );
             println!();
             println!("verify with:");
             println!("  cargo run --example check");

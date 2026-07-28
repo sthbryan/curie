@@ -20,11 +20,11 @@ pub use explore::explore_skills as browse_skills;
 pub use find::find_skills as search_skills;
 pub use list::list_skills_in;
 pub use remove::{remove_all_skills_in, remove_skills_in};
+pub use scope::Scope;
 pub use types::{
     CustomSkillInstallResult, ExplorePage, SkillExploreResult, SkillInfo, SkillInstallResult,
     SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
-pub use scope::Scope;
 pub use update::update_skills_in;
 
 #[tauri::command]
@@ -62,11 +62,9 @@ pub async fn find_skills(
     query: String,
     owner: Option<String>,
 ) -> Result<Vec<SkillSearchResult>, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        search_skills(&query, owner.as_deref())
-    })
-    .await
-    .map_err(|e| format!("find task failed: {e}"))?
+    tauri::async_runtime::spawn_blocking(move || search_skills(&query, owner.as_deref()))
+        .await
+        .map_err(|e| format!("find task failed: {e}"))?
 }
 
 #[tauri::command]
@@ -119,9 +117,7 @@ pub async fn remove_skills(
 }
 
 #[tauri::command]
-pub async fn remove_all_skills(
-    project_path: Option<String>,
-) -> Result<SkillRemoveResult, String> {
+pub async fn remove_all_skills(project_path: Option<String>) -> Result<SkillRemoveResult, String> {
     tauri::async_runtime::spawn_blocking(move || {
         remove_all_skills_in(&Scope::resolve(project_path)?)
     })

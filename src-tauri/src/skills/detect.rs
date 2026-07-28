@@ -112,11 +112,7 @@ pub(crate) fn parse_skill_list(raw: &str) -> SkillDetection {
     }
 }
 
-fn push_skill(
-    out: &mut Vec<DetectedSkill>,
-    name: &mut Option<String>,
-    desc: &mut String,
-) {
+fn push_skill(out: &mut Vec<DetectedSkill>, name: &mut Option<String>, desc: &mut String) {
     if let Some(n) = name.take() {
         let d = desc.trim().to_string();
         if !n.is_empty() {
@@ -199,10 +195,7 @@ fn parse_desc_line(line: &str) -> Option<String> {
 }
 
 fn strip_box(line: &str) -> Option<&str> {
-    if let Some(rest) = line
-        .strip_prefix('│')
-        .or_else(|| line.strip_prefix('|'))
-    {
+    if let Some(rest) = line.strip_prefix('│').or_else(|| line.strip_prefix('|')) {
         Some(rest)
     } else {
         None
@@ -387,4 +380,3 @@ mod integration_tests {
         assert_eq!(d.skills[0].name, "code-review-excellence");
     }
 }
-

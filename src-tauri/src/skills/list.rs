@@ -48,7 +48,8 @@ fn run_skills_list(scope: &Scope) -> Result<Vec<CliSkill>, String> {
     }
 
     let stdout = String::from_utf8_lossy(&output.stdout);
-    let json = extract_json_array(&stdout).ok_or_else(|| "skills list did not return JSON".to_string())?;
+    let json =
+        extract_json_array(&stdout).ok_or_else(|| "skills list did not return JSON".to_string())?;
 
     serde_json::from_str(json).map_err(|e| format!("Failed to parse skills list JSON: {e}"))
 }

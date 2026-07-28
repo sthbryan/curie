@@ -16,14 +16,15 @@ fn main() {
         Ok(info) => {
             println!(
                 "node:       {}",
-                if info.installed { "installed" } else { "NOT FOUND" }
+                if info.installed {
+                    "installed"
+                } else {
+                    "NOT FOUND"
+                }
             );
             println!("version:    {}", info.version.as_deref().unwrap_or("—"));
             println!("path:       {}", info.path.as_deref().unwrap_or("—"));
-            println!(
-                "manager:    {}",
-                info.manager.as_deref().unwrap_or("—")
-            );
+            println!("manager:    {}", info.manager.as_deref().unwrap_or("—"));
         }
         Err(e) => {
             println!("node:       error");
