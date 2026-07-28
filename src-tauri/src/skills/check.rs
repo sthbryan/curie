@@ -6,6 +6,7 @@ use std::sync::{Mutex, OnceLock};
 use std::time::{Duration, Instant};
 
 const TREE_CACHE_TTL: Duration = Duration::from_secs(120);
+const REQUEST_TIMEOUT: Duration = Duration::from_secs(7);
 
 type TreeCache = HashMap<String, (Instant, GitTreeResponse)>;
 
@@ -80,9 +81,7 @@ fn fetch_github_tree(
     };
 
     let token = github_token();
-    let agent = ureq::AgentBuilder::new()
-        .timeout(std::time::Duration::from_secs(10))
-        .build();
+    let agent = ureq::AgentBuilder::new().timeout(REQUEST_TIMEOUT).build();
 
     for branch in branches {
         let url = format!(
