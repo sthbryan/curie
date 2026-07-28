@@ -2,6 +2,30 @@ use super::lock::load_skill_lock;
 use super::scope::Scope;
 use super::types::{GitTreeResponse, SkillLockEntry, SkillUpdateInfo};
 use std::collections::HashMap;
+use std::sync::{Mutex, OnceLock};
+use std::time::{Duration, Instant};
+
+const TREE_CACHE_TTL: Duration = Duration::from_secs(300);
+
+type TreeCache = HashMap<String, (Instant, GitTreeResponse)>;
+
+fn tree_cache() -> &'static Mutex<TreeCache> {
+    static CACHE: OnceLock<Mutex<TreeCache>> = OnceLock::new();
+    CACHE.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+fn cached_tree(key: &str) -> Option<GitTreeResponse> {
+    let cache = tree_cache().lock().ok()?;
+    let (stored_at, tree) = cache.get(key)?;
+    (stored_at.elapsed() < TREE_CACHE_TTL).then(|| tree.clone())
+}
+
+fn store_tree(key: String, tree: &GitTreeResponse) {
+    if let Ok(mut cache) = tree_cache().lock() {
+        cache.retain(|_, (stored_at, _)| stored_at.elapsed() < TREE_CACHE_TTL);
+        cache.insert(key, (Instant::now(), tree.clone()));
+    }
+}
 
 pub(crate) fn skill_folder_path(skill_path: &str) -> String {
     let mut path = skill_path.replace('\\', "/");
@@ -38,6 +62,11 @@ fn encode_path_segment(segment: &str) -> String {
 }
 
 fn fetch_github_tree(owner_repo: &str, r#ref: Option<&str>) -> Option<GitTreeResponse> {
+    let cache_key = format!("{owner_repo}#{}", r#ref.unwrap_or(""));
+    if let Some(tree) = cached_tree(&cache_key) {
+        return Some(tree);
+    }
+
     let branches: Vec<&str> = if let Some(r) = r#ref.filter(|s| !s.is_empty()) {
         vec![r]
     } else {
@@ -68,6 +97,7 @@ fn fetch_github_tree(owner_repo: &str, r#ref: Option<&str>) -> Option<GitTreeRes
         match req.call() {
             Ok(resp) => {
                 if let Ok(tree) = resp.into_json::<GitTreeResponse>() {
+                    store_tree(cache_key, &tree);
                     return Some(tree);
                 }
             }
@@ -260,4 +290,50 @@ mod tests {
         );
     }
 
+    fn sample_tree(sha: &str) -> GitTreeResponse {
+        GitTreeResponse {
+            sha: sha.into(),
+            tree: vec![GitTreeEntry {
+                path: "skills/one".into(),
+                entry_type: "tree".into(),
+                sha: "hash".into(),
+            }],
+        }
+    }
+
+    #[test]
+    fn a_stored_tree_is_served_from_the_cache() {
+        let key = format!("owner/repo-hit-{}#", std::process::id());
+        store_tree(key.clone(), &sample_tree("cached"));
+
+        assert_eq!(cached_tree(&key).unwrap().sha, "cached");
+    }
+
+    #[test]
+    fn an_unknown_repo_is_a_cache_miss() {
+        let key = format!("owner/repo-miss-{}#", std::process::id());
+
+        assert!(cached_tree(&key).is_none());
+    }
+
+    #[test]
+    fn a_ref_gets_its_own_cache_entry() {
+        let base = format!("owner/repo-ref-{}", std::process::id());
+        store_tree(format!("{base}#"), &sample_tree("head"));
+        store_tree(format!("{base}#v2"), &sample_tree("tagged"));
+
+        assert_eq!(cached_tree(&format!("{base}#")).unwrap().sha, "head");
+        assert_eq!(cached_tree(&format!("{base}#v2")).unwrap().sha, "tagged");
+    }
+
+    #[test]
+    fn an_expired_entry_is_not_served() {
+        let key = format!("owner/repo-stale-{}#", std::process::id());
+        if let Ok(mut cache) = tree_cache().lock() {
+            let stale = Instant::now() - TREE_CACHE_TTL - Duration::from_secs(1);
+            cache.insert(key.clone(), (stale, sample_tree("stale")));
+        }
+
+        assert!(cached_tree(&key).is_none());
+    }
 }

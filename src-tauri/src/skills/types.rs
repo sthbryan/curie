@@ -167,14 +167,14 @@ pub(crate) struct SkillLockEntry {
     pub r#ref: Option<String>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub(crate) struct GitTreeResponse {
     pub sha: String,
     #[serde(default)]
     pub tree: Vec<GitTreeEntry>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub(crate) struct GitTreeEntry {
     pub path: String,
     #[serde(rename = "type")]
