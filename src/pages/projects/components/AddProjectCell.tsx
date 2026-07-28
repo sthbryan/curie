@@ -14,7 +14,7 @@ export function AddProjectCell({ busy, onAdd }: Props) {
       type="button"
       onClick={onAdd}
       disabled={busy}
-      className="flex min-h-40 flex-col items-center justify-center gap-2 border border-dashed border-border text-fg-3 transition-colors duration-150 hover:border-fg-3 hover:text-fg focus-visible:outline focus-visible:outline-1 focus-visible:outline-fg disabled:cursor-not-allowed disabled:opacity-60"
+      className="flex flex-col items-center justify-center gap-2 border border-dashed border-border px-5 py-8 text-fg-3 transition-colors duration-150 hover:border-fg-3 hover:text-fg focus-visible:outline focus-visible:outline-1 focus-visible:outline-fg disabled:cursor-not-allowed disabled:opacity-60"
     >
       <Plus size={16} aria-hidden />
       <span className="font-mono uppercase tracking-label text-micro">

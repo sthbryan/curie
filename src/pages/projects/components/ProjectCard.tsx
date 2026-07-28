@@ -19,6 +19,7 @@ type Props = {
 export function ProjectCard({ project, summary, active, onOpen, onForget }: Props) {
   const t = useT("projects");
   const missing = summary?.missing ?? false;
+  const agents = missing ? [] : (summary?.agents ?? []);
 
   return (
     <div
@@ -56,64 +57,62 @@ export function ProjectCard({ project, summary, active, onOpen, onForget }: Prop
             {project.path}
           </span>
         </div>
-        {missing ? (
-          <span className="shrink-0 border border-warning/50 px-1.5 py-0.5 font-mono uppercase tracking-label text-micro text-warning">
-            {t("missing")}
-          </span>
-        ) : active ? (
-          <span className="shrink-0 font-mono uppercase tracking-label text-micro text-fg-3">
-            {t("active")}
-          </span>
-        ) : null}
-      </div>
 
-      {missing ? (
-        <p className="font-body text-sm text-warning">{t("missingHint")}</p>
-      ) : summary ? (
-        <>
-          <div className="flex items-baseline gap-2">
-            <span
-              className={cn(
-                "font-mono text-xl font-bold leading-none tabular-nums",
-                summary.count > 0 ? "text-fg" : "text-fg-4",
-              )}
-            >
-              {summary.count}
+        <div className="flex shrink-0 items-center gap-2">
+          {missing ? (
+            <span className="border border-warning/50 px-1.5 py-0.5 font-mono uppercase tracking-label text-micro text-warning">
+              {t("missing")}
             </span>
+          ) : active ? (
             <span className="font-mono uppercase tracking-label text-micro text-fg-3">
-              {t("skills")}
+              {t("active")}
             </span>
-          </div>
+          ) : null}
 
-          <div className="flex min-h-5 flex-wrap gap-1">
-            {summary.agents.slice(0, MAX_AGENTS).map((agent) => (
-              <AgentBadge key={agent} label={agent} />
-            ))}
-            {summary.agents.length > MAX_AGENTS ? (
-              <span className="self-center px-1 font-mono text-micro text-fg-4">
-                +{summary.agents.length - MAX_AGENTS}
-              </span>
-            ) : null}
-          </div>
-        </>
-      ) : (
-        <>
-          <Bone className="h-6 w-16" />
-          <Bone className="h-5 w-32" />
-        </>
-      )}
-
-      <div className="flex items-center justify-end border-t border-border pt-3">
-        <div className="relative z-10 flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
           <IconButton
             label={t("forget", { name: project.name })}
             variant="ghost"
+            size="xs"
+            className="relative z-10 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"
             onClick={onForget}
           >
             <X size={12} />
           </IconButton>
         </div>
       </div>
+
+      {missing ? (
+        <p className="font-body text-sm text-warning">{t("missingHint")}</p>
+      ) : summary ? (
+        <div className="flex items-baseline gap-2">
+          <span
+            className={cn(
+              "font-mono text-xl font-bold leading-none tabular-nums",
+              summary.count > 0 ? "text-fg" : "text-fg-4",
+            )}
+          >
+            {summary.count}
+          </span>
+          <span className="font-mono uppercase tracking-label text-micro text-fg-3">
+            {t("skills")}
+          </span>
+        </div>
+      ) : (
+        <Bone className="h-6 w-16" />
+      )}
+
+      {agents.length > 0 ? (
+        <div className="flex flex-wrap gap-1">
+          {agents.slice(0, MAX_AGENTS).map((agent) => (
+            <AgentBadge key={agent} label={agent} />
+          ))}
+          {agents.length > MAX_AGENTS ? (
+            <span className="self-center px-1 font-mono text-micro text-fg-4">
+              +{agents.length - MAX_AGENTS}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }
