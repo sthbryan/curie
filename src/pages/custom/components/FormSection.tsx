@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 
 type Props = {
@@ -13,7 +14,9 @@ export function FormSection({ eyebrow, title, subtitle, children }: Props) {
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <Label>{eyebrow}</Label>
-        <h3 className="font-display text-xl font-bold tracking-tight text-fg">{title}</h3>
+        <Heading as="h3" className="text-xl">
+          {title}
+        </Heading>
         <p className="font-body text-sm text-fg-3 max-w-lg">{subtitle}</p>
       </div>
       {children}

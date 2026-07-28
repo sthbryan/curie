@@ -1,6 +1,7 @@
 import { CircleFadingArrowUp, Plus, RefreshCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
+import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { t as rawT, useT } from "@/i18n";
 import { checkSkillUpdates, loadSkills } from "@/lib/boot";
@@ -38,7 +39,7 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-3">
         <Label>{t("eyebrow")}</Label>
-        <h2 className="font-display text-heading font-bold tracking-tight text-fg">{t("title")}</h2>
+        <Heading>{t("title")}</Heading>
         <p className="max-w-lg font-body text-sm text-fg-3">
           {t("subtitle", { n: skills.value.length })}
           {scope.kind === "project" ? ` ${t("scopeBadge", { name: scope.project.name })}` : ""}

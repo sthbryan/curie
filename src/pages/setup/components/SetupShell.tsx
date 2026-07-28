@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
+import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { fadeUp } from "@/lib/motion";
 
@@ -17,9 +18,7 @@ export function SetupShell({ eyebrow, title, subtitle, eyebrowClassName, childre
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-10 pt-16 pb-10">
         <motion.section {...fadeUp(0)} className="flex flex-col gap-3">
           <Label className={eyebrowClassName}>{eyebrow}</Label>
-          <h2 className="max-w-xl font-display text-heading font-bold tracking-tight text-fg">
-            {title}
-          </h2>
+          <Heading className="max-w-xl">{title}</Heading>
           <p className="max-w-xl font-body text-base text-fg-3">{subtitle}</p>
         </motion.section>
 

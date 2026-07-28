@@ -1,5 +1,6 @@
 import { House, RefreshCcw } from "lucide-react";
 import { When } from "react-if";
+import { Heading } from "@/components/Heading";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { lang } from "@/store/system";
@@ -36,9 +37,7 @@ export function ErrorFallback({ error, reset, variant = "page", onHome }: Props)
       <span className="font-mono uppercase tracking-label text-micro text-accent">
         {t(lang, "error.eyebrow")}
       </span>
-      <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-        {t(lang, "error.title")}
-      </h2>
+      <Heading>{t(lang, "error.title")}</Heading>
       <p className="font-body text-sm text-fg-3">{t(lang, "error.subtitle")}</p>
       <p
         className="w-full border border-border-strong bg-surface-tint px-3 py-2 font-mono text-micro text-fg-3 break-all text-left"

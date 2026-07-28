@@ -3,6 +3,7 @@ import { SquareArrowOutUpRight } from "lucide-react";
 import { Else, If, Then } from "react-if";
 import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
+import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import {
   REDUCED_MOTION_OPTIONS,
@@ -52,9 +53,7 @@ export function Settings() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-10 pt-12 pb-8">
         <section className="flex flex-col gap-3">
           <Label>{t("eyebrow")}</Label>
-          <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-            {t("title")}
-          </h2>
+          <Heading>{t("title")}</Heading>
         </section>
 
         <hr className="border-0 border-t border-border" />

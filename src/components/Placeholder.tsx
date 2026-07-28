@@ -1,4 +1,5 @@
 import { useLocation } from "wouter";
+import { Heading } from "@/components/Heading";
 import { useT } from "@/i18n";
 import { Button } from "./Button";
 import type { View } from "./types";
@@ -17,9 +18,7 @@ export function Placeholder({ view }: Props) {
 
   return (
     <main className="flex min-w-0 flex-1 flex-col items-center justify-center gap-3 px-10">
-      <span className="font-display text-heading font-bold tracking-tight text-fg">
-        {view.toUpperCase()}
-      </span>
+      <Heading as="span">{view.toUpperCase()}</Heading>
       <span className="font-mono uppercase tracking-label text-mono text-fg-3">
         {t("home.notBuilt")}
       </span>

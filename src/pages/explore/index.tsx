@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
 import { ErrorNotice } from "@/components/ErrorNotice";
+import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { ScopeBanner } from "@/components/ScopeBanner";
 import type { ExploreView } from "@/components/types";
@@ -99,9 +100,7 @@ export function Explore() {
             <Label>{t("eyebrow")}</Label>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="flex flex-col gap-2 min-w-0">
-                <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-                  {t("title")}
-                </h2>
+                <Heading>{t("title")}</Heading>
                 <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
               </div>
               <div className="flex shrink-0 gap-2">

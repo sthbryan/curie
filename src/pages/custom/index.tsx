@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { ScopeBanner } from "@/components/ScopeBanner";
 import { useT } from "@/i18n";
@@ -16,9 +17,7 @@ export function Custom() {
 
         <motion.section {...fadeUp(0)} className="flex flex-col gap-3">
           <Label>{t("eyebrow")}</Label>
-          <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-            {t("title")}
-          </h2>
+          <Heading>{t("title")}</Heading>
           <p className="max-w-2xl font-body text-sm text-fg-3">{t("subtitle")}</p>
         </motion.section>
 

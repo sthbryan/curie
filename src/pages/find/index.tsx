@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { When } from "react-if";
 import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
+import { Heading } from "@/components/Heading";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
 import { ScopeBanner } from "@/components/ScopeBanner";
@@ -100,9 +101,7 @@ export function Find() {
         <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>
-            <h2 className="font-display text-heading font-bold tracking-tight text-fg">
-              {t("title")}
-            </h2>
+            <Heading>{t("title")}</Heading>
             <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
           </div>
 

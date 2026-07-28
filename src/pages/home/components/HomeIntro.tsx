@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
@@ -11,7 +12,7 @@ export function HomeIntro() {
   return (
     <motion.section {...fadeUp(0)} className="flex flex-col gap-3">
       <Label>{t("eyebrow")}</Label>
-      <h2 className="font-display text-heading font-bold tracking-tight text-fg">{t("title")}</h2>
+      <Heading>{t("title")}</Heading>
       {totalSkills.value === 0 ? (
         <p className="max-w-2xl font-body text-sm text-fg-3">{t("skillsNone")}</p>
       ) : (
