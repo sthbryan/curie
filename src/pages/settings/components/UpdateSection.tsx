@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
-import { checkAppUpdate, installAppUpdate } from "@/lib/boot";
+import { checkAppUpdate, installAppUpdate, RESTART_DELAY, restartApp } from "@/lib/boot";
 import { cn } from "@/lib/cn";
 import { APP_VERSION_LABEL } from "@/lib/meta";
 import { formatRelative } from "@/lib/skills";
@@ -37,6 +37,9 @@ export function UpdateSection() {
     if (!result) return;
     if (result.success) {
       toast.success(t("updateInstallSuccess"));
+      setTimeout(() => {
+        void restartApp();
+      }, RESTART_DELAY);
       return;
     }
     toast.error(result.message || t("updateInstallFailed"));

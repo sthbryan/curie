@@ -66,6 +66,16 @@ export async function installAppUpdate(): Promise<InstallResult | null> {
   }
 }
 
+export const RESTART_DELAY = 1200;
+
+export async function restartApp() {
+  try {
+    await invoke("restart_app");
+  } catch {
+    // the process is going away — nothing to report
+  }
+}
+
 let loadToken = 0;
 let updatesToken = 0;
 

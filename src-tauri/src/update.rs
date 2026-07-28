@@ -164,3 +164,8 @@ async fn install_app_update_impl(app: &AppHandle) -> Result<InstallResult, Strin
         fallback_url: None,
     })
 }
+
+#[tauri::command]
+pub fn restart_app(app: AppHandle) {
+    app.restart();
+}
