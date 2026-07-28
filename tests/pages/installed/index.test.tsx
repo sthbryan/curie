@@ -19,14 +19,14 @@ import { lang } from "@/store/system";
 import { buttonWith, cleanup, click, mount, skillFixture, text } from "./mount";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
+const loadSkillsMock = vi.fn().mockResolvedValue(undefined);
 const checkSkillUpdatesMock = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
   checkSkillUpdates: (...args: unknown[]) => checkSkillUpdatesMock(...args),
 }));
 
@@ -35,7 +35,7 @@ const { Installed } = await import("@/pages/installed/index");
 afterEach(cleanup);
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockClear();
+  loadSkillsMock.mockClear();
   checkSkillUpdatesMock.mockClear();
   lang.value = "en";
   skills.value = [];
@@ -173,7 +173,7 @@ describe("Installed", () => {
       buttonWith(el, "REFRESH")?.click();
     });
 
-    expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: false });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: false });
     expect(checkSkillUpdatesMock).toHaveBeenCalledTimes(1);
   });
 });

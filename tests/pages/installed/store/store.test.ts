@@ -26,19 +26,19 @@ import {
 } from "@/pages/installed/store/store";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn();
+const loadSkillsMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockReset();
-  loadGlobalSkillsMock.mockResolvedValue(undefined);
+  loadSkillsMock.mockReset();
+  loadSkillsMock.mockResolvedValue(undefined);
   updatingSkill.value = null;
   updateApplyError.value = null;
   removingSkill.value = null;
@@ -66,7 +66,7 @@ describe("InstalledActions", () => {
     await update();
 
     expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: null });
-    expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
     expect(updatingSkill.value).toBeNull();
     expect(updateApplyError.value).toBeNull();
   });
@@ -102,7 +102,7 @@ describe("InstalledActions", () => {
     await remove(["only"]);
 
     expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["only"] });
-    expect(loadGlobalSkillsMock).toHaveBeenCalled();
+    expect(loadSkillsMock).toHaveBeenCalled();
     expect(removingSkill.value).toBeNull();
   });
 
@@ -116,7 +116,7 @@ describe("InstalledActions", () => {
   it("remove() with empty names is a no-op", async () => {
     await remove([]);
     expect(invokeMock).not.toHaveBeenCalled();
-    expect(loadGlobalSkillsMock).not.toHaveBeenCalled();
+    expect(loadSkillsMock).not.toHaveBeenCalled();
   });
 
   it("remove() surfaces a failure and rethrows", async () => {
@@ -248,7 +248,7 @@ describe("removeAll", () => {
     expect(queryInput.value).toBe("");
     expect(agentFilter.value).toBeNull();
     expect(removingSkill.value).toBeNull();
-    expect(loadGlobalSkillsMock).toHaveBeenCalled();
+    expect(loadSkillsMock).toHaveBeenCalled();
   });
 
   it("keeps the failure in the banner and rethrows", async () => {

@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useState } from "react";
 import type { CustomSkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
-import { loadGlobalSkills } from "@/lib/boot";
+import { loadSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
 import { promiseToast } from "@/lib/toast";
 import { lang } from "@/store/system";
@@ -22,7 +22,7 @@ export function useLocalInstall(): LocalInstall {
       name: detail,
       content,
     }).then(async (res) => {
-      await loadGlobalSkills({ checkUpdates: true });
+      await loadSkills(null, { checkUpdates: true });
       return res;
     });
 

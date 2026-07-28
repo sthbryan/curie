@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import type { SkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
-import { loadGlobalSkills } from "@/lib/boot";
+import { loadSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
 import { lang } from "@/store/system";
 
@@ -24,7 +24,7 @@ export function useSkillInstall(): SkillInstall {
     try {
       await invoke<SkillInstallResult>("add_skill", { package: pkg });
       toast.success(t(lang.value, "toast.installed", { name: pkg }));
-      await loadGlobalSkills({ checkUpdates: true });
+      await loadSkills(null, { checkUpdates: true });
     } catch (e) {
       setInstallError(errorMessage(e));
       throw e;

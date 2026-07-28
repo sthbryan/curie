@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { NodeInfo, ProgressEvent, SetupPlan, SetupStep } from "@/components/types";
 import { t } from "@/i18n";
-import { loadGlobalSkills } from "@/lib/boot";
+import { loadSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
 import { lang } from "@/store/system";
 
@@ -87,7 +87,7 @@ export function useSetup(onComplete: (node: NodeInfo) => void) {
       if (!ready.installed) throw new Error(t(lang.value, "setup.errorHint"));
       toast.success(t(lang.value, "toast.setupComplete"));
       onComplete(ready);
-      loadGlobalSkills().catch(() => {
+      loadSkills().catch(() => {
         // the skills store surfaces its own error state
       });
     } catch (e) {

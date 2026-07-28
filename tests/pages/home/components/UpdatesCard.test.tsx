@@ -11,7 +11,7 @@ const checkSkillUpdatesMock = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@/lib/boot", () => ({
   checkSkillUpdates: (...args: unknown[]) => checkSkillUpdatesMock(...args),
-  loadGlobalSkills: vi.fn(),
+  loadSkills: vi.fn(),
 }));
 
 const { UpdatesCard } = await import("@/pages/home/components/UpdatesCard");

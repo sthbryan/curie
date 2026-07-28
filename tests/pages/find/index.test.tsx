@@ -16,13 +16,13 @@ import {
 import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
+const loadSkillsMock = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 const { Find } = await import("@/pages/find/index");
@@ -52,7 +52,7 @@ const sample: SkillSearchResult = {
 
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockClear();
+  loadSkillsMock.mockClear();
   skills.value = [];
   skillsLoading.value = false;
   skillsError.value = null;

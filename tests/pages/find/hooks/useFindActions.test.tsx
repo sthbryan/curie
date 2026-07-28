@@ -6,14 +6,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SkillSearchResult } from "@/components/types";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn();
+const loadSkillsMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 const { useFindActions } = await import("@/pages/find/hooks/useFindActions");
@@ -55,8 +55,8 @@ function renderHook<T>(hookFn: () => T) {
 
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockReset();
-  loadGlobalSkillsMock.mockResolvedValue(undefined);
+  loadSkillsMock.mockReset();
+  loadSkillsMock.mockResolvedValue(undefined);
 });
 
 afterEach(() => {
@@ -204,7 +204,7 @@ describe("useFindActions", () => {
     });
 
     expect(invokeMock).toHaveBeenCalledWith("add_skill", { package: "x" });
-    expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
     expect(get().installing).toBeNull();
     unmount();
   });

@@ -13,7 +13,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: vi.fn(),
+  loadSkills: vi.fn(),
 }));
 
 vi.mock("@/lib/toast", () => ({

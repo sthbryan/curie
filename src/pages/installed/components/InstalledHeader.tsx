@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { t as rawT, useT } from "@/i18n";
-import { checkSkillUpdates, loadGlobalSkills } from "@/lib/boot";
+import { checkSkillUpdates, loadSkills } from "@/lib/boot";
 import { cn } from "@/lib/cn";
 import { skills, skillsLoading, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
@@ -23,7 +23,7 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
   const [, navigate] = useLocation();
 
   const refresh = async () => {
-    await loadGlobalSkills({ checkUpdates: false });
+    await loadSkills(null, { checkUpdates: false });
     await checkSkillUpdates();
     const found = updateNames.value.size;
     toast.success(

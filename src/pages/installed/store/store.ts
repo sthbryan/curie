@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import type { SortDir } from "@/components/Table";
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
 import { t } from "@/i18n";
-import { loadGlobalSkills } from "@/lib/boot";
+import { loadSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
 import { lang } from "@/store/system";
 import type { SortField } from "../lib/query";
@@ -78,7 +78,7 @@ export const update = async (names?: string[]) => {
       skills: names && names.length > 0 ? names : null,
     });
     toast.success(t(lang.value, "toast.updated", { name: names?.length === 1 ? names[0] : "" }));
-    await loadGlobalSkills({ checkUpdates: true });
+    await loadSkills(null, { checkUpdates: true });
   } catch (e) {
     updateApplyError.value = errorMessage(e);
     throw e;
@@ -95,7 +95,7 @@ export const remove = async (names: string[]) => {
     await invoke<SkillRemoveResult>("remove_skills", { skills: names });
     const removedName = names.length === 1 ? names[0] : null;
     toast.success(t(lang.value, "toast.removed", removedName ? { name: removedName } : undefined));
-    await loadGlobalSkills({ checkUpdates: true });
+    await loadSkills(null, { checkUpdates: true });
   } catch (e) {
     removeError.value = errorMessage(e);
     throw e;
@@ -111,7 +111,7 @@ export const removeAll = async () => {
     await invoke<SkillRemoveResult>("remove_all_skills");
     toast.success(t(lang.value, "toast.removedAll"));
     clearFilters();
-    await loadGlobalSkills({ checkUpdates: true });
+    await loadSkills(null, { checkUpdates: true });
   } catch (e) {
     removeError.value = errorMessage(e);
     throw e;

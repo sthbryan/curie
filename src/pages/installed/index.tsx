@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
-import { loadGlobalSkills } from "@/lib/boot";
+import { loadSkills } from "@/lib/boot";
 import { fadeUp } from "@/lib/motion";
 import { skills, skillsError, skillsLoading } from "@/store/skills";
 import { EmptyState, NoMatches } from "./components/EmptyState";
@@ -27,7 +27,7 @@ export function Installed() {
       <FullPageError
         message={skillsError.value}
         onRetry={() => {
-          void loadGlobalSkills();
+          void loadSkills();
         }}
       />
     );

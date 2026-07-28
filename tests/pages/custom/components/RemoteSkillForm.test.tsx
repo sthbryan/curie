@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SkillDetection, SkillInstallResult } from "@/components/types";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn();
+const loadSkillsMock = vi.fn();
 const toastErrorMock = vi.fn();
 const promiseToastMock = vi.fn();
 
@@ -15,7 +15,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 vi.mock("sonner", () => ({
@@ -122,8 +122,8 @@ async function clickInstall() {
 
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockReset();
-  loadGlobalSkillsMock.mockResolvedValue(undefined);
+  loadSkillsMock.mockReset();
+  loadSkillsMock.mockResolvedValue(undefined);
   toastErrorMock.mockReset();
   promiseToastMock.mockReset();
   vi.useFakeTimers();

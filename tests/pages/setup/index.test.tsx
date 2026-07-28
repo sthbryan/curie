@@ -9,7 +9,7 @@ import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/syst
 const invokeMock = vi.fn();
 const listenMock = vi.fn();
 const openUrlMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
+const loadSkillsMock = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -21,7 +21,7 @@ vi.mock("@tauri-apps/plugin-opener", () => ({
   openUrl: (...args: unknown[]) => openUrlMock(...args),
 }));
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 const { Setup } = await import("@/pages/setup/index");
@@ -102,7 +102,7 @@ beforeEach(() => {
   invokeMock.mockReset();
   listenMock.mockReset();
   openUrlMock.mockReset();
-  loadGlobalSkillsMock.mockClear();
+  loadSkillsMock.mockClear();
   unlisten.mockReset();
   listenMock.mockResolvedValue(unlisten);
   theme.value = "dark";
@@ -190,7 +190,7 @@ describe("Setup", () => {
     await flush();
 
     expect(onComplete).toHaveBeenCalledWith(installedNode);
-    expect(loadGlobalSkillsMock).toHaveBeenCalled();
+    expect(loadSkillsMock).toHaveBeenCalled();
   });
 
   it("shows the failure and the command to run by hand", async () => {
