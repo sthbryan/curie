@@ -13,7 +13,7 @@ export function FullPageLoading({ label }: Props) {
       aria-live="polite"
       className="flex min-w-0 flex-1 flex-col items-center justify-center gap-10"
     >
-      <ThinkingOrb state="solving" size={64} className="scale-200" />
+      <ThinkingOrb state="solving" size={64} />
       <span className="font-mono uppercase tracking-label text-mono text-fg-3">
         {label ?? t("app.loading")}
       </span>
