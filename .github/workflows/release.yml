@@ -25,13 +25,6 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: src-tauri
-          cache-all-crates: true
-          save-if: false
-
       - name: Install system deps (Linux)
         if: runner.os == 'Linux'
         run: |
