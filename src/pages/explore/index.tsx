@@ -4,15 +4,16 @@ import { motion, useReducedMotionConfig } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { When } from "react-if";
 import { toast } from "sonner";
-import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Label } from "@/components/Label";
+import { ScopeBanner } from "@/components/ScopeBanner";
 import type { ExploreView } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
+import { useRoute } from "@/lib/routes";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { skills } from "@/store/skills";
 import { ExploreList } from "./components/ExploreList";
@@ -22,7 +23,7 @@ const VIEWS: ExploreView[] = ["hot", "trending", "all-time"];
 
 export function Explore() {
   const t = useT("explore");
-  const [, navigate] = useLocation();
+  const { go } = useRoute();
   const shouldReduceMotion = useReducedMotionConfig();
   const {
     skills: exploreSkills,
@@ -66,7 +67,7 @@ export function Explore() {
     });
   }
 
-  const handleGoFind = () => navigate("/find");
+  const handleGoFind = () => go("find");
   const handleOpenSite = () => {
     void openUrl("https://skills.sh");
   };
@@ -91,6 +92,8 @@ export function Explore() {
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
       <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-8 px-10 pt-12 pb-8">
+        <ScopeBanner />
+
         <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>

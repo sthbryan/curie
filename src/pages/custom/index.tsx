@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { Label } from "@/components/Label";
+import { ScopeBanner } from "@/components/ScopeBanner";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
 import { LocalSkillForm } from "./components/LocalSkillForm";
@@ -11,6 +12,8 @@ export function Custom() {
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-10 pt-12 pb-8">
+        <ScopeBanner />
+
         <motion.section {...fadeUp(0)} className="flex flex-col gap-3">
           <Label>{t("eyebrow")}</Label>
           <h2 className="font-display text-heading font-bold tracking-tight text-fg">
