@@ -21,6 +21,7 @@
   "dependencies": {
     "@preact/signals": "2.10.0",
     "@tauri-apps/api": "2.11.1",
+    "@tauri-apps/plugin-dialog": "2.5.0",
     "@tauri-apps/plugin-opener": "2.5.4",
     "cnfast": "0.0.8",
     "lucide-react": "1.26.0",
