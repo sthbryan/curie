@@ -5,6 +5,7 @@ import type { SkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
 import { loadSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
+import { activeScopePath } from "@/store/skills";
 import { lang } from "@/store/system";
 
 export type SkillInstall = {
@@ -19,12 +20,14 @@ export function useSkillInstall(): SkillInstall {
   const [installError, setInstallError] = useState<string | null>(null);
 
   const install = useCallback(async (pkg: string) => {
+    const projectPath = activeScopePath.value;
     setInstalling(pkg);
     setInstallError(null);
     try {
-      await invoke<SkillInstallResult>("add_skill", { package: pkg });
+      await invoke<SkillInstallResult>("add_skill", { package: pkg, projectPath });
       toast.success(t(lang.value, "toast.installed", { name: pkg }));
-      await loadSkills(null, { checkUpdates: true });
+      if (projectPath === activeScopePath.value)
+        await loadSkills(projectPath, { checkUpdates: true });
     } catch (e) {
       setInstallError(errorMessage(e));
       throw e;

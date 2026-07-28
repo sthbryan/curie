@@ -4,7 +4,7 @@ import { FullPageError } from "@/components/FullPageError";
 import { useT } from "@/i18n";
 import { loadSkills } from "@/lib/boot";
 import { scopeKey, scopePath, useRoute } from "@/lib/routes";
-import { resetSkillsForScope, skillsScope } from "@/store/skills";
+import { activeScopePath, resetSkillsForScope, skillsScope } from "@/store/skills";
 
 export function useScopeSync() {
   const { scope, missing } = useRoute();
@@ -12,7 +12,9 @@ export function useScopeSync() {
   const path = scopePath(scope);
 
   useEffect(() => {
-    if (key === null || key === skillsScope.value) return;
+    if (key === null) return;
+    activeScopePath.value = path;
+    if (key === skillsScope.value) return;
     resetSkillsForScope(key);
     void loadSkills(path, { checkUpdates: true });
   }, [key, path]);

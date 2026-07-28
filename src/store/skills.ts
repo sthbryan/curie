@@ -3,6 +3,7 @@ import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
 
 export const skills = signal<SkillInfo[]>([]);
 export const skillsScope = signal<string>("global");
+export const activeScopePath = signal<string | null>(null);
 export const skillsLoading = signal<boolean>(false);
 export const skillsError = signal<string | null>(null);
 export const skillUpdates = signal<SkillUpdateInfo[]>([]);

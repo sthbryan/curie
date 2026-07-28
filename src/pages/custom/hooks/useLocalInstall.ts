@@ -5,6 +5,7 @@ import { t } from "@/i18n";
 import { loadSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
 import { promiseToast } from "@/lib/toast";
+import { activeScopePath } from "@/store/skills";
 import { lang } from "@/store/system";
 
 export type LocalInstall = {
@@ -16,13 +17,16 @@ export function useLocalInstall(): LocalInstall {
   const [installing, setInstalling] = useState(false);
 
   const install = useCallback(async (name: string, content: string) => {
+    const projectPath = activeScopePath.value;
     setInstalling(true);
     const detail = name.trim();
     const promise = invoke<CustomSkillInstallResult>("install_custom_skill", {
       name: detail,
       content,
+      projectPath,
     }).then(async (res) => {
-      await loadSkills(null, { checkUpdates: true });
+      if (projectPath === activeScopePath.value)
+        await loadSkills(projectPath, { checkUpdates: true });
       return res;
     });
 

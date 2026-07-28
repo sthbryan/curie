@@ -6,6 +6,7 @@ import { t } from "@/i18n";
 import { loadSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
 import { promiseToast } from "@/lib/toast";
+import { activeScopePath } from "@/store/skills";
 import { lang } from "@/store/system";
 import { classifyTarget, targetLabel } from "../lib/target";
 
@@ -24,13 +25,16 @@ export function useRemoteInstall(): RemoteInstall {
       return false;
     }
 
+    const projectPath = activeScopePath.value;
     setInstalling(true);
     const detail = targetLabel(trimmed);
     const promise = invoke<SkillInstallResult>("add_skill", {
       package: trimmed,
       skillName: null,
+      projectPath,
     }).then(async (res) => {
-      await loadSkills(null, { checkUpdates: true });
+      if (projectPath === activeScopePath.value)
+        await loadSkills(projectPath, { checkUpdates: true });
       return res;
     });
 
