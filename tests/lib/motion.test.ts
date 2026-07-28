@@ -11,17 +11,18 @@ describe("motion constants", () => {
     expect(easeOut).toEqual([0.22, 1, 0.36, 1]);
   });
 
-  it("pageTransition drives opacity, y, and scale", () => {
-    expect(pageTransition.initial).toEqual({ opacity: 0, y: 12, scale: 0.99 });
-    expect(pageTransition.animate).toEqual({ opacity: 1, y: 0, scale: 1 });
-    expect(pageTransition.exit).toEqual({ opacity: 0, y: -6, scale: 1.005 });
+  it("pageTransition drives opacity and y", () => {
+    expect(pageTransition.initial).toEqual({ opacity: 0, y: 6 });
+    expect(pageTransition.animate).toMatchObject({ opacity: 1, y: 0 });
+    expect(pageTransition.exit).toMatchObject({ opacity: 0, y: -3, pointerEvents: "none" });
   });
 
-  it("pageTransition uses a slow ease-out curve", () => {
-    expect(pageTransition.transition).toMatchObject({
-      duration: duration.slow,
+  it("pageTransition leaves faster than it enters", () => {
+    expect(pageTransition.animate.transition).toMatchObject({
+      duration: duration.base,
       ease: easeOut,
     });
+    expect(pageTransition.exit.transition.duration).toBeLessThan(duration.base);
   });
 
   it("fadeUp returns a variant with the given delay", () => {
