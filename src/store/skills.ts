@@ -2,6 +2,7 @@ import { signal } from "@preact/signals";
 import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
 
 export const skills = signal<SkillInfo[]>([]);
+export const skillsScope = signal<string>("global");
 export const skillsLoading = signal<boolean>(false);
 export const skillsError = signal<string | null>(null);
 export const skillUpdates = signal<SkillUpdateInfo[]>([]);
@@ -27,6 +28,13 @@ export const setUpdatesLoading = (next: boolean) => {
 };
 export const setUpdatesError = (next: string | null) => {
   updatesError.value = next;
+};
+export const resetSkillsForScope = (key: string) => {
+  skillsScope.value = key;
+  skills.value = [];
+  skillUpdates.value = [];
+  skillsError.value = null;
+  updatesError.value = null;
 };
 
 export const skillsStore = {
