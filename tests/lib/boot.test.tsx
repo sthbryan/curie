@@ -107,6 +107,42 @@ describe("loadSkills", () => {
     expect(invokeMock).toHaveBeenCalledWith("list_skills", { projectPath: null });
   });
 
+  it("sends the project path when a project scope is active", async () => {
+    invokeMock.mockResolvedValue([]);
+    await loadSkills("/code/don_camaron", { checkUpdates: false });
+    expect(invokeMock).toHaveBeenCalledWith("list_skills", {
+      projectPath: "/code/don_camaron",
+    });
+  });
+
+  it("drops a slow response once a newer scope has taken over", async () => {
+    let releaseGlobal: ((value: SkillInfo[]) => void) | null = null;
+    invokeMock.mockImplementation((cmd, args) => {
+      if (cmd !== "list_skills") return Promise.resolve([]);
+      const { projectPath } = args as { projectPath: string | null };
+      if (projectPath === null) {
+        return new Promise<SkillInfo[]>((resolve) => {
+          releaseGlobal = resolve;
+        });
+      }
+      return Promise.resolve(sampleSkills);
+    });
+
+    const stale = loadSkills(null, { checkUpdates: false });
+    await loadSkills("/code/don_camaron", { checkUpdates: false });
+
+    expect(skills.value).toBe(sampleSkills);
+    expect(skillsLoading.value).toBe(false);
+
+    await act(async () => {
+      releaseGlobal?.([]);
+      await stale;
+    });
+
+    expect(skills.value).toBe(sampleSkills);
+    expect(skillsLoading.value).toBe(false);
+  });
+
   it("records an error when list_skills rejects", async () => {
     invokeMock.mockImplementation(() => Promise.reject(new Error("boom")));
     await loadSkills();
