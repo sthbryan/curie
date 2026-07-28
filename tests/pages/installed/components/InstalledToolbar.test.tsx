@@ -86,14 +86,14 @@ describe("InstalledToolbar", () => {
 
     cleanup();
     skillUpdates.value = [
-      { name: "alpha", source: "me/alpha", updateAvailable: true, checkable: true },
+      { name: "alpha", source: "me/alpha", updateAvailable: true, checkable: true, checked: true },
     ];
     expect(buttonWith(mount(<InstalledToolbar />), "UPDATES")).toBeDefined();
   });
 
   it("keeps the tool filter when the updates toggle goes on", () => {
     skillUpdates.value = [
-      { name: "alpha", source: "me/alpha", updateAvailable: true, checkable: true },
+      { name: "alpha", source: "me/alpha", updateAvailable: true, checkable: true, checked: true },
     ];
     agentFilter.value = "Codex";
 

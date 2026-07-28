@@ -35,6 +35,7 @@ const sampleUpdates: SkillUpdateInfo[] = [
     source: "pbakaus/impeccable",
     updateAvailable: true,
     checkable: true,
+    checked: true,
   },
 ];
 

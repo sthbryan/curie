@@ -59,7 +59,7 @@ describe("Home", () => {
       skillFixture("find-skills", ["Codex"]),
     ];
     skillUpdates.value = [
-      { name: "impeccable", source: "me/impeccable", updateAvailable: true, checkable: true },
+      { name: "impeccable", source: "me/impeccable", updateAvailable: true, checkable: true, checked: true },
     ];
 
     const el = mount(<Home />);

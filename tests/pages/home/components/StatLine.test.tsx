@@ -19,8 +19,8 @@ describe("StatLine", () => {
   it("counts skills, tools and updates on one line", () => {
     skills.value = [skillFixture("a", ["Codex"]), skillFixture("b", ["Codex", "Zed"])];
     skillUpdates.value = [
-      { name: "a", source: "me/a", updateAvailable: true, checkable: true },
-      { name: "b", source: "me/b", updateAvailable: false, checkable: true },
+      { name: "a", source: "me/a", updateAvailable: true, checkable: true, checked: true },
+      { name: "b", source: "me/b", updateAvailable: false, checkable: true, checked: true },
     ];
 
     const el = mount(<StatLine />);
@@ -37,7 +37,7 @@ describe("StatLine", () => {
 
   it("stops pulsing once results are in", () => {
     updatesLoading.value = true;
-    skillUpdates.value = [{ name: "a", source: null, updateAvailable: false, checkable: true }];
+    skillUpdates.value = [{ name: "a", source: null, updateAvailable: false, checkable: true, checked: true }];
     const el = mount(<StatLine />);
     expect(el.querySelectorAll(".animate-pulse")).toHaveLength(0);
   });

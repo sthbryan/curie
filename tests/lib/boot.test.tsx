@@ -3,7 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { NodeInfo, SkillInfo, SkillUpdateInfo } from "@/components/types";
+import type { NodeInfo, Settings, SkillInfo, SkillUpdateInfo } from "@/components/types";
 import {
   setUpdatesError,
   skills,
@@ -13,7 +13,15 @@ import {
   updatesError,
   updatesLoading,
 } from "@/store/skills";
-import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
+import {
+  hasBooted,
+  lang,
+  node,
+  reducedMotion,
+  resetSettingsPersistence,
+  stage,
+  theme,
+} from "@/store/system";
 
 const invokeMock = vi.fn();
 
@@ -24,6 +32,14 @@ vi.mock("@tauri-apps/api/core", () => ({
 const { checkSkillUpdates, loadSkills, useBoot } = await import("@/lib/boot");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
+const storedSettings: Settings = {
+  version: 1,
+  theme: "dark",
+  lang: "en",
+  reducedMotion: "user",
+  hasBooted: false,
+};
 
 const nodeInstalled: NodeInfo = {
   installed: true,
@@ -59,11 +75,13 @@ const sampleUpdates: SkillUpdateInfo[] = [
     source: "pbakaus/impeccable",
     updateAvailable: true,
     checkable: true,
+    checked: true,
   },
 ];
 
 beforeEach(() => {
   invokeMock.mockReset();
+  resetSettingsPersistence();
   localStorage.clear();
   skills.value = [];
   skillsLoading.value = false;
@@ -93,7 +111,10 @@ describe("loadSkills", () => {
     expect(skillsError.value).toBeNull();
     expect(skillsLoading.value).toBe(false);
     expect(invokeMock).toHaveBeenCalledWith("list_skills", { projectPath: null });
-    expect(invokeMock).toHaveBeenCalledWith("check_skill_updates", { projectPath: null });
+    expect(invokeMock).toHaveBeenCalledWith("check_skill_updates", {
+      projectPath: null,
+      fresh: false,
+    });
   });
 
   it("skips the update check when checkUpdates=false", async () => {
@@ -214,6 +235,8 @@ describe("useBoot", () => {
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "get_locale") return Promise.resolve("es-MX");
       if (cmd === "detect_node") return Promise.resolve(nodeMissing);
+      if (cmd === "read_settings") return Promise.resolve(storedSettings);
+      if (cmd === "write_settings") return Promise.resolve();
       return Promise.reject(new Error(`unexpected: ${cmd}`));
     });
 
@@ -234,6 +257,8 @@ describe("useBoot", () => {
       if (cmd === "detect_node") return Promise.resolve(nodeInstalled);
       if (cmd === "list_skills") return Promise.resolve(sampleSkills);
       if (cmd === "check_skill_updates") return Promise.resolve(sampleUpdates);
+      if (cmd === "read_settings") return Promise.resolve(storedSettings);
+      if (cmd === "write_settings") return Promise.resolve();
       return Promise.reject(new Error(`unexpected: ${cmd}`));
     });
 
@@ -254,6 +279,8 @@ describe("useBoot", () => {
       if (cmd === "detect_node") return Promise.resolve(nodeInstalled);
       if (cmd === "list_skills") return Promise.resolve([]);
       if (cmd === "check_skill_updates") return Promise.resolve([]);
+      if (cmd === "read_settings") return Promise.resolve(storedSettings);
+      if (cmd === "write_settings") return Promise.resolve();
       return Promise.reject(new Error(`unexpected: ${cmd}`));
     });
 
@@ -269,6 +296,8 @@ describe("useBoot", () => {
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "get_locale") return Promise.resolve("en-US");
       if (cmd === "detect_node") return Promise.reject(new Error("no node"));
+      if (cmd === "read_settings") return Promise.resolve(storedSettings);
+      if (cmd === "write_settings") return Promise.resolve();
       return Promise.reject(new Error(`unexpected: ${cmd}`));
     });
 
@@ -287,6 +316,8 @@ describe("useBoot", () => {
       if (cmd === "detect_node") return Promise.resolve(nodeInstalled);
       if (cmd === "list_skills") return Promise.resolve([]);
       if (cmd === "check_skill_updates") return Promise.resolve([]);
+      if (cmd === "read_settings") return Promise.resolve(storedSettings);
+      if (cmd === "write_settings") return Promise.resolve();
       return Promise.reject(new Error(`unexpected: ${cmd}`));
     });
 
@@ -300,6 +331,90 @@ describe("useBoot", () => {
     expect(calledCommands).toContain("detect_node");
   });
 
+  it("reads the settings file before anything else", async () => {
+    invokeMock.mockImplementation((cmd) => {
+      if (cmd === "get_locale") return Promise.resolve("en-US");
+      if (cmd === "detect_node") return Promise.resolve(nodeMissing);
+      if (cmd === "read_settings") return Promise.resolve(storedSettings);
+      if (cmd === "write_settings") return Promise.resolve();
+      return Promise.reject(new Error(`unexpected: ${cmd}`));
+    });
+
+    mountHarness();
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 10));
+    });
+
+    expect(invokeMock.mock.calls[0][0]).toBe("read_settings");
+  });
+
+  it("hydrates the stored preferences over the cached ones", async () => {
+    invokeMock.mockImplementation((cmd) => {
+      if (cmd === "detect_node") return Promise.resolve(nodeMissing);
+      if (cmd === "read_settings")
+        return Promise.resolve({
+          version: 1,
+          theme: "nord",
+          lang: "es",
+          reducedMotion: "always",
+          hasBooted: true,
+        });
+      if (cmd === "write_settings") return Promise.resolve();
+      return Promise.reject(new Error(`unexpected: ${cmd}`));
+    });
+
+    mountHarness();
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 10));
+    });
+
+    expect(theme.value).toBe("nord");
+    expect(lang.value).toBe("es");
+    expect(reducedMotion.value).toBe("always");
+    expect(invokeMock.mock.calls.map(([cmd]) => cmd)).not.toContain("get_locale");
+  });
+
+  it("seeds the file from the cache when there is none yet", async () => {
+    theme.value = "sand";
+    invokeMock.mockImplementation((cmd) => {
+      if (cmd === "get_locale") return Promise.resolve("en-US");
+      if (cmd === "detect_node") return Promise.resolve(nodeMissing);
+      if (cmd === "read_settings") return Promise.resolve({ ...storedSettings, version: 0 });
+      if (cmd === "write_settings") return Promise.resolve();
+      return Promise.reject(new Error(`unexpected: ${cmd}`));
+    });
+
+    mountHarness();
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 10));
+    });
+
+    expect(invokeMock).toHaveBeenCalledWith("write_settings", {
+      settings: { theme: "sand", lang: "en", reducedMotion: "user", hasBooted: false },
+    });
+  });
+
+  it("keeps the cached preferences when the settings file cannot be read", async () => {
+    theme.value = "ember";
+    invokeMock.mockImplementation((cmd) => {
+      if (cmd === "get_locale") return Promise.resolve("en-US");
+      if (cmd === "detect_node") return Promise.resolve(nodeInstalled);
+      if (cmd === "list_skills") return Promise.resolve([]);
+      if (cmd === "check_skill_updates") return Promise.resolve([]);
+      if (cmd === "read_settings") return Promise.reject(new Error("no home directory"));
+      if (cmd === "write_settings") return Promise.resolve();
+      return Promise.reject(new Error(`unexpected: ${cmd}`));
+    });
+
+    mountHarness();
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 10));
+    });
+
+    expect(theme.value).toBe("ember");
+    expect(stage.value).toBe("home");
+  });
+
   it("cancels in-flight work when unmounted before the invoke resolves", async () => {
     type Resolver = (value: unknown) => void;
     const resolvers: Resolver[] = [];
@@ -309,6 +424,8 @@ describe("useBoot", () => {
         return new Promise((resolve) => {
           resolvers.push(resolve as Resolver);
         });
+      if (cmd === "read_settings") return Promise.resolve(storedSettings);
+      if (cmd === "write_settings") return Promise.resolve();
       return Promise.reject(new Error(`unexpected: ${cmd}`));
     });
 

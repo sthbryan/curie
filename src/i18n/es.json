@@ -205,7 +205,7 @@
     "local": {
       "eyebrow": "OPCIÓN 02 · SKILL PROPIA",
       "title": "Escribir una skill a mano",
-      "subtitle": "Pegá un SKILL.md o subilo desde el disco. El frontmatter le da el nombre y la instalamos igual que las demás.",
+      "subtitle": "Pegá un SKILL.md, soltalo sobre la ventana o subilo desde el disco. El frontmatter le da el nombre y la instalamos igual que las demás.",
       "contentLabel": "Contenido de SKILL.md",
       "contentPlaceholder": "---\nname: mi-skill\ndescription: qué hace\n---\n\n# Mi skill\n\n…",
       "fileButton": "SUBIR .MD",
@@ -222,7 +222,10 @@
       "nameMissing": "Al bloque de arriba le falta el nombre de la skill.",
       "descriptionMissing": "Al bloque de arriba le falta la descripción de la skill.",
       "bothMissing": "Al bloque de arriba le faltan el nombre y la descripción de la skill.",
-      "nameInvalid": "\"{name}\" no sirve como nombre: usá letras, números, guiones y puntos, sin espacios."
+      "nameInvalid": "\"{name}\" no sirve como nombre: usá letras, números, guiones y puntos, sin espacios.",
+      "dropHint": "SOLTÁ EL .MD ACÁ",
+      "dropRejected": "ESE ARCHIVO NO ES MARKDOWN",
+      "dropFailed": "NO SE PUDO LEER EL ARCHIVO"
     }
   },
   "explore": {
@@ -332,10 +335,11 @@
     "setupComplete": "Setup completado",
     "refreshed": "Skills recargados",
     "appUpdate": "Hay una nueva versión de Curie disponible",
-    "appUpdateAction": "VER",
+    "appUpdateAction": "VER ACTUALIZACIÓN",
     "removedAll": "SE BORRARON TODAS LAS SKILLS",
     "projectAdded": "Se agregó {name}",
-    "projectForgotten": "Se olvidó {name}"
+    "projectForgotten": "Se olvidó {name}",
+    "unverified": "NO SE PUDIERON VERIFICAR {n} SKILLS"
   },
   "projects": {
     "eyebrow": "PROYECTOS · ÁMBITOS",

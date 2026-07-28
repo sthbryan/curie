@@ -2,9 +2,7 @@ use super::npx::run_skills_command;
 use super::scope::Scope;
 use super::types::CustomSkillInstallResult;
 use std::fs;
-use std::path::{Path, PathBuf};
-
-const CUSTOM_DIR: &str = ".curie/custom-skills";
+use std::path::Path;
 
 pub fn install_custom_skill_in(
     scope: &Scope,
@@ -24,10 +22,7 @@ pub fn install_custom_skill_in(
         return Err("skill content is empty".into());
     }
 
-    let home = dirs::home_dir().ok_or_else(|| "could not resolve home directory".to_string())?;
-    let base: PathBuf = [home.as_path(), Path::new(CUSTOM_DIR), Path::new(name)]
-        .iter()
-        .collect();
+    let base = crate::paths::custom_skills_dir()?.join(name);
     let file = base.join("SKILL.md");
 
     let existed = base.exists();
@@ -99,9 +94,97 @@ fn is_valid_skill_name(name: &str) -> bool {
         .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.'))
 }
 
+const MAX_MARKDOWN_BYTES: u64 = 512 * 1024;
+
+pub fn read_markdown_in(path: &Path) -> Result<String, String> {
+    let is_markdown = path
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(|e| e.eq_ignore_ascii_case("md") || e.eq_ignore_ascii_case("markdown"))
+        .unwrap_or(false);
+    if !is_markdown {
+        return Err(format!("{} is not a markdown file", path.display()));
+    }
+
+    let meta =
+        fs::metadata(path).map_err(|e| format!("could not read {}: {e}", path.display()))?;
+    if !meta.is_file() {
+        return Err(format!("{} is not a file", path.display()));
+    }
+    if meta.len() > MAX_MARKDOWN_BYTES {
+        return Err(format!("{} is too large to read", path.display()));
+    }
+
+    fs::read_to_string(path).map_err(|e| format!("could not read {}: {e}", path.display()))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn temp_dir(tag: &str) -> std::path::PathBuf {
+        let dir = std::env::temp_dir().join(format!("curie-md-{tag}-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    #[test]
+    fn reads_a_markdown_file() {
+        let dir = temp_dir("read");
+        let file = dir.join("SKILL.md");
+        fs::write(&file, "---\nname: x\n---\nbody").unwrap();
+
+        assert_eq!(read_markdown_in(&file).unwrap(), "---\nname: x\n---\nbody");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn accepts_the_markdown_extension_in_any_case() {
+        let dir = temp_dir("case");
+        let file = dir.join("SKILL.MARKDOWN");
+        fs::write(&file, "body").unwrap();
+
+        assert_eq!(read_markdown_in(&file).unwrap(), "body");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn rejects_a_file_that_is_not_markdown() {
+        let dir = temp_dir("ext");
+        let file = dir.join("skill.txt");
+        fs::write(&file, "body").unwrap();
+
+        assert!(read_markdown_in(&file).is_err());
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn rejects_a_directory() {
+        let dir = temp_dir("dir");
+        let nested = dir.join("bundle.md");
+        fs::create_dir_all(&nested).unwrap();
+
+        assert!(read_markdown_in(&nested).is_err());
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn rejects_a_missing_file() {
+        let dir = temp_dir("missing");
+        assert!(read_markdown_in(&dir.join("nope.md")).is_err());
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn rejects_a_file_over_the_size_limit() {
+        let dir = temp_dir("big");
+        let file = dir.join("huge.md");
+        fs::write(&file, vec![b'x'; (MAX_MARKDOWN_BYTES + 1) as usize]).unwrap();
+
+        assert!(read_markdown_in(&file).is_err());
+        let _ = fs::remove_dir_all(&dir);
+    }
 
     #[test]
     fn rejects_empty_name() {

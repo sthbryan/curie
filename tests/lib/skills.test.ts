@@ -9,6 +9,7 @@ import {
   maxAgentCount,
   skillTimestamp,
   summarizeAgents,
+  unverifiedCount,
 } from "@/lib/skills";
 
 const sample: SkillInfo[] = [
@@ -42,18 +43,21 @@ const sampleUpdates: SkillUpdateInfo[] = [
     source: "pbakaus/impeccable",
     updateAvailable: true,
     checkable: true,
+    checked: true,
   },
   {
     name: "find-skills",
     source: "vercel-labs/skills",
     updateAvailable: false,
     checkable: true,
+    checked: true,
   },
   {
     name: "local-only",
     source: null,
     updateAvailable: false,
     checkable: false,
+    checked: false,
   },
 ];
 
@@ -97,6 +101,7 @@ describe("availableUpdates", () => {
         source: "x/y",
         updateAvailable: true,
         checkable: true,
+        checked: true,
       },
     ]);
     expect(rows).toHaveLength(1);
@@ -110,12 +115,14 @@ describe("availableUpdates", () => {
         source: "vercel-labs/skills",
         updateAvailable: true,
         checkable: true,
+        checked: true,
       },
       {
         name: "impeccable",
         source: "pbakaus/impeccable",
         updateAvailable: true,
         checkable: true,
+        checked: true,
       },
     ]);
     expect(rows.map((r) => r.skill.name)).toEqual(["find-skills", "impeccable"]);
@@ -204,5 +211,22 @@ describe("skillTimestamp", () => {
     expect(skillTimestamp(sample[0])).toBe("2026-07-12T10:00:00.000Z");
     expect(skillTimestamp({ ...sample[0], updatedAt: null })).toBe("2026-07-10T10:00:00.000Z");
     expect(skillTimestamp({ ...sample[0], updatedAt: null, installedAt: null })).toBeNull();
+  });
+});
+
+describe("unverifiedCount", () => {
+  it("counts skills that could be checked but were not", () => {
+    expect(
+      unverifiedCount([
+        { name: "a", source: "o/a", updateAvailable: false, checkable: true, checked: false },
+        { name: "b", source: "o/b", updateAvailable: false, checkable: true, checked: true },
+        { name: "c", source: null, updateAvailable: false, checkable: false, checked: false },
+      ]),
+    ).toBe(1);
+  });
+
+  it("is zero when every checkable skill was reached", () => {
+    expect(unverifiedCount(sampleUpdates)).toBe(0);
+    expect(unverifiedCount([])).toBe(0);
   });
 });

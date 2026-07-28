@@ -10,6 +10,7 @@ import type {
 import { detectLang } from "@/i18n";
 import { errorMessage } from "@/lib/errors";
 import { loadProjects } from "@/lib/projects";
+import { readSettings, resolveSettings, writeSettings } from "@/lib/settings";
 import {
   setSkills,
   setSkillsError,
@@ -18,7 +19,18 @@ import {
   setUpdatesError,
   setUpdatesLoading,
 } from "@/store/skills";
-import { hasBooted, markBooted, setLang, setNode, setStage } from "@/store/system";
+import {
+  applySettings,
+  hasBooted,
+  lang,
+  markBooted,
+  markHydrated,
+  reducedMotion,
+  setLang,
+  setNode,
+  setStage,
+  theme,
+} from "@/store/system";
 import {
   setAppInstallRunning,
   setAppUpdate,
@@ -54,15 +66,29 @@ export async function installAppUpdate(): Promise<InstallResult | null> {
   }
 }
 
+export const RESTART_DELAY = 1200;
+
+export async function restartApp() {
+  try {
+    await invoke("restart_app");
+  } catch {
+    // the process is going away — nothing to report
+  }
+}
+
 let loadToken = 0;
 let updatesToken = 0;
 
-export async function checkSkillUpdates(projectPath: string | null = null) {
+export async function checkSkillUpdates(
+  projectPath: string | null = null,
+  options?: { fresh?: boolean },
+) {
   const token = ++updatesToken;
+  const fresh = options?.fresh ?? false;
   setUpdatesLoading(true);
   setUpdatesError(null);
   try {
-    const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates", { projectPath });
+    const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates", { projectPath, fresh });
     if (token !== updatesToken) return;
     setSkillUpdates(updates);
   } catch (e) {
@@ -101,6 +127,23 @@ export function useBoot() {
     let cancelled = false;
 
     (async () => {
+      const file = await readSettings();
+      if (cancelled) return;
+      if (file) {
+        const cached = {
+          theme: theme.value,
+          lang: lang.value,
+          reducedMotion: reducedMotion.value,
+          hasBooted: hasBooted.value,
+        };
+        if (file.version === 0) {
+          void writeSettings(cached).catch(() => {});
+        } else {
+          applySettings(resolveSettings(file, cached));
+        }
+      }
+      markHydrated();
+
       if (!hasBooted.value) {
         try {
           const locale = await invoke<string>("get_locale");

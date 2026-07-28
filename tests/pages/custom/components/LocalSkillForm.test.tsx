@@ -12,6 +12,10 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 
+vi.mock("@tauri-apps/api/webview", () => ({
+  getCurrentWebview: () => ({ onDragDropEvent: () => Promise.resolve(() => {}) }),
+}));
+
 vi.mock("@/lib/boot", () => ({
   loadSkills: vi.fn(),
 }));

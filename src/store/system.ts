@@ -1,7 +1,10 @@
-import { effect, signal } from "@preact/signals";
+import { batch, effect, signal } from "@preact/signals";
 import type { NodeInfo, ReducedMotionPref, Stage, ThemeMode } from "@/components/types";
 import type { Lang } from "@/i18n";
 import { loadPartial, savePartial } from "@/lib/persistence";
+import { type SettingsPatch, writeSettings } from "@/lib/settings";
+
+const WRITE_DELAY = 200;
 
 const STORAGE_KEY = "curie.system";
 
@@ -42,6 +45,46 @@ export const completeSetup = (n: NodeInfo) => {
   stage.value = "home";
 };
 
+let hydrated = false;
+let timer: ReturnType<typeof setTimeout> | null = null;
+let pending: Promise<void> | null = null;
+
+export const applySettings = (next: SettingsPatch) => {
+  batch(() => {
+    theme.value = next.theme;
+    lang.value = next.lang;
+    reducedMotion.value = next.reducedMotion;
+    hasBooted.value = next.hasBooted;
+  });
+};
+
+export const markHydrated = () => {
+  hydrated = true;
+};
+
+export const flushSettings = async () => {
+  if (timer) {
+    clearTimeout(timer);
+    timer = null;
+    pending = writeSettings(snapshot()).catch(() => {});
+  }
+  await pending;
+};
+
+export const resetSettingsPersistence = () => {
+  if (timer) clearTimeout(timer);
+  timer = null;
+  pending = null;
+  hydrated = false;
+};
+
+const snapshot = (): SettingsPatch => ({
+  theme: theme.value,
+  lang: lang.value,
+  reducedMotion: reducedMotion.value,
+  hasBooted: hasBooted.value,
+});
+
 export const systemStore = {
   theme,
   lang,
@@ -59,12 +102,14 @@ export const systemStore = {
 };
 
 effect(() => {
-  savePartial(STORAGE_KEY, {
-    theme: theme.value,
-    lang: lang.value,
-    reducedMotion: reducedMotion.value,
-    hasBooted: hasBooted.value,
-  });
+  const next = snapshot();
+  savePartial(STORAGE_KEY, next);
+  if (!hydrated) return;
+  if (timer) clearTimeout(timer);
+  timer = setTimeout(() => {
+    timer = null;
+    pending = writeSettings(next).catch(() => {});
+  }, WRITE_DELAY);
 });
 
 export type SystemState = {

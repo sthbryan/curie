@@ -205,7 +205,7 @@
     "local": {
       "eyebrow": "OPTION 02 · YOUR OWN SKILL",
       "title": "Write a skill by hand",
-      "subtitle": "Paste a SKILL.md or upload one from disk. Its frontmatter names the skill, and we install it like any other.",
+      "subtitle": "Paste a SKILL.md, drop one on the window, or upload it from disk. Its frontmatter names the skill, and we install it like any other.",
       "contentLabel": "SKILL.md content",
       "contentPlaceholder": "---\nname: my-skill\ndescription: what it does\n---\n\n# My skill\n\n…",
       "fileButton": "UPLOAD .MD",
@@ -222,7 +222,10 @@
       "nameMissing": "The block at the top is missing the skill's name.",
       "descriptionMissing": "The block at the top is missing the skill's description.",
       "bothMissing": "The block at the top is missing the skill's name and description.",
-      "nameInvalid": "\"{name}\" won't work as a name: use letters, digits, dashes and dots, with no spaces."
+      "nameInvalid": "\"{name}\" won't work as a name: use letters, digits, dashes and dots, with no spaces.",
+      "dropHint": "DROP THE .MD HERE",
+      "dropRejected": "THAT IS NOT A MARKDOWN FILE",
+      "dropFailed": "COULD NOT READ THAT FILE"
     }
   },
   "explore": {
@@ -332,10 +335,11 @@
     "setupComplete": "Setup complete",
     "refreshed": "Skills refreshed",
     "appUpdate": "A new version of Curie is available",
-    "appUpdateAction": "VIEW",
+    "appUpdateAction": "VIEW UPDATE",
     "removedAll": "EVERY SKILL REMOVED",
     "projectAdded": "Added {name}",
-    "projectForgotten": "Forgot {name}"
+    "projectForgotten": "Forgot {name}",
+    "unverified": "COULD NOT CHECK {n} SKILLS"
   },
   "projects": {
     "eyebrow": "PROJECTS · SCOPES",

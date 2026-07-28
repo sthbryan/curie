@@ -1,3 +1,5 @@
+import type { Lang } from "@/i18n";
+
 export type ThemeMode = "dark" | "rose" | "nord" | "ember" | "light" | "dawn" | "snow" | "sand";
 export type ReducedMotionPref = "user" | "always" | "never";
 export type View = "home" | "installed" | "marketplace" | "search" | "settings";
@@ -17,6 +19,14 @@ export type InstallResult = {
 };
 
 export const REDUCED_MOTION_OPTIONS: ReducedMotionPref[] = ["user", "always", "never"];
+
+export type Settings = {
+  version: number;
+  theme: ThemeMode;
+  lang: Lang;
+  reducedMotion: ReducedMotionPref;
+  hasBooted: boolean;
+};
 
 export type NodeInfo = {
   installed: boolean;
@@ -66,6 +76,7 @@ export type SkillUpdateInfo = {
   source: string | null;
   updateAvailable: boolean;
   checkable: boolean;
+  checked: boolean;
 };
 
 export type SkillUpdateResult = {

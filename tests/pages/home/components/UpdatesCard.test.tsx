@@ -2,7 +2,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SkillUpdateInfo } from "@/components/types";
-import { skills, skillUpdates, updatesError, updatesLoading } from "@/store/skills";
+import { activeScopePath, skills, skillUpdates, updatesError, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
 import { skillFixture } from "../fixtures";
 import { cleanup, click, mount, text } from "../mount";
@@ -21,6 +21,7 @@ const outdated = (name: string): SkillUpdateInfo => ({
   source: `me/${name}`,
   updateAvailable: true,
   checkable: true,
+  checked: true,
 });
 
 afterEach(cleanup);
@@ -31,6 +32,7 @@ beforeEach(() => {
   skillUpdates.value = [];
   updatesLoading.value = false;
   updatesError.value = null;
+  activeScopePath.value = null;
 });
 
 describe("UpdatesCard", () => {
@@ -69,6 +71,19 @@ describe("UpdatesCard", () => {
     const el = mount(<UpdatesCard />);
     click(el.querySelector("button"));
     expect(checkSkillUpdatesMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("asks for fresh data instead of the cache", () => {
+    const el = mount(<UpdatesCard />);
+    click(el.querySelector("button"));
+    expect(checkSkillUpdatesMock).toHaveBeenCalledWith(null, { fresh: true });
+  });
+
+  it("checks the scope the user is looking at", () => {
+    activeScopePath.value = "/code/don_camaron";
+    const el = mount(<UpdatesCard />);
+    click(el.querySelector("button"));
+    expect(checkSkillUpdatesMock).toHaveBeenCalledWith("/code/don_camaron", { fresh: true });
   });
 
   it("disables the button while a check is running", () => {

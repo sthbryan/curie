@@ -1,8 +1,9 @@
 import { FileUp, LoaderCircle, Save } from "lucide-react";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
+import { useFileDrop } from "../hooks/useFileDrop";
 import { useLocalInstall } from "../hooks/useLocalInstall";
 import { checkFrontmatter, type FrontmatterCheck } from "../lib/frontmatter";
 import { FieldLabel } from "./FieldLabel";
@@ -43,6 +44,13 @@ export function LocalSkillForm() {
     setFileName(file.name);
   };
 
+  const handleDropped = useCallback((name: string, text: string) => {
+    setContent(text);
+    setFileName(name);
+  }, []);
+
+  const { dragging } = useFileDrop({ enabled: !installing, onFile: handleDropped });
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) void handleFile(file);
@@ -79,23 +87,34 @@ export function LocalSkillForm() {
             {t("fileButton")}
           </Button>
         </div>
-        <textarea
-          id={CONTENT_ID}
-          value={content}
-          onChange={(e) => setContent((e.target as HTMLTextAreaElement).value)}
-          placeholder={t("contentPlaceholder")}
-          spellCheck={false}
-          rows={10}
-          disabled={installing}
-          aria-invalid={warning !== null}
-          aria-describedby={`${CONTENT_ID}-status`}
-          className={cn(
-            "w-full border bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none rounded-sm resize-y min-h-45 disabled:opacity-60",
-            warning
-              ? "border-warning/60 focus:border-warning"
-              : "border-border-strong focus:border-fg-3",
-          )}
-        />
+        <div className="relative">
+          <textarea
+            id={CONTENT_ID}
+            value={content}
+            onChange={(e) => setContent((e.target as HTMLTextAreaElement).value)}
+            placeholder={t("contentPlaceholder")}
+            spellCheck={false}
+            rows={10}
+            disabled={installing}
+            aria-invalid={warning !== null}
+            aria-describedby={`${CONTENT_ID}-status`}
+            className={cn(
+              "w-full border bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none rounded-sm resize-y min-h-45 disabled:opacity-60",
+              warning
+                ? "border-warning/60 focus:border-warning"
+                : "border-border-strong focus:border-fg-3",
+            )}
+          />
+          {dragging ? (
+            <div
+              aria-hidden
+              className="absolute inset-0 flex items-center justify-center gap-2 border border-accent border-dashed bg-bg/90 font-mono uppercase tracking-label text-micro text-accent"
+            >
+              <FileUp size={13} />
+              {t("dropHint")}
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <div className="flex items-center justify-between gap-4 flex-wrap">

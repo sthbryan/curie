@@ -45,7 +45,7 @@ describe("SkillTable", () => {
 
   it("marks the outdated row with the accent timestamp", () => {
     skillUpdates.value = [
-      { name: "alpha", source: "me/alpha", updateAvailable: true, checkable: true },
+      { name: "alpha", source: "me/alpha", updateAvailable: true, checkable: true, checked: true },
     ];
     const el = mount(<SkillTable onAskRemove={noop} />);
     expect(el.querySelector(".text-accent")).not.toBeNull();
@@ -56,7 +56,7 @@ describe("SkillTable", () => {
 
     cleanup();
     skillUpdates.value = [
-      { name: "alpha", source: "me/alpha", updateAvailable: true, checkable: true },
+      { name: "alpha", source: "me/alpha", updateAvailable: true, checkable: true, checked: true },
     ];
     const after = mount(<SkillTable onAskRemove={noop} />).querySelectorAll("button").length;
     expect(after).toBe(before + 1);
