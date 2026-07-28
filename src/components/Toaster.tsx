@@ -19,7 +19,6 @@ export function Toaster() {
       gap={8}
       offset={24}
       style={{ "--width": "520px" } as CSSProperties}
-      duration={5000000}
       closeButton
       icons={{
         loading: <LoaderCircle size={ICON_SIZE} className="animate-spin text-fg-3" aria-hidden />,
