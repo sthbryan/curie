@@ -25,7 +25,8 @@
     "explore": "EXPLORAR",
     "find": "BUSCAR",
     "custom": "CUSTOM",
-    "settings": "AJUSTES"
+    "settings": "AJUSTES",
+    "projects": "PROYECTOS"
   },
   "setup": {
     "eyebrow": "PRIMERA VEZ",
@@ -137,7 +138,9 @@
     "removeAllBody": "Se van a desinstalar las {n} skills globales de todas tus herramientas. No hay vuelta atrás.",
     "removeAllConfirm": "BORRAR TODAS",
     "removeAllPhrase": "BORRAR",
-    "removeAllPhraseLabel": "ESCRIBÍ {phrase} PARA CONFIRMAR"
+    "removeAllPhraseLabel": "ESCRIBÍ {phrase} PARA CONFIRMAR",
+    "scopeBadge": "en {name}",
+    "removeAllBodyProject": "Esto borra todas las skills de {name}. Tus skills globales quedan intactas."
   },
   "find": {
     "eyebrow": "BUSCAR · SKILLS.SH",
@@ -326,6 +329,55 @@
     "refreshed": "Skills recargados",
     "appUpdate": "Hay una nueva versión de Curie disponible",
     "appUpdateAction": "VER",
-    "removedAll": "SE BORRARON TODAS LAS SKILLS"
+    "removedAll": "SE BORRARON TODAS LAS SKILLS",
+    "projectAdded": "Se agregó {name}",
+    "projectForgotten": "Se olvidó {name}"
+  },
+  "projects": {
+    "eyebrow": "PROYECTOS · ÁMBITOS",
+    "title": "Proyectos",
+    "subtitle": "Tené un skill en una sola carpeta en vez de en todas.",
+    "add": "AGREGAR PROYECTO",
+    "adding": "ABRIENDO…",
+    "pickTitle": "Elegí la carpeta del proyecto",
+    "pickFailed": "No se pudo abrir el selector de carpetas",
+    "open": "Abrir {name}",
+    "globalName": "GLOBAL",
+    "globalHint": "Todos los agentes, en toda la máquina.",
+    "active": "ACTIVO",
+    "skills": "SKILLS",
+    "noSkills": "Todavía no hay skills",
+    "neverUsed": "Nunca se usó",
+    "updates": "ACTUALIZACIONES",
+    "missing": "NO ESTÁ",
+    "missingHint": "Esta carpeta ya no existe. Olvidala, o volvé a ponerla donde estaba.",
+    "reveal": "Mostrar en Finder",
+    "forget": "Olvidar {name}",
+    "forgetTitle": "Olvidar proyecto",
+    "forgetBody": "Curie deja de seguir esta carpeta. La carpeta y sus skills quedan intactas en el disco.",
+    "forgetConfirm": "OLVIDAR",
+    "forgetCancel": "CANCELAR",
+    "empty": "Todavía no hay proyectos",
+    "emptyHint": "Agregá una carpeta y Curie va a manejar sus skills aparte de las globales.",
+    "duplicate": "{name} ya está en la lista",
+    "nested": "Esa carpeta se superpone con {name}",
+    "invalid": "Esa no es una carpeta que Curie pueda usar",
+    "refused": "Elegí una carpeta de proyecto, no tu carpeta personal",
+    "saveFailed": "No se pudo guardar la lista de proyectos",
+    "summaryError": "No se pudo leer este proyecto",
+    "unknownTitle": "PROYECTO NO ENCONTRADO",
+    "unknownBody": "No hay ningún proyecto registrado como \"{id}\". Puede que lo hayas olvidado en otra ventana.",
+    "backToProjects": "VOLVER A PROYECTOS",
+    "count": "{count} PROYECTOS",
+    "countOne": "1 PROYECTO"
+  },
+  "scope": {
+    "global": "GLOBAL",
+    "globalHint": "Se instala global, para todos los proyectos.",
+    "installingInto": "Se instala en",
+    "switchToGlobal": "PASAR A GLOBAL",
+    "announceGlobal": "Ámbito: global, {count} skills",
+    "announceProject": "Ámbito: {name}, {count} skills",
+    "manage": "Administrar proyectos"
   }
 }

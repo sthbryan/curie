@@ -25,7 +25,8 @@
     "explore": "EXPLORE",
     "find": "FIND",
     "custom": "CUSTOM",
-    "settings": "SETTINGS"
+    "settings": "SETTINGS",
+    "projects": "PROJECTS"
   },
   "setup": {
     "eyebrow": "FIRST RUN",
@@ -137,7 +138,9 @@
     "removeAllBody": "This uninstalls all {n} global skills from every one of your tools. There is no undo.",
     "removeAllConfirm": "REMOVE ALL",
     "removeAllPhrase": "REMOVE",
-    "removeAllPhraseLabel": "TYPE {phrase} TO CONFIRM"
+    "removeAllPhraseLabel": "TYPE {phrase} TO CONFIRM",
+    "scopeBadge": "in {name}",
+    "removeAllBodyProject": "This deletes every skill from {name}. Your global skills are untouched."
   },
   "find": {
     "eyebrow": "FIND · SKILLS.SH",
@@ -326,6 +329,55 @@
     "refreshed": "Skills refreshed",
     "appUpdate": "A new version of Curie is available",
     "appUpdateAction": "VIEW",
-    "removedAll": "EVERY SKILL REMOVED"
+    "removedAll": "EVERY SKILL REMOVED",
+    "projectAdded": "Added {name}",
+    "projectForgotten": "Forgot {name}"
+  },
+  "projects": {
+    "eyebrow": "PROJECTS · SCOPES",
+    "title": "Projects",
+    "subtitle": "Keep a skill in one folder instead of everywhere.",
+    "add": "ADD PROJECT",
+    "adding": "OPENING…",
+    "pickTitle": "Choose a project folder",
+    "pickFailed": "Could not open the folder picker",
+    "open": "Open {name}",
+    "globalName": "GLOBAL",
+    "globalHint": "Every agent, everywhere on this machine.",
+    "active": "ACTIVE",
+    "skills": "SKILLS",
+    "noSkills": "No skills yet",
+    "neverUsed": "Never used",
+    "updates": "UPDATES",
+    "missing": "MISSING",
+    "missingHint": "This folder is gone. Forget it, or put it back where it was.",
+    "reveal": "Reveal in Finder",
+    "forget": "Forget {name}",
+    "forgetTitle": "Forget project",
+    "forgetBody": "Curie stops tracking this folder. The folder and its skills stay exactly where they are on disk.",
+    "forgetConfirm": "FORGET",
+    "forgetCancel": "CANCEL",
+    "empty": "No projects yet",
+    "emptyHint": "Add a folder and Curie will manage its skills separately from your global ones.",
+    "duplicate": "{name} is already on the list",
+    "nested": "That folder overlaps with {name}",
+    "invalid": "That is not a folder Curie can use",
+    "refused": "Pick a project folder, not your home directory",
+    "saveFailed": "Could not save the project list",
+    "summaryError": "Could not read this project",
+    "unknownTitle": "PROJECT NOT FOUND",
+    "unknownBody": "No project is registered as \"{id}\". It may have been forgotten in another window.",
+    "backToProjects": "BACK TO PROJECTS",
+    "count": "{count} PROJECTS",
+    "countOne": "1 PROJECT"
+  },
+  "scope": {
+    "global": "GLOBAL",
+    "globalHint": "Installing globally, for every project.",
+    "installingInto": "Installing into",
+    "switchToGlobal": "SWITCH TO GLOBAL",
+    "announceGlobal": "Scope: global, {count} skills",
+    "announceProject": "Scope: {name}, {count} skills",
+    "manage": "Manage projects"
   }
 }
