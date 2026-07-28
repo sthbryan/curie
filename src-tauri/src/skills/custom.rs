@@ -1,11 +1,13 @@
 use super::npx::run_skills_command;
+use super::scope::Scope;
 use super::types::CustomSkillInstallResult;
 use std::fs;
 use std::path::{Path, PathBuf};
 
 const CUSTOM_DIR: &str = ".curie/custom-skills";
 
-pub fn install_custom_skill(
+pub fn install_custom_skill_in(
+    scope: &Scope,
     name: &str,
     content: &str,
 ) -> Result<CustomSkillInstallResult, String> {
@@ -35,7 +37,12 @@ pub fn install_custom_skill(
     fs::write(&file, content).map_err(|e| format!("could not write {}: {e}", file.display()))?;
 
     let base_string = base.to_string_lossy().to_string();
-    let outcome = run_skills_command(&["add", &base_string, "-g", "-y"]);
+    let mut args: Vec<&str> = vec!["add", &base_string];
+    if let Some(flag) = scope.flag() {
+        args.push(flag);
+    }
+    args.push("-y");
+    let outcome = run_skills_command(&args, scope);
 
     let failure = match outcome {
         Ok(output) if output.status.success() => None,
@@ -98,22 +105,22 @@ mod tests {
 
     #[test]
     fn rejects_empty_name() {
-        assert!(install_custom_skill("", "body").is_err());
-        assert!(install_custom_skill("   ", "body").is_err());
+        assert!(install_custom_skill_in(&Scope::Global, "", "body").is_err());
+        assert!(install_custom_skill_in(&Scope::Global, "   ", "body").is_err());
     }
 
     #[test]
     fn rejects_empty_content() {
-        assert!(install_custom_skill("my-skill", "   \n  ").is_err());
+        assert!(install_custom_skill_in(&Scope::Global, "my-skill", "   \n  ").is_err());
     }
 
     #[test]
     fn rejects_invalid_name() {
-        assert!(install_custom_skill("../bad", "x").is_err());
-        assert!(install_custom_skill("with space", "x").is_err());
-        assert!(install_custom_skill("slash/here", "x").is_err());
-        assert!(install_custom_skill("-leading", "x").is_err());
-        assert!(install_custom_skill(".hidden", "x").is_err());
+        assert!(install_custom_skill_in(&Scope::Global, "../bad", "x").is_err());
+        assert!(install_custom_skill_in(&Scope::Global, "with space", "x").is_err());
+        assert!(install_custom_skill_in(&Scope::Global, "slash/here", "x").is_err());
+        assert!(install_custom_skill_in(&Scope::Global, "-leading", "x").is_err());
+        assert!(install_custom_skill_in(&Scope::Global, ".hidden", "x").is_err());
     }
 
     #[test]

@@ -37,6 +37,30 @@ export type SkillInfo = {
   updatedAt: string | null;
 };
 
+export type Project = {
+  id: string;
+  name: string;
+  path: string;
+  addedAt: string;
+};
+
+export type ProjectProbe = {
+  path: string;
+  name: string;
+  exists: boolean;
+  isDir: boolean;
+  isReserved: boolean;
+};
+
+export type ProjectSummary = {
+  count: number;
+  agents: string[];
+  missing: boolean;
+  error: string | null;
+};
+
+export type Scope = { kind: "global" } | { kind: "project"; project: Project };
+
 export type SkillUpdateInfo = {
   name: string;
   source: string | null;

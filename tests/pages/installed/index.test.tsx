@@ -19,14 +19,14 @@ import { lang } from "@/store/system";
 import { buttonWith, cleanup, click, mount, skillFixture, text } from "./mount";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
+const loadSkillsMock = vi.fn().mockResolvedValue(undefined);
 const checkSkillUpdatesMock = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
   checkSkillUpdates: (...args: unknown[]) => checkSkillUpdatesMock(...args),
 }));
 
@@ -35,7 +35,7 @@ const { Installed } = await import("@/pages/installed/index");
 afterEach(cleanup);
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockClear();
+  loadSkillsMock.mockClear();
   checkSkillUpdatesMock.mockClear();
   lang.value = "en";
   skills.value = [];
@@ -108,7 +108,7 @@ describe("Installed", () => {
       updateBtn?.click();
     });
 
-    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: ["impeccable"] });
+    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: ["impeccable"], projectPath: null });
   });
 
   it("confirms before removing one skill", async () => {
@@ -127,7 +127,7 @@ describe("Installed", () => {
         .find((b) => b.textContent === "REMOVE")
         ?.click();
     });
-    expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["impeccable"] });
+    expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["impeccable"], projectPath: null });
   });
 
   it("locks the remove-all confirmation behind the typed phrase", async () => {
@@ -156,7 +156,7 @@ describe("Installed", () => {
     await act(async () => {
       confirm?.click();
     });
-    expect(invokeMock).toHaveBeenCalledWith("remove_all_skills");
+    expect(invokeMock).toHaveBeenCalledWith("remove_all_skills", { projectPath: null });
   });
 
   it("surfaces a failed action in the banner", () => {
@@ -173,7 +173,7 @@ describe("Installed", () => {
       buttonWith(el, "REFRESH")?.click();
     });
 
-    expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: false });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: false });
     expect(checkSkillUpdatesMock).toHaveBeenCalledTimes(1);
   });
 });

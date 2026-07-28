@@ -17,7 +17,7 @@ import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/syst
 
 const invokeMock = vi.fn();
 const openUrlMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
+const loadSkillsMock = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -26,7 +26,7 @@ vi.mock("@tauri-apps/plugin-opener", () => ({
   openUrl: (...args: unknown[]) => openUrlMock(...args),
 }));
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 const { Explore } = await import("@/pages/explore/index");
@@ -69,7 +69,7 @@ const page = (overrides: Partial<ExplorePage> = {}): ExplorePage => ({
 beforeEach(() => {
   invokeMock.mockReset();
   openUrlMock.mockReset();
-  loadGlobalSkillsMock.mockClear();
+  loadSkillsMock.mockClear();
   skills.value = [];
   skillsLoading.value = false;
   skillsError.value = null;

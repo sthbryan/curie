@@ -1,4 +1,5 @@
 use super::lock::load_skill_lock;
+use super::scope::Scope;
 use super::types::{GitTreeResponse, SkillLockEntry, SkillUpdateInfo};
 use std::collections::HashMap;
 
@@ -122,8 +123,8 @@ fn resolve_github_source(entry: &SkillLockEntry) -> Option<String> {
         .filter(|s| !s.is_empty())
 }
 
-pub fn check_global_skill_updates() -> Result<Vec<SkillUpdateInfo>, String> {
-    let lock = load_skill_lock();
+pub fn check_skill_updates_in(scope: &Scope) -> Result<Vec<SkillUpdateInfo>, String> {
+    let lock = load_skill_lock(scope);
     if lock.skills.is_empty() {
         return Ok(Vec::new());
     }

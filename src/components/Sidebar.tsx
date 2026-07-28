@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Compass,
   FileCode,
+  FolderGit2,
   House,
   LayoutGrid,
   Search,
@@ -10,21 +11,23 @@ import {
 import { motion, useReducedMotionConfig } from "motion/react";
 import type { FocusEvent } from "react";
 import { useState } from "react";
-import { useLocation } from "wouter";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { duration, easeOut } from "@/lib/motion";
+import type { Section } from "@/lib/routes";
+import { useRoute } from "@/lib/routes";
 import { reducedTransition } from "@/lib/transition";
 import { NavItem } from "./NavItem";
 
-type NavKey = "home" | "skills" | "explore" | "find" | "custom";
+type NavKey = "home" | "skills" | "explore" | "find" | "custom" | "projects";
 
-const TOP_ITEMS: { path: string; key: NavKey; num: string; icon: LucideIcon }[] = [
-  { path: "/", key: "home", num: "01", icon: House },
-  { path: "/installed", key: "skills", num: "02", icon: LayoutGrid },
-  { path: "/marketplace", key: "explore", num: "03", icon: Compass },
-  { path: "/find", key: "find", num: "04", icon: Search },
-  { path: "/custom", key: "custom", num: "05", icon: FileCode },
+const TOP_ITEMS: { section: Section; key: NavKey; num: string; icon: LucideIcon }[] = [
+  { section: "home", key: "home", num: "01", icon: House },
+  { section: "installed", key: "skills", num: "02", icon: LayoutGrid },
+  { section: "marketplace", key: "explore", num: "03", icon: Compass },
+  { section: "find", key: "find", num: "04", icon: Search },
+  { section: "custom", key: "custom", num: "05", icon: FileCode },
+  { section: "projects", key: "projects", num: "06", icon: FolderGit2 },
 ];
 
 export const RAIL_WIDTH = 50;
@@ -32,12 +35,12 @@ const PANEL_WIDTH = 172;
 
 export function Sidebar() {
   const t = useT();
-  const [location, navigate] = useLocation();
+  const { section, go } = useRoute();
   const [open, setOpen] = useState(false);
 
   const shouldReduceMotion = useReducedMotionConfig();
 
-  const handleNavSettings = () => navigate("/settings");
+  const handleNavSettings = () => go("settings", null);
 
   const handleBlur = (event: FocusEvent<HTMLElement>) => {
     const next = event.relatedTarget as Node | null;
@@ -66,15 +69,15 @@ export function Sidebar() {
         <div className="flex flex-col gap-0.5 px-2 pt-4 pb-2">
           {TOP_ITEMS.map((item) => {
             const handleNavItem = () => {
-              navigate(item.path);
+              go(item.section);
             };
             return (
               <NavItem
-                key={item.path}
+                key={item.section}
                 number={item.num}
                 label={t(`nav.${item.key}`)}
                 icon={item.icon}
-                active={location === item.path}
+                active={section === item.section}
                 expanded={open}
                 onClick={handleNavItem}
               />
@@ -89,7 +92,7 @@ export function Sidebar() {
             number="00"
             label={t("nav.settings")}
             icon={SettingsIcon}
-            active={location === "/settings"}
+            active={section === "settings"}
             expanded={open}
             onClick={handleNavSettings}
           />

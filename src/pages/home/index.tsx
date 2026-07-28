@@ -3,11 +3,12 @@ import { toast } from "sonner";
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { useT } from "@/i18n";
-import { loadGlobalSkills } from "@/lib/boot";
+import { loadSkills } from "@/lib/boot";
 import { fadeUp } from "@/lib/motion";
 import { skillsError, skillsLoading } from "@/store/skills";
 import { AgentsCard } from "./components/AgentsCard";
 import { HomeIntro } from "./components/HomeIntro";
+import { ProjectsCard } from "./components/ProjectsCard";
 import { RecentCard } from "./components/RecentCard";
 import { UpdatesCard } from "./components/UpdatesCard";
 import { totalSkills } from "./lib/derived";
@@ -21,7 +22,7 @@ export function Home() {
 
   if (skillsError.value && totalSkills.value === 0) {
     const retry = async () => {
-      await loadGlobalSkills();
+      await loadSkills();
       toast.success(t("toast.refreshed"));
     };
     return <FullPageError message={skillsError.value} onRetry={retry} />;
@@ -38,6 +39,7 @@ export function Home() {
             <UpdatesCard />
             <RecentCard />
           </div>
+          <ProjectsCard />
         </motion.div>
       </div>
     </main>

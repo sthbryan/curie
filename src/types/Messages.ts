@@ -25,6 +25,7 @@ export type Messages = {
     explore: string;
     find: string;
     custom: string;
+    projects: string;
     settings: string;
   };
   setup: {
@@ -69,6 +70,8 @@ export type Messages = {
     retry: string;
   };
   home: {
+    projects: string;
+    statProjects: string;
     eyebrow: string;
     title: string;
     more: string;
@@ -128,6 +131,8 @@ export type Messages = {
     removeAllConfirm: string;
     removeAllPhrase: string;
     removeAllPhraseLabel: string;
+    scopeBadge: string;
+    removeAllBodyProject: string;
     colName: string;
     colSource: string;
     colAgents: string;
@@ -140,6 +145,7 @@ export type Messages = {
     noMatches: string;
   };
   find: {
+    installTarget: string;
     eyebrow: string;
     title: string;
     subtitle: string;
@@ -220,6 +226,7 @@ export type Messages = {
     };
   };
   explore: {
+    installTarget: string;
     eyebrow: string;
     title: string;
     subtitle: string;
@@ -327,5 +334,55 @@ export type Messages = {
     refreshed: string;
     appUpdate: string;
     appUpdateAction: string;
+    projectAdded: string;
+    projectForgotten: string;
+  };
+
+  projects: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    add: string;
+    adding: string;
+    pickTitle: string;
+    pickFailed: string;
+    open: string;
+    globalName: string;
+    globalHint: string;
+    active: string;
+    skills: string;
+    noSkills: string;
+    neverUsed: string;
+    updates: string;
+    missing: string;
+    missingHint: string;
+    reveal: string;
+    forget: string;
+    forgetTitle: string;
+    forgetBody: string;
+    forgetConfirm: string;
+    forgetCancel: string;
+    empty: string;
+    emptyHint: string;
+    duplicate: string;
+    nested: string;
+    invalid: string;
+    refused: string;
+    saveFailed: string;
+    summaryError: string;
+    unknownTitle: string;
+    unknownBody: string;
+    backToProjects: string;
+    count: string;
+    countOne: string;
+  };
+  scope: {
+    global: string;
+    globalHint: string;
+    installingInto: string;
+    switchToGlobal: string;
+    announceGlobal: string;
+    announceProject: string;
+    manage: string;
   };
 };

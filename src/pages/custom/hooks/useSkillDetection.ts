@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import type { SkillDetection } from "@/components/types";
 import { errorMessage } from "@/lib/errors";
+import { activeScopePath } from "@/store/skills";
 
 export type DetectionState =
   | { kind: "idle" }
@@ -29,6 +30,7 @@ export function useSkillDetection(input: string | null): DetectionState {
         try {
           const detection = await invoke<SkillDetection>("detect_skill", {
             package: input,
+            projectPath: activeScopePath.value,
           });
           if (cancelled) return;
           if (detection.isSkill && detection.skills.length > 0) {

@@ -2,6 +2,7 @@ import { Check, Plus } from "lucide-react";
 import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
+import { useScope } from "@/lib/routes";
 import type { DiscoveryNamespace } from "./types";
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
 
 export function SkillInstallAction({ ns, pkg, installed, installing, busy, onInstall }: Props) {
   const t = useT(ns);
+  const scope = useScope();
 
   if (installed) {
     return (
@@ -33,8 +35,16 @@ export function SkillInstallAction({ ns, pkg, installed, installing, busy, onIns
     onInstall(pkg);
   };
 
+  const scoped = scope.kind === "project";
+
   return (
-    <Button size="xs" variant="primary" onClick={handleInstall} disabled={busy}>
+    <Button
+      size="xs"
+      variant={scoped ? "accent" : "primary"}
+      title={scoped ? t("installTarget", { name: scope.project.name }) : undefined}
+      onClick={handleInstall}
+      disabled={busy}
+    >
       <Plus size={10} />
       {t("install")}
     </Button>

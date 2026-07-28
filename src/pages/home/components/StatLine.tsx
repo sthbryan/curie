@@ -1,5 +1,6 @@
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
+import { projects } from "@/store/projects";
 import { agents, checkingUpdates, totalSkills, updates } from "../lib/derived";
 
 type Entry = {
@@ -26,6 +27,9 @@ export function StatLine() {
     { value: agents.value.length, label: t("statTools") },
     { value: updates.value.length, label: t("statUpdates"), pending: checkingUpdates.value },
   ];
+  if (projects.value.length > 0) {
+    entries.push({ value: projects.value.length, label: t("statProjects") });
+  }
 
   return (
     <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">

@@ -1,11 +1,11 @@
 import { CircleFadingArrowUp, Plus, RefreshCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { t as rawT, useT } from "@/i18n";
-import { checkSkillUpdates, loadGlobalSkills } from "@/lib/boot";
+import { checkSkillUpdates, loadSkills } from "@/lib/boot";
 import { cn } from "@/lib/cn";
+import { useRoute } from "@/lib/routes";
 import { skills, skillsLoading, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
 import { updateNames } from "../lib/derived";
@@ -20,11 +20,12 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
   const outdated = updateNames.value;
   const actionBusy = updatingSkill.value !== null || removingSkill.value !== null;
   const refreshing = skillsLoading.value || updatesLoading.value;
-  const [, navigate] = useLocation();
+  const { scope, go } = useRoute();
+  const projectPath = scope.kind === "project" ? scope.project.path : null;
 
   const refresh = async () => {
-    await loadGlobalSkills({ checkUpdates: false });
-    await checkSkillUpdates();
+    await loadSkills(projectPath, { checkUpdates: false });
+    await checkSkillUpdates(projectPath);
     const found = updateNames.value.size;
     toast.success(
       found > 0
@@ -40,12 +41,17 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
         <h2 className="font-display text-heading font-bold tracking-tight text-fg">{t("title")}</h2>
         <p className="max-w-lg font-body text-sm text-fg-3">
           {t("subtitle", { n: skills.value.length })}
+          {scope.kind === "project" ? ` ${t("scopeBadge", { name: scope.project.name })}` : ""}
           {outdated.size > 0 ? ` · ${t("updatesHint", { n: outdated.size })}` : ""}
         </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button size="sm" variant="primary" onClick={() => navigate("/find")}>
+        <Button
+          size="sm"
+          variant={scope.kind === "project" ? "accent" : "primary"}
+          onClick={() => go("find")}
+        >
           <Plus size={14} />
           {t("install")}
         </Button>

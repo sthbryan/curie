@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SkillInstallResult } from "@/components/types";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn();
+const loadSkillsMock = vi.fn();
 const toastErrorMock = vi.fn();
 const promiseToastMock = vi.fn();
 
@@ -15,7 +15,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 vi.mock("sonner", () => ({
@@ -78,8 +78,8 @@ function toastCopy() {
 
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockReset();
-  loadGlobalSkillsMock.mockResolvedValue(undefined);
+  loadSkillsMock.mockReset();
+  loadSkillsMock.mockResolvedValue(undefined);
   toastErrorMock.mockReset();
   promiseToastMock.mockReset();
   mount();
@@ -108,8 +108,9 @@ describe("useRemoteInstall", () => {
     expect(invokeMock).toHaveBeenCalledWith("add_skill", {
       package: "owner/repo@skill",
       skillName: null,
+      projectPath: null,
     });
-    expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
     expect(toastCopy().loading.detail).toBe("owner/repo · skill");
     expect(toastCopy().success.detail).toBe("owner/repo · skill");
@@ -125,6 +126,7 @@ describe("useRemoteInstall", () => {
     expect(invokeMock).toHaveBeenCalledWith("add_skill", {
       package: "https://github.com/owner/repo",
       skillName: null,
+      projectPath: null,
     });
   });
 

@@ -13,11 +13,11 @@ import { lang } from "@/store/system";
 import { skillFixture } from "./fixtures";
 import { cleanup, mount, text } from "./mount";
 
-const loadGlobalSkillsMock = vi.fn().mockResolvedValue(undefined);
+const loadSkillsMock = vi.fn().mockResolvedValue(undefined);
 const checkSkillUpdatesMock = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
   checkSkillUpdates: (...args: unknown[]) => checkSkillUpdatesMock(...args),
 }));
 
@@ -25,7 +25,7 @@ const { Home } = await import("@/pages/home/index");
 
 afterEach(cleanup);
 beforeEach(() => {
-  loadGlobalSkillsMock.mockClear();
+  loadSkillsMock.mockClear();
   checkSkillUpdatesMock.mockClear();
   lang.value = "en";
   skills.value = [];

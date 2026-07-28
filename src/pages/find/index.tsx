@@ -3,13 +3,14 @@ import { motion } from "motion/react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { When } from "react-if";
-import { useLocation } from "wouter";
 import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
+import { ScopeBanner } from "@/components/ScopeBanner";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
+import { useRoute } from "@/lib/routes";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { skills } from "@/store/skills";
 import { ResultsPanel } from "./components/ResultsPanel";
@@ -19,7 +20,7 @@ const DEBOUNCE_MS = 280;
 
 export function Find() {
   const t = useT("find");
-  const [, navigate] = useLocation();
+  const { go } = useRoute();
   const {
     results: findResults,
     loading: findLoading,
@@ -74,7 +75,7 @@ export function Find() {
     handleSearch();
   };
 
-  const handleGoExplore = () => navigate("/marketplace");
+  const handleGoExplore = () => go("marketplace");
 
   const handleClear = () => {
     setQuery("");
@@ -94,6 +95,8 @@ export function Find() {
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
       <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-8 px-10 pt-12 pb-8">
+        <ScopeBanner />
+
         <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>

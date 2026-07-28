@@ -6,14 +6,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ExplorePage, SkillExploreResult } from "@/components/types";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn();
+const loadSkillsMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 const { useExploreActions } = await import("@/pages/explore/hooks/useExploreActions");
@@ -54,8 +54,8 @@ function renderHook<T>(hookFn: () => T) {
 
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockReset();
-  loadGlobalSkillsMock.mockResolvedValue(undefined);
+  loadSkillsMock.mockReset();
+  loadSkillsMock.mockResolvedValue(undefined);
 });
 
 afterEach(() => {
@@ -258,7 +258,7 @@ describe("useExploreActions", () => {
     await act(async () => {
       await get().install("x");
     });
-    expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
     expect(get().installing).toBeNull();
     unmount();
   });

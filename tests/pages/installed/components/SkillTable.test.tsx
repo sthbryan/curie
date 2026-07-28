@@ -7,7 +7,7 @@ import { lang } from "@/store/system";
 import { cleanup, click, mount, skillFixture, text } from "../mount";
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: vi.fn(),
+  loadSkills: vi.fn(),
   checkSkillUpdates: vi.fn(),
 }));
 

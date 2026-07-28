@@ -9,6 +9,7 @@ import type {
 } from "@/components/types";
 import { detectLang } from "@/i18n";
 import { errorMessage } from "@/lib/errors";
+import { loadProjects } from "@/lib/projects";
 import {
   setSkills,
   setSkillsError,
@@ -53,33 +54,45 @@ export async function installAppUpdate(): Promise<InstallResult | null> {
   }
 }
 
-export async function checkSkillUpdates() {
+let loadToken = 0;
+let updatesToken = 0;
+
+export async function checkSkillUpdates(projectPath: string | null = null) {
+  const token = ++updatesToken;
   setUpdatesLoading(true);
   setUpdatesError(null);
   try {
-    const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates");
+    const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates", { projectPath });
+    if (token !== updatesToken) return;
     setSkillUpdates(updates);
   } catch (e) {
+    if (token !== updatesToken) return;
     setUpdatesError(errorMessage(e));
   } finally {
-    setUpdatesLoading(false);
+    if (token === updatesToken) setUpdatesLoading(false);
   }
 }
 
-export async function loadGlobalSkills(options?: { checkUpdates?: boolean }) {
+export async function loadSkills(
+  projectPath: string | null = null,
+  options?: { checkUpdates?: boolean },
+) {
+  const token = ++loadToken;
   const checkUpdates = options?.checkUpdates ?? true;
   setSkillsLoading(true);
   setSkillsError(null);
   try {
-    const skills = await invoke<SkillInfo[]>("list_skills");
+    const skills = await invoke<SkillInfo[]>("list_skills", { projectPath });
+    if (token !== loadToken) return;
     setSkills(skills);
     if (checkUpdates) {
-      void checkSkillUpdates();
+      void checkSkillUpdates(projectPath);
     }
   } catch (e) {
+    if (token !== loadToken) return;
     setSkillsError(errorMessage(e));
   } finally {
-    setSkillsLoading(false);
+    if (token === loadToken) setSkillsLoading(false);
   }
 }
 
@@ -103,7 +116,8 @@ export function useBoot() {
         setNode(info);
         setStage(info.installed ? "home" : "setup");
         if (info.installed) {
-          await loadGlobalSkills();
+          void loadProjects();
+          await loadSkills();
           void checkAppUpdate();
         }
       } catch {

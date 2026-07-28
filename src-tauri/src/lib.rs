@@ -1,12 +1,14 @@
 mod node;
+mod projects;
 mod skills;
 mod update;
 
 pub use node::{build_plan, detect_node_info, install_node_impl, ManagerInfo, NodeInfo, SetupPlan};
+pub use projects::{Project, ProjectProbe};
 pub use skills::{
-    check_global_skill_updates, list_global_skills, CustomSkillInstallResult, DetectedSkill,
-    ExplorePage, SkillDetection, SkillExploreResult, SkillInfo, SkillInstallResult,
-    SkillRemoveResult, SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
+    check_skill_updates_in, list_skills_in, CustomSkillInstallResult, DetectedSkill, ExplorePage,
+    Scope, SkillDetection, SkillExploreResult, SkillInfo, SkillInstallResult, SkillRemoveResult,
+    SkillSearchResult, SkillUpdateInfo, SkillUpdateResult,
 };
 pub use update::{AppUpdateInfo, InstallResult};
 
@@ -18,6 +20,7 @@ fn get_locale() -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
@@ -35,6 +38,9 @@ pub fn run() {
             skills::remove_skills,
             skills::remove_all_skills,
             skills::install_custom_skill,
+            projects::validate_project_path,
+            projects::read_projects,
+            projects::write_projects,
             update::check_app_update,
             update::install_app_update,
         ])

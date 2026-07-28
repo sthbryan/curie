@@ -21,7 +21,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }));
 
-const { checkSkillUpdates, loadGlobalSkills, useBoot } = await import("@/lib/boot");
+const { checkSkillUpdates, loadSkills, useBoot } = await import("@/lib/boot");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -79,7 +79,7 @@ beforeEach(() => {
   node.value = null;
 });
 
-describe("loadGlobalSkills", () => {
+describe("loadSkills", () => {
   it("stores the listed skills and triggers a check for updates by default", async () => {
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "list_skills") return Promise.resolve(sampleSkills);
@@ -87,13 +87,13 @@ describe("loadGlobalSkills", () => {
       return Promise.reject(new Error(`unknown command: ${cmd}`));
     });
 
-    await loadGlobalSkills();
+    await loadSkills();
 
     expect(skills.value).toBe(sampleSkills);
     expect(skillsError.value).toBeNull();
     expect(skillsLoading.value).toBe(false);
-    expect(invokeMock).toHaveBeenCalledWith("list_skills");
-    expect(invokeMock).toHaveBeenCalledWith("check_skill_updates");
+    expect(invokeMock).toHaveBeenCalledWith("list_skills", { projectPath: null });
+    expect(invokeMock).toHaveBeenCalledWith("check_skill_updates", { projectPath: null });
   });
 
   it("skips the update check when checkUpdates=false", async () => {
@@ -102,14 +102,50 @@ describe("loadGlobalSkills", () => {
       return Promise.reject(new Error(`unexpected command: ${cmd}`));
     });
 
-    await loadGlobalSkills({ checkUpdates: false });
+    await loadSkills(null, { checkUpdates: false });
     expect(invokeMock).toHaveBeenCalledTimes(1);
-    expect(invokeMock).toHaveBeenCalledWith("list_skills");
+    expect(invokeMock).toHaveBeenCalledWith("list_skills", { projectPath: null });
+  });
+
+  it("sends the project path when a project scope is active", async () => {
+    invokeMock.mockResolvedValue([]);
+    await loadSkills("/code/don_camaron", { checkUpdates: false });
+    expect(invokeMock).toHaveBeenCalledWith("list_skills", {
+      projectPath: "/code/don_camaron",
+    });
+  });
+
+  it("drops a slow response once a newer scope has taken over", async () => {
+    let releaseGlobal: ((value: SkillInfo[]) => void) | null = null;
+    invokeMock.mockImplementation((cmd, args) => {
+      if (cmd !== "list_skills") return Promise.resolve([]);
+      const { projectPath } = args as { projectPath: string | null };
+      if (projectPath === null) {
+        return new Promise<SkillInfo[]>((resolve) => {
+          releaseGlobal = resolve;
+        });
+      }
+      return Promise.resolve(sampleSkills);
+    });
+
+    const stale = loadSkills(null, { checkUpdates: false });
+    await loadSkills("/code/don_camaron", { checkUpdates: false });
+
+    expect(skills.value).toBe(sampleSkills);
+    expect(skillsLoading.value).toBe(false);
+
+    await act(async () => {
+      releaseGlobal?.([]);
+      await stale;
+    });
+
+    expect(skills.value).toBe(sampleSkills);
+    expect(skillsLoading.value).toBe(false);
   });
 
   it("records an error when list_skills rejects", async () => {
     invokeMock.mockImplementation(() => Promise.reject(new Error("boom")));
-    await loadGlobalSkills();
+    await loadSkills();
     expect(skillsError.value).toBe("boom");
     expect(skillsLoading.value).toBe(false);
   });

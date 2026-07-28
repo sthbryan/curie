@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CustomSkillInstallResult } from "@/components/types";
 
 const invokeMock = vi.fn();
-const loadGlobalSkillsMock = vi.fn();
+const loadSkillsMock = vi.fn();
 const promiseToastMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
@@ -14,7 +14,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: (...args: unknown[]) => loadGlobalSkillsMock(...args),
+  loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
 vi.mock("@/lib/toast", () => ({
@@ -77,8 +77,8 @@ function toastCopy() {
 
 beforeEach(() => {
   invokeMock.mockReset();
-  loadGlobalSkillsMock.mockReset();
-  loadGlobalSkillsMock.mockResolvedValue(undefined);
+  loadSkillsMock.mockReset();
+  loadSkillsMock.mockResolvedValue(undefined);
   promiseToastMock.mockReset();
   mount();
 });
@@ -96,8 +96,9 @@ describe("useLocalInstall", () => {
     expect(invokeMock).toHaveBeenCalledWith("install_custom_skill", {
       name: "my-skill",
       content: "# content",
+      projectPath: null,
     });
-    expect(loadGlobalSkillsMock).toHaveBeenCalledWith({ checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
   });
 
   it("drives one toast for the whole install", async () => {
@@ -121,7 +122,7 @@ describe("useLocalInstall", () => {
       expect(await get().install("my-skill", "# content")).toBe(false);
     });
 
-    expect(loadGlobalSkillsMock).not.toHaveBeenCalled();
+    expect(loadSkillsMock).not.toHaveBeenCalled();
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
     expect(toastCopy().error("missing required frontmatter field(s): name, description").detail).toContain(
       "missing required frontmatter",

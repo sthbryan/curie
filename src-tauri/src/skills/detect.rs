@@ -1,4 +1,5 @@
 use super::npx::run_skills_command;
+use super::scope::Scope;
 use serde::Serialize;
 
 const MAX_RETURNED: usize = 50;
@@ -20,7 +21,7 @@ pub struct SkillDetection {
     pub ref_used: Option<String>,
 }
 
-pub fn detect_global_skill(package: &str) -> Result<SkillDetection, String> {
+pub fn detect_skill_in(scope: &Scope, package: &str) -> Result<SkillDetection, String> {
     let package = package.trim();
     if package.is_empty() {
         return Err("package is required".into());
@@ -29,7 +30,7 @@ pub fn detect_global_skill(package: &str) -> Result<SkillDetection, String> {
         return Err("invalid package name".into());
     }
 
-    let output = run_skills_command(&["add", package, "-l"])?;
+    let output = run_skills_command(&["add", package, "-l"], scope)?;
     let stdout = String::from_utf8_lossy(&output.stdout);
     let stderr = String::from_utf8_lossy(&output.stderr);
     let combined = if stdout.len() >= stderr.len() {
@@ -111,11 +112,7 @@ pub(crate) fn parse_skill_list(raw: &str) -> SkillDetection {
     }
 }
 
-fn push_skill(
-    out: &mut Vec<DetectedSkill>,
-    name: &mut Option<String>,
-    desc: &mut String,
-) {
+fn push_skill(out: &mut Vec<DetectedSkill>, name: &mut Option<String>, desc: &mut String) {
     if let Some(n) = name.take() {
         let d = desc.trim().to_string();
         if !n.is_empty() {
@@ -198,10 +195,7 @@ fn parse_desc_line(line: &str) -> Option<String> {
 }
 
 fn strip_box(line: &str) -> Option<&str> {
-    if let Some(rest) = line
-        .strip_prefix('│')
-        .or_else(|| line.strip_prefix('|'))
-    {
+    if let Some(rest) = line.strip_prefix('│').or_else(|| line.strip_prefix('|')) {
         Some(rest)
     } else {
         None
@@ -386,4 +380,3 @@ mod integration_tests {
         assert_eq!(d.skills[0].name, "code-review-excellence");
     }
 }
-

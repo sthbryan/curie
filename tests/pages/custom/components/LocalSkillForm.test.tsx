@@ -13,7 +13,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 vi.mock("@/lib/boot", () => ({
-  loadGlobalSkills: vi.fn(),
+  loadSkills: vi.fn(),
 }));
 
 vi.mock("@/lib/toast", () => ({
@@ -123,6 +123,7 @@ describe("LocalSkillForm", () => {
     expect(invokeMock).toHaveBeenCalledWith("install_custom_skill", {
       name: "my-skill",
       content: VALID_CONTENT,
+      projectPath: null,
     });
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
     expect(getContentInput().value).toBe("");
