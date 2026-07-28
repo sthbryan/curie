@@ -170,7 +170,8 @@
     "packageHint": "INSTALLS GLOBALLY",
     "clear": "CLEAR",
     "goExplore": "EXPLORE",
-    "hintExplore": "Or browse the rankings if you don't know what to look for yet"
+    "hintExplore": "Or browse the rankings if you don't know what to look for yet",
+    "installTarget": "Installs into {name}"
   },
   "custom": {
     "eyebrow": "CUSTOM · DIRECT INSTALL",
@@ -256,7 +257,8 @@
     "emptyHint": "Try another board or search with Find",
     "error": "Could not load explore",
     "installError": "Install failed",
-    "packageHint": "INSTALLS GLOBALLY"
+    "packageHint": "INSTALLS GLOBALLY",
+    "installTarget": "Installs into {name}"
   },
   "status": {
     "node": "NODE",

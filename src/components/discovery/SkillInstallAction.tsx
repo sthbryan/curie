@@ -41,19 +41,12 @@ export function SkillInstallAction({ ns, pkg, installed, installing, busy, onIns
     <Button
       size="xs"
       variant={scoped ? "accent" : "primary"}
+      title={scoped ? t("installTarget", { name: scope.project.name }) : undefined}
       onClick={handleInstall}
       disabled={busy}
     >
       <Plus size={10} />
       {t("install")}
-      {scoped ? (
-        <>
-          <span aria-hidden className="opacity-50">
-            →
-          </span>
-          <span className="max-w-24 truncate">{scope.project.name}</span>
-        </>
-      ) : null}
     </Button>
   );
 }

@@ -170,7 +170,8 @@
     "packageHint": "INSTALACIÓN GLOBAL",
     "clear": "LIMPIAR",
     "goExplore": "EXPLORAR",
-    "hintExplore": "O explora los rankings si aún no sabes qué buscar"
+    "hintExplore": "O explora los rankings si aún no sabes qué buscar",
+    "installTarget": "Se instala en {name}"
   },
   "custom": {
     "eyebrow": "CUSTOM · INSTALACIÓN DIRECTA",
@@ -256,7 +257,8 @@
     "emptyHint": "Prueba otro ranking o busca con Buscar",
     "error": "No se pudo cargar explorar",
     "installError": "Falló la instalación",
-    "packageHint": "INSTALACIÓN GLOBAL"
+    "packageHint": "INSTALACIÓN GLOBAL",
+    "installTarget": "Se instala en {name}"
   },
   "status": {
     "node": "NODE",

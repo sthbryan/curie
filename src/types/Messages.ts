@@ -145,6 +145,7 @@ export type Messages = {
     noMatches: string;
   };
   find: {
+    installTarget: string;
     eyebrow: string;
     title: string;
     subtitle: string;
@@ -225,6 +226,7 @@ export type Messages = {
     };
   };
   explore: {
+    installTarget: string;
     eyebrow: string;
     title: string;
     subtitle: string;
