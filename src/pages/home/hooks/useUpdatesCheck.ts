@@ -2,12 +2,12 @@ import { toast } from "sonner";
 import { t } from "@/i18n";
 import { checkSkillUpdates } from "@/lib/boot";
 import { unverifiedCount } from "@/lib/skills";
-import { skillUpdates, updatesLoading } from "@/store/skills";
+import { activeScopePath, skillUpdates, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
 
 export function useUpdatesCheck() {
   const check = async () => {
-    await checkSkillUpdates();
+    await checkSkillUpdates(activeScopePath.value, { fresh: true });
     const found = skillUpdates.value.filter((update) => update.updateAvailable).length;
     const unverified = unverifiedCount(skillUpdates.value);
 

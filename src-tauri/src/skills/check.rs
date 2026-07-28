@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::sync::{Mutex, OnceLock};
 use std::time::{Duration, Instant};
 
-const TREE_CACHE_TTL: Duration = Duration::from_secs(300);
+const TREE_CACHE_TTL: Duration = Duration::from_secs(120);
 
 type TreeCache = HashMap<String, (Instant, GitTreeResponse)>;
 
@@ -61,10 +61,16 @@ fn encode_path_segment(segment: &str) -> String {
     out
 }
 
-fn fetch_github_tree(owner_repo: &str, r#ref: Option<&str>) -> Option<GitTreeResponse> {
+fn fetch_github_tree(
+    owner_repo: &str,
+    r#ref: Option<&str>,
+    fresh: bool,
+) -> Option<GitTreeResponse> {
     let cache_key = format!("{owner_repo}#{}", r#ref.unwrap_or(""));
-    if let Some(tree) = cached_tree(&cache_key) {
-        return Some(tree);
+    if !fresh {
+        if let Some(tree) = cached_tree(&cache_key) {
+            return Some(tree);
+        }
     }
 
     let branches: Vec<&str> = if let Some(r) = r#ref.filter(|s| !s.is_empty()) {
@@ -153,7 +159,7 @@ fn resolve_github_source(entry: &SkillLockEntry) -> Option<String> {
         .filter(|s| !s.is_empty())
 }
 
-pub fn check_skill_updates_in(scope: &Scope) -> Result<Vec<SkillUpdateInfo>, String> {
+pub fn check_skill_updates_in(scope: &Scope, fresh: bool) -> Result<Vec<SkillUpdateInfo>, String> {
     let lock = load_skill_lock(scope);
     if lock.skills.is_empty() {
         return Ok(Vec::new());
@@ -208,7 +214,7 @@ pub fn check_skill_updates_in(scope: &Scope) -> Result<Vec<SkillUpdateInfo>, Str
             .first()
             .and_then(|(_, e)| e.r#ref.as_deref())
             .map(|s| s.to_string());
-        let tree = fetch_github_tree(&source, ref_hint.as_deref());
+        let tree = fetch_github_tree(&source, ref_hint.as_deref(), fresh);
 
         for (name, entry) in items {
             let Some(tree) = tree.as_ref() else {

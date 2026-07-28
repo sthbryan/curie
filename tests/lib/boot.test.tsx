@@ -111,7 +111,10 @@ describe("loadSkills", () => {
     expect(skillsError.value).toBeNull();
     expect(skillsLoading.value).toBe(false);
     expect(invokeMock).toHaveBeenCalledWith("list_skills", { projectPath: null });
-    expect(invokeMock).toHaveBeenCalledWith("check_skill_updates", { projectPath: null });
+    expect(invokeMock).toHaveBeenCalledWith("check_skill_updates", {
+      projectPath: null,
+      fresh: false,
+    });
   });
 
   it("skips the update check when checkUpdates=false", async () => {

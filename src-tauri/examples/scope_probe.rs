@@ -13,14 +13,14 @@ fn main() {
         println!("  {} scope={} agents={:?}", s.name, s.scope, s.agents);
     }
 
-    let global_updates = check_skill_updates_in(&Scope::resolve(None).unwrap()).unwrap();
+    let global_updates = check_skill_updates_in(&Scope::resolve(None).unwrap(), true).unwrap();
     println!(
         "global updates: {} entries, {} checkable",
         global_updates.len(),
         global_updates.iter().filter(|u| u.checkable).count()
     );
 
-    let project_updates = check_skill_updates_in(&scope).unwrap();
+    let project_updates = check_skill_updates_in(&scope, true).unwrap();
     println!(
         "project updates: {} entries, {} checkable",
         project_updates.len(),

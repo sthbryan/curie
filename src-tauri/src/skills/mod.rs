@@ -37,9 +37,10 @@ pub async fn list_skills(project_path: Option<String>) -> Result<Vec<SkillInfo>,
 #[tauri::command]
 pub async fn check_skill_updates(
     project_path: Option<String>,
+    fresh: Option<bool>,
 ) -> Result<Vec<SkillUpdateInfo>, String> {
     tauri::async_runtime::spawn_blocking(move || {
-        check_skill_updates_in(&Scope::resolve(project_path)?)
+        check_skill_updates_in(&Scope::resolve(project_path)?, fresh.unwrap_or(false))
     })
     .await
     .map_err(|e| format!("update check task failed: {e}"))?

@@ -69,12 +69,16 @@ export async function installAppUpdate(): Promise<InstallResult | null> {
 let loadToken = 0;
 let updatesToken = 0;
 
-export async function checkSkillUpdates(projectPath: string | null = null) {
+export async function checkSkillUpdates(
+  projectPath: string | null = null,
+  options?: { fresh?: boolean },
+) {
   const token = ++updatesToken;
+  const fresh = options?.fresh ?? false;
   setUpdatesLoading(true);
   setUpdatesError(null);
   try {
-    const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates", { projectPath });
+    const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates", { projectPath, fresh });
     if (token !== updatesToken) return;
     setSkillUpdates(updates);
   } catch (e) {
