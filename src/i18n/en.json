@@ -93,7 +93,9 @@
     "loadError": "Could not load global skills",
     "retry": "RETRY",
     "notBuilt": "SCREEN NOT YET BUILT",
-    "back": "BACK TO HOME"
+    "back": "BACK TO HOME",
+    "projects": "PROJECTS",
+    "statProjects": "PROJECTS"
   },
   "installed": {
     "eyebrow": "INSTALLED · GLOBAL",

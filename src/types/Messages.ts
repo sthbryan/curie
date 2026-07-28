@@ -70,6 +70,8 @@ export type Messages = {
     retry: string;
   };
   home: {
+    projects: string;
+    statProjects: string;
     eyebrow: string;
     title: string;
     more: string;

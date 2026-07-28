@@ -93,7 +93,9 @@
     "loadError": "No se pudieron cargar las skills globales",
     "retry": "REINTENTAR",
     "notBuilt": "PANTALLA NO CONSTRUIDA",
-    "back": "VOLVER AL INICIO"
+    "back": "VOLVER AL INICIO",
+    "projects": "PROYECTOS",
+    "statProjects": "PROYECTOS"
   },
   "installed": {
     "eyebrow": "INSTALADAS · GLOBAL",
