@@ -76,6 +76,7 @@ export type SkillUpdateInfo = {
   source: string | null;
   updateAvailable: boolean;
   checkable: boolean;
+  checked: boolean;
 };
 
 export type SkillUpdateResult = {

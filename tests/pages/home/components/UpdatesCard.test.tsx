@@ -21,6 +21,7 @@ const outdated = (name: string): SkillUpdateInfo => ({
   source: `me/${name}`,
   updateAvailable: true,
   checkable: true,
+  checked: true,
 });
 
 afterEach(cleanup);

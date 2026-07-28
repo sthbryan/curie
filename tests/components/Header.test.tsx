@@ -58,8 +58,8 @@ describe("Header", () => {
 
   it("offers a shortcut when skills are outdated", () => {
     skillUpdates.value = [
-      { name: "pr-review", source: null, updateAvailable: true, checkable: true },
-      { name: "shader-dev", source: null, updateAvailable: false, checkable: true },
+      { name: "pr-review", source: null, updateAvailable: true, checkable: true, checked: true },
+      { name: "shader-dev", source: null, updateAvailable: false, checkable: true, checked: true },
     ];
     mount(<Router><Header /></Router>);
     expect(activityButton()?.textContent).toContain("1 UPDATES");
@@ -68,7 +68,7 @@ describe("Header", () => {
   it("hides the shortcut on the page that already shows it", () => {
     window.history.pushState({}, "", "/installed");
     skillUpdates.value = [
-      { name: "pr-review", source: null, updateAvailable: true, checkable: true },
+      { name: "pr-review", source: null, updateAvailable: true, checkable: true, checked: true },
     ];
     mount(<Router><Header /></Router>);
     expect(activityButton()).toBeNull();

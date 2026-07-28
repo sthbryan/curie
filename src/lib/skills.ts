@@ -101,6 +101,10 @@ export function skillTimestamp(skill: SkillInfo): string | null {
   return skill.updatedAt ?? skill.installedAt;
 }
 
+export function unverifiedCount(updates: SkillUpdateInfo[]): number {
+  return updates.filter((u) => u.checkable && !u.checked).length;
+}
+
 export function updateNameSet(updates: SkillUpdateInfo[]): Set<string> {
   return new Set(updates.filter((u) => u.updateAvailable).map((u) => u.name));
 }

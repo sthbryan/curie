@@ -60,6 +60,7 @@ const outdated = (name: string) => ({
   source: `me/${name}`,
   updateAvailable: true,
   checkable: true,
+  checked: true,
 });
 
 describe("Installed", () => {

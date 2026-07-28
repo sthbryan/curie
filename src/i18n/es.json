@@ -338,7 +338,8 @@
     "appUpdateAction": "VER",
     "removedAll": "SE BORRARON TODAS LAS SKILLS",
     "projectAdded": "Se agregó {name}",
-    "projectForgotten": "Se olvidó {name}"
+    "projectForgotten": "Se olvidó {name}",
+    "unverified": "NO SE PUDIERON VERIFICAR {n} SKILLS"
   },
   "projects": {
     "eyebrow": "PROYECTOS · ÁMBITOS",

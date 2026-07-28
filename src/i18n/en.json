@@ -338,7 +338,8 @@
     "appUpdateAction": "VIEW",
     "removedAll": "EVERY SKILL REMOVED",
     "projectAdded": "Added {name}",
-    "projectForgotten": "Forgot {name}"
+    "projectForgotten": "Forgot {name}",
+    "unverified": "COULD NOT CHECK {n} SKILLS"
   },
   "projects": {
     "eyebrow": "PROJECTS · SCOPES",
