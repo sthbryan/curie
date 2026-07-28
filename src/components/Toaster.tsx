@@ -12,7 +12,7 @@ const baseDescription = "mt-1 normal-case tracking-normal text-fg-3";
 const baseCloseButton =
   "absolute top-3 right-2 inline-flex h-5 w-5 cursor-pointer items-center justify-center text-fg-3 transition-colors hover:text-fg";
 const baseActionButton =
-  "ml-1 inline-flex h-6 shrink-0 cursor-pointer items-center rounded-sm border border-border-strong px-2 uppercase tracking-label text-fg-2 transition-colors hover:border-fg-3 hover:text-fg";
+  "-my-[3px] ml-1 inline-flex h-6 shrink-0 cursor-pointer items-center rounded-sm border border-border-strong px-2 uppercase tracking-label text-fg-2 transition-colors hover:border-fg-3 hover:text-fg";
 
 export function Toaster() {
   return (
