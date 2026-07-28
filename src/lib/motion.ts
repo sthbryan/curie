@@ -9,10 +9,19 @@ export const duration = {
 } as const;
 
 export const pageTransition = {
-  initial: { opacity: 0, y: 12, scale: 0.99 },
-  animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: -6, scale: 1.005 },
-  transition: { duration: duration.slow, ease: easeOut },
+  initial: { opacity: 0, y: 6 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: duration.base, type: "spring", bounce: 0, ease: easeOut },
+  },
+  exit: {
+    opacity: 0,
+    y: -3,
+    pointerEvents: "none",
+    transition: { duration: 0.12, type: "spring", bounce: 0, ease: easeOut },
+  },
+  transition: { duration: duration.base, ease: easeOut },
 } as const;
 
 export const fadeUp = (delay = 0) =>
