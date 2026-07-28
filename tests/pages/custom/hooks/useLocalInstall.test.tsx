@@ -96,6 +96,7 @@ describe("useLocalInstall", () => {
     expect(invokeMock).toHaveBeenCalledWith("install_custom_skill", {
       name: "my-skill",
       content: "# content",
+      projectPath: null,
     });
     expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
   });

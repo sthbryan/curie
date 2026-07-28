@@ -108,7 +108,7 @@ describe("Installed", () => {
       updateBtn?.click();
     });
 
-    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: ["impeccable"] });
+    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: ["impeccable"], projectPath: null });
   });
 
   it("confirms before removing one skill", async () => {
@@ -127,7 +127,7 @@ describe("Installed", () => {
         .find((b) => b.textContent === "REMOVE")
         ?.click();
     });
-    expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["impeccable"] });
+    expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["impeccable"], projectPath: null });
   });
 
   it("locks the remove-all confirmation behind the typed phrase", async () => {
@@ -156,7 +156,7 @@ describe("Installed", () => {
     await act(async () => {
       confirm?.click();
     });
-    expect(invokeMock).toHaveBeenCalledWith("remove_all_skills");
+    expect(invokeMock).toHaveBeenCalledWith("remove_all_skills", { projectPath: null });
   });
 
   it("surfaces a failed action in the banner", () => {

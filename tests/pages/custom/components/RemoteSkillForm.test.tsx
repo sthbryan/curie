@@ -201,6 +201,7 @@ describe("RemoteSkillForm", () => {
     expect(invokeMock).toHaveBeenCalledWith("add_skill", {
       package: "owner/repo@skill",
       skillName: null,
+      projectPath: null,
     });
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
     expect(getInput().value).toBe("");

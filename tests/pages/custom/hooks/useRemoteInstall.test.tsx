@@ -108,6 +108,7 @@ describe("useRemoteInstall", () => {
     expect(invokeMock).toHaveBeenCalledWith("add_skill", {
       package: "owner/repo@skill",
       skillName: null,
+      projectPath: null,
     });
     expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
@@ -125,6 +126,7 @@ describe("useRemoteInstall", () => {
     expect(invokeMock).toHaveBeenCalledWith("add_skill", {
       package: "https://github.com/owner/repo",
       skillName: null,
+      projectPath: null,
     });
   });
 

@@ -65,7 +65,7 @@ describe("InstalledActions", () => {
 
     await update();
 
-    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: null });
+    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: null, projectPath: null });
     expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
     expect(updatingSkill.value).toBeNull();
     expect(updateApplyError.value).toBeNull();
@@ -76,7 +76,7 @@ describe("InstalledActions", () => {
 
     await expect(update(["only-one"])).rejects.toThrow("network down");
 
-    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: ["only-one"] });
+    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: ["only-one"], projectPath: null });
     expect(updatingSkill.value).toBeNull();
     expect(updateApplyError.value).toBe("network down");
   });
@@ -101,7 +101,7 @@ describe("InstalledActions", () => {
 
     await remove(["only"]);
 
-    expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["only"] });
+    expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["only"], projectPath: null });
     expect(loadSkillsMock).toHaveBeenCalled();
     expect(removingSkill.value).toBeNull();
   });
@@ -244,7 +244,7 @@ describe("removeAll", () => {
 
     await removeAll();
 
-    expect(invokeMock).toHaveBeenCalledWith("remove_all_skills");
+    expect(invokeMock).toHaveBeenCalledWith("remove_all_skills", { projectPath: null });
     expect(queryInput.value).toBe("");
     expect(agentFilter.value).toBeNull();
     expect(removingSkill.value).toBeNull();

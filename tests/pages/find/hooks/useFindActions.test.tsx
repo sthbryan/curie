@@ -203,7 +203,7 @@ describe("useFindActions", () => {
       await get().install("x");
     });
 
-    expect(invokeMock).toHaveBeenCalledWith("add_skill", { package: "x" });
+    expect(invokeMock).toHaveBeenCalledWith("add_skill", { package: "x", projectPath: null });
     expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
     expect(get().installing).toBeNull();
     unmount();
