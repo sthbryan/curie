@@ -8,7 +8,7 @@ type Props = {
 
 export function CardHead({ title, meta }: Props) {
   return (
-    <div className="flex items-baseline justify-between gap-3">
+    <div className="flex items-center justify-between gap-3 min-h-7">
       <Label>{title}</Label>
       {meta}
     </div>
