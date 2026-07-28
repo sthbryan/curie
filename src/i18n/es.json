@@ -335,7 +335,7 @@
     "setupComplete": "Setup completado",
     "refreshed": "Skills recargados",
     "appUpdate": "Hay una nueva versión de Curie disponible",
-    "appUpdateAction": "VER",
+    "appUpdateAction": "VER ACTUALIZACIÓN",
     "removedAll": "SE BORRARON TODAS LAS SKILLS",
     "projectAdded": "Se agregó {name}",
     "projectForgotten": "Se olvidó {name}",
