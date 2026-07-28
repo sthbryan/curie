@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { activeScopePath } from "@/store/skills";
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
 import {
   agentFilter,
@@ -49,6 +50,7 @@ beforeEach(() => {
   sortDir.value = "desc";
   agentFilter.value = null;
   updatesOnly.value = false;
+  activeScopePath.value = null;
 });
 
 describe("InstalledActions", () => {
@@ -256,5 +258,54 @@ describe("removeAll", () => {
     await expect(removeAll()).rejects.toBe("nope");
     expect(removeError.value).toBe("nope");
     expect(removingSkill.value).toBeNull();
+  });
+});
+
+describe("project scope", () => {
+  const PROJECT = "/code/don_camaron";
+
+  it("sends the project path with update, remove and remove-all", async () => {
+    activeScopePath.value = PROJECT;
+    invokeMock.mockResolvedValue({ updated: [], message: "ok" } as SkillUpdateResult);
+    await update(["aws"]);
+    expect(invokeMock).toHaveBeenCalledWith("update_skills", {
+      skills: ["aws"],
+      projectPath: PROJECT,
+    });
+
+    invokeMock.mockResolvedValue({ removed: ["aws"], message: "ok" } as SkillRemoveResult);
+    await remove(["aws"]);
+    expect(invokeMock).toHaveBeenCalledWith("remove_skills", {
+      skills: ["aws"],
+      projectPath: PROJECT,
+    });
+
+    await removeAll();
+    expect(invokeMock).toHaveBeenCalledWith("remove_all_skills", { projectPath: PROJECT });
+  });
+
+  it("reloads the same scope it mutated", async () => {
+    activeScopePath.value = PROJECT;
+    invokeMock.mockResolvedValue({ removed: ["aws"], message: "ok" } as SkillRemoveResult);
+
+    await remove(["aws"]);
+
+    expect(loadSkillsMock).toHaveBeenCalledWith(PROJECT, { checkUpdates: true });
+  });
+
+  it("skips the reload when the scope moved while the mutation was in flight", async () => {
+    activeScopePath.value = PROJECT;
+    invokeMock.mockImplementation(() => {
+      activeScopePath.value = null;
+      return Promise.resolve({ removed: ["aws"], message: "ok" } as SkillRemoveResult);
+    });
+
+    await remove(["aws"]);
+
+    expect(invokeMock).toHaveBeenCalledWith("remove_skills", {
+      skills: ["aws"],
+      projectPath: PROJECT,
+    });
+    expect(loadSkillsMock).not.toHaveBeenCalled();
   });
 });
