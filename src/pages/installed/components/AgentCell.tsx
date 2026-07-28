@@ -1,5 +1,5 @@
+import { AgentBadge } from "@/components/AgentBadge";
 import { useT } from "@/i18n";
-import { AgentBadge } from "./AgentBadge";
 
 const VISIBLE = 2;
 

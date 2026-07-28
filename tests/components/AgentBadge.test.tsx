@@ -3,7 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
-import { AgentBadge } from "@/pages/installed/components/AgentBadge";
+import { AgentBadge } from "@/components/AgentBadge";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
