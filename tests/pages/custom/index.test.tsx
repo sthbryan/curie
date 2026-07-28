@@ -2,10 +2,15 @@
 
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
 import { lang } from "@/store/system";
-import { Custom } from "@/pages/custom/index";
+
+vi.mock("@tauri-apps/api/webview", () => ({
+  getCurrentWebview: () => ({ onDragDropEvent: () => Promise.resolve(() => {}) }),
+}));
+
+const { Custom } = await import("@/pages/custom/index");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
