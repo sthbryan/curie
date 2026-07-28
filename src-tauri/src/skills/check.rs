@@ -151,6 +151,7 @@ pub fn check_skill_updates_in(scope: &Scope) -> Result<Vec<SkillUpdateInfo>, Str
                 source: entry.source.clone(),
                 update_available: false,
                 checkable: false,
+                checked: false,
             });
             continue;
         }
@@ -161,6 +162,7 @@ pub fn check_skill_updates_in(scope: &Scope) -> Result<Vec<SkillUpdateInfo>, Str
                 source: entry.source.clone(),
                 update_available: false,
                 checkable: false,
+                checked: false,
             });
             continue;
         };
@@ -185,6 +187,7 @@ pub fn check_skill_updates_in(scope: &Scope) -> Result<Vec<SkillUpdateInfo>, Str
                     source: Some(source.clone()),
                     update_available: false,
                     checkable: true,
+                    checked: false,
                 });
                 continue;
             };
@@ -192,13 +195,13 @@ pub fn check_skill_updates_in(scope: &Scope) -> Result<Vec<SkillUpdateInfo>, Str
             let skill_path = entry.skill_path.as_deref().unwrap_or("");
             let local_hash = entry.skill_folder_hash.as_deref().unwrap_or("");
             let latest = latest_folder_hash(tree, skill_path);
-            let update_available = latest.as_deref().map(|h| h != local_hash).unwrap_or(false);
 
             results.push(SkillUpdateInfo {
                 name,
                 source: Some(source.clone()),
-                update_available,
+                update_available: latest.as_deref().map(|h| h != local_hash).unwrap_or(false),
                 checkable: true,
+                checked: latest.is_some(),
             });
         }
     }
@@ -256,4 +259,5 @@ mod tests {
             Some("root")
         );
     }
+
 }

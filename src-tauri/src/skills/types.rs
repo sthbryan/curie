@@ -22,6 +22,7 @@ pub struct SkillUpdateInfo {
     pub source: Option<String>,
     pub update_available: bool,
     pub checkable: bool,
+    pub checked: bool,
 }
 
 #[derive(Serialize, Clone)]
