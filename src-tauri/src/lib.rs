@@ -1,11 +1,13 @@
 mod node;
 mod paths;
 mod projects;
+mod settings;
 mod skills;
 mod update;
 
 pub use node::{build_plan, detect_node_info, install_node_impl, ManagerInfo, NodeInfo, SetupPlan};
 pub use projects::{Project, ProjectProbe};
+pub use settings::Settings;
 pub use skills::{
     check_skill_updates_in, list_skills_in, CustomSkillInstallResult, DetectedSkill, ExplorePage,
     Scope, SkillDetection, SkillExploreResult, SkillInfo, SkillInstallResult, SkillRemoveResult,
@@ -42,6 +44,8 @@ pub fn run() {
             projects::validate_project_path,
             projects::read_projects,
             projects::write_projects,
+            settings::read_settings,
+            settings::write_settings,
             update::check_app_update,
             update::install_app_update,
         ])
