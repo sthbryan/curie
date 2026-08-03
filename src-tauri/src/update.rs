@@ -1,3 +1,4 @@
+use crate::errors::{coded, key};
 use serde::Serialize;
 use tauri::AppHandle;
 use tauri_plugin_updater::UpdaterExt;
@@ -66,16 +67,16 @@ fn fetch_latest_release() -> Result<GitHubRelease, String> {
 
     let resp = req
         .call()
-        .map_err(|e| format!("Failed to fetch latest release: {e}"))?;
+        .map_err(|_| coded(key::RELEASE_FETCH_FAILED))?;
     resp.into_json::<GitHubRelease>()
-        .map_err(|e| format!("Failed to parse release: {e}"))
+        .map_err(|_| coded(key::RELEASE_PARSE_FAILED))
 }
 
 #[tauri::command]
 pub async fn check_app_update() -> Result<AppUpdateInfo, String> {
     tauri::async_runtime::spawn_blocking(check_app_update_impl)
         .await
-        .map_err(|e| format!("app update check task failed: {e}"))?
+        .map_err(|_| coded(key::TASK_FAILED))?
 }
 
 fn check_app_update_impl() -> Result<AppUpdateInfo, String> {
@@ -112,10 +113,10 @@ async fn install_app_update_impl(app: &AppHandle) -> Result<InstallResult, Strin
 
     let updater = match app.updater() {
         Ok(u) => u,
-        Err(e) => {
+        Err(_) => {
             return Ok(InstallResult {
                 success: false,
-                message: format!("Updater init failed: {e}"),
+                message: coded(key::UPDATER_INIT_FAILED),
                 fallback_url: fallback(),
             });
         }
@@ -130,10 +131,10 @@ async fn install_app_update_impl(app: &AppHandle) -> Result<InstallResult, Strin
                 fallback_url: fallback(),
             });
         }
-        Err(e) => {
+        Err(_) => {
             return Ok(InstallResult {
                 success: false,
-                message: format!("Updater check failed: {e}"),
+                message: coded(key::UPDATER_CHECK_FAILED),
                 fallback_url: fallback(),
             });
         }
@@ -142,7 +143,7 @@ async fn install_app_update_impl(app: &AppHandle) -> Result<InstallResult, Strin
     let _body = update.body.clone();
     let _version = update.version.clone();
 
-    if let Err(e) = update
+    if let Err(_) = update
         .download_and_install(
             |chunk_len, content_len| {
                 let _ = (chunk_len, content_len);
@@ -153,7 +154,7 @@ async fn install_app_update_impl(app: &AppHandle) -> Result<InstallResult, Strin
     {
         return Ok(InstallResult {
             success: false,
-            message: format!("Install failed: {e}"),
+            message: coded(key::UPDATE_INSTALL_FAILED),
             fallback_url: fallback(),
         });
     }

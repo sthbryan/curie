@@ -1,3 +1,4 @@
+use crate::errors::{coded, key};
 mod add;
 mod check;
 mod custom;
@@ -31,7 +32,7 @@ pub use update::update_skills_in;
 pub async fn list_skills(project_path: Option<String>) -> Result<Vec<SkillInfo>, String> {
     tauri::async_runtime::spawn_blocking(move || list_skills_in(&Scope::resolve(project_path)?))
         .await
-        .map_err(|e| format!("list task failed: {e}"))?
+        .map_err(|_| coded(key::TASK_FAILED))?
 }
 
 #[tauri::command]

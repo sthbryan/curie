@@ -1,3 +1,4 @@
+use crate::errors::{coded, coded_with, key};
 use super::npx::run_skills_command;
 use super::scope::Scope;
 use super::types::CustomSkillInstallResult;
@@ -11,7 +12,7 @@ pub fn install_custom_skill_in(
 ) -> Result<CustomSkillInstallResult, String> {
     let name = name.trim();
     if name.is_empty() {
-        return Err("skill name is required".into());
+        return Err(coded(key::SKILL_NAME_REQUIRED));
     }
     if !is_valid_skill_name(name) {
         return Err(
@@ -19,7 +20,7 @@ pub fn install_custom_skill_in(
         );
     }
     if content.trim().is_empty() {
-        return Err("skill content is empty".into());
+        return Err(coded(key::SKILL_CONTENT_EMPTY));
     }
 
     let base = crate::paths::custom_skills_dir()?.join(name);
@@ -28,8 +29,8 @@ pub fn install_custom_skill_in(
     let existed = base.exists();
     let previous = fs::read(&file).ok();
 
-    fs::create_dir_all(&base).map_err(|e| format!("could not create {}: {e}", base.display()))?;
-    fs::write(&file, content).map_err(|e| format!("could not write {}: {e}", file.display()))?;
+    fs::create_dir_all(&base).map_err(|_| coded_with(key::DIR_CREATE_FAILED, base.display()))?;
+    fs::write(&file, content).map_err(|_| coded_with(key::WRITE_FAILED, file.display()))?;
 
     let base_string = base.to_string_lossy().to_string();
     let mut args: Vec<&str> = vec!["add", &base_string];
@@ -49,7 +50,7 @@ pub fn install_custom_skill_in(
             } else if !stdout.is_empty() {
                 stdout
             } else {
-                format!("skills add exited with status {}", output.status)
+                coded_with(key::SKILL_ADD_FAILED, output.status)
             })
         }
         Err(e) => Some(e),
@@ -103,19 +104,19 @@ pub fn read_markdown_in(path: &Path) -> Result<String, String> {
         .map(|e| e.eq_ignore_ascii_case("md") || e.eq_ignore_ascii_case("markdown"))
         .unwrap_or(false);
     if !is_markdown {
-        return Err(format!("{} is not a markdown file", path.display()));
+        return Err(coded_with(key::NOT_MARKDOWN, path.display()));
     }
 
     let meta =
-        fs::metadata(path).map_err(|e| format!("could not read {}: {e}", path.display()))?;
+        fs::metadata(path).map_err(|_| coded_with(key::READ_FAILED, path.display()))?;
     if !meta.is_file() {
-        return Err(format!("{} is not a file", path.display()));
+        return Err(coded_with(key::NOT_A_FILE, path.display()));
     }
     if meta.len() > MAX_MARKDOWN_BYTES {
-        return Err(format!("{} is too large to read", path.display()));
+        return Err(coded_with(key::FILE_TOO_LARGE, path.display()));
     }
 
-    fs::read_to_string(path).map_err(|e| format!("could not read {}: {e}", path.display()))
+    fs::read_to_string(path).map_err(|_| coded_with(key::READ_FAILED, path.display()))
 }
 
 #[cfg(test)]

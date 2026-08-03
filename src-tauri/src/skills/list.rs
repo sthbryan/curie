@@ -1,3 +1,4 @@
+use crate::errors::{coded, key};
 use super::lock::load_skill_lock;
 use super::npx::{extract_json_array, run_skills_command};
 use super::scope::Scope;
@@ -49,7 +50,7 @@ fn run_skills_list(scope: &Scope) -> Result<Vec<CliSkill>, String> {
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     let json =
-        extract_json_array(&stdout).ok_or_else(|| "skills list did not return JSON".to_string())?;
+        extract_json_array(&stdout).ok_or_else(|| coded(key::SKILLS_LIST_NOT_JSON))?;
 
-    serde_json::from_str(json).map_err(|e| format!("Failed to parse skills list JSON: {e}"))
+    serde_json::from_str(json).map_err(|_| coded(key::SKILLS_LIST_PARSE_FAILED))
 }

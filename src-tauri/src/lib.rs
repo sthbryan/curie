@@ -1,3 +1,4 @@
+mod errors;
 mod node;
 mod paths;
 mod projects;

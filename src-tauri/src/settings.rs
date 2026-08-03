@@ -1,3 +1,4 @@
+use crate::errors::{coded, coded_with, key};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
@@ -53,22 +54,22 @@ pub(crate) fn read_settings_file(path: &Path) -> Settings {
 pub(crate) fn write_settings_file(path: &Path, settings: &Settings) -> Result<(), String> {
     let parent = path
         .parent()
-        .ok_or_else(|| format!("invalid settings path: {}", path.display()))?;
+        .ok_or_else(|| coded_with(key::PATH_INVALID, path.display()))?;
     fs::create_dir_all(parent)
-        .map_err(|e| format!("could not create {}: {e}", parent.display()))?;
+        .map_err(|_| coded_with(key::DIR_CREATE_FAILED, parent.display()))?;
 
     let stored = Settings {
         version: SETTINGS_VERSION,
         ..settings.clone()
     };
     let body = serde_json::to_string_pretty(&stored)
-        .map_err(|e| format!("could not encode the settings: {e}"))?;
+        .map_err(|_| coded(key::ENCODE_FAILED))?;
 
     let temp = path.with_extension("json.tmp");
-    fs::write(&temp, body).map_err(|e| format!("could not write {}: {e}", temp.display()))?;
-    fs::rename(&temp, path).map_err(|e| {
+    fs::write(&temp, body).map_err(|_| coded_with(key::WRITE_FAILED, temp.display()))?;
+    fs::rename(&temp, path).map_err(|_| {
         let _ = fs::remove_file(&temp);
-        format!("could not save {}: {e}", path.display())
+        coded_with(key::SAVE_FAILED, path.display())
     })
 }
 
@@ -76,7 +77,7 @@ pub(crate) fn write_settings_file(path: &Path, settings: &Settings) -> Result<()
 pub async fn read_settings() -> Result<Settings, String> {
     tauri::async_runtime::spawn_blocking(|| Ok(read_settings_file(&crate::paths::settings_file()?)))
         .await
-        .map_err(|e| format!("read settings task failed: {e}"))?
+        .map_err(|_| coded(key::TASK_FAILED))?
 }
 
 #[tauri::command]
@@ -85,7 +86,7 @@ pub async fn write_settings(settings: Settings) -> Result<(), String> {
         write_settings_file(&crate::paths::settings_file()?, &settings)
     })
     .await
-    .map_err(|e| format!("write settings task failed: {e}"))?
+    .map_err(|_| coded(key::TASK_FAILED))?
 }
 
 #[cfg(test)]

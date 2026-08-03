@@ -1,3 +1,4 @@
+use crate::errors::{coded, key};
 use super::npx::run_skills_command;
 use super::scope::Scope;
 use super::types::SkillInstallResult;
@@ -9,10 +10,10 @@ pub fn add_skill_in(
 ) -> Result<SkillInstallResult, String> {
     let package = package.trim();
     if package.is_empty() {
-        return Err("package is required".into());
+        return Err(coded(key::PACKAGE_REQUIRED));
     }
     if package.starts_with('-') || package.contains(char::is_whitespace) {
-        return Err("invalid package name".into());
+        return Err(coded(key::PACKAGE_INVALID));
     }
 
     let mut args: Vec<&str> = vec!["add", package];
