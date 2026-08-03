@@ -19,6 +19,37 @@ export type Messages = {
     home: string;
     reload: string;
   };
+  errors: {
+    homeMissing: string;
+    pathInvalid: string;
+    dirCreateFailed: string;
+    readFailed: string;
+    writeFailed: string;
+    saveFailed: string;
+    encodeFailed: string;
+    taskFailed: string;
+    projectPathRequired: string;
+    projectPathInvalid: string;
+    projectPathNotAbsolute: string;
+    projectFolderMissing: string;
+    projectNotAFolder: string;
+    packageRequired: string;
+    packageInvalid: string;
+    skillNameRequired: string;
+    skillNameInvalid: string;
+    skillContentEmpty: string;
+    skillAddFailed: string;
+    skillsListNotJson: string;
+    skillsListParseFailed: string;
+    notMarkdown: string;
+    notAFile: string;
+    fileTooLarge: string;
+    releaseFetchFailed: string;
+    releaseParseFailed: string;
+    updaterInitFailed: string;
+    updaterCheckFailed: string;
+    updateInstallFailed: string;
+  };
   nav: {
     home: string;
     skills: string;
