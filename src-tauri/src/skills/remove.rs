@@ -1,3 +1,4 @@
+use crate::errors::{coded, coded_with, key};
 use std::process::Output;
 
 use super::npx::run_skills_command;
@@ -6,13 +7,13 @@ use super::types::SkillRemoveResult;
 
 pub fn remove_skills_in(scope: &Scope, skills: &[String]) -> Result<SkillRemoveResult, String> {
     if skills.is_empty() {
-        return Err("at least one skill name is required".into());
+        return Err(coded(key::SKILL_NAME_REQUIRED));
     }
 
     for name in skills {
         let name = name.trim();
         if name.is_empty() || name.starts_with('-') || name.contains(char::is_whitespace) {
-            return Err(format!("invalid skill name: {name}"));
+            return Err(coded_with(key::SKILL_NAME_INVALID, name));
         }
     }
 

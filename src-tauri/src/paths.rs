@@ -1,3 +1,4 @@
+use crate::errors::{coded, key};
 use std::path::PathBuf;
 
 const CURIE_DIR: &str = ".curie";
@@ -6,7 +7,7 @@ const SETTINGS_FILE: &str = "settings.json";
 const CUSTOM_SKILLS_DIR: &str = "custom-skills";
 
 pub(crate) fn curie_dir() -> Result<PathBuf, String> {
-    let home = dirs::home_dir().ok_or_else(|| "could not resolve home directory".to_string())?;
+    let home = dirs::home_dir().ok_or_else(|| coded(key::HOME_MISSING))?;
     Ok(home.join(CURIE_DIR))
 }
 

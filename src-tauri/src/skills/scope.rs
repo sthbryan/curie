@@ -1,3 +1,4 @@
+use crate::errors::{coded_with, key};
 use std::path::{Path, PathBuf};
 
 pub enum Scope {
@@ -15,16 +16,16 @@ impl Scope {
             return Ok(Scope::Global);
         }
         if raw.starts_with('-') {
-            return Err(format!("invalid project path: {raw}"));
+            return Err(coded_with(key::PROJECT_PATH_INVALID, raw));
         }
         let candidate = Path::new(raw);
         if !candidate.is_absolute() {
-            return Err(format!("project path must be absolute: {raw}"));
+            return Err(coded_with(key::PROJECT_PATH_NOT_ABSOLUTE, raw));
         }
         let canonical = std::fs::canonicalize(candidate)
-            .map_err(|_| format!("project folder not found: {raw}"))?;
+            .map_err(|_| coded_with(key::PROJECT_FOLDER_MISSING, raw))?;
         if !canonical.is_dir() {
-            return Err(format!("not a folder: {raw}"));
+            return Err(coded_with(key::PROJECT_NOT_A_FOLDER, raw));
         }
         Ok(Scope::Project(canonical))
     }

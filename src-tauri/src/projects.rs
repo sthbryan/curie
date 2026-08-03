@@ -1,3 +1,4 @@
+use crate::errors::{coded, coded_with, key};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
@@ -55,22 +56,22 @@ pub(crate) fn read_registry(path: &Path) -> Vec<Project> {
 pub(crate) fn write_registry(path: &Path, projects: &[Project]) -> Result<(), String> {
     let parent = path
         .parent()
-        .ok_or_else(|| format!("invalid registry path: {}", path.display()))?;
+        .ok_or_else(|| coded_with(key::PATH_INVALID, path.display()))?;
     fs::create_dir_all(parent)
-        .map_err(|e| format!("could not create {}: {e}", parent.display()))?;
+        .map_err(|_| coded_with(key::DIR_CREATE_FAILED, parent.display()))?;
 
     let registry = Registry {
         version: REGISTRY_VERSION,
         projects: projects.to_vec(),
     };
     let body = serde_json::to_string_pretty(&registry)
-        .map_err(|e| format!("could not encode the project registry: {e}"))?;
+        .map_err(|_| coded(key::ENCODE_FAILED))?;
 
     let temp = path.with_extension("json.tmp");
-    fs::write(&temp, body).map_err(|e| format!("could not write {}: {e}", temp.display()))?;
-    fs::rename(&temp, path).map_err(|e| {
+    fs::write(&temp, body).map_err(|_| coded_with(key::WRITE_FAILED, temp.display()))?;
+    fs::rename(&temp, path).map_err(|_| {
         let _ = fs::remove_file(&temp);
-        format!("could not save {}: {e}", path.display())
+        coded_with(key::SAVE_FAILED, path.display())
     })
 }
 
@@ -79,7 +80,7 @@ pub async fn validate_project_path(path: String) -> Result<ProjectProbe, String>
     tauri::async_runtime::spawn_blocking(move || {
         let raw = path.trim();
         if raw.is_empty() {
-            return Err("project path is required".to_string());
+            return Err(coded(key::PROJECT_PATH_REQUIRED));
         }
 
         let candidate = Path::new(raw);
@@ -95,14 +96,14 @@ pub async fn validate_project_path(path: String) -> Result<ProjectProbe, String>
         })
     })
     .await
-    .map_err(|e| format!("validate task failed: {e}"))?
+    .map_err(|_| coded(key::TASK_FAILED))?
 }
 
 #[tauri::command]
 pub async fn read_projects() -> Result<Vec<Project>, String> {
     tauri::async_runtime::spawn_blocking(|| Ok(read_registry(&crate::paths::projects_file()?)))
         .await
-        .map_err(|e| format!("read projects task failed: {e}"))?
+        .map_err(|_| coded(key::TASK_FAILED))?
 }
 
 #[tauri::command]
@@ -111,7 +112,7 @@ pub async fn write_projects(projects: Vec<Project>) -> Result<(), String> {
         write_registry(&crate::paths::projects_file()?, &projects)
     })
         .await
-        .map_err(|e| format!("write projects task failed: {e}"))?
+        .map_err(|_| coded(key::TASK_FAILED))?
 }
 
 #[cfg(test)]
