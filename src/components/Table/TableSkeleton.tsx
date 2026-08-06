@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
 import { Bone } from "./Bone";
@@ -16,7 +15,7 @@ export function TableSkeleton<T>({ columns, gridTemplate, skeletonRows }: Props<
   const keys = SKELETON_KEYS.slice(0, Math.min(skeletonRows, SKELETON_KEYS.length));
 
   return (
-    <motion.div {...fadeUp(0.04)} className="flex flex-col" aria-hidden>
+    <div {...fadeUp(0.04)} className="flex flex-col" aria-hidden>
       <div className={cn("grid gap-4 border-b border-border pb-2", gridTemplate)}>
         {columns.map((col) => (
           <Bone
@@ -45,6 +44,6 @@ export function TableSkeleton<T>({ columns, gridTemplate, skeletonRows }: Props<
           ))}
         </div>
       ))}
-    </motion.div>
+    </div>
   );
 }

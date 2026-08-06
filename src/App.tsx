@@ -1,4 +1,3 @@
-import { MotionConfig } from "motion/react";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
@@ -20,6 +19,10 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = lang.value;
   }, [lang.value]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-reduced-motion", reducedMotion.value);
+  }, [reducedMotion.value]);
 
   const notifiedUpdates = useRef(false);
   useEffect(() => {
@@ -46,10 +49,10 @@ function App() {
   });
 
   return (
-    <MotionConfig reducedMotion={reducedMotion.value}>
+    <>
       <AppShell />
       <Toaster />
-    </MotionConfig>
+    </>
   );
 }
 

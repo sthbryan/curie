@@ -1,6 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Download, RotateCcw, SquareArrowOutUpRight, TriangleAlert } from "lucide-react";
-import { useReducedMotionConfig } from "motion/react";
 import { Case, Default, Switch } from "react-if";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
@@ -9,6 +8,7 @@ import { useT } from "@/i18n";
 import { checkAppUpdate, installAppUpdate, RESTART_DELAY, restartApp } from "@/lib/boot";
 import { cn } from "@/lib/cn";
 import { APP_VERSION_LABEL } from "@/lib/meta";
+import { useReducedMotion } from "@/lib/motion";
 import { formatRelative } from "@/lib/skills";
 import { lang } from "@/store/system";
 import {
@@ -21,7 +21,7 @@ import {
 
 export function UpdateSection() {
   const t = useT("settings");
-  const shouldReduceMotion = useReducedMotionConfig();
+  const shouldReduceMotion = useReducedMotion();
 
   const checking = appUpdateLoading.value;
   const error = appUpdateError.value;

@@ -1,7 +1,7 @@
 import { CircleFadingArrowUp, LoaderCircle } from "lucide-react";
-import { useReducedMotionConfig } from "motion/react";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
+import { useReducedMotion } from "@/lib/motion";
 import { useRoute } from "@/lib/routes";
 import { skillsLoading, skillUpdates, updatesLoading } from "@/store/skills";
 
@@ -10,7 +10,7 @@ const CHIP = "flex items-center gap-2 font-mono uppercase tracking-label text-mi
 export function HeaderActivity() {
   const t = useT("app");
   const { section, go } = useRoute();
-  const shouldReduceMotion = useReducedMotionConfig();
+  const shouldReduceMotion = useReducedMotion();
 
   const busyKey = skillsLoading.value
     ? "loadingSkills"

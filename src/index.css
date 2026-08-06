@@ -49,6 +49,59 @@
   }
 }
 
+@keyframes anim-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes anim-page {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+[data-anim="fade-up"] {
+  animation: anim-fade-up 410ms cubic-bezier(0.22, 1, 0.36, 1) var(--anim-delay, 0ms) both;
+}
+
+[data-anim="page"] {
+  animation: anim-page 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes anim-overlay {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes anim-dialog {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+[data-anim="overlay"] {
+  animation: anim-overlay 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[data-anim="dialog"] {
+  animation: anim-dialog 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+:root[data-reduced-motion="always"] [data-anim] {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-reduced-motion="never"]) [data-anim] {
+    animation: none;
+  }
+}
+
 :root[data-theme="light"] {
   --color-bg: #fafaf8;
   --color-surface: #f0eee8;

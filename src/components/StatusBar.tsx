@@ -1,4 +1,3 @@
-import { useReducedMotionConfig } from "motion/react";
 import type { ReactNode } from "react";
 import { Else, If, Then, When } from "react-if";
 import { useLocation } from "wouter";
@@ -6,6 +5,7 @@ import { THEME_OPTIONS } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
+import { useReducedMotion } from "@/lib/motion";
 import { lang, node, setLang, setTheme, theme } from "@/store/system";
 import { appUpdate } from "@/store/update";
 
@@ -27,7 +27,7 @@ function Meta({ children, dim, title }: { children: ReactNode; dim?: boolean; ti
 export function StatusBar() {
   const t = useT();
   const [, navigate] = useLocation();
-  const shouldReduceMotion = useReducedMotionConfig();
+  const shouldReduceMotion = useReducedMotion();
 
   const current = node.value;
   const hasUpdate = appUpdate.value?.updateAvailable === true;

@@ -42,11 +42,16 @@ describe("Sidebar", () => {
 
   it("reveals the labels when a nav item takes focus", () => {
     mount(<Router><Sidebar /></Router>);
-    expect(container?.textContent).not.toContain("HOME");
+    const label = () => container?.querySelector("button > span:last-child") as HTMLElement;
+
+    expect(label().getAttribute("aria-hidden")).toBe("true");
+    expect(label().className).toContain("opacity-0");
 
     const first = container?.querySelector("button") as HTMLButtonElement;
     act(() => { first.focus(); });
 
-    expect(container?.textContent).toContain("HOME");
+    expect(label().getAttribute("aria-hidden")).toBe("false");
+    expect(label().className).toContain("opacity-100");
+    expect(label().textContent).toContain("HOME");
   });
 });

@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { useState } from "react";
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
@@ -38,11 +37,11 @@ export function Installed() {
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
       <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-6 px-10 pt-12 pb-8">
-        <motion.div {...fadeUp(0)} className="flex shrink-0 flex-col gap-6">
+        <div {...fadeUp(0)} className="flex shrink-0 flex-col gap-6">
           <InstalledHeader onAskRemoveAll={() => setRemovingAll(true)} />
           <ErrorBanner />
           {empty ? null : <InstalledToolbar />}
-        </motion.div>
+        </div>
 
         {empty ? (
           <EmptyState />

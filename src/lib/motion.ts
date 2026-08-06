@@ -1,75 +1,51 @@
-import type { Transition, Variants } from "motion/react";
+import type { CSSProperties } from "react";
+import { useEffect, useState } from "react";
+import { reducedMotion } from "@/store/system";
 
-export const easeOut: Transition["ease"] = [0.22, 1, 0.36, 1];
+export const easeOut = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 export const duration = {
-  fast: 0.16,
-  base: 0.22,
-  slow: 0.41,
+  fast: 160,
+  base: 220,
+  slow: 410,
 } as const;
 
-export const pageTransition = {
-  initial: { opacity: 0, y: 6 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: duration.base, type: "spring", bounce: 0, ease: easeOut },
-  },
-  exit: {
-    opacity: 0,
-    y: -3,
-    pointerEvents: "none",
-    transition: { duration: 0.12, type: "spring", bounce: 0, ease: easeOut },
-  },
-  transition: { duration: duration.base, ease: easeOut },
-} as const;
-
-export const fadeUp = (delay = 0) =>
-  ({
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: duration.slow, type: "spring", delay },
-  }) as const;
-
-export const staggerContainer: Variants = {
-  initial: {},
-  animate: {
-    transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.04,
-    },
-  },
+export type AnimProps = {
+  "data-anim": string;
+  style?: CSSProperties;
 };
 
-export const staggerItem: Variants = {
-  initial: { opacity: 0, y: 8 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: duration.base, ease: easeOut },
-  },
-};
+const delayStyle = (delay: number): CSSProperties =>
+  ({ "--anim-delay": `${Math.round(delay * 1000)}ms` }) as CSSProperties;
 
-export const listStagger: Variants = {
-  initial: {},
-  animate: {
-    transition: {
-      staggerChildren: 0.03,
-      delayChildren: 0.06,
-    },
-  },
-};
+export const fadeUp = (delay = 0): AnimProps => ({
+  "data-anim": "fade-up",
+  style: delayStyle(delay),
+});
 
-export const listItem: Variants = {
-  initial: { opacity: 0, y: 6 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: duration.fast, ease: easeOut },
-  },
-  exit: {
-    opacity: 0,
-    y: -4,
-    transition: { duration: duration.fast, ease: easeOut },
-  },
-};
+export const pageAnim: AnimProps = { "data-anim": "page" };
+
+const REDUCE_QUERY = "(prefers-reduced-motion: reduce)";
+
+const systemPrefersReduced = () =>
+  typeof window !== "undefined" &&
+  typeof window.matchMedia === "function" &&
+  window.matchMedia(REDUCE_QUERY).matches;
+
+export function useReducedMotion(): boolean {
+  const pref = reducedMotion.value;
+  const [system, setSystem] = useState(systemPrefersReduced);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+    const query = window.matchMedia(REDUCE_QUERY);
+    const sync = () => setSystem(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  if (pref === "always") return true;
+  if (pref === "never") return false;
+  return system;
+}

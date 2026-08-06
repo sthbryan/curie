@@ -1,9 +1,8 @@
-import { AnimatePresence, motion } from "motion/react";
 import { lazy, type ReactNode, Suspense } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorFallback } from "@/components/ErrorFallback";
 import { FullPageLoading } from "@/components/FullPageLoading";
-import { pageTransition } from "@/lib/motion";
+import { pageAnim } from "@/lib/motion";
 import { completeSetup, stage } from "@/store/system";
 import { RoutedPages } from "./RoutedPages";
 
@@ -41,18 +40,9 @@ export function MainContent() {
       resetKeys={[stage.value]}
       fallback={({ error, reset }) => <ErrorFallback error={error} reset={reset} variant="page" />}
     >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={key}
-          className="flex min-h-0 min-w-0 flex-1 flex-col"
-          initial={pageTransition.initial}
-          animate={pageTransition.animate}
-          exit={pageTransition.exit}
-          transition={pageTransition.transition}
-        >
-          {content}
-        </motion.div>
-      </AnimatePresence>
+      <div key={key} {...pageAnim} className="flex min-h-0 min-w-0 flex-1 flex-col">
+        {content}
+      </div>
     </ErrorBoundary>
   );
 }

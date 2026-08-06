@@ -63,10 +63,10 @@ export default defineConfig(async () => ({
     deps: {
       optimizer: {
         web: {
-          include: ["wouter", "motion", "react-if", "lucide-react", "thinking-orbs"],
+          include: ["wouter", "react-if", "lucide-react", "thinking-orbs"],
         },
         ssr: {
-          include: ["wouter", "motion", "react-if", "lucide-react", "thinking-orbs"],
+          include: ["wouter", "react-if", "lucide-react", "thinking-orbs"],
         },
       },
     },

@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { type ReactNode, useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
 import { Button } from "@/components/Button";
@@ -150,13 +149,13 @@ export function ExploreList({
       </Case>
 
       <Case condition={empty}>
-        <motion.div
+        <div
           {...fadeUp(0.08)}
           className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
         >
           <span className="font-body text-sm text-fg">{t("empty")}</span>
           <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
-        </motion.div>
+        </div>
       </Case>
 
       <Case condition={skills.length > 0}>

@@ -1,6 +1,5 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
-import { motion, useReducedMotionConfig } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { When } from "react-if";
 import { toast } from "sonner";
@@ -13,7 +12,7 @@ import { ScopeBanner } from "@/components/ScopeBanner";
 import type { ExploreView } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { fadeUp } from "@/lib/motion";
+import { fadeUp, useReducedMotion } from "@/lib/motion";
 import { useRoute } from "@/lib/routes";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { skills } from "@/store/skills";
@@ -25,7 +24,7 @@ const VIEWS: ExploreView[] = ["hot", "trending", "all-time"];
 export function Explore() {
   const t = useT("explore");
   const { go } = useRoute();
-  const shouldReduceMotion = useReducedMotionConfig();
+  const shouldReduceMotion = useReducedMotion();
   const {
     skills: exploreSkills,
     view,
@@ -96,7 +95,7 @@ export function Explore() {
       <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-8 px-10 pt-12 pb-8">
         <ScopeBanner />
 
-        <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
+        <section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>
             <div className="flex flex-wrap items-end justify-between gap-4">
@@ -133,9 +132,9 @@ export function Explore() {
               onDismiss={dismissInstallError}
             />
           </When>
-        </motion.section>
+        </section>
 
-        <motion.section
+        <section
           {...fadeUp(0.05)}
           className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border pb-4"
         >
@@ -171,7 +170,7 @@ export function Explore() {
               {loading ? t("refreshing") : t("refresh")}
             </Button>
           </div>
-        </motion.section>
+        </section>
 
         <section className="flex min-h-0 flex-1 flex-col">
           <ExploreList
