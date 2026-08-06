@@ -4,11 +4,14 @@ import type { ExplorePage, ExploreView, SkillExploreResult } from "@/components/
 import { errorMessage } from "@/lib/errors";
 import { type SkillInstall, useSkillInstall } from "@/lib/useSkillInstall";
 
+export const MAX_EXPLORE_SKILLS = 300;
+
 export type ExploreActions = SkillInstall & {
   skills: SkillExploreResult[];
   view: ExploreView;
   total: number;
   hasMore: boolean;
+  atCap: boolean;
   loading: boolean;
   loadingMore: boolean;
   error: string | null;
@@ -23,6 +26,7 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
   const [view, setViewState] = useState<ExploreView>(initialView);
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const [atCap, setAtCap] = useState(false);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -32,11 +36,18 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
   const latestLoadId = useRef(0);
   const viewRef = useRef(view);
   viewRef.current = view;
+  const skillsRef = useRef<SkillExploreResult[]>([]);
 
   const applyPage = useCallback((res: ExplorePage, append: boolean) => {
-    setSkills((prev) => (append ? [...prev, ...res.skills] : res.skills));
+    const merged = append ? [...skillsRef.current, ...res.skills] : res.skills;
+    const capped = merged.slice(0, MAX_EXPLORE_SKILLS);
+    const capReached = capped.length >= MAX_EXPLORE_SKILLS;
+
+    skillsRef.current = capped;
+    setSkills(capped);
     setTotal(res.total);
-    setHasMore(res.hasMore);
+    setHasMore(res.hasMore && !capReached);
+    setAtCap(res.hasMore && capReached);
     setPage(res.page);
   }, []);
 
@@ -53,9 +64,11 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
       } catch (e) {
         if (id !== latestLoadId.current) return;
         setError(errorMessage(e));
+        skillsRef.current = [];
         setSkills([]);
         setTotal(0);
         setHasMore(false);
+        setAtCap(false);
         setPage(0);
       } finally {
         if (id === latestLoadId.current) setLoading(false);
@@ -103,6 +116,7 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
     view,
     total,
     hasMore,
+    atCap,
     loading,
     loadingMore,
     error,

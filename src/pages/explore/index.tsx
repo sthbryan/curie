@@ -31,6 +31,7 @@ export function Explore() {
     view,
     total,
     hasMore,
+    atCap,
     loading,
     loadingMore,
     error,
@@ -182,6 +183,7 @@ export function Explore() {
             installingPackage={installingPackage}
             installBusy={installBusy}
             hasMore={hasMore}
+            atCap={atCap}
             loadingMore={loadingMore}
             onInstall={handleInstall}
             onLoadMore={handleLoadMore}

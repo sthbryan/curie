@@ -284,6 +284,7 @@
     "loading": "CARGANDO…",
     "loadingMore": "CARGANDO…",
     "loadMore": "CARGAR MÁS",
+    "capReached": "MOSTRANDO LOS PRIMEROS {n} · USA BUSCAR PARA AFINAR",
     "refresh": "ACTUALIZAR",
     "refreshing": "ACTUALIZANDO…",
     "showing": "{n} DE {total}",

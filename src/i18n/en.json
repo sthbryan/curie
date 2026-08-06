@@ -284,6 +284,7 @@
     "loading": "LOADING…",
     "loadingMore": "LOADING…",
     "loadMore": "LOAD MORE",
+    "capReached": "SHOWING FIRST {n} · USE SEARCH TO NARROW",
     "refresh": "REFRESH",
     "refreshing": "REFRESHING…",
     "showing": "{n} OF {total}",
