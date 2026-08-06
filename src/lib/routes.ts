@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import type { Project, Scope } from "@/components/types";
+import { withViewTransition } from "@/lib/viewTransition";
 import { projects } from "@/store/projects";
 
 export const SECTIONS = [
@@ -68,14 +69,18 @@ export function useRoute() {
   const project = findProject(scopeId);
   const scope: Scope = project ? { kind: "project", project } : GLOBAL_SCOPE;
 
+  const transition = (path: string) => {
+    withViewTransition(() => navigate(path));
+  };
+
   return {
     location,
-    navigate,
+    navigate: transition,
     section,
     scopeId,
     scope,
     missing: scopeId !== null && project === null,
-    go: (next: Section, id: string | null = scopeId) => navigate(sectionPath(id, next)),
+    go: (next: Section, id: string | null = scopeId) => transition(sectionPath(id, next)),
   };
 }
 

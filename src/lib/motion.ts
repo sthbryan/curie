@@ -25,12 +25,21 @@ export const fadeUp = (delay = 0): AnimProps => ({
 
 export const pageAnim: AnimProps = { "data-anim": "page" };
 
+export const stageAnim: AnimProps = { "data-anim": "stage" };
+
 const REDUCE_QUERY = "(prefers-reduced-motion: reduce)";
 
 const systemPrefersReduced = () =>
   typeof window !== "undefined" &&
   typeof window.matchMedia === "function" &&
   window.matchMedia(REDUCE_QUERY).matches;
+
+export function prefersReducedMotion(): boolean {
+  const pref = reducedMotion.peek();
+  if (pref === "always") return true;
+  if (pref === "never") return false;
+  return systemPrefersReduced();
+}
 
 export function useReducedMotion(): boolean {
   const pref = reducedMotion.value;

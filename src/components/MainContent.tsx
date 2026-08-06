@@ -2,7 +2,7 @@ import { lazy, type ReactNode, Suspense } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorFallback } from "@/components/ErrorFallback";
 import { FullPageLoading } from "@/components/FullPageLoading";
-import { pageAnim } from "@/lib/motion";
+import { stageAnim } from "@/lib/motion";
 import { completeSetup, stage } from "@/store/system";
 import { RoutedPages } from "./RoutedPages";
 
@@ -40,7 +40,7 @@ export function MainContent() {
       resetKeys={[stage.value]}
       fallback={({ error, reset }) => <ErrorFallback error={error} reset={reset} variant="page" />}
     >
-      <div key={key} {...pageAnim} className="flex min-h-0 min-w-0 flex-1 flex-col">
+      <div key={key} {...stageAnim} className="flex min-h-0 min-w-0 flex-1 flex-col">
         {content}
       </div>
     </ErrorBoundary>

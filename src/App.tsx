@@ -1,17 +1,23 @@
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { useLocation } from "wouter";
 import { AppShell } from "@/components/AppShell";
 import { Toaster } from "@/components/Toaster";
 import { t } from "@/i18n";
 import { useBoot } from "@/lib/boot";
+import { useRoute } from "@/lib/routes";
+import { markViewTransitionSupport } from "@/lib/viewTransition";
 import { skillUpdates } from "@/store/skills";
 import { lang, reducedMotion, theme } from "@/store/system";
 import { appUpdate } from "@/store/update";
 
 function App() {
   useBoot();
-  const [, navigate] = useLocation();
+  const { navigate } = useRoute();
+
+  useEffect(() => {
+    markViewTransitionSupport();
+  }, []);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme.value);
   }, [theme.value]);
