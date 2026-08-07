@@ -1,8 +1,8 @@
 import { Check, LoaderCircle } from "lucide-react";
-import { useReducedMotionConfig } from "motion/react";
 import type { SetupStep } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
+import { useReducedMotion } from "@/lib/motion";
 
 type Props = {
   steps: SetupStep[];
@@ -12,7 +12,7 @@ type Props = {
 
 export function StepList({ steps, current, manager }: Props) {
   const t = useT("setup");
-  const shouldReduceMotion = useReducedMotionConfig();
+  const shouldReduceMotion = useReducedMotion();
   const currentIndex = steps.indexOf(current);
 
   return (

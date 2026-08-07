@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
@@ -10,7 +9,7 @@ export function HomeIntro() {
   const t = useT("home");
 
   return (
-    <motion.section {...fadeUp(0)} className="flex flex-col gap-3">
+    <section {...fadeUp(0)} className="flex flex-col gap-3">
       <Label>{t("eyebrow")}</Label>
       <Heading>{t("title")}</Heading>
       {totalSkills.value === 0 ? (
@@ -18,6 +17,6 @@ export function HomeIntro() {
       ) : (
         <StatLine />
       )}
-    </motion.section>
+    </section>
   );
 }

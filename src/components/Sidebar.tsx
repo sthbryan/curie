@@ -8,15 +8,13 @@ import {
   Search,
   Settings as SettingsIcon,
 } from "lucide-react";
-import { motion, useReducedMotionConfig } from "motion/react";
 import type { FocusEvent } from "react";
 import { useState } from "react";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { duration, easeOut } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/motion";
 import type { Section } from "@/lib/routes";
 import { useRoute } from "@/lib/routes";
-import { reducedTransition } from "@/lib/transition";
 import { NavItem } from "./NavItem";
 
 type NavKey = "home" | "skills" | "explore" | "find" | "custom" | "projects";
@@ -38,9 +36,12 @@ export function Sidebar() {
   const { section, go } = useRoute();
   const [open, setOpen] = useState(false);
 
-  const shouldReduceMotion = useReducedMotionConfig();
+  const shouldReduceMotion = useReducedMotion();
 
   const handleNavSettings = () => go("settings", null);
+
+  const handleHoverStart = () => setOpen(true);
+  const handleHoverEnd = () => setOpen(false);
 
   const handleBlur = (event: FocusEvent<HTMLElement>) => {
     const next = event.relatedTarget as Node | null;
@@ -50,19 +51,16 @@ export function Sidebar() {
 
   return (
     <div className="relative z-30 shrink-0" style={{ width: RAIL_WIDTH }}>
-      <motion.nav
-        initial={false}
-        animate={{ width: open ? PANEL_WIDTH : RAIL_WIDTH }}
-        transition={reducedTransition({
-          shouldReduceMotion,
-          transition: { duration: duration.base, ease: easeOut },
-        })}
-        onHoverStart={() => setOpen(true)}
-        onHoverEnd={() => setOpen(false)}
-        onFocus={() => setOpen(true)}
+      <nav
+        style={{ width: open ? PANEL_WIDTH : RAIL_WIDTH }}
+        onMouseEnter={handleHoverStart}
+        onMouseLeave={handleHoverEnd}
+        onFocus={handleHoverStart}
         onBlur={handleBlur}
         className={cn(
           "absolute inset-y-0 left-0 flex flex-col overflow-hidden border-r border-border bg-surface",
+          !shouldReduceMotion &&
+            "transition-[width] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
           open && "shadow-2xl",
         )}
       >
@@ -97,7 +95,7 @@ export function Sidebar() {
             onClick={handleNavSettings}
           />
         </div>
-      </motion.nav>
+      </nav>
     </div>
   );
 }

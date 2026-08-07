@@ -1,5 +1,4 @@
 import { CloudDownload, Compass } from "lucide-react";
-import { motion } from "motion/react";
 import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
 import { Button } from "@/components/Button";
@@ -96,7 +95,7 @@ export function ResultsPanel({
   return (
     <Switch>
       <Case condition={showHint}>
-        <motion.div
+        <div
           {...fadeUp(0.08)}
           className="flex flex-col items-start gap-3 border border-border-strong bg-surface-tint px-5 py-8"
         >
@@ -106,7 +105,7 @@ export function ResultsPanel({
             <Compass size={12} strokeWidth={1.5} />
             {t("goExplore")}
           </Button>
-        </motion.div>
+        </div>
       </Case>
 
       <Case condition={loading}>
@@ -121,13 +120,13 @@ export function ResultsPanel({
       </Case>
 
       <Case condition={empty}>
-        <motion.div
+        <div
           {...fadeUp(0.08)}
           className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
         >
           <span className="font-body text-sm text-fg">{t("empty")}</span>
           <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
-        </motion.div>
+        </div>
       </Case>
 
       <Case condition={results.length > 0}>

@@ -1,8 +1,6 @@
-import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/Button";
-import { duration, easeOut } from "@/lib/motion";
 
 type Props = {
   open: boolean;
@@ -95,29 +93,23 @@ export function ConfirmDialog(props: Props) {
   };
 
   return createPortal(
-    <AnimatePresence>
+    <>
       {open ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
-          <motion.div
+          <div
+            data-anim="overlay"
             className="absolute inset-0 bg-bg/80 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: duration.fast }}
             onClick={handleCancel}
             aria-hidden
           />
-          <motion.div
+          <div
             ref={panelRef}
+            data-anim="dialog"
             role="alertdialog"
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={description || detail ? descId : undefined}
             className="relative z-10 flex w-full max-w-sm flex-col gap-5 border border-border-strong bg-surface px-5 py-5 shadow-2xl"
-            initial={{ opacity: 0, scale: 0.96, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.98, y: 4 }}
-            transition={{ duration: duration.base, ease: easeOut }}
           >
             <div className="flex flex-col gap-2">
               <h2
@@ -175,10 +167,10 @@ export function ConfirmDialog(props: Props) {
                 {busy && busyLabel ? busyLabel : confirmLabel}
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       ) : null}
-    </AnimatePresence>,
+    </>,
     document.body,
   );
 }

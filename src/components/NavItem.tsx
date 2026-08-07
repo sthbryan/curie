@@ -1,8 +1,6 @@
 import type { LucideIcon } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotionConfig } from "motion/react";
 import { cn } from "@/lib/cn";
-import { duration, easeOut } from "@/lib/motion";
-import { reducedTransition } from "@/lib/transition";
+import { useReducedMotion } from "@/lib/motion";
 
 type Props = {
   number: string;
@@ -14,7 +12,7 @@ type Props = {
 };
 
 export function NavItem({ number, label, icon: Icon, active, expanded, onClick }: Props) {
-  const shouldReduceMotion = useReducedMotionConfig();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <button
@@ -39,38 +37,32 @@ export function NavItem({ number, label, icon: Icon, active, expanded, onClick }
         />
       </span>
 
-      <AnimatePresence initial={false}>
-        {expanded && (
-          <motion.span
-            key="label"
-            initial={{ opacity: 0, x: -4 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -4 }}
-            transition={reducedTransition({
-              shouldReduceMotion,
-              transition: { duration: duration.base, ease: easeOut, delay: 0.06 },
-            })}
-            className="absolute top-1/2 left-9.5 flex -translate-y-1/2 items-baseline gap-2 whitespace-nowrap"
-          >
-            <span
-              className={cn(
-                "font-mono leading-none tabular-nums text-micro",
-                active ? "text-fg-3" : "text-fg-4",
-              )}
-            >
-              {number}
-            </span>
-            <span
-              className={cn(
-                "font-mono uppercase leading-none tracking-label text-micro transition-colors group-hover:text-fg",
-                active ? "font-bold text-fg" : "text-fg-2",
-              )}
-            >
-              {label}
-            </span>
-          </motion.span>
+      <span
+        aria-hidden={!expanded}
+        className={cn(
+          "absolute top-1/2 left-9.5 flex -translate-y-1/2 items-baseline gap-2 whitespace-nowrap",
+          !shouldReduceMotion &&
+            "transition-[opacity,translate] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+          expanded ? "opacity-100 translate-x-0 delay-[60ms]" : "opacity-0 -translate-x-1",
         )}
-      </AnimatePresence>
+      >
+        <span
+          className={cn(
+            "font-mono leading-none tabular-nums text-micro",
+            active ? "text-fg-3" : "text-fg-4",
+          )}
+        >
+          {number}
+        </span>
+        <span
+          className={cn(
+            "font-mono uppercase leading-none tracking-label text-micro transition-colors group-hover:text-fg",
+            active ? "font-bold text-fg" : "text-fg-2",
+          )}
+        >
+          {label}
+        </span>
+      </span>
     </button>
   );
 }

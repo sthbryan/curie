@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { ScopeBanner } from "@/components/ScopeBanner";
@@ -15,13 +14,13 @@ export function Custom() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-10 pt-12 pb-8">
         <ScopeBanner />
 
-        <motion.section {...fadeUp(0)} className="flex flex-col gap-3">
+        <section {...fadeUp(0)} className="flex flex-col gap-3">
           <Label>{t("eyebrow")}</Label>
           <Heading>{t("title")}</Heading>
           <p className="max-w-2xl font-body text-sm text-fg-3">{t("subtitle")}</p>
-        </motion.section>
+        </section>
 
-        <motion.section
+        <section
           {...fadeUp(0.05)}
           className="flex flex-col gap-8 border border-border bg-surface-tint p-8"
         >
@@ -36,7 +35,7 @@ export function Custom() {
           </div>
 
           <LocalSkillForm />
-        </motion.section>
+        </section>
       </div>
     </main>
   );

@@ -19,34 +19,33 @@
     "postinstall": "lefthook install || true"
   },
   "dependencies": {
-    "@preact/signals": "2.10.0",
+    "@preact/signals": "2.11.0",
     "@tauri-apps/api": "2.11.1",
     "@tauri-apps/plugin-dialog": "2.7.2",
     "@tauri-apps/plugin-opener": "2.5.4",
     "cnfast": "0.1.0",
-    "lucide-react": "1.27.0",
-    "motion": "12.42.2",
-    "preact": "10.29.7",
+    "lucide-react": "1.29.0",
+    "preact": "10.29.8",
     "react-if": "4.1.6",
     "sonner": "^2.0.7",
     "tailwind-merge": "3.6.0",
-    "thinking-orbs": "^0.1.1",
+    "thinking-orbs": "^0.2.0",
     "wouter": "3.10.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.5",
+    "@biomejs/biome": "2.5.7",
     "@preact/preset-vite": "2.10.6",
     "@tailwindcss/vite": "4.3.3",
     "@tauri-apps/cli": "2.11.4",
     "@types/node": "26.1.2",
-    "@types/react": "19.2.17",
-    "@types/react-dom": "19.2.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
     "@vitest/coverage-v8": "4.1.10",
     "happy-dom": "20.11.1",
     "lefthook": "2.1.10",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
-    "vite": "8.1.5",
+    "vite": "8.2.1",
     "vitest": "4.1.10"
   }
 }

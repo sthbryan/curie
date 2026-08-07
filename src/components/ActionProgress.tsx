@@ -1,7 +1,7 @@
 import { LoaderCircle } from "lucide-react";
-import { useReducedMotionConfig } from "motion/react";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
+import { useReducedMotion } from "@/lib/motion";
 
 type Props = {
   active: boolean;
@@ -11,7 +11,7 @@ type Props = {
 
 export function ActionProgress({ active, labelKey, className = "" }: Props) {
   const t = useT();
-  const shouldReduceMotion = useReducedMotionConfig();
+  const shouldReduceMotion = useReducedMotion();
 
   if (!active) return null;
 

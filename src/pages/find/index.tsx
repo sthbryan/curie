@@ -1,5 +1,4 @@
 import { X } from "lucide-react";
-import { motion } from "motion/react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { When } from "react-if";
@@ -98,7 +97,7 @@ export function Find() {
       <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-8 px-10 pt-12 pb-8">
         <ScopeBanner />
 
-        <motion.section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
+        <section {...fadeUp(0)} className="flex shrink-0 flex-col gap-4">
           <div className="flex flex-col gap-3">
             <Label>{t("eyebrow")}</Label>
             <Heading>{t("title")}</Heading>
@@ -121,9 +120,9 @@ export function Find() {
               onDismiss={dismissInstallError}
             />
           </When>
-        </motion.section>
+        </section>
 
-        <motion.section
+        <section
           {...fadeUp(0.05)}
           className="flex shrink-0 flex-wrap items-end gap-3 border-b border-border pb-4"
         >
@@ -161,7 +160,7 @@ export function Find() {
           >
             {statusLabel}
           </span>
-        </motion.section>
+        </section>
 
         <section className="flex min-h-0 flex-1 flex-col">
           <ResultsPanel

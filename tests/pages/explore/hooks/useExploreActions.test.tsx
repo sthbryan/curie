@@ -16,7 +16,9 @@ vi.mock("@/lib/boot", () => ({
   loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
-const { useExploreActions } = await import("@/pages/explore/hooks/useExploreActions");
+const { useExploreActions, MAX_EXPLORE_SKILLS } = await import(
+  "@/pages/explore/hooks/useExploreActions"
+);
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -226,6 +228,56 @@ describe("useExploreActions", () => {
     expect(invokeMock).toHaveBeenLastCalledWith("explore_skills", { view: "hot", page: 1 });
     expect(get().skills).toEqual([first, second]);
     expect(get().hasMore).toBe(false);
+    unmount();
+  });
+
+  it("caps the accumulated list and stops offering more", async () => {
+    const bulk = (n: number, offset: number): SkillExploreResult[] =>
+      Array.from({ length: n }, (_, i) => ({ ...sample, id: `${offset + i}` }));
+
+    invokeMock
+      .mockResolvedValueOnce({
+        ...page({ hasMore: true, page: 0 }),
+        skills: bulk(MAX_EXPLORE_SKILLS - 10, 0),
+      })
+      .mockResolvedValueOnce({
+        ...page({ hasMore: true, page: 1 }),
+        skills: bulk(50, MAX_EXPLORE_SKILLS),
+      });
+
+    const { get, unmount } = renderHook(() => useExploreActions());
+    await act(async () => {
+      await get().load("hot");
+    });
+    await act(async () => {
+      await get().loadMore();
+    });
+
+    expect(get().skills).toHaveLength(MAX_EXPLORE_SKILLS);
+    expect(get().hasMore).toBe(false);
+    expect(get().atCap).toBe(true);
+
+    invokeMock.mockClear();
+    await act(async () => {
+      await get().loadMore();
+    });
+    expect(invokeMock).not.toHaveBeenCalled();
+    unmount();
+  });
+
+  it("keeps atCap false when the registry has no further pages", async () => {
+    invokeMock.mockResolvedValueOnce({
+      ...page({ hasMore: false, page: 0 }),
+      skills: Array.from({ length: MAX_EXPLORE_SKILLS }, (_, i) => ({ ...sample, id: `${i}` })),
+    });
+
+    const { get, unmount } = renderHook(() => useExploreActions());
+    await act(async () => {
+      await get().load("hot");
+    });
+
+    expect(get().skills).toHaveLength(MAX_EXPLORE_SKILLS);
+    expect(get().atCap).toBe(false);
     unmount();
   });
 

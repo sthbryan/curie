@@ -1,14 +1,15 @@
-import { AnimatePresence, motion } from "motion/react";
+import { lazy, Suspense } from "react";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 import { ScopeGuard, useScopeSync } from "@/components/ScopeGuard";
-import { pageTransition } from "@/lib/motion";
-import { Custom } from "@/pages/custom";
-import { Explore } from "@/pages/explore";
-import { Find } from "@/pages/find";
+import { pageAnim } from "@/lib/motion";
 import { Home } from "@/pages/home";
-import { Installed } from "@/pages/installed";
-import { Projects } from "@/pages/projects";
-import { Settings } from "@/pages/settings";
+
+const Custom = lazy(() => import("@/pages/custom").then((m) => ({ default: m.Custom })));
+const Explore = lazy(() => import("@/pages/explore").then((m) => ({ default: m.Explore })));
+const Find = lazy(() => import("@/pages/find").then((m) => ({ default: m.Find })));
+const Installed = lazy(() => import("@/pages/installed").then((m) => ({ default: m.Installed })));
+const Projects = lazy(() => import("@/pages/projects").then((m) => ({ default: m.Projects })));
+const Settings = lazy(() => import("@/pages/settings").then((m) => ({ default: m.Settings })));
 
 export function RoutedPages() {
   const [location] = useLocation();
@@ -16,15 +17,8 @@ export function RoutedPages() {
 
   return (
     <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
-      <AnimatePresence>
-        <motion.div
-          key={location}
-          className="absolute inset-0 flex min-h-0 min-w-0 flex-col"
-          initial={pageTransition.initial}
-          animate={pageTransition.animate}
-          exit={pageTransition.exit}
-          transition={pageTransition.transition}
-        >
+      <div key={location} {...pageAnim} className="absolute inset-0 flex min-h-0 min-w-0 flex-col">
+        <Suspense fallback={<div className="flex min-h-0 min-w-0 flex-1 flex-col" />}>
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/projects" component={Projects} />
@@ -56,8 +50,8 @@ export function RoutedPages() {
               </ScopeGuard>
             </Route>
           </Switch>
-        </motion.div>
-      </AnimatePresence>
+        </Suspense>
+      </div>
     </div>
   );
 }

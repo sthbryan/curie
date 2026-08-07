@@ -1,5 +1,4 @@
-import { motion } from "motion/react";
-import { useMemo } from "react";
+import { type ReactNode, useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
 import { Button } from "@/components/Button";
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
@@ -10,6 +9,7 @@ import { Table } from "@/components/Table";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
+import { MAX_EXPLORE_SKILLS } from "../hooks/useExploreActions";
 import { MetricCell } from "./MetricCell";
 
 type Props = {
@@ -21,6 +21,7 @@ type Props = {
   installingPackage: string | null;
   installBusy: boolean;
   hasMore: boolean;
+  atCap: boolean;
   loadingMore: boolean;
   onInstall: (pkg: string) => void;
   onLoadMore: () => void;
@@ -44,6 +45,7 @@ export function ExploreList({
   installingPackage,
   installBusy,
   hasMore,
+  atCap,
   loadingMore,
   onInstall,
   onLoadMore,
@@ -109,6 +111,30 @@ export function ExploreList({
     [view, installedPackages, installingPackage, installBusy, onInstall],
   );
 
+  let footer: ReactNode = null;
+  if (hasMore) {
+    footer = (
+      <div className="flex justify-center py-6">
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={onLoadMore}
+          disabled={loadingMore || installBusy}
+        >
+          {loadingMore ? t("loadingMore") : t("loadMore")}
+        </Button>
+      </div>
+    );
+  } else if (atCap) {
+    footer = (
+      <div className="flex justify-center py-6">
+        <span className="font-mono uppercase tracking-label text-micro text-fg-4">
+          {t("capReached", { n: MAX_EXPLORE_SKILLS })}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <Switch>
       <Case condition={loading}>
@@ -123,13 +149,13 @@ export function ExploreList({
       </Case>
 
       <Case condition={empty}>
-        <motion.div
+        <div
           {...fadeUp(0.08)}
           className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
         >
           <span className="font-body text-sm text-fg">{t("empty")}</span>
           <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
-        </motion.div>
+        </div>
       </Case>
 
       <Case condition={skills.length > 0}>
@@ -140,20 +166,7 @@ export function ExploreList({
           rowHeight={ROW_HEIGHT}
           getRowKey={(r) => r.id}
           viewportClassName="pr-1"
-          footer={
-            hasMore ? (
-              <div className="flex justify-center py-6">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={onLoadMore}
-                  disabled={loadingMore || installBusy}
-                >
-                  {loadingMore ? t("loadingMore") : t("loadMore")}
-                </Button>
-              </div>
-            ) : null
-          }
+          footer={footer}
         />
       </Case>
 
