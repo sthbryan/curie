@@ -1,9 +1,11 @@
 import { useState } from "react";
+
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { loadSkills } from "@/lib/boot";
 import { fadeUp } from "@/lib/motion";
 import { skills, skillsError, skillsLoading } from "@/store/skills";
+
 import { EmptyState, NoMatches } from "./components/EmptyState";
 import { ErrorBanner } from "./components/ErrorBanner";
 import { InstalledHeader } from "./components/InstalledHeader";

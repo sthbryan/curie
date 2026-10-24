@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { activeScopePath } from "@/store/skills";
+
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
 import {
   agentFilter,
@@ -25,6 +25,7 @@ import {
   updatesOnly,
   updatingSkill,
 } from "@/pages/installed/store/store";
+import { activeScopePath } from "@/store/skills";
 
 const invokeMock = vi.fn();
 const loadSkillsMock = vi.fn();
@@ -78,7 +79,10 @@ describe("InstalledActions", () => {
 
     await expect(update(["only-one"])).rejects.toThrow("network down");
 
-    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: ["only-one"], projectPath: null });
+    expect(invokeMock).toHaveBeenCalledWith("update_skills", {
+      skills: ["only-one"],
+      projectPath: null,
+    });
     expect(updatingSkill.value).toBeNull();
     expect(updateApplyError.value).toBe("network down");
   });
@@ -103,7 +107,10 @@ describe("InstalledActions", () => {
 
     await remove(["only"]);
 
-    expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["only"], projectPath: null });
+    expect(invokeMock).toHaveBeenCalledWith("remove_skills", {
+      skills: ["only"],
+      projectPath: null,
+    });
     expect(loadSkillsMock).toHaveBeenCalled();
     expect(removingSkill.value).toBeNull();
   });

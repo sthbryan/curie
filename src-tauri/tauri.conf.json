@@ -4,9 +4,9 @@
   "version": "0.8.0",
   "identifier": "com.justcallmebryan.curie",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "bun run build",
     "frontendDist": "../dist"
   },
   "app": {
@@ -20,7 +20,9 @@
         "resizable": true,
         "decorations": true,
         "transparent": false,
-        "theme": "Dark"
+        "theme": "Dark",
+        "visible": false,
+        "backgroundColor": "#0a0a0a"
       }
     ],
     "security": {

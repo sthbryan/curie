@@ -1,9 +1,11 @@
 import { lazy, type ReactNode, Suspense } from "react";
+
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorFallback } from "@/components/ErrorFallback";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { stageAnim } from "@/lib/motion";
 import { completeSetup, stage } from "@/store/system";
+
 import { RoutedPages } from "./RoutedPages";
 
 const Setup = lazy(() => import("@/pages/setup").then((m) => ({ default: m.Setup })));

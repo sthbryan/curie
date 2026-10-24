@@ -1,6 +1,8 @@
 import { computed } from "@preact/signals";
+
 import { summarizeAgents, updateNameSet } from "@/lib/skills";
 import { skills, skillUpdates } from "@/store/skills";
+
 import { agentFilter, query, sortDir, sortKey, updatesOnly } from "../store/store";
 import { buildSearchIndex, selectSkills } from "./query";
 

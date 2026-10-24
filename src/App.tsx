@@ -1,5 +1,7 @@
+import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+
 import { AppShell } from "@/components/AppShell";
 import { Toaster } from "@/components/Toaster";
 import { t } from "@/i18n";
@@ -18,16 +20,27 @@ function App() {
     markViewTransitionSupport();
   }, []);
 
+  // The native window starts hidden; reveal it once the shell is committed so
+  // the first frame is the app and not an empty plate. This runs directly from
+  // the effect because a hidden webview may not run animation frames, and Rust
+  // reveals the window after 3s if this never gets called.
+  useEffect(() => {
+    void invoke("show_main_window").catch(() => {});
+  }, []);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme.value);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- reading .value is how signals re-run the effect
   }, [theme.value]);
 
   useEffect(() => {
     document.documentElement.lang = lang.value;
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- reading .value is how signals re-run the effect
   }, [lang.value]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-reduced-motion", reducedMotion.value);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- reading .value is how signals re-run the effect
   }, [reducedMotion.value]);
 
   const notifiedUpdates = useRef(false);

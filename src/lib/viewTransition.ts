@@ -1,4 +1,5 @@
 import { flushSync } from "react-dom";
+
 import { prefersReducedMotion } from "@/lib/motion";
 
 export function supportsViewTransitions(): boolean {

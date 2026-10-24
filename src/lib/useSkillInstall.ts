@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
+
 import type { SkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
 import { loadSkills } from "@/lib/boot";

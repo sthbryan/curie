@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { NodeInfo, ProgressEvent, SetupPlan } from "@/components/types";
 import { hasBooted, lang, node, reducedMotion, stage, theme } from "@/store/system";
 

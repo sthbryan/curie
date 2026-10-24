@@ -48,9 +48,10 @@ fn is_newer(latest: &str, current: &str) -> bool {
 }
 
 fn fetch_latest_release() -> Result<GitHubRelease, String> {
-    let agent = ureq::AgentBuilder::new()
-        .timeout(std::time::Duration::from_secs(10))
+    let config = ureq::Agent::config_builder()
+        .timeout_global(Some(std::time::Duration::from_secs(10)))
         .build();
+    let agent: ureq::Agent = config.into();
 
     let url = "https://api.github.com/repos/sthbryan/curie/releases/latest";
 
@@ -58,17 +59,16 @@ fn fetch_latest_release() -> Result<GitHubRelease, String> {
 
     let mut req = agent
         .get(url)
-        .set("Accept", "application/vnd.github.v3+json")
-        .set("User-Agent", "curie-app");
+        .header("Accept", "application/vnd.github.v3+json")
+        .header("User-Agent", "curie-app");
 
     if let Some(ref t) = token {
-        req = req.set("Authorization", &format!("Bearer {t}"));
+        req = req.header("Authorization", &format!("Bearer {t}"));
     }
 
-    let resp = req
-        .call()
-        .map_err(|_| coded(key::RELEASE_FETCH_FAILED))?;
-    resp.into_json::<GitHubRelease>()
+    let mut resp = req.call().map_err(|_| coded(key::RELEASE_FETCH_FAILED))?;
+    resp.body_mut()
+        .read_json::<GitHubRelease>()
         .map_err(|_| coded(key::RELEASE_PARSE_FAILED))
 }
 

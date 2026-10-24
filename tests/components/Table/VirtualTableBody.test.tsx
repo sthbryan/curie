@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import type { ColumnDef } from "@/components/Table";
 import { Table } from "@/components/Table";
 import { lang } from "@/store/system";

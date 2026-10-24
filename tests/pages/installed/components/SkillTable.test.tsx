@@ -1,9 +1,11 @@
 // @vitest-environment happy-dom
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { agentFilter, query, sortDir, sortKey } from "@/pages/installed/store/store";
 import { skills, skillUpdates } from "@/store/skills";
 import { lang } from "@/store/system";
+
 import { cleanup, click, mount, skillFixture, text } from "../mount";
 
 vi.mock("@/lib/boot", () => ({
@@ -21,10 +23,7 @@ beforeEach(() => {
   sortKey.value = "name";
   sortDir.value = "asc";
   skillUpdates.value = [];
-  skills.value = [
-    skillFixture("alpha", ["Codex", "Zed", "Pi"]),
-    skillFixture("beta", ["Codex"]),
-  ];
+  skills.value = [skillFixture("alpha", ["Codex", "Zed", "Pi"]), skillFixture("beta", ["Codex"])];
 });
 
 const noop = () => {};

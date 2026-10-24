@@ -1,9 +1,11 @@
 // @vitest-environment happy-dom
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { RecentCard } from "@/pages/home/components/RecentCard";
 import { skills } from "@/store/skills";
 import { lang } from "@/store/system";
+
 import { skillFixture } from "../fixtures";
 import { cleanup, flush, mount, text } from "../mount";
 

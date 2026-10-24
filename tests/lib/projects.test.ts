@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { Project, ProjectProbe } from "@/components/types";
 
 const invokeMock = vi.fn();
@@ -17,9 +18,8 @@ vi.mock("@tauri-apps/plugin-dialog", () => ({
 }));
 vi.mock("sonner", () => ({ toast: toastMock }));
 
-const { addProject, forgetProject, isNested, loadProjects, samePath, slugify } = await import(
-  "@/lib/projects"
-);
+const { addProject, forgetProject, isNested, loadProjects, samePath, slugify } =
+  await import("@/lib/projects");
 const { projects, projectsError } = await import("@/store/projects");
 const { lang } = await import("@/store/system");
 

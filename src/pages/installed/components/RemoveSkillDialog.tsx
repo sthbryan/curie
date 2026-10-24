@@ -1,5 +1,6 @@
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useT } from "@/i18n";
+
 import { remove, removingSkill } from "../store/store";
 
 type Props = {

@@ -1,5 +1,6 @@
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
+
 import type { DetectionState } from "../hooks/useSkillDetection";
 import type { InstallPhase } from "../lib/phase";
 

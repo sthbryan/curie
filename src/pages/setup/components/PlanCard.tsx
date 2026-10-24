@@ -1,7 +1,9 @@
 import { Hexagon, PackageCheck, PackagePlus } from "lucide-react";
+
 import { Label } from "@/components/Label";
 import type { SetupPlan } from "@/components/types";
 import { useT } from "@/i18n";
+
 import { FALLBACK_MANAGER, managerLabel } from "../lib/managers";
 import { PlanRow } from "./PlanRow";
 

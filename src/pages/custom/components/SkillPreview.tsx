@@ -1,4 +1,5 @@
 import { When } from "react-if";
+
 import type { SkillDetection } from "@/components/types";
 import { useT } from "@/i18n";
 

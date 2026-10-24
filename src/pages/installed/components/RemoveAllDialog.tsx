@@ -2,6 +2,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useT } from "@/i18n";
 import { useScope } from "@/lib/routes";
 import { skills } from "@/store/skills";
+
 import { removeAll, removingSkill } from "../store/store";
 
 type Props = {

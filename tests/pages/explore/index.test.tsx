@@ -4,6 +4,7 @@ import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
+
 import type { ExplorePage, SkillExploreResult } from "@/components/types";
 import {
   skills,

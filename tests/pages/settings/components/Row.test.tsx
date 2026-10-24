@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
+
 import { Row } from "@/pages/settings/components/Row";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -14,19 +15,33 @@ function mount(ui: React.ReactElement) {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
-  act(() => { root?.render(ui); });
+  act(() => {
+    root?.render(ui);
+  });
 }
 
 function unmount() {
-  if (root) { act(() => { root?.unmount(); }); root = null; }
-  if (container) { container.remove(); container = null; }
+  if (root) {
+    act(() => {
+      root?.unmount();
+    });
+    root = null;
+  }
+  if (container) {
+    container.remove();
+    container = null;
+  }
 }
 
 afterEach(unmount);
 
 describe("Row", () => {
   it("renders label and children", () => {
-    mount(<Row label="Setting"><span>value</span></Row>);
+    mount(
+      <Row label="Setting">
+        <span>value</span>
+      </Row>,
+    );
     expect(container?.textContent).toContain("Setting");
     expect(container?.textContent).toContain("value");
   });

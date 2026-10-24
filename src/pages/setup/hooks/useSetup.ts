@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
 import type { NodeInfo, ProgressEvent, SetupPlan, SetupStep } from "@/components/types";
 import { t } from "@/i18n";
 import { loadSkills } from "@/lib/boot";

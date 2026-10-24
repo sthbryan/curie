@@ -1,6 +1,8 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
+
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
+
 import type { ColumnDef, SortDir } from "./types";
 
 type Props<T> = {

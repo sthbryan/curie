@@ -1,5 +1,6 @@
 import { CircleFadingArrowUp, Plus, RefreshCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+
 import { Button } from "@/components/Button";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
@@ -9,6 +10,7 @@ import { cn } from "@/lib/cn";
 import { useRoute } from "@/lib/routes";
 import { skills, skillsLoading, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
+
 import { updateNames } from "../lib/derived";
 import { removingSkill, update, updatingSkill } from "../store/store";
 

@@ -2,6 +2,7 @@ import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import type { ReactNode } from "react";
 import { Router } from "wouter";
+
 import type { Project, ProjectSummary } from "@/components/types";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

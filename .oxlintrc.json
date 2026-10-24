@@ -1,0 +1,30 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "react", "jsx-a11y", "import", "vitest"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "builtin": true
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "vitest/require-mock-type-parameters": "off",
+    "react/set-state-in-effect": "off",
+    "react/immutability": "off",
+    "react/purity": "off",
+    "react/globals": "off",
+    "react/refs": "off",
+    "jsx-a11y/prefer-tag-over-role": "off"
+  },
+  "ignorePatterns": ["dist/**", "coverage/**", "src-tauri/**"],
+  "overrides": [
+    {
+      "files": ["src/components/Sidebar.tsx"],
+      "rules": {
+        "jsx-a11y/no-noninteractive-element-interactions": "off"
+      }
+    }
+  ]
+}

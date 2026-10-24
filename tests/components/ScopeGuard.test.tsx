@@ -1,9 +1,11 @@
 // @vitest-environment happy-dom
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import { ScopeGuard } from "@/components/ScopeGuard";
 import { projects } from "@/store/projects";
 import { lang } from "@/store/system";
+
 import { buttonWith, cleanup, click, mount, projectFixture, text } from "../pages/projects/mount";
 
 const donCamaron = projectFixture("don_camaron");

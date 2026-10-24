@@ -1,7 +1,8 @@
-import preact from "@preact/preset-vite";
-import tailwindcss from "@tailwindcss/vite";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
+
+import preact from "@preact/preset-vite";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 const host = process.env.TAURI_DEV_HOST;
@@ -71,7 +72,7 @@ export default defineConfig(async () => ({
       },
     },
     pool: "threads",
-    maxWorkers: '100%',
+    maxWorkers: "100%",
     minWorkers: 1,
   },
 }));

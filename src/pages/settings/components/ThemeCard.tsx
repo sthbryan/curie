@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+
 import type { ThemeMode } from "@/components/types";
 import { cn } from "@/lib/cn";
 

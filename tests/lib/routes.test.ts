@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+
 import type { Project } from "@/components/types";
 import { findProject, parseLocation, scopeKey, scopePath, sectionPath } from "@/lib/routes";
 import { projects } from "@/store/projects";

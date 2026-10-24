@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { toast } from "sonner";
+
 import type { Project, ProjectProbe, SkillInfo } from "@/components/types";
 import { t } from "@/i18n";
 import { errorMessage } from "@/lib/errors";

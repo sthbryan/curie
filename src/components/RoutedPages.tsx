@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Redirect, Route, Switch, useLocation } from "wouter";
+
 import { ScopeGuard, useScopeSync } from "@/components/ScopeGuard";
 import { pageAnim } from "@/lib/motion";
 import { Home } from "@/pages/home";

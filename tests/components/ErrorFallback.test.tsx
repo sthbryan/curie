@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { ErrorFallback } from "@/components/ErrorFallback";
 import { lang } from "@/store/system";
 
@@ -15,16 +16,28 @@ function mount(ui: React.ReactElement) {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
-  act(() => { root?.render(ui); });
+  act(() => {
+    root?.render(ui);
+  });
 }
 
 function unmount() {
-  if (root) { act(() => { root?.unmount(); }); root = null; }
-  if (container) { container.remove(); container = null; }
+  if (root) {
+    act(() => {
+      root?.unmount();
+    });
+    root = null;
+  }
+  if (container) {
+    container.remove();
+    container = null;
+  }
 }
 
 afterEach(unmount);
-beforeEach(() => { lang.value = "en"; });
+beforeEach(() => {
+  lang.value = "en";
+});
 
 const base = { error: new Error("boom"), reset: vi.fn() };
 

@@ -2,6 +2,7 @@ import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
+
 import { totalSkills } from "../lib/derived";
 import { StatLine } from "./StatLine";
 

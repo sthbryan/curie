@@ -1,4 +1,5 @@
 import { useLocation } from "wouter";
+
 import type { Project, Scope } from "@/components/types";
 import { withViewTransition } from "@/lib/viewTransition";
 import { projects } from "@/store/projects";

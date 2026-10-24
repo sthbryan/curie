@@ -1,8 +1,10 @@
 // @vitest-environment happy-dom
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import { MoreLink } from "@/pages/home/components/MoreLink";
 import { lang } from "@/store/system";
+
 import { cleanup, click, mount, text } from "../mount";
 
 afterEach(cleanup);

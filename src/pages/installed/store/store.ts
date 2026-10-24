@@ -1,6 +1,7 @@
 import { signal } from "@preact/signals";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
+
 import type { SortDir } from "@/components/Table";
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
 import { t } from "@/i18n";
@@ -8,6 +9,7 @@ import { loadSkills } from "@/lib/boot";
 import { errorMessage } from "@/lib/errors";
 import { activeScopePath } from "@/store/skills";
 import { lang } from "@/store/system";
+
 import type { SortField } from "../lib/query";
 
 // ─── Sorting ─────────────────────────────────────────────────────────────────

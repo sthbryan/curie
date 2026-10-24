@@ -1,8 +1,10 @@
 import { Check, Plus } from "lucide-react";
+
 import { ActionProgress } from "@/components/ActionProgress";
 import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { useScope } from "@/lib/routes";
+
 import type { DiscoveryNamespace } from "./types";
 
 type Props = {

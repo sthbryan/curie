@@ -1,4 +1,5 @@
 import { batch, effect, signal } from "@preact/signals";
+
 import type { NodeInfo, ReducedMotionPref, Stage, ThemeMode } from "@/components/types";
 import type { Lang } from "@/i18n";
 import { loadPartial, savePartial } from "@/lib/persistence";

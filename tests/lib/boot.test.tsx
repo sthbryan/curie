@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { NodeInfo, Settings, SkillInfo, SkillUpdateInfo } from "@/components/types";
 import {
   setUpdatesError,
@@ -106,6 +107,7 @@ describe("loadSkills", () => {
     });
 
     await loadSkills();
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(skills.value).toBe(sampleSkills);
     expect(skillsError.value).toBeNull();
@@ -115,6 +117,33 @@ describe("loadSkills", () => {
       projectPath: null,
       fresh: false,
     });
+  });
+
+  it("starts the update check before the list comes back", async () => {
+    const resolvers: Array<(value: SkillInfo[]) => void> = [];
+    const called: string[] = [];
+    invokeMock.mockImplementation((cmd) => {
+      called.push(cmd as string);
+      if (cmd === "list_skills") {
+        return new Promise<SkillInfo[]>((resolve) => {
+          resolvers.push(resolve);
+        });
+      }
+      if (cmd === "check_skill_updates") return Promise.resolve(sampleUpdates);
+      return Promise.reject(new Error(`unexpected command: ${cmd}`));
+    });
+
+    const pending = loadSkills();
+    await Promise.resolve();
+
+    expect(called).toContain("check_skill_updates");
+    expect(skillsLoading.value).toBe(true);
+
+    resolvers[0]?.(sampleSkills);
+    await pending;
+
+    expect(skills.value).toBe(sampleSkills);
+    expect(skillsLoading.value).toBe(false);
   });
 
   it("skips the update check when checkUpdates=false", async () => {

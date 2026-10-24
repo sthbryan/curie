@@ -1,5 +1,6 @@
 import { type ReactNode, useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
+
 import { Button } from "@/components/Button";
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
 import { SkillNameCell } from "@/components/discovery/SkillNameCell";
@@ -9,6 +10,7 @@ import { Table } from "@/components/Table";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
+
 import { MAX_EXPLORE_SKILLS } from "../hooks/useExploreActions";
 import { MetricCell } from "./MetricCell";
 
@@ -108,7 +110,7 @@ export function ExploreList({
         ),
       },
     ],
-    [view, installedPackages, installingPackage, installBusy, onInstall],
+    [view, installedPackages, installingPackage, installBusy, onInstall, t],
   );
 
   let footer: ReactNode = null;

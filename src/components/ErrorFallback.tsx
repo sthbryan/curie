@@ -1,9 +1,11 @@
 import { House, RefreshCcw } from "lucide-react";
 import { When } from "react-if";
+
 import { Heading } from "@/components/Heading";
 import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { lang } from "@/store/system";
+
 import { Button } from "./Button";
 import type { ErrorBoundaryFallbackProps } from "./ErrorBoundary";
 

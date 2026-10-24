@@ -1,4 +1,5 @@
 import { computed } from "@preact/signals";
+
 import {
   availableUpdates,
   buildRecentActivity,

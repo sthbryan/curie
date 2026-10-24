@@ -1,4 +1,5 @@
 import { signal } from "@preact/signals";
+
 import type { Project, ProjectSummary } from "@/components/types";
 
 export const projects = signal<Project[]>([]);

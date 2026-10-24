@@ -3,7 +3,7 @@ mod install;
 mod manager;
 mod volta;
 
-pub use detect::{detect_node_info, NodeInfo};
+pub use detect::{cached_node_bin, detect_node_info, invalidate_node_cache, NodeInfo};
 pub use install::{build_plan, install_node_impl, SetupPlan};
 pub use manager::ManagerInfo;
 
@@ -18,6 +18,7 @@ struct ProgressEvent {
 
 #[tauri::command]
 pub async fn install_node(window: Window) -> Result<NodeInfo, String> {
+    invalidate_node_cache();
     tauri::async_runtime::spawn_blocking(move || {
         install_node_impl(|stage, message, done| {
             emit_progress(&window, stage, message, done);

@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { CustomSkillInstallResult } from "@/components/types";
 
 const invokeMock = vi.fn();
@@ -114,9 +115,7 @@ describe("useLocalInstall", () => {
   });
 
   it("resolves to false and maps the backend reason into the same toast", async () => {
-    invokeMock.mockRejectedValueOnce(
-      "missing required frontmatter field(s): name, description",
-    );
+    invokeMock.mockRejectedValueOnce("missing required frontmatter field(s): name, description");
 
     await act(async () => {
       expect(await get().install("my-skill", "# content")).toBe(false);
@@ -124,9 +123,9 @@ describe("useLocalInstall", () => {
 
     expect(loadSkillsMock).not.toHaveBeenCalled();
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
-    expect(toastCopy().error("missing required frontmatter field(s): name, description").detail).toContain(
-      "missing required frontmatter",
-    );
+    expect(
+      toastCopy().error("missing required frontmatter field(s): name, description").detail,
+    ).toContain("missing required frontmatter");
   });
 
   it("flags installing while the backend is working and clears it afterwards", async () => {

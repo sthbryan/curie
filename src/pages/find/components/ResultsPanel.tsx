@@ -1,6 +1,7 @@
 import { CloudDownload, Compass } from "lucide-react";
 import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
+
 import { Button } from "@/components/Button";
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
 import { SkillNameCell } from "@/components/discovery/SkillNameCell";
@@ -89,7 +90,7 @@ export function ResultsPanel({
         ),
       },
     ],
-    [installedPackages, installingPackage, installBusy, onInstall],
+    [installedPackages, installingPackage, installBusy, onInstall, t],
   );
 
   return (

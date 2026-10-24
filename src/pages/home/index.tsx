@@ -1,10 +1,12 @@
 import { toast } from "sonner";
+
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import { useT } from "@/i18n";
 import { loadSkills } from "@/lib/boot";
 import { fadeUp } from "@/lib/motion";
 import { skillsError, skillsLoading } from "@/store/skills";
+
 import { AgentsCard } from "./components/AgentsCard";
 import { HomeIntro } from "./components/HomeIntro";
 import { ProjectsCard } from "./components/ProjectsCard";

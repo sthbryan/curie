@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { useRoute } from "@/lib/routes";
+
 import { clearFilters } from "../store/store";
 
 export function EmptyState() {

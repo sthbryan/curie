@@ -1,6 +1,7 @@
 use serde::Serialize;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::sync::{Mutex, OnceLock};
 
 #[derive(Serialize, Clone, Debug, PartialEq)]
 pub struct NodeInfo {
@@ -10,10 +11,51 @@ pub struct NodeInfo {
     pub manager: Option<String>,
 }
 
+fn node_bin_cache() -> &'static Mutex<Option<PathBuf>> {
+    static CACHE: OnceLock<Mutex<Option<PathBuf>>> = OnceLock::new();
+    CACHE.get_or_init(|| Mutex::new(None))
+}
+
+fn remember_node(path: Option<&str>) {
+    if let Ok(mut cache) = node_bin_cache().lock() {
+        *cache = Some(match path {
+            Some(path) if !path.is_empty() => PathBuf::from(path),
+            _ => PathBuf::from("node"),
+        });
+    }
+}
+
+/// The node binary for this machine, probed once per process. Every skills
+/// command used to re-scan the version managers and spawn `node --version`.
+pub fn cached_node_bin() -> PathBuf {
+    let mut cache = match node_bin_cache().lock() {
+        Ok(cache) => cache,
+        Err(poisoned) => poisoned.into_inner(),
+    };
+    if let Some(path) = cache.as_ref() {
+        return path.clone();
+    }
+    let path = find_node()
+        .and_then(|info| info.path)
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from("node"));
+    *cache = Some(path.clone());
+    path
+}
+
+/// The machine changed underneath the cached probe (a Node install).
+pub fn invalidate_node_cache() {
+    if let Ok(mut cache) = node_bin_cache().lock() {
+        *cache = None;
+    }
+}
+
 pub fn detect_node_info() -> Result<NodeInfo, String> {
     if let Some(info) = find_node() {
+        remember_node(info.path.as_deref());
         return Ok(info);
     }
+    remember_node(None);
     Ok(NodeInfo {
         installed: false,
         version: None,
@@ -321,5 +363,28 @@ mod tests {
             assert!(info.version.is_some());
             assert!(info.path.is_some());
         }
+    }
+
+    #[test]
+    fn detection_primes_the_cached_binary() {
+        invalidate_node_cache();
+        let info = detect_node_info().expect("detect");
+        let expected = info
+            .path
+            .clone()
+            .map(PathBuf::from)
+            .unwrap_or_else(|| PathBuf::from("node"));
+
+        assert_eq!(cached_node_bin(), expected);
+        assert_eq!(cached_node_bin(), expected);
+    }
+
+    #[test]
+    fn a_reprobe_after_invalidation_finds_the_same_binary() {
+        let first = cached_node_bin();
+
+        invalidate_node_cache();
+
+        assert_eq!(cached_node_bin(), first);
     }
 }

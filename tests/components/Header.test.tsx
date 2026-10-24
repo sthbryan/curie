@@ -4,6 +4,7 @@ import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { Router } from "wouter";
+
 import { Header } from "@/components/Header";
 import { skillsLoading, skillUpdates, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
@@ -17,12 +18,22 @@ function mount(ui: React.ReactElement) {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
-  act(() => { root?.render(ui); });
+  act(() => {
+    root?.render(ui);
+  });
 }
 
 function unmount() {
-  if (root) { act(() => { root?.unmount(); }); root = null; }
-  if (container) { container.remove(); container = null; }
+  if (root) {
+    act(() => {
+      root?.unmount();
+    });
+    root = null;
+  }
+  if (container) {
+    container.remove();
+    container = null;
+  }
 }
 
 function activityButton() {
@@ -40,19 +51,31 @@ beforeEach(() => {
 
 describe("Header", () => {
   it("renders the breadcrumb for the current route", () => {
-    mount(<Router><Header /></Router>);
+    mount(
+      <Router>
+        <Header />
+      </Router>,
+    );
     expect(container?.textContent).toMatch(/curie/i);
     expect(container?.textContent).toContain("HOME");
   });
 
   it("reports what the app is doing while skills load", () => {
     skillsLoading.value = true;
-    mount(<Router><Header /></Router>);
+    mount(
+      <Router>
+        <Header />
+      </Router>,
+    );
     expect(container?.textContent).toContain("LOADING SKILLS");
   });
 
   it("stays quiet when nothing is happening", () => {
-    mount(<Router><Header /></Router>);
+    mount(
+      <Router>
+        <Header />
+      </Router>,
+    );
     expect(activityButton()).toBeNull();
   });
 
@@ -61,7 +84,11 @@ describe("Header", () => {
       { name: "pr-review", source: null, updateAvailable: true, checkable: true, checked: true },
       { name: "shader-dev", source: null, updateAvailable: false, checkable: true, checked: true },
     ];
-    mount(<Router><Header /></Router>);
+    mount(
+      <Router>
+        <Header />
+      </Router>,
+    );
     expect(activityButton()?.textContent).toContain("1 UPDATES");
   });
 
@@ -70,7 +97,11 @@ describe("Header", () => {
     skillUpdates.value = [
       { name: "pr-review", source: null, updateAvailable: true, checkable: true, checked: true },
     ];
-    mount(<Router><Header /></Router>);
+    mount(
+      <Router>
+        <Header />
+      </Router>,
+    );
     expect(activityButton()).toBeNull();
   });
 });

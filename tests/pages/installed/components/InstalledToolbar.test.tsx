@@ -2,6 +2,7 @@
 
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { InstalledToolbar } from "@/pages/installed/components/InstalledToolbar";
 import {
   agentFilter,
@@ -12,6 +13,7 @@ import {
 } from "@/pages/installed/store/store";
 import { skills, skillUpdates } from "@/store/skills";
 import { lang } from "@/store/system";
+
 import { buttonWith, cleanup, click, mount, skillFixture, text } from "../mount";
 
 afterEach(() => {

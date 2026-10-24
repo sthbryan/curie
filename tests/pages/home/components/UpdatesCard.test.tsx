@@ -1,9 +1,17 @@
 // @vitest-environment happy-dom
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { SkillUpdateInfo } from "@/components/types";
-import { activeScopePath, skills, skillUpdates, updatesError, updatesLoading } from "@/store/skills";
+import {
+  activeScopePath,
+  skills,
+  skillUpdates,
+  updatesError,
+  updatesLoading,
+} from "@/store/skills";
 import { lang } from "@/store/system";
+
 import { skillFixture } from "../fixtures";
 import { cleanup, click, mount, text } from "../mount";
 

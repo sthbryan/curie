@@ -1,4 +1,5 @@
 import { CloudDownload, TrendingDown, TrendingUp } from "lucide-react";
+
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { cn } from "@/lib/cn";
 import { formatInstalls } from "@/lib/skills";

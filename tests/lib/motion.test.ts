@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { duration, easeOut, fadeUp, pageAnim } from "@/lib/motion";
 
 describe("motion tokens", () => {

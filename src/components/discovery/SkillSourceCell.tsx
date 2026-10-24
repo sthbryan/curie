@@ -1,6 +1,8 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { SquareArrowOutUpRight } from "lucide-react";
+
 import { useT } from "@/i18n";
+
 import type { DiscoveryNamespace } from "./types";
 
 type Props = {

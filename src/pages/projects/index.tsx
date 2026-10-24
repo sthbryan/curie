@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Label } from "@/components/Label";
 import type { Project } from "@/components/types";
@@ -8,6 +9,7 @@ import { addProject, forgetProject, refreshAllSummaries } from "@/lib/projects";
 import { useRoute } from "@/lib/routes";
 import { projectSummaries, projects, projectsError, setProjectsError } from "@/store/projects";
 import { skills } from "@/store/skills";
+
 import { AddProjectCell } from "./components/AddProjectCell";
 import { ForgetProjectDialog } from "./components/ForgetProjectDialog";
 import { GlobalCard } from "./components/GlobalCard";

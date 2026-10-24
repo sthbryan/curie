@@ -101,19 +101,12 @@ cd curie
 bun install
 ```
 
-With npm:
-
-```bash
-npm install
-```
-
 ### Run in development
 
 Desktop app (recommended):
 
 ```bash
 bun run tauri dev
-# or: npm run tauri dev
 ```
 
 Frontend only (no native window shell):

@@ -69,11 +69,13 @@ pub fn download_url(version: &str, target: &str) -> String {
 }
 
 fn latest_version() -> Result<String, String> {
-    let body = agent()
+    let mut resp = agent()
         .get(LATEST_VERSION_URL)
         .call()
-        .map_err(|e| format!("could not reach volta.sh: {e}"))?
-        .into_string()
+        .map_err(|e| format!("could not reach volta.sh: {e}"))?;
+    let body = resp
+        .body_mut()
+        .read_to_string()
         .map_err(|e| format!("could not read the Volta version: {e}"))?;
     let version = body.trim().trim_start_matches('v').to_string();
     if version.is_empty() {
@@ -83,12 +85,13 @@ fn latest_version() -> Result<String, String> {
 }
 
 fn download(url: &str) -> Result<Vec<u8>, String> {
-    let resp = agent()
+    let mut resp = agent()
         .get(url)
         .call()
         .map_err(|e| format!("could not download Volta: {e}"))?;
     let mut bytes = Vec::new();
-    resp.into_reader()
+    resp.body_mut()
+        .as_reader()
         .read_to_end(&mut bytes)
         .map_err(|e| format!("could not download Volta: {e}"))?;
     if bytes.is_empty() {
@@ -98,10 +101,11 @@ fn download(url: &str) -> Result<Vec<u8>, String> {
 }
 
 fn agent() -> ureq::Agent {
-    ureq::AgentBuilder::new()
-        .timeout(Duration::from_secs(120))
+    let config = ureq::Agent::config_builder()
+        .timeout_global(Some(Duration::from_secs(120)))
         .user_agent("curie-skills-manager")
-        .build()
+        .build();
+    config.into()
 }
 
 #[cfg(test)]
