@@ -2,11 +2,14 @@ use super::lock::load_skill_lock;
 use super::scope::Scope;
 use super::types::{GitTreeResponse, SkillLockEntry, SkillUpdateInfo};
 use std::collections::HashMap;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Mutex, OnceLock};
 use std::time::{Duration, Instant};
 
 const TREE_CACHE_TTL: Duration = Duration::from_secs(120);
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(7);
+/// Each source is a separate GitHub round trip, so a few run side by side.
+const CHECK_WORKERS: usize = 4;
 
 type TreeCache = HashMap<String, (Instant, GitTreeResponse)>;
 
@@ -81,7 +84,12 @@ fn fetch_github_tree(
     };
 
     let token = github_token();
-    let agent = ureq::AgentBuilder::new().timeout(REQUEST_TIMEOUT).build();
+    let config = ureq::Agent::config_builder()
+        .timeout_global(Some(REQUEST_TIMEOUT))
+        // A rate-limited reply still carries the header that tells us to stop.
+        .http_status_as_error(false)
+        .build();
+    let agent: ureq::Agent = config.into();
 
     for branch in branches {
         let url = format!(
@@ -92,24 +100,29 @@ fn fetch_github_tree(
 
         let mut req = agent
             .get(&url)
-            .set("Accept", "application/vnd.github.v3+json")
-            .set("User-Agent", "curie-skills-manager");
+            .header("Accept", "application/vnd.github.v3+json")
+            .header("User-Agent", "curie-skills-manager");
 
         if let Some(ref t) = token {
-            req = req.set("Authorization", &format!("Bearer {t}"));
+            req = req.header("Authorization", &format!("Bearer {t}"));
         }
 
         match req.call() {
-            Ok(resp) => {
-                if let Ok(tree) = resp.into_json::<GitTreeResponse>() {
-                    store_tree(cache_key, &tree);
-                    return Some(tree);
-                }
-            }
-            Err(ureq::Error::Status(403, resp)) => {
-                let remaining = resp.header("x-ratelimit-remaining").unwrap_or("?");
-                if remaining == "0" {
-                    break;
+            Ok(mut resp) => {
+                if resp.status().is_success() {
+                    if let Ok(tree) = resp.body_mut().read_json::<GitTreeResponse>() {
+                        store_tree(cache_key, &tree);
+                        return Some(tree);
+                    }
+                } else if resp.status().as_u16() == 403 {
+                    let remaining = resp
+                        .headers()
+                        .get("x-ratelimit-remaining")
+                        .and_then(|value| value.to_str().ok())
+                        .unwrap_or("?");
+                    if remaining == "0" {
+                        break;
+                    }
                 }
             }
             Err(_) => continue,
@@ -208,41 +221,64 @@ pub fn check_skill_updates_in(scope: &Scope, fresh: bool) -> Result<Vec<SkillUpd
             .push((name.clone(), entry.clone()));
     }
 
-    for (source, items) in by_source {
-        let ref_hint = items
-            .first()
-            .and_then(|(_, e)| e.r#ref.as_deref())
-            .map(|s| s.to_string());
-        let tree = fetch_github_tree(&source, ref_hint.as_deref(), fresh);
+    let sources: Vec<(String, Vec<(String, SkillLockEntry)>)> = by_source.into_iter().collect();
+    let results: Mutex<Vec<SkillUpdateInfo>> = Mutex::new(Vec::new());
+    let next = AtomicUsize::new(0);
 
-        for (name, entry) in items {
+    std::thread::scope(|scope| {
+        for _ in 0..CHECK_WORKERS.min(sources.len()) {
+            scope.spawn(|| loop {
+                let index = next.fetch_add(1, Ordering::Relaxed);
+                let Some((source, items)) = sources.get(index) else {
+                    break;
+                };
+                let checked = check_source(source, items, fresh);
+                if let Ok(mut results) = results.lock() {
+                    results.extend(checked);
+                }
+            });
+        }
+    });
+
+    let mut results = results.into_inner().unwrap_or_default();
+    results.sort_by(|a, b| a.name.cmp(&b.name));
+    Ok(results)
+}
+
+fn check_source(
+    source: &str,
+    items: &[(String, SkillLockEntry)],
+    fresh: bool,
+) -> Vec<SkillUpdateInfo> {
+    let ref_hint = items.first().and_then(|(_, entry)| entry.r#ref.as_deref());
+    let tree = fetch_github_tree(source, ref_hint, fresh);
+
+    items
+        .iter()
+        .map(|(name, entry)| {
             let Some(tree) = tree.as_ref() else {
-                results.push(SkillUpdateInfo {
-                    name,
-                    source: Some(source.clone()),
+                return SkillUpdateInfo {
+                    name: name.clone(),
+                    source: Some(source.to_string()),
                     update_available: false,
                     checkable: true,
                     checked: false,
-                });
-                continue;
+                };
             };
 
             let skill_path = entry.skill_path.as_deref().unwrap_or("");
             let local_hash = entry.skill_folder_hash.as_deref().unwrap_or("");
             let latest = latest_folder_hash(tree, skill_path);
 
-            results.push(SkillUpdateInfo {
-                name,
-                source: Some(source.clone()),
+            SkillUpdateInfo {
+                name: name.clone(),
+                source: Some(source.to_string()),
                 update_available: latest.as_deref().map(|h| h != local_hash).unwrap_or(false),
                 checkable: true,
                 checked: latest.is_some(),
-            });
-        }
-    }
-
-    results.sort_by(|a, b| a.name.cmp(&b.name));
-    Ok(results)
+            }
+        })
+        .collect()
 }
 
 #[cfg(test)]
@@ -329,6 +365,55 @@ mod tests {
 
         assert_eq!(cached_tree(&format!("{base}#")).unwrap().sha, "head");
         assert_eq!(cached_tree(&format!("{base}#v2")).unwrap().sha, "tagged");
+    }
+
+    #[test]
+    fn checks_every_source_from_the_cache_across_workers() {
+        let root = std::env::temp_dir().join(format!("curie-updates-{}", std::process::id()));
+        std::fs::create_dir_all(&root).expect("temp dir");
+        let lock = serde_json::json!({
+            "skills": {
+                "alpha": {
+                    "source": "one/alpha",
+                    "sourceType": "github",
+                    "skillPath": "skills/alpha/SKILL.md",
+                    "skillFolderHash": "old-alpha",
+                },
+                "beta": {
+                    "source": "two/beta",
+                    "sourceType": "github",
+                    "skillPath": "skills/beta/SKILL.md",
+                    "skillFolderHash": "old-beta",
+                },
+            }
+        });
+        std::fs::write(root.join("skills-lock.json"), lock.to_string()).expect("lockfile");
+
+        for (source, path, sha) in [
+            ("one/alpha", "skills/alpha", "new-alpha"),
+            ("two/beta", "skills/beta", "new-beta"),
+        ] {
+            store_tree(
+                format!("{source}#"),
+                &GitTreeResponse {
+                    sha: "root".into(),
+                    tree: vec![GitTreeEntry {
+                        path: path.into(),
+                        entry_type: "tree".into(),
+                        sha: sha.into(),
+                    }],
+                },
+            );
+        }
+
+        let rows = check_skill_updates_in(&Scope::Project(root.clone()), false).expect("check");
+        let _ = std::fs::remove_dir_all(&root);
+
+        assert_eq!(rows.len(), 2);
+        assert_eq!(rows[0].name, "alpha");
+        assert_eq!(rows[1].name, "beta");
+        assert!(rows.iter().all(|row| row.checkable && row.checked));
+        assert!(rows.iter().all(|row| row.update_available));
     }
 
     #[test]

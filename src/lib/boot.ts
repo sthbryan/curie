@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
+
 import type {
   AppUpdateInfo,
   InstallResult,
@@ -107,13 +108,12 @@ export async function loadSkills(
   const checkUpdates = options?.checkUpdates ?? true;
   setSkillsLoading(true);
   setSkillsError(null);
+  // The list and the update check are independent round trips.
+  if (checkUpdates) void checkSkillUpdates(projectPath);
   try {
     const skills = await invoke<SkillInfo[]>("list_skills", { projectPath });
     if (token !== loadToken) return;
     setSkills(skills);
-    if (checkUpdates) {
-      void checkSkillUpdates(projectPath);
-    }
   } catch (e) {
     if (token !== loadToken) return;
     setSkillsError(errorMessage(e));
@@ -144,30 +144,38 @@ export function useBoot() {
       }
       markHydrated();
 
-      if (!hasBooted.value) {
-        try {
-          const locale = await invoke<string>("get_locale");
-          if (!cancelled) setLang(detectLang(locale));
-        } catch {
-          // ignore — fall back to default lang
-        }
-      }
+      // The language and the Node probe are independent. Both land before the
+      // first real screen, so the shell never flips language under the user.
+      const localeTask = hasBooted.value
+        ? null
+        : invoke<string>("get_locale").then(
+            (locale) => locale,
+            () => null,
+          );
+      const nodeTask = invoke<NodeInfo>("detect_node").then(
+        (info) => ({ ok: true as const, info }),
+        () => ({ ok: false as const }),
+      );
 
-      try {
-        const info = await invoke<NodeInfo>("detect_node");
-        if (cancelled) return;
-        setNode(info);
-        setStage(info.installed ? "home" : "setup");
-        if (info.installed) {
+      const [locale, detected] = await Promise.all([localeTask, nodeTask]);
+      if (cancelled) return;
+      if (locale) setLang(detectLang(locale));
+
+      if (detected.ok) {
+        setNode(detected.info);
+        setStage(detected.info.installed ? "home" : "setup");
+        if (detected.info.installed) {
+          // Nothing here waits on anything else: the installed list, its update
+          // check and the app update are independent round trips.
           void loadProjects();
-          await loadSkills();
+          void loadSkills();
           void checkAppUpdate();
         }
-      } catch {
-        if (!cancelled) setStage("setup");
+      } else {
+        setStage("setup");
       }
 
-      if (!cancelled) markBooted();
+      markBooted();
     })();
 
     return () => {

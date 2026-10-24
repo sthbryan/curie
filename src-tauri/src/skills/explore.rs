@@ -14,23 +14,28 @@ pub fn explore_skills(view: &str, page: u32) -> Result<ExplorePage, String> {
 
     let url = format!("{SEARCH_API_BASE}/api/skills/{view}/{page}");
 
-    let agent = ureq::AgentBuilder::new()
-        .timeout(std::time::Duration::from_secs(20))
+    let config = ureq::Agent::config_builder()
+        .timeout_global(Some(std::time::Duration::from_secs(20)))
         .build();
+    let agent: ureq::Agent = config.into();
 
-    let resp = agent
+    let mut resp = agent
         .get(&url)
-        .set("Accept", "application/json")
-        .set("User-Agent", "curie-skills-manager")
+        .header("Accept", "application/json")
+        .header("User-Agent", "curie-skills-manager")
         .call()
         .map_err(|e| format!("skills explore failed: {e}"))?;
 
-    if resp.status() < 200 || resp.status() >= 300 {
-        return Err(format!("skills explore returned HTTP {}", resp.status()));
+    if !resp.status().is_success() {
+        return Err(format!(
+            "skills explore returned HTTP {}",
+            resp.status().as_u16()
+        ));
     }
 
     let body: ExploreApiResponse = resp
-        .into_json()
+        .body_mut()
+        .read_json()
         .map_err(|e| format!("Failed to parse explore response: {e}"))?;
 
     let skills: Vec<SkillExploreResult> = body

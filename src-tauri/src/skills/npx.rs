@@ -1,13 +1,10 @@
 use super::scope::Scope;
-use crate::node::detect_node_info;
+use crate::node::cached_node_bin;
 use std::path::PathBuf;
 use std::process::{Command, Output};
 
 pub(crate) fn resolve_node_bin() -> PathBuf {
-    detect_node_info()
-        .ok()
-        .and_then(|info| info.path.map(PathBuf::from))
-        .unwrap_or_else(|| PathBuf::from("node"))
+    cached_node_bin()
 }
 
 pub(crate) fn resolve_npx_bin() -> PathBuf {
@@ -26,8 +23,15 @@ pub(crate) fn run_skills_command(args: &[&str], scope: &Scope) -> Result<Output,
     let npx = resolve_npx_bin();
     let mut cmd = Command::new(&npx);
     cmd.arg("--yes").arg("skills").args(args);
+    // No registry update checks, funding banners or audit on every run: a
+    // short command can finish before npm's background check does.
     cmd.env("DISABLE_TELEMETRY", "1")
-        .env("npm_config_yes", "true");
+        .env("npm_config_yes", "true")
+        .env("npm_config_update_notifier", "false")
+        .env("npm_config_fund", "false")
+        .env("npm_config_audit", "false")
+        .env("npm_config_progress", "false")
+        .env("NO_UPDATE_NOTIFIER", "1");
 
     if let Some(dir) = scope.cwd() {
         cmd.current_dir(dir);

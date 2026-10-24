@@ -39,11 +39,6 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
       - name: Install system deps
         run: |
           sudo apt-get update
@@ -58,9 +53,9 @@ jobs:
         with:
           workspaces: src-tauri
 
-      - name: Install JS deps
-        run: bun install --frozen-lockfile
-
       - name: Cargo check
         run: cargo check --manifest-path src-tauri/Cargo.toml
+
+      - name: Cargo test
+        run: cargo test --manifest-path src-tauri/Cargo.toml
 

@@ -30,23 +30,28 @@ pub fn find_skills(query: &str, owner: Option<&str>) -> Result<Vec<SkillSearchRe
         url.push_str(&urlencoding_encode(o));
     }
 
-    let agent = ureq::AgentBuilder::new()
-        .timeout(std::time::Duration::from_secs(15))
+    let config = ureq::Agent::config_builder()
+        .timeout_global(Some(std::time::Duration::from_secs(15)))
         .build();
+    let agent: ureq::Agent = config.into();
 
-    let resp = agent
+    let mut resp = agent
         .get(&url)
-        .set("Accept", "application/json")
-        .set("User-Agent", "curie-skills-manager")
+        .header("Accept", "application/json")
+        .header("User-Agent", "curie-skills-manager")
         .call()
         .map_err(|e| format!("skills search failed: {e}"))?;
 
-    if resp.status() < 200 || resp.status() >= 300 {
-        return Err(format!("skills search returned HTTP {}", resp.status()));
+    if !resp.status().is_success() {
+        return Err(format!(
+            "skills search returned HTTP {}",
+            resp.status().as_u16()
+        ));
     }
 
     let body: SearchApiResponse = resp
-        .into_json()
+        .body_mut()
+        .read_json()
         .map_err(|e| format!("Failed to parse search response: {e}"))?;
 
     let mut results: Vec<SkillSearchResult> = body
