@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { When } from "react-if";
+
 import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Heading } from "@/components/Heading";
@@ -13,6 +14,7 @@ import { fadeUp } from "@/lib/motion";
 import { useRoute } from "@/lib/routes";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { skills } from "@/store/skills";
+
 import { ResultsPanel } from "./components/ResultsPanel";
 import { useFindActions } from "./hooks/useFindActions";
 
@@ -55,6 +57,7 @@ export function Find() {
       new Set(
         findResults.filter((r) => isSearchResultInstalled(r, skills.value)).map((r) => r.package),
       ),
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- .value is how a signal subscribes a memo
     [findResults, skills.value],
   );
 

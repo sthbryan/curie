@@ -1,4 +1,5 @@
 import { signal } from "@preact/signals";
+
 import type { AppUpdateInfo } from "@/components/types";
 
 export const appUpdate = signal<AppUpdateInfo | null>(null);

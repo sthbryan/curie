@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
+
 import { reducedMotion } from "@/store/system";
 
 export const easeOut = "cubic-bezier(0.22, 1, 0.36, 1)";

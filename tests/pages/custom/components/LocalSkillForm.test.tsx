@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { CustomSkillInstallResult } from "@/components/types";
 
 const invokeMock = vi.fn();
@@ -79,9 +80,14 @@ function setInputValue(input: HTMLInputElement | HTMLTextAreaElement, value: str
   });
 }
 
-const VALID_CONTENT = ["---", "name: my-skill", "description: what it does", "---", "", "# Body"].join(
-  "\n",
-);
+const VALID_CONTENT = [
+  "---",
+  "name: my-skill",
+  "description: what it does",
+  "---",
+  "",
+  "# Body",
+].join("\n");
 
 function fillForm(content = VALID_CONTENT) {
   setInputValue(getContentInput(), content);

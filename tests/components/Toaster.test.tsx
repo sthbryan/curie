@@ -4,6 +4,7 @@ import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { toast } from "sonner";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { Toaster } from "@/components/Toaster";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

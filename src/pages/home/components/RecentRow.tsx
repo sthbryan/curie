@@ -1,4 +1,5 @@
 import { ArrowUp, Plus } from "lucide-react";
+
 import type { Activity } from "@/components/types";
 import { useT } from "@/i18n";
 import { formatRelative } from "@/lib/skills";

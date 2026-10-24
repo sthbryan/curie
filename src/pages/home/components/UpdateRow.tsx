@@ -1,4 +1,5 @@
 import { ArrowUp } from "lucide-react";
+
 import { useT } from "@/i18n";
 
 type Props = {

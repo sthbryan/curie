@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   skills,
   skillsError,
@@ -10,6 +11,7 @@ import {
   updatesLoading,
 } from "@/store/skills";
 import { lang } from "@/store/system";
+
 import { skillFixture } from "./fixtures";
 import { cleanup, mount, text } from "./mount";
 
@@ -59,7 +61,13 @@ describe("Home", () => {
       skillFixture("find-skills", ["Codex"]),
     ];
     skillUpdates.value = [
-      { name: "impeccable", source: "me/impeccable", updateAvailable: true, checkable: true, checked: true },
+      {
+        name: "impeccable",
+        source: "me/impeccable",
+        updateAvailable: true,
+        checkable: true,
+        checked: true,
+      },
     ];
 
     const el = mount(<Home />);

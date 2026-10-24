@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { Settings } from "@/components/types";
 
 const invokeMock = vi.fn();
@@ -81,9 +82,9 @@ describe("resolveSettings", () => {
   });
 
   it("treats hasBooted as the or of both sources", () => {
-    expect(resolveSettings({ ...stored, hasBooted: false }, { ...cached, hasBooted: true })).toEqual(
-      expect.objectContaining({ hasBooted: true }),
-    );
+    expect(
+      resolveSettings({ ...stored, hasBooted: false }, { ...cached, hasBooted: true }),
+    ).toEqual(expect.objectContaining({ hasBooted: true }));
     expect(
       resolveSettings({ ...stored, hasBooted: true }, { ...cached, hasBooted: false }),
     ).toEqual(expect.objectContaining({ hasBooted: true }));

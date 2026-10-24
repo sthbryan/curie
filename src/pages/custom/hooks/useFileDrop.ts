@@ -2,9 +2,11 @@ import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
 import { t } from "@/i18n";
 import { errorMessage } from "@/lib/errors";
 import { lang } from "@/store/system";
+
 import { fileNameOf, pickMarkdown } from "../lib/drop";
 
 type Props = {

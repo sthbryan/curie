@@ -1,5 +1,6 @@
 import { cn } from "@/lib/cn";
 import { fadeUp } from "@/lib/motion";
+
 import { Bone } from "./Bone";
 import type { ColumnDef } from "./types";
 

@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useState } from "react";
+
 import type { CustomSkillInstallResult } from "@/components/types";
 import { t } from "@/i18n";
 import { loadSkills } from "@/lib/boot";

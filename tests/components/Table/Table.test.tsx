@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { Table } from "@/components/Table";
 import type { ColumnDef } from "@/components/Table";
 
@@ -62,40 +63,19 @@ const GRID = "grid-cols-[1fr_4rem]";
 
 describe("Table", () => {
   it("renders column headers", () => {
-    mount(
-      <Table
-        columns={columns}
-        rows={rows}
-        gridTemplate={GRID}
-        getRowKey={(r) => r.id}
-      />,
-    );
+    mount(<Table columns={columns} rows={rows} gridTemplate={GRID} getRowKey={(r) => r.id} />);
     expect(container?.textContent).toContain("NAME");
     expect(container?.textContent).toContain("VALUE");
   });
 
   it("renders one row per item", () => {
-    mount(
-      <Table
-        columns={columns}
-        rows={rows}
-        gridTemplate={GRID}
-        getRowKey={(r) => r.id}
-      />,
-    );
+    mount(<Table columns={columns} rows={rows} gridTemplate={GRID} getRowKey={(r) => r.id} />);
     const articles = container?.querySelectorAll("article");
     expect(articles?.length).toBe(3);
   });
 
   it("renders cell content via cell renderers", () => {
-    mount(
-      <Table
-        columns={columns}
-        rows={rows}
-        gridTemplate={GRID}
-        getRowKey={(r) => r.id}
-      />,
-    );
+    mount(<Table columns={columns} rows={rows} gridTemplate={GRID} getRowKey={(r) => r.id} />);
     expect(container?.textContent).toContain("alpha");
     expect(container?.textContent).toContain("beta");
     expect(container?.textContent).toContain("gamma");
@@ -245,14 +225,7 @@ describe("Table", () => {
   });
 
   it("applies cellClassName to cell wrappers", () => {
-    mount(
-      <Table
-        columns={columns}
-        rows={rows}
-        gridTemplate={GRID}
-        getRowKey={(r) => r.id}
-      />,
-    );
+    mount(<Table columns={columns} rows={rows} gridTemplate={GRID} getRowKey={(r) => r.id} />);
 
     const article = container?.querySelector("article");
     const cells = article?.querySelectorAll(":scope > div");
@@ -262,14 +235,7 @@ describe("Table", () => {
   });
 
   it("applies headerClassName to every header cell", () => {
-    mount(
-      <Table
-        columns={columns}
-        rows={rows}
-        gridTemplate={GRID}
-        getRowKey={(r) => r.id}
-      />,
-    );
+    mount(<Table columns={columns} rows={rows} gridTemplate={GRID} getRowKey={(r) => r.id} />);
 
     const header = container?.firstElementChild;
     const cells = header?.querySelectorAll(":scope > *");
@@ -278,14 +244,7 @@ describe("Table", () => {
   });
 
   it("renders empty when rows is empty", () => {
-    mount(
-      <Table
-        columns={columns}
-        rows={[]}
-        gridTemplate={GRID}
-        getRowKey={(r) => r.id}
-      />,
-    );
+    mount(<Table columns={columns} rows={[]} gridTemplate={GRID} getRowKey={(r) => r.id} />);
 
     const articles = container?.querySelectorAll("article");
     expect(articles?.length).toBe(0);

@@ -2,6 +2,7 @@
 
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   agentFilter,
   query,
@@ -16,6 +17,7 @@ import {
 } from "@/pages/installed/store/store";
 import { skills, skillsError, skillsLoading, skillUpdates, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
+
 import { buttonWith, cleanup, click, mount, skillFixture, text } from "./mount";
 
 const invokeMock = vi.fn();
@@ -109,7 +111,10 @@ describe("Installed", () => {
       updateBtn?.click();
     });
 
-    expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: ["impeccable"], projectPath: null });
+    expect(invokeMock).toHaveBeenCalledWith("update_skills", {
+      skills: ["impeccable"],
+      projectPath: null,
+    });
   });
 
   it("confirms before removing one skill", async () => {
@@ -128,7 +133,10 @@ describe("Installed", () => {
         .find((b) => b.textContent === "REMOVE")
         ?.click();
     });
-    expect(invokeMock).toHaveBeenCalledWith("remove_skills", { skills: ["impeccable"], projectPath: null });
+    expect(invokeMock).toHaveBeenCalledWith("remove_skills", {
+      skills: ["impeccable"],
+      projectPath: null,
+    });
   });
 
   it("locks the remove-all confirmation behind the typed phrase", async () => {

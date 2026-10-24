@@ -10,11 +10,13 @@ import {
 } from "lucide-react";
 import type { FocusEvent } from "react";
 import { useState } from "react";
+
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { useReducedMotion } from "@/lib/motion";
 import type { Section } from "@/lib/routes";
 import { useRoute } from "@/lib/routes";
+
 import { NavItem } from "./NavItem";
 
 type NavKey = "home" | "skills" | "explore" | "find" | "custom" | "projects";

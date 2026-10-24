@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { MetricCell } from "@/pages/explore/components/MetricCell";
 import { lang } from "@/store/system";

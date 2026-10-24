@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { lang } from "@/store/system";
 import {
   appInstallRunning,
@@ -34,7 +35,9 @@ function render() {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
-  act(() => { root?.render(<UpdateSection />); });
+  act(() => {
+    root?.render(<UpdateSection />);
+  });
 }
 
 beforeEach(() => {
@@ -49,8 +52,16 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  if (root) { act(() => { root?.unmount(); }); root = null; }
-  if (container) { container.remove(); container = null; }
+  if (root) {
+    act(() => {
+      root?.unmount();
+    });
+    root = null;
+  }
+  if (container) {
+    container.remove();
+    container = null;
+  }
 });
 
 describe("UpdateSection", () => {
@@ -98,7 +109,9 @@ describe("UpdateSection", () => {
 
     const buttons = [...(container?.querySelectorAll("button") ?? [])];
     const release = buttons.find((b) => b.textContent?.includes("OPEN GITHUB"));
-    act(() => { release?.click(); });
+    act(() => {
+      release?.click();
+    });
 
     expect(openUrl).toHaveBeenCalledWith("https://example.test/release");
   });
@@ -106,10 +119,14 @@ describe("UpdateSection", () => {
   it("runs a check and blocks a second one while it is running", () => {
     render();
     const button = container?.querySelector("button") as HTMLButtonElement;
-    act(() => { button.click(); });
+    act(() => {
+      button.click();
+    });
     expect(checkAppUpdate).toHaveBeenCalledTimes(1);
 
-    act(() => { appUpdateLoading.value = true; });
+    act(() => {
+      appUpdateLoading.value = true;
+    });
     const busy = container?.querySelector("button") as HTMLButtonElement;
     expect(busy.disabled).toBe(true);
     expect(busy.textContent).toContain("CHECKING FOR UPDATES");

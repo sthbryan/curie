@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 
 import { beforeEach, describe, expect, it } from "vitest";
+
 import { loadPartial, savePartial } from "@/lib/persistence";
 
 const KEY = "curie.test";
@@ -10,7 +11,12 @@ beforeEach(() => {
 });
 
 describe("persistence", () => {
-  const fallback = { theme: "dark" as const, lang: "en" as const, reducedMotion: "user" as const, hasBooted: false };
+  const fallback = {
+    theme: "dark" as const,
+    lang: "en" as const,
+    reducedMotion: "user" as const,
+    hasBooted: false,
+  };
 
   it("returns fallback when no data exists", () => {
     const result = loadPartial(KEY, fallback);

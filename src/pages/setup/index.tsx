@@ -1,10 +1,12 @@
 import { ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
+
 import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import type { NodeInfo, SetupStep } from "@/components/types";
 import { useT } from "@/i18n";
+
 import { ManualPanel } from "./components/ManualPanel";
 import { PlanCard } from "./components/PlanCard";
 import { SetupShell } from "./components/SetupShell";

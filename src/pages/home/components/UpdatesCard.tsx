@@ -1,8 +1,10 @@
 import { RotateCcw } from "lucide-react";
+
 import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { updatesError } from "@/store/skills";
+
 import { useUpdatesCheck } from "../hooks/useUpdatesCheck";
 import { checkingUpdates, PREVIEW_LIMIT, totalSkills, updates } from "../lib/derived";
 import { CardHead } from "./CardHead";

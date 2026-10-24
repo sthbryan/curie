@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import type { SkillDetection } from "@/components/types";
 import type { DetectionState } from "@/pages/custom/hooks/useSkillDetection";
 import { isPending, resolvePhase } from "@/pages/custom/lib/phase";

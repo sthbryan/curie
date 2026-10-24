@@ -1,4 +1,5 @@
 import { useLocation } from "wouter";
+
 import { useT } from "@/i18n";
 
 type Props = {

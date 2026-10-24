@@ -1,9 +1,11 @@
 import { GitBranch, LoaderCircle, X } from "lucide-react";
 import { useState } from "react";
+
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
+
 import { useRemoteInstall } from "../hooks/useRemoteInstall";
 import { useSkillDetection } from "../hooks/useSkillDetection";
 import { isPending, resolvePhase } from "../lib/phase";

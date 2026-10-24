@@ -1,4 +1,5 @@
 import { ThinkingOrb } from "thinking-orbs";
+
 import { useT } from "@/i18n";
 
 type Props = {

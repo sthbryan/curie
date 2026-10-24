@@ -2,6 +2,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import { Download, RotateCcw, SquareArrowOutUpRight, TriangleAlert } from "lucide-react";
 import { Case, Default, Switch } from "react-if";
 import { toast } from "sonner";
+
 import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";

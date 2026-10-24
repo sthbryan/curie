@@ -1,4 +1,5 @@
 import { useT } from "@/i18n";
+
 import { agentCapacity, agents, agentsShareCount, PREVIEW_LIMIT } from "../lib/derived";
 import { AgentBar } from "./AgentBar";
 import { AgentChips } from "./AgentChips";

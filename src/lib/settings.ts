@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+
 import type { ReducedMotionPref, Settings, ThemeMode } from "@/components/types";
 import { REDUCED_MOTION_OPTIONS, THEME_OPTIONS } from "@/components/types";
 import type { Lang } from "@/i18n";

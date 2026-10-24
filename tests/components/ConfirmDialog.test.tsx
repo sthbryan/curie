@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -50,9 +51,7 @@ const base = {
 };
 
 function button(label: string) {
-  return Array.from(document.body.querySelectorAll("button")).find(
-    (b) => b.textContent === label,
-  );
+  return Array.from(document.body.querySelectorAll("button")).find((b) => b.textContent === label);
 }
 
 function type(value: string) {

@@ -1,6 +1,8 @@
 import { useLocation } from "wouter";
+
 import { Heading } from "@/components/Heading";
 import { useT } from "@/i18n";
+
 import { Button } from "./Button";
 import type { View } from "./types";
 

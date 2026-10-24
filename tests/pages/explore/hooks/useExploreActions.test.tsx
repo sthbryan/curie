@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { ExplorePage, SkillExploreResult } from "@/components/types";
 
 const invokeMock = vi.fn();
@@ -16,9 +17,8 @@ vi.mock("@/lib/boot", () => ({
   loadSkills: (...args: unknown[]) => loadSkillsMock(...args),
 }));
 
-const { useExploreActions, MAX_EXPLORE_SKILLS } = await import(
-  "@/pages/explore/hooks/useExploreActions"
-);
+const { useExploreActions, MAX_EXPLORE_SKILLS } =
+  await import("@/pages/explore/hooks/useExploreActions");
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

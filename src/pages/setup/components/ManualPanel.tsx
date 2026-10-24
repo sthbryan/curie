@@ -1,5 +1,6 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import type { MouseEvent as ReactMouseEvent } from "react";
+
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 

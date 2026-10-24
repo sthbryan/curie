@@ -1,13 +1,11 @@
 // @vitest-environment happy-dom
 
 import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { reducedMotion } from "@/store/system";
 
-const {
-  markViewTransitionSupport,
-  supportsViewTransitions,
-  withViewTransition,
-} = await import("@/lib/viewTransition");
+const { markViewTransitionSupport, supportsViewTransitions, withViewTransition } =
+  await import("@/lib/viewTransition");
 
 type Doc = { startViewTransition?: unknown };
 

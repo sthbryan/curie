@@ -1,8 +1,10 @@
 // @vitest-environment happy-dom
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import { AgentCell } from "@/pages/installed/components/AgentCell";
 import { lang } from "@/store/system";
+
 import { cleanup, mount, text } from "../mount";
 
 afterEach(cleanup);

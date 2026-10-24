@@ -1,6 +1,7 @@
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { projects } from "@/store/projects";
+
 import { agents, checkingUpdates, totalSkills, updates } from "../lib/derived";
 
 type Entry = {

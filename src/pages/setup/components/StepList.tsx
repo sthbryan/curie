@@ -1,4 +1,5 @@
 import { Check, LoaderCircle } from "lucide-react";
+
 import type { SetupStep } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";

@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 import { useRef } from "react";
+
 import { cn } from "@/lib/cn";
 import { useVirtualRows } from "@/lib/useVirtualRows";
+
 import { TableHeader } from "./TableHeader";
 import { TableRow } from "./TableRow";
 import type { ColumnDef, SortDir } from "./types";

@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import { StatusBar } from "@/components/StatusBar";
 import { lang, node, theme } from "@/store/system";
 import { appUpdate } from "@/store/update";
@@ -16,12 +17,22 @@ function mount(ui: React.ReactElement) {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
-  act(() => { root?.render(ui); });
+  act(() => {
+    root?.render(ui);
+  });
 }
 
 function unmount() {
-  if (root) { act(() => { root?.unmount(); }); root = null; }
-  if (container) { container.remove(); container = null; }
+  if (root) {
+    act(() => {
+      root?.unmount();
+    });
+    root = null;
+  }
+  if (container) {
+    container.remove();
+    container = null;
+  }
 }
 
 afterEach(unmount);
@@ -39,7 +50,12 @@ describe("StatusBar", () => {
   });
 
   it("renders node info when node is installed and keeps the path in the title", () => {
-    node.value = { installed: true, version: "v22.0.0", manager: "volta", path: "/usr/local/bin/node" };
+    node.value = {
+      installed: true,
+      version: "v22.0.0",
+      manager: "volta",
+      path: "/usr/local/bin/node",
+    };
     mount(<StatusBar />);
     expect(container?.textContent).toContain("22.0.0");
     expect(container?.textContent).toContain("volta");
@@ -63,7 +79,9 @@ describe("StatusBar", () => {
     const button = container?.querySelector("[aria-label=Theme]") as HTMLButtonElement;
     expect(button.textContent).toContain("DARK");
 
-    act(() => { button.click(); });
+    act(() => {
+      button.click();
+    });
 
     expect(theme.value).toBe("rose");
   });
@@ -72,7 +90,9 @@ describe("StatusBar", () => {
     mount(<StatusBar />);
     const button = container?.querySelector("[aria-label=Language]") as HTMLButtonElement;
 
-    act(() => { button.click(); });
+    act(() => {
+      button.click();
+    });
 
     expect(lang.value).toBe("es");
   });

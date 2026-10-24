@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import en from "./i18n/en.json";
 import es from "./i18n/es.json";
 import { lang } from "./store/system";
@@ -12,8 +14,11 @@ const messages: Record<Lang, Messages> = {
 
 export function useT(ns?: string) {
   const l = lang.value;
-  return (key: string, vars?: Record<string, string | number>): string =>
-    t(l, ns ? `${ns}.${key}` : key, vars);
+  return useCallback(
+    (key: string, vars?: Record<string, string | number>): string =>
+      t(l, ns ? `${ns}.${key}` : key, vars),
+    [l, ns],
+  );
 }
 
 export function detectLang(locale: string): Lang {

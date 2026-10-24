@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import type { SkillInfo } from "@/components/types";
 import { buildSearchIndex, searchKey, selectSkills } from "@/pages/installed/lib/query";
 

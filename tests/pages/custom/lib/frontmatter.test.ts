@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
+
 import { checkFrontmatter } from "@/pages/custom/lib/frontmatter";
 
-const valid = ["---", "name: my-skill", "description: what it does", "---", "", "# Body"].join("\n");
+const valid = ["---", "name: my-skill", "description: what it does", "---", "", "# Body"].join(
+  "\n",
+);
 
 describe("checkFrontmatter", () => {
   it("returns the skill name from a complete block", () => {
@@ -10,9 +13,10 @@ describe("checkFrontmatter", () => {
 
   it("tolerates blank lines, quotes and extra spacing around the name", () => {
     expect(checkFrontmatter(`\n\n${valid}\n`)).toEqual({ ok: true, name: "my-skill" });
-    expect(
-      checkFrontmatter('---\nname:   "my-skill"  \ndescription: x\n---\n# Body'),
-    ).toEqual({ ok: true, name: "my-skill" });
+    expect(checkFrontmatter('---\nname:   "my-skill"  \ndescription: x\n---\n# Body')).toEqual({
+      ok: true,
+      name: "my-skill",
+    });
   });
 
   it("reports a body with no frontmatter at all", () => {

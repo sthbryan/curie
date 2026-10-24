@@ -1,5 +1,6 @@
 import type { ComponentChildren } from "preact";
 import { useEffect } from "react";
+
 import { FullPageError } from "@/components/FullPageError";
 import { useT } from "@/i18n";
 import { loadSkills } from "@/lib/boot";

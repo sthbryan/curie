@@ -1,4 +1,5 @@
 import { FolderGit2 } from "lucide-react";
+
 import type { Project, ProjectSummary } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";

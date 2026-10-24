@@ -1,8 +1,10 @@
 import { useEffect } from "react";
+
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 import { refreshAllSummaries } from "@/lib/projects";
 import { projectSummaries, projects } from "@/store/projects";
+
 import { PREVIEW_LIMIT } from "../lib/derived";
 import { CardHead } from "./CardHead";
 import { EmptyNote } from "./EmptyNote";

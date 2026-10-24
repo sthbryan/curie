@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useRef, useState } from "react";
+
 import type { SkillSearchResult } from "@/components/types";
 import { errorMessage } from "@/lib/errors";
 import { type SkillInstall, useSkillInstall } from "@/lib/useSkillInstall";

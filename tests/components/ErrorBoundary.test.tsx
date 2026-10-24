@@ -3,7 +3,12 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ErrorBoundary, type ErrorBoundaryFallbackProps, resetKeysChanged } from "@/components/ErrorBoundary";
+
+import {
+  ErrorBoundary,
+  type ErrorBoundaryFallbackProps,
+  resetKeysChanged,
+} from "@/components/ErrorBoundary";
 
 // React 19 + happy-dom: enable act warnings globally for this file.
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

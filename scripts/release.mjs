@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+
 import { $ } from "bun";
 
 const root = resolve(import.meta.dir, "..");
@@ -47,7 +48,9 @@ ${c.reset}`;
 }
 
 function parseSemver(v) {
-  const m = String(v).trim().match(/^(\d+)\.(\d+)\.(\d+)$/);
+  const m = String(v)
+    .trim()
+    .match(/^(\d+)\.(\d+)\.(\d+)$/);
   if (!m) fail(`invalid semver: ${v}`);
   return { major: +m[1], minor: +m[2], patch: +m[3] };
 }
@@ -155,7 +158,9 @@ async function chooseBump(current) {
   if (answer === "2" || answer === "minor" || answer === "m") return "minor";
   if (answer === "3" || answer === "major") return "major";
   if (answer === "4" || answer === "custom" || answer === "c") {
-    const custom = await promptLine(`   ${paint(c.bold, "?")}  version ${paint(c.dim, "(x.y.z)")}: `);
+    const custom = await promptLine(
+      `   ${paint(c.bold, "?")}  version ${paint(c.dim, "(x.y.z)")}: `,
+    );
     if (!/^\d+\.\d+\.\d+$/.test(custom)) fail(`invalid version: ${custom}`);
     return custom;
   }

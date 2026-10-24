@@ -93,11 +93,14 @@ describe("promiseToast", () => {
   });
 
   it("renders the mapped error detail", () => {
-    promiseToast(Promise.reject(new Error("boom")).catch(() => "handled"), {
-      loading: { label: "INSTALLING" },
-      success: { label: "INSTALLED" },
-      error: (e) => ({ label: "INSTALL FAILED", detail: String(e) }),
-    });
+    promiseToast(
+      Promise.reject(new Error("boom")).catch(() => "handled"),
+      {
+        loading: { label: "INSTALLING" },
+        success: { label: "INSTALLED" },
+        error: (e) => ({ label: "INSTALL FAILED", detail: String(e) }),
+      },
+    );
 
     const failure = render(options().error(new Error("boom")));
     expect(failure.textContent).toContain("INSTALL FAILED");

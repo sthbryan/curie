@@ -1,4 +1,5 @@
 import { signal } from "@preact/signals";
+
 import type { SkillInfo, SkillUpdateInfo } from "@/components/types";
 
 export const skills = signal<SkillInfo[]>([]);

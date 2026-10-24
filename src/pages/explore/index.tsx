@@ -3,6 +3,7 @@ import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { When } from "react-if";
 import { toast } from "sonner";
+
 import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
 import { ErrorNotice } from "@/components/ErrorNotice";
@@ -16,6 +17,7 @@ import { fadeUp, useReducedMotion } from "@/lib/motion";
 import { useRoute } from "@/lib/routes";
 import { isSearchResultInstalled } from "@/lib/skills";
 import { skills } from "@/store/skills";
+
 import { ExploreList } from "./components/ExploreList";
 import { useExploreActions } from "./hooks/useExploreActions";
 
@@ -53,6 +55,7 @@ export function Explore() {
       new Set(
         exploreSkills.filter((r) => isSearchResultInstalled(r, skills.value)).map((r) => r.package),
       ),
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- .value is how a signal subscribes a memo
     [exploreSkills, skills.value],
   );
 

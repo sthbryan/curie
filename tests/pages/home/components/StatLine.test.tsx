@@ -1,9 +1,11 @@
 // @vitest-environment happy-dom
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import { StatLine } from "@/pages/home/components/StatLine";
 import { skills, skillUpdates, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
+
 import { skillFixture } from "../fixtures";
 import { cleanup, mount, text } from "../mount";
 
@@ -37,7 +39,9 @@ describe("StatLine", () => {
 
   it("stops pulsing once results are in", () => {
     updatesLoading.value = true;
-    skillUpdates.value = [{ name: "a", source: null, updateAvailable: false, checkable: true, checked: true }];
+    skillUpdates.value = [
+      { name: "a", source: null, updateAvailable: false, checkable: true, checked: true },
+    ];
     const el = mount(<StatLine />);
     expect(el.querySelectorAll(".animate-pulse")).toHaveLength(0);
   });

@@ -1,7 +1,9 @@
 import { ArrowUp, X } from "lucide-react";
+
 import { ActionProgress } from "@/components/ActionProgress";
 import { IconButton } from "@/components/IconButton";
 import { useT } from "@/i18n";
+
 import { removingSkill, update, updatingSkill } from "../store/store";
 
 type Props = {

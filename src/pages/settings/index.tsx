@@ -1,6 +1,7 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Else, If, Then } from "react-if";
+
 import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
 import { Heading } from "@/components/Heading";
@@ -14,6 +15,7 @@ import {
 import { useT } from "@/i18n";
 import { APP_NAME } from "@/lib/meta";
 import { systemStore } from "@/store/system";
+
 import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";

@@ -3,6 +3,7 @@
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import type { SkillSearchResult } from "@/components/types";
 import { ResultsPanel } from "@/pages/find/components/ResultsPanel";
 import { lang } from "@/store/system";

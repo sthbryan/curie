@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
+
 import type { SkillDetection } from "@/components/types";
 import { errorMessage } from "@/lib/errors";
 import { activeScopePath } from "@/store/skills";
