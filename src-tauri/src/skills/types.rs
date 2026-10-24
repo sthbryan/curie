@@ -133,20 +133,6 @@ pub(crate) struct ExploreApiSkill {
     pub is_official: Option<bool>,
 }
 
-#[derive(Deserialize)]
-pub(crate) struct CliSkill {
-    pub name: String,
-    pub path: String,
-    pub scope: String,
-    #[serde(default)]
-    pub agents: Vec<String>,
-    pub source: Option<String>,
-    #[serde(rename = "sourceUrl")]
-    pub source_url: Option<String>,
-    #[serde(rename = "sourceType")]
-    pub source_type: Option<String>,
-}
-
 #[derive(Deserialize, Default)]
 pub(crate) struct SkillLockFile {
     #[serde(default)]

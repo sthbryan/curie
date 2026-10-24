@@ -84,7 +84,7 @@ export const update = async (names?: string[]) => {
     });
     toast.success(t(lang.value, "toast.updated", { name: names?.length === 1 ? names[0] : "" }));
     if (projectPath === activeScopePath.value)
-      await loadSkills(projectPath, { checkUpdates: true });
+      await loadSkills(projectPath, { checkUpdates: true, freshUpdates: true });
   } catch (e) {
     updateApplyError.value = errorMessage(e);
     throw e;
@@ -103,7 +103,7 @@ export const remove = async (names: string[]) => {
     const removedName = names.length === 1 ? names[0] : null;
     toast.success(t(lang.value, "toast.removed", removedName ? { name: removedName } : undefined));
     if (projectPath === activeScopePath.value)
-      await loadSkills(projectPath, { checkUpdates: true });
+      await loadSkills(projectPath, { checkUpdates: true, freshUpdates: true });
   } catch (e) {
     removeError.value = errorMessage(e);
     throw e;
@@ -121,7 +121,7 @@ export const removeAll = async () => {
     toast.success(t(lang.value, "toast.removedAll"));
     clearFilters();
     if (projectPath === activeScopePath.value)
-      await loadSkills(projectPath, { checkUpdates: true });
+      await loadSkills(projectPath, { checkUpdates: true, freshUpdates: true });
   } catch (e) {
     removeError.value = errorMessage(e);
     throw e;

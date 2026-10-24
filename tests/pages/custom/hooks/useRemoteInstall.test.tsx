@@ -111,7 +111,7 @@ describe("useRemoteInstall", () => {
       skillName: null,
       projectPath: null,
     });
-    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true, freshUpdates: true });
     expect(promiseToastMock).toHaveBeenCalledTimes(1);
     expect(toastCopy().loading.detail).toBe("owner/repo · skill");
     expect(toastCopy().success.detail).toBe("owner/repo · skill");

@@ -10,6 +10,7 @@ import {
   skills,
   skillsError,
   skillsLoading,
+  skillsScope,
   skillUpdates,
   updatesError,
   updatesLoading,
@@ -85,6 +86,7 @@ beforeEach(() => {
   resetSettingsPersistence();
   localStorage.clear();
   skills.value = [];
+  skillsScope.value = "global";
   skillsLoading.value = false;
   skillsError.value = null;
   skillUpdates.value = [];
@@ -146,6 +148,21 @@ describe("loadSkills", () => {
     expect(skillsLoading.value).toBe(false);
   });
 
+  it("forces the update check after a mutation", async () => {
+    invokeMock.mockImplementation((cmd) => {
+      if (cmd === "list_skills") return Promise.resolve(sampleSkills);
+      if (cmd === "check_skill_updates") return Promise.resolve(sampleUpdates);
+      return Promise.reject(new Error(`unexpected command: ${cmd}`));
+    });
+
+    await loadSkills(null, { freshUpdates: true });
+
+    expect(invokeMock).toHaveBeenCalledWith("check_skill_updates", {
+      projectPath: null,
+      fresh: true,
+    });
+  });
+
   it("skips the update check when checkUpdates=false", async () => {
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "list_skills") return Promise.resolve(sampleSkills);
@@ -199,6 +216,64 @@ describe("loadSkills", () => {
     expect(skillsError.value).toBe("boom");
     expect(skillsLoading.value).toBe(false);
   });
+
+  it("paints the cached list before the fresh one arrives", async () => {
+    invokeMock.mockImplementation(() => Promise.resolve(sampleSkills));
+    await loadSkills(null, { checkUpdates: false });
+
+    skills.value = [];
+    let release: ((value: SkillInfo[]) => void) | null = null;
+    invokeMock.mockImplementation(
+      () =>
+        new Promise<SkillInfo[]>((resolve) => {
+          release = resolve;
+        }),
+    );
+
+    const pending = loadSkills(null, { checkUpdates: false });
+    expect(skills.value).toEqual(sampleSkills);
+    expect(skillsLoading.value).toBe(true);
+
+    await act(async () => {
+      release?.([]);
+      await pending;
+    });
+    expect(skills.value).toEqual([]);
+  });
+
+  it("keeps the cached list when the refresh fails", async () => {
+    invokeMock.mockImplementation(() => Promise.resolve(sampleSkills));
+    await loadSkills(null, { checkUpdates: false });
+
+    invokeMock.mockImplementation(() => Promise.reject(new Error("offline")));
+    await loadSkills(null, { checkUpdates: false });
+
+    expect(skills.value).toEqual(sampleSkills);
+    expect(skillsError.value).toBe("offline");
+  });
+
+  it("does not paint another scope's cached list", async () => {
+    invokeMock.mockImplementation(() => Promise.resolve(sampleSkills));
+    await loadSkills(null, { checkUpdates: false });
+
+    skills.value = [];
+    skillsScope.value = "project:/code/don_camaron";
+    let release: ((value: SkillInfo[]) => void) | null = null;
+    invokeMock.mockImplementation(
+      () =>
+        new Promise<SkillInfo[]>((resolve) => {
+          release = resolve;
+        }),
+    );
+
+    const pending = loadSkills(null, { checkUpdates: false });
+    expect(skills.value).toEqual([]);
+
+    await act(async () => {
+      release?.([]);
+      await pending;
+    });
+  });
 });
 
 describe("checkSkillUpdates", () => {
@@ -220,6 +295,42 @@ describe("checkSkillUpdates", () => {
 
     expect(updatesError.value).toBe("plain string error");
     expect(updatesLoading.value).toBe(false);
+  });
+
+  it("reuses a fresh cached list without invoking the command", async () => {
+    invokeMock.mockImplementation(() => Promise.resolve(sampleUpdates));
+    await checkSkillUpdates();
+
+    skillUpdates.value = [];
+    invokeMock.mockClear();
+    await checkSkillUpdates();
+
+    expect(skillUpdates.value).toEqual(sampleUpdates);
+    expect(invokeMock).not.toHaveBeenCalled();
+  });
+
+  it("forces the network check when fresh is requested", async () => {
+    invokeMock.mockImplementation(() => Promise.resolve(sampleUpdates));
+    await checkSkillUpdates();
+
+    invokeMock.mockClear();
+    await checkSkillUpdates(null, { fresh: true });
+
+    expect(invokeMock).toHaveBeenCalledWith("check_skill_updates", {
+      projectPath: null,
+      fresh: true,
+    });
+  });
+
+  it("keeps cached updates visible when a forced refresh fails", async () => {
+    invokeMock.mockImplementation(() => Promise.resolve(sampleUpdates));
+    await checkSkillUpdates();
+
+    invokeMock.mockImplementation(() => Promise.reject(new Error("offline")));
+    await checkSkillUpdates(null, { fresh: true });
+
+    expect(skillUpdates.value).toEqual(sampleUpdates);
+    expect(updatesError.value).toBeNull();
   });
 });
 

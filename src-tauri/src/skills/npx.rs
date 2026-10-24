@@ -53,25 +53,3 @@ pub(crate) fn run_skills_command(args: &[&str], scope: &Scope) -> Result<Output,
         )
     })
 }
-
-pub(crate) fn extract_json_array(raw: &str) -> Option<&str> {
-    let start = raw.find('[')?;
-    let end = raw.rfind(']')?;
-    if end < start {
-        return None;
-    }
-    Some(&raw[start..=end])
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn extract_json_array_strips_noise() {
-        let raw = "Global Skills\n[{ \"name\": \"a\", \"path\": \"/x\", \"scope\": \"global\" }]\n";
-        let json = extract_json_array(raw).expect("json");
-        assert!(json.starts_with('['));
-        assert!(json.ends_with(']'));
-    }
-}

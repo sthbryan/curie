@@ -99,7 +99,7 @@ describe("useLocalInstall", () => {
       content: "# content",
       projectPath: null,
     });
-    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true, freshUpdates: true });
   });
 
   it("drives one toast for the whole install", async () => {
