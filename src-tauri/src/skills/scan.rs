@@ -265,6 +265,11 @@ fn nested_global_roots(home: &Path, config: &Path) -> Vec<(PathBuf, &'static str
             config.join("kimchi").join("harness").join("skills"),
             "Kimchi",
         ),
+        (home.join(".astrbot").join("data").join("skills"), "AstrBot"),
+        (
+            home.join(".deepagents").join("agent").join("skills"),
+            "Deep Agents",
+        ),
     ]
 }
 
@@ -336,6 +341,7 @@ fn agent_label(dir: &str) -> String {
         "pi" => "Pi",
         "pochi" => "Pochi",
         "qoder" => "Qoder",
+        "qoder-cn" => "Qoder CN",
         "qwen" => "Qwen Code",
         "reasonix" => "Reasonix",
         "roo" => "Roo Code",
@@ -344,6 +350,7 @@ fn agent_label(dir: &str) -> String {
         "terramind" => "Terramind",
         "tinycloud" => "Tinycloud",
         "trae" => "Trae",
+        "trae-cn" => "Trae CN",
         "vibe" => "Mistral Vibe",
         "windsurf" => "Windsurf",
         "zcode" => "ZCode",
@@ -607,6 +614,22 @@ mod tests {
         assert_eq!(skills[0].agents, vec!["Claude Code"]);
 
         let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn covers_the_nested_global_agent_directories() {
+        let home = PathBuf::from("/tmp/curie-home");
+        let config = PathBuf::from("/tmp/curie-config");
+        let roots = nested_global_roots(&home, &config);
+
+        assert!(roots.iter().any(|(path, label)| {
+            path == &home.join(".astrbot/data/skills") && *label == "AstrBot"
+        }));
+        assert!(roots.iter().any(|(path, label)| {
+            path == &home.join(".deepagents/agent/skills") && *label == "Deep Agents"
+        }));
+        assert_eq!(agent_label(".qoder-cn"), "Qoder CN");
+        assert_eq!(agent_label(".trae-cn"), "Trae CN");
     }
 
     #[test]
