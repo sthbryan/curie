@@ -9,6 +9,7 @@ mod list;
 mod lock;
 mod npx;
 mod remove;
+mod scan;
 mod scope;
 mod types;
 mod update;

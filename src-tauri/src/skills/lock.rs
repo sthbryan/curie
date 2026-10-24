@@ -9,15 +9,22 @@ pub(crate) fn lock_candidates(scope: &Scope) -> Vec<PathBuf> {
             root.join(".agents").join(".skill-lock.json"),
             root.join(".skill-lock.json"),
         ],
-        Scope::Global => dirs::home_dir()
-            .map(|home| {
-                vec![
-                    home.join(".agents").join(".skill-lock.json"),
-                    home.join(".skill-lock.json"),
-                    home.join("skills-lock.json"),
-                ]
-            })
-            .unwrap_or_default(),
+        Scope::Global => {
+            let Some(home) = dirs::home_dir() else {
+                return Vec::new();
+            };
+            let mut candidates = Vec::new();
+            // The CLI moved its global lock to XDG_STATE_HOME when set.
+            if let Some(state) = std::env::var_os("XDG_STATE_HOME").filter(|v| !v.is_empty()) {
+                candidates.push(PathBuf::from(state).join("skills").join(".skill-lock.json"));
+            }
+            candidates.extend([
+                home.join(".agents").join(".skill-lock.json"),
+                home.join(".skill-lock.json"),
+                home.join("skills-lock.json"),
+            ]);
+            candidates
+        }
     }
 }
 
@@ -52,9 +59,10 @@ mod tests {
         let home = dirs::home_dir().expect("home");
         let candidates = lock_candidates(&Scope::Global);
 
-        assert_eq!(candidates.len(), 3);
-        assert_eq!(candidates[0], home.join(".agents").join(".skill-lock.json"));
-        assert!(candidates.iter().all(|p| p.starts_with(&home)));
+        assert!(candidates.len() >= 3);
+        assert!(candidates.contains(&home.join(".agents").join(".skill-lock.json")));
+        assert!(candidates.contains(&home.join(".skill-lock.json")));
+        assert!(candidates.contains(&home.join("skills-lock.json")));
     }
 
     #[test]
