@@ -1,6 +1,8 @@
+// @vitest-environment happy-dom
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { Project, ProjectProbe } from "@/components/types";
+import type { Project, ProjectProbe, SkillInfo } from "@/components/types";
 
 const invokeMock = vi.fn();
 const openMock = vi.fn();
@@ -18,9 +20,16 @@ vi.mock("@tauri-apps/plugin-dialog", () => ({
 }));
 vi.mock("sonner", () => ({ toast: toastMock }));
 
-const { addProject, forgetProject, isNested, loadProjects, samePath, slugify } =
-  await import("@/lib/projects");
-const { projects, projectsError } = await import("@/store/projects");
+const {
+  addProject,
+  forgetProject,
+  isNested,
+  loadProjects,
+  refreshAllSummaries,
+  samePath,
+  slugify,
+} = await import("@/lib/projects");
+const { projectSummaries, projects, projectsError } = await import("@/store/projects");
 const { lang } = await import("@/store/system");
 
 const donCamaron: Project = {
@@ -34,10 +43,26 @@ function probe(path: string, name: string): ProjectProbe {
   return { path, name, exists: true, isDir: true, isReserved: false };
 }
 
+function skillInfo(name: string, agents: string[]): SkillInfo {
+  return {
+    name,
+    path: `/skills/${name}`,
+    scope: "global",
+    agents,
+    source: null,
+    sourceUrl: null,
+    sourceType: null,
+    installedAt: null,
+    updatedAt: null,
+  };
+}
+
 beforeEach(() => {
   lang.value = "en";
+  localStorage.clear();
   projects.value = [];
   projectsError.value = null;
+  projectSummaries.value = {};
   invokeMock.mockReset();
   openMock.mockReset();
   toastMock.success.mockReset();
@@ -98,6 +123,80 @@ describe("loadProjects", () => {
     await loadProjects();
     expect(projectsError.value).toBe("no disk");
     expect(projects.value).toEqual([]);
+  });
+});
+
+describe("refreshAllSummaries", () => {
+  it("hydrates cached counts and skips npx while the cache is fresh", async () => {
+    projects.value = [donCamaron];
+    invokeMock.mockImplementation((cmd) => {
+      if (cmd === "list_skills") {
+        return Promise.resolve([skillInfo("a", ["Codex"]), skillInfo("b", ["Claude"])]);
+      }
+      return Promise.resolve();
+    });
+
+    await refreshAllSummaries({ force: true });
+    expect(projectSummaries.value[donCamaron.id]).toEqual({
+      count: 2,
+      agents: ["Claude", "Codex"],
+      missing: false,
+      error: null,
+    });
+
+    projectSummaries.value = {};
+    invokeMock.mockClear();
+    await refreshAllSummaries();
+
+    expect(projectSummaries.value[donCamaron.id]?.count).toBe(2);
+    expect(invokeMock).not.toHaveBeenCalled();
+  });
+
+  it("retries a transient failure instead of caching it", async () => {
+    projects.value = [donCamaron];
+    invokeMock.mockImplementation(() => Promise.reject(new Error("npx exploded")));
+    await refreshAllSummaries({ force: true });
+
+    invokeMock.mockClear();
+    await refreshAllSummaries();
+
+    expect(invokeMock).toHaveBeenCalledWith("list_skills", { projectPath: donCamaron.path });
+  });
+
+  it("keeps at most two list_skills calls in flight", async () => {
+    projects.value = [
+      donCamaron,
+      { ...donCamaron, id: "b", name: "b", path: "/code/b" },
+      { ...donCamaron, id: "c", name: "c", path: "/code/c" },
+    ];
+    let active = 0;
+    let peak = 0;
+    invokeMock.mockImplementation((cmd) => {
+      if (cmd !== "list_skills") return Promise.resolve([]);
+      active += 1;
+      peak = Math.max(peak, active);
+      return new Promise<SkillInfo[]>((resolve) => {
+        setTimeout(() => {
+          active -= 1;
+          resolve([]);
+        }, 1);
+      });
+    });
+
+    await refreshAllSummaries({ force: true });
+
+    expect(peak).toBe(2);
+  });
+
+  it("drops a forgotten project from the cache", async () => {
+    projects.value = [donCamaron];
+    invokeMock.mockImplementation((cmd) =>
+      cmd === "list_skills" ? Promise.resolve([]) : Promise.resolve(),
+    );
+    await refreshAllSummaries({ force: true });
+
+    expect(await forgetProject(donCamaron)).toBe(true);
+    expect(localStorage.getItem("curie.cache.project-summaries")).toBeNull();
   });
 });
 

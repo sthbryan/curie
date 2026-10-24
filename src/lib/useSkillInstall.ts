@@ -28,7 +28,7 @@ export function useSkillInstall(): SkillInstall {
       await invoke<SkillInstallResult>("add_skill", { package: pkg, projectPath });
       toast.success(t(lang.value, "toast.installed", { name: pkg }));
       if (projectPath === activeScopePath.value)
-        await loadSkills(projectPath, { checkUpdates: true });
+        await loadSkills(projectPath, { checkUpdates: true, freshUpdates: true });
     } catch (e) {
       setInstallError(errorMessage(e));
       throw e;

@@ -28,7 +28,7 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
 
   const refresh = async () => {
     await loadSkills(projectPath, { checkUpdates: false });
-    await checkSkillUpdates(projectPath);
+    await checkSkillUpdates(projectPath, { fresh: true });
     const found = updateNames.value.size;
     toast.success(
       found > 0

@@ -17,7 +17,7 @@ export function ProjectsCard() {
   const list = projects.value;
 
   useEffect(() => {
-    refreshAllSummaries();
+    void refreshAllSummaries();
   }, []);
 
   return (

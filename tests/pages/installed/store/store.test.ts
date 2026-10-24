@@ -69,7 +69,7 @@ describe("InstalledActions", () => {
     await update();
 
     expect(invokeMock).toHaveBeenCalledWith("update_skills", { skills: null, projectPath: null });
-    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true, freshUpdates: true });
     expect(updatingSkill.value).toBeNull();
     expect(updateApplyError.value).toBeNull();
   });
@@ -297,7 +297,10 @@ describe("project scope", () => {
 
     await remove(["aws"]);
 
-    expect(loadSkillsMock).toHaveBeenCalledWith(PROJECT, { checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(PROJECT, {
+      checkUpdates: true,
+      freshUpdates: true,
+    });
   });
 
   it("skips the reload when the scope moved while the mutation was in flight", async () => {

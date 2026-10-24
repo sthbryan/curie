@@ -9,8 +9,9 @@ import type {
   SkillUpdateInfo,
 } from "@/components/types";
 import { detectLang } from "@/i18n";
+import { readCache, writeCache } from "@/lib/cache";
 import { errorMessage } from "@/lib/errors";
-import { loadProjects } from "@/lib/projects";
+import { loadProjects, refreshAllSummaries } from "@/lib/projects";
 import { readSettings, resolveSettings, writeSettings } from "@/lib/settings";
 import {
   setSkills,
@@ -19,6 +20,7 @@ import {
   setSkillUpdates,
   setUpdatesError,
   setUpdatesLoading,
+  skillsScope,
 } from "@/store/skills";
 import {
   applySettings,
@@ -69,6 +71,20 @@ export async function installAppUpdate(): Promise<InstallResult | null> {
 
 export const RESTART_DELAY = 1200;
 
+const UPDATES_TTL = 30 * 60_000;
+
+const scopeCacheKey = (prefix: string, projectPath: string | null) =>
+  `${prefix}:${projectPath ?? "global"}`;
+
+const skillsCacheKey = (projectPath: string | null) =>
+  scopeCacheKey("curie.cache.skills", projectPath);
+
+const updatesCacheKey = (projectPath: string | null) =>
+  scopeCacheKey("curie.cache.updates", projectPath);
+
+const isActiveScope = (projectPath: string | null) =>
+  skillsScope.value === (projectPath === null ? "global" : `project:${projectPath}`);
+
 export async function restartApp() {
   try {
     await invoke("restart_app");
@@ -84,17 +100,30 @@ export async function checkSkillUpdates(
   projectPath: string | null = null,
   options?: { fresh?: boolean },
 ) {
-  const token = ++updatesToken;
   const fresh = options?.fresh ?? false;
+  const key = updatesCacheKey(projectPath);
+  const cached = readCache<SkillUpdateInfo[]>(key);
+  const hasCache = Boolean(cached && Array.isArray(cached.value));
+
+  // Stale-while-revalidate: the last result paints immediately, and the
+  // network is only touched when the user asks or the TTL has passed.
+  if (hasCache && cached) {
+    setSkillUpdates(cached.value);
+    if (!fresh && Date.now() - cached.at < UPDATES_TTL) return;
+  }
+
+  const token = ++updatesToken;
   setUpdatesLoading(true);
   setUpdatesError(null);
   try {
     const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates", { projectPath, fresh });
     if (token !== updatesToken) return;
     setSkillUpdates(updates);
+    writeCache(key, updates);
   } catch (e) {
     if (token !== updatesToken) return;
-    setUpdatesError(errorMessage(e));
+    // With a cached list on screen, an offline check is not worth an error card.
+    if (!hasCache) setUpdatesError(errorMessage(e));
   } finally {
     if (token === updatesToken) setUpdatesLoading(false);
   }
@@ -102,18 +131,27 @@ export async function checkSkillUpdates(
 
 export async function loadSkills(
   projectPath: string | null = null,
-  options?: { checkUpdates?: boolean },
+  options?: { checkUpdates?: boolean; freshUpdates?: boolean },
 ) {
   const token = ++loadToken;
   const checkUpdates = options?.checkUpdates ?? true;
+  const key = skillsCacheKey(projectPath);
+  const cached = readCache<SkillInfo[]>(key);
+
+  // Paint the last known list on the first frame, then refresh underneath.
+  if (cached && Array.isArray(cached.value) && isActiveScope(projectPath)) {
+    setSkills(cached.value);
+  }
+
   setSkillsLoading(true);
   setSkillsError(null);
   // The list and the update check are independent round trips.
-  if (checkUpdates) void checkSkillUpdates(projectPath);
+  if (checkUpdates) void checkSkillUpdates(projectPath, { fresh: options?.freshUpdates });
   try {
     const skills = await invoke<SkillInfo[]>("list_skills", { projectPath });
     if (token !== loadToken) return;
     setSkills(skills);
+    writeCache(key, skills);
   } catch (e) {
     if (token !== loadToken) return;
     setSkillsError(errorMessage(e));
@@ -167,7 +205,7 @@ export function useBoot() {
         if (detected.info.installed) {
           // Nothing here waits on anything else: the installed list, its update
           // check and the app update are independent round trips.
-          void loadProjects();
+          void loadProjects().then(() => refreshAllSummaries());
           void loadSkills();
           void checkAppUpdate();
         }

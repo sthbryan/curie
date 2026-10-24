@@ -26,7 +26,7 @@ export function Projects() {
   const list = projects.value;
 
   useEffect(() => {
-    refreshAllSummaries();
+    void refreshAllSummaries();
   }, []);
 
   const handleAdd = async () => {

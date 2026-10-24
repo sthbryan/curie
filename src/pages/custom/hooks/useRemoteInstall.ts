@@ -36,7 +36,7 @@ export function useRemoteInstall(): RemoteInstall {
       projectPath,
     }).then(async (res) => {
       if (projectPath === activeScopePath.value)
-        await loadSkills(projectPath, { checkUpdates: true });
+        await loadSkills(projectPath, { checkUpdates: true, freshUpdates: true });
       return res;
     });
 

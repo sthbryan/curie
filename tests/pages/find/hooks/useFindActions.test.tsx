@@ -205,7 +205,7 @@ describe("useFindActions", () => {
     });
 
     expect(invokeMock).toHaveBeenCalledWith("add_skill", { package: "x", projectPath: null });
-    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true });
+    expect(loadSkillsMock).toHaveBeenCalledWith(null, { checkUpdates: true, freshUpdates: true });
     expect(get().installing).toBeNull();
     unmount();
   });
