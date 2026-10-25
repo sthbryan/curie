@@ -5,12 +5,13 @@ mod custom;
 mod detect;
 mod explore;
 mod find;
+mod install;
 mod list;
 mod lock;
-mod npx;
 mod remove;
 mod scan;
 mod scope;
+mod source;
 mod types;
 mod update;
 

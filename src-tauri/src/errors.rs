@@ -31,7 +31,6 @@ pub mod key {
     pub const SKILL_NAME_REQUIRED: &str = "skillNameRequired";
     pub const SKILL_NAME_INVALID: &str = "skillNameInvalid";
     pub const SKILL_CONTENT_EMPTY: &str = "skillContentEmpty";
-    pub const SKILL_ADD_FAILED: &str = "skillAddFailed";
 
     pub const NOT_MARKDOWN: &str = "notMarkdown";
     pub const NOT_A_FILE: &str = "notAFile";
@@ -83,7 +82,6 @@ mod tests {
             key::SKILL_NAME_REQUIRED,
             key::SKILL_NAME_INVALID,
             key::SKILL_CONTENT_EMPTY,
-            key::SKILL_ADD_FAILED,
             key::NOT_MARKDOWN,
             key::NOT_A_FILE,
             key::FILE_TOO_LARGE,
