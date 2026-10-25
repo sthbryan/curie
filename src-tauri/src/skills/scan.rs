@@ -22,10 +22,18 @@ const SKIP_DIRS: &[&str] = &[
     "__pycache__",
 ];
 
-struct SkillRoot {
-    path: PathBuf,
-    agent: Option<String>,
-    canonical: bool,
+pub(crate) struct SkillRoot {
+    pub(crate) path: PathBuf,
+    pub(crate) agent: Option<String>,
+    pub(crate) canonical: bool,
+    /// Whether the agent itself is present, even when its `skills` folder is not.
+    pub(crate) agent_present: bool,
+}
+
+pub(crate) struct SkillMeta {
+    pub(crate) name: String,
+    pub(crate) description: String,
+    pub(crate) internal: bool,
 }
 
 struct FoundSkill {
@@ -54,9 +62,9 @@ fn scan_at(scope: &Scope, base: &Path, lock: &SkillLockFile) -> Vec<SkillInfo> {
     };
     let mut found: Vec<FoundSkill> = Vec::new();
     let mut indexes: HashMap<String, usize> = HashMap::new();
-    let mut parsed: HashMap<PathBuf, Option<(String, String)>> = HashMap::new();
+    let mut parsed: HashMap<PathBuf, Option<SkillMeta>> = HashMap::new();
 
-    for root in skill_roots(scope, base) {
+    for root in candidate_roots(scope, base) {
         let Ok(entries) = std::fs::read_dir(&root.path) else {
             continue;
         };
@@ -75,10 +83,11 @@ fn scan_at(scope: &Scope, base: &Path, lock: &SkillLockFile) -> Vec<SkillInfo> {
             let identity = std::fs::canonicalize(&skill_dir).unwrap_or_else(|_| skill_dir.clone());
             let metadata = parsed
                 .entry(identity)
-                .or_insert_with(|| parse_skill_md(&skill_md));
-            let Some((name, _description)) = metadata.as_ref() else {
+                .or_insert_with(|| read_skill_meta(&skill_md));
+            let Some(meta) = metadata.as_ref() else {
                 continue;
             };
+            let name = &meta.name;
             if name.is_empty() {
                 continue;
             }
@@ -134,22 +143,31 @@ fn scan_at(scope: &Scope, base: &Path, lock: &SkillLockFile) -> Vec<SkillInfo> {
         .collect()
 }
 
-fn skill_roots(scope: &Scope, base: &Path) -> Vec<SkillRoot> {
+/// Every place this scope could keep skills, including agents that have not
+/// created their `skills` folder yet. Reads use the ones that exist; installs
+/// also link into agents that are present.
+pub(crate) fn candidate_roots(scope: &Scope, base: &Path) -> Vec<SkillRoot> {
     let mut roots: Vec<SkillRoot> = Vec::new();
     let mut seen: HashSet<PathBuf> = HashSet::new();
 
-    let mut push = |path: PathBuf, agent: Option<&str>, canonical: bool| {
-        if !seen.insert(path.clone()) || !path.is_dir() {
+    let mut push = |path: PathBuf, agent: Option<&str>, canonical: bool, agent_present: bool| {
+        if !seen.insert(path.clone()) {
             return;
         }
         roots.push(SkillRoot {
             path,
             agent: agent.map(str::to_string),
             canonical,
+            agent_present,
         });
     };
 
-    push(base.join(".agents").join("skills"), None, true);
+    push(
+        base.join(".agents").join("skills"),
+        None,
+        true,
+        base.join(".agents").is_dir(),
+    );
 
     if let Ok(entries) = std::fs::read_dir(base) {
         for entry in entries.flatten() {
@@ -163,9 +181,9 @@ fn skill_roots(scope: &Scope, base: &Path) -> Vec<SkillRoot> {
                 continue;
             }
             let skills = path.join("skills");
-            if skills.is_dir() {
+            if skills.is_dir() || (name != ".agents" && known_agent(&name)) {
                 let label = (name != ".agents").then(|| agent_label(&name));
-                push(skills, label.as_deref(), false);
+                push(skills, label.as_deref(), false, true);
             }
         }
     }
@@ -181,18 +199,20 @@ fn skill_roots(scope: &Scope, base: &Path) -> Vec<SkillRoot> {
                 let name = entry.file_name().to_string_lossy().to_string();
                 let label = config_label(&name);
                 let skills = path.join("skills");
-                if skills.is_dir() {
-                    push(skills, Some(&label), false);
+                if skills.is_dir() || known_config_dir(&name) {
+                    push(skills, Some(&label), false, true);
                 }
                 let harness = path.join("harness").join("skills");
                 if harness.is_dir() {
-                    push(harness, Some(&label), false);
+                    push(harness, Some(&label), false, true);
                 }
             }
         }
 
         for (path, label) in nested_global_roots(base, &config) {
-            push(path, Some(label), false);
+            if path.parent().map(Path::is_dir).unwrap_or(false) {
+                push(path, Some(label), false, true);
+            }
         }
 
         for (env, label) in [
@@ -204,24 +224,31 @@ fn skill_roots(scope: &Scope, base: &Path) -> Vec<SkillRoot> {
             ("SARVAM_HOME", "Sarvam Code"),
         ] {
             if let Some(dir) = std::env::var_os(env) {
-                push(PathBuf::from(dir).join("skills"), Some(label), false);
+                let dir = PathBuf::from(dir);
+                if dir.is_dir() {
+                    push(dir.join("skills"), Some(label), false, true);
+                }
             }
         }
     } else {
-        push(base.join("data").join("skills"), Some("AstrBot"), false);
-        push(base.join("agent").join("skills"), Some("Eve"), false);
-        push(
-            base.join(".posit").join("assistant").join("skills"),
-            Some("Posit Assistant"),
-            false,
-        );
-        push(
-            base.join(".tabnine").join("agent").join("skills"),
-            Some("Tabnine CLI"),
-            false,
-        );
-        if openclaw_installed() {
-            push(base.join("skills"), Some("OpenClaw"), false);
+        for (path, label) in [
+            (base.join("data").join("skills"), "AstrBot"),
+            (base.join("agent").join("skills"), "Eve"),
+            (
+                base.join(".posit").join("assistant").join("skills"),
+                "Posit Assistant",
+            ),
+            (
+                base.join(".tabnine").join("agent").join("skills"),
+                "Tabnine CLI",
+            ),
+        ] {
+            if path.parent().map(Path::is_dir).unwrap_or(false) {
+                push(path, Some(label), false, true);
+            }
+        }
+        if openclaw_installed() && base.join("skills").is_dir() {
+            push(base.join("skills"), Some("OpenClaw"), false, true);
         }
     }
 
@@ -275,6 +302,79 @@ fn openclaw_installed() -> bool {
     home.join(".openclaw").is_dir()
         || home.join(".clawdbot").is_dir()
         || home.join(".moltbot").is_dir()
+}
+
+const KNOWN_AGENTS: &[&str] = &[
+    "aider-desk",
+    "autohand",
+    "augment",
+    "bob",
+    "claude",
+    "codeartsdoer",
+    "codebuddy",
+    "codemaker",
+    "codestudio",
+    "codex",
+    "commandcode",
+    "continue",
+    "cortex",
+    "crush",
+    "cursor",
+    "devin",
+    "factory",
+    "firebender",
+    "forge",
+    "gemini",
+    "github",
+    "goose",
+    "grok",
+    "hermes",
+    "iflow",
+    "inferencesh",
+    "jazz",
+    "junie",
+    "kilo",
+    "kimchi",
+    "kiro",
+    "kode",
+    "lingma",
+    "mcpjam",
+    "minimax",
+    "moxby",
+    "mux",
+    "neovate",
+    "ona",
+    "openclaw",
+    "clawdbot",
+    "moltbot",
+    "openhands",
+    "pi",
+    "pochi",
+    "qoder",
+    "qwen",
+    "reasonix",
+    "roo",
+    "rovodev",
+    "tabnine",
+    "terramind",
+    "tinycloud",
+    "trae",
+    "vibe",
+    "windsurf",
+    "zcode",
+    "zencoder",
+    "adal",
+];
+
+fn known_agent(name: &str) -> bool {
+    KNOWN_AGENTS.contains(&name.trim_start_matches('.'))
+}
+
+fn known_config_dir(name: &str) -> bool {
+    matches!(
+        name,
+        "agents" | "opencode" | "goose" | "crush" | "devin" | "kimchi"
+    ) || known_agent(name)
 }
 
 fn config_label(dir: &str) -> String {
@@ -368,9 +468,13 @@ fn pretty_name(name: &str) -> String {
         .join(" ")
 }
 
-fn parse_skill_md(path: &Path) -> Option<(String, String)> {
+pub(crate) fn read_skill_meta(path: &Path) -> Option<SkillMeta> {
     let raw = std::fs::read_to_string(path).ok()?;
-    let front = frontmatter(&raw)?;
+    parse_skill_meta(&raw)
+}
+
+fn parse_skill_meta(raw: &str) -> Option<SkillMeta> {
+    let front = frontmatter(raw)?;
     let docs = YamlLoader::load_from_str(front).ok()?;
     let map = docs.first()?.as_hash()?;
     let name = map.get(&Yaml::String("name".to_string()))?.as_str()?.trim();
@@ -381,7 +485,17 @@ fn parse_skill_md(path: &Path) -> Option<(String, String)> {
     if name.is_empty() || description.is_empty() {
         return None;
     }
-    Some((name.to_string(), description.to_string()))
+    let internal = map
+        .get(&Yaml::String("metadata".to_string()))
+        .and_then(Yaml::as_hash)
+        .and_then(|meta| meta.get(&Yaml::String("internal".to_string())))
+        .and_then(Yaml::as_bool)
+        .unwrap_or(false);
+    Some(SkillMeta {
+        name: name.to_string(),
+        description: description.to_string(),
+        internal,
+    })
 }
 
 fn frontmatter(raw: &str) -> Option<&str> {
@@ -411,7 +525,7 @@ fn lock_entry<'a>(lock: &'a SkillLockFile, name: &str) -> Option<&'a SkillLockEn
         .or_else(|| lock.skills.get(&sanitize_name(name)))
 }
 
-fn sanitize_name(name: &str) -> String {
+pub(crate) fn sanitize_name(name: &str) -> String {
     let mut out = String::new();
     for ch in name.chars() {
         let next = if ch.is_ascii_alphanumeric() || ch == '.' || ch == '_' {
@@ -617,11 +731,6 @@ mod tests {
     }
 
     fn parse_skill_md_text(raw: &str) -> Option<(String, String)> {
-        let dir = temp_dir("parse");
-        let path = dir.join(SKILL_FILE);
-        fs::write(&path, raw).expect("write");
-        let parsed = parse_skill_md(&path);
-        let _ = fs::remove_dir_all(&dir);
-        parsed
+        parse_skill_meta(raw).map(|meta| (meta.name, meta.description))
     }
 }

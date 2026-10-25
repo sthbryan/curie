@@ -29,4 +29,5 @@ yaml-rust2 = { version = "0.13", default-features = false }
 sys-locale = "0.3"
 dirs = "7"
 ureq = { version = "3", features = ["json"] }
+sha2 = "0.10"
 tauri-plugin-dialog = "2"

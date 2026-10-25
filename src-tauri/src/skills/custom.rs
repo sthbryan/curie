@@ -1,7 +1,7 @@
-use crate::errors::{coded, coded_with, key};
-use super::npx::run_skills_command;
 use super::scope::Scope;
+use super::source::Source;
 use super::types::CustomSkillInstallResult;
+use crate::errors::{coded, coded_with, key};
 use std::fs;
 use std::path::Path;
 
@@ -33,30 +33,7 @@ pub fn install_custom_skill_in(
     fs::write(&file, content).map_err(|_| coded_with(key::WRITE_FAILED, file.display()))?;
 
     let base_string = base.to_string_lossy().to_string();
-    let mut args: Vec<&str> = vec!["add", &base_string];
-    if let Some(flag) = scope.flag() {
-        args.push(flag);
-    }
-    args.push("-y");
-    let outcome = run_skills_command(&args, scope);
-
-    let failure = match outcome {
-        Ok(output) if output.status.success() => None,
-        Ok(output) => {
-            let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
-            let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
-            Some(if !stderr.is_empty() {
-                stderr
-            } else if !stdout.is_empty() {
-                stdout
-            } else {
-                coded_with(key::SKILL_ADD_FAILED, output.status)
-            })
-        }
-        Err(e) => Some(e),
-    };
-
-    if let Some(reason) = failure {
+    if let Err(reason) = super::add::install_source(scope, &Source::Local(base.clone()), None) {
         roll_back(existed, previous.as_deref(), &base, &file);
         return Err(reason);
     }
@@ -107,8 +84,7 @@ pub fn read_markdown_in(path: &Path) -> Result<String, String> {
         return Err(coded_with(key::NOT_MARKDOWN, path.display()));
     }
 
-    let meta =
-        fs::metadata(path).map_err(|_| coded_with(key::READ_FAILED, path.display()))?;
+    let meta = fs::metadata(path).map_err(|_| coded_with(key::READ_FAILED, path.display()))?;
     if !meta.is_file() {
         return Err(coded_with(key::NOT_A_FILE, path.display()));
     }

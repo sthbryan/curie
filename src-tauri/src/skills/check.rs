@@ -65,7 +65,7 @@ fn encode_path_segment(segment: &str) -> String {
     out
 }
 
-fn fetch_github_tree(
+pub(crate) fn fetch_github_tree(
     owner_repo: &str,
     r#ref: Option<&str>,
     fresh: bool,

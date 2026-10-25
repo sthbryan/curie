@@ -47,7 +47,7 @@ function persistSummaries() {
   const byId: SummaryCache = {};
   for (const project of projects.value) {
     const summary = projectSummaries.value[project.id];
-    // Cache a missing folder, but retry a transient npx failure next time.
+    // Cache a missing folder, but retry a transient scan failure next time.
     if (summary && (!summary.error || summary.missing)) {
       byId[project.id] = { path: project.path, summary };
     }
