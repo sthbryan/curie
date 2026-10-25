@@ -2,6 +2,7 @@
   "name": "curie",
   "private": true,
   "version": "0.8.0",
+  "license": "PolyForm-Perimeter-1.0.0",
   "packageManager": "bun@1.4.4",
   "type": "module",
   "scripts": {
