@@ -112,5 +112,5 @@ Curie works with the real skills ecosystem on your computer. It doesn’t invent
 ---
 
 <p align="center">
-  <sub>MIT License · Made for people who ship with AI agents</sub>
+  <sub><a href="./LICENSE">PolyForm Perimeter License 1.0.0</a> · Made for people who ship with AI agents</sub>
 </p>
