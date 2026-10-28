@@ -12,7 +12,7 @@ const { readSettings, resolveSettings, writeSettings } = await import("@/lib/set
 
 const stored: Settings = {
   version: 1,
-  theme: "nord",
+  theme: "asterism",
   lang: "es",
   reducedMotion: "always",
   hasBooted: true,
@@ -53,7 +53,7 @@ describe("writeSettings", () => {
 describe("resolveSettings", () => {
   it("prefers the values from the file", () => {
     expect(resolveSettings(stored, cached)).toEqual({
-      theme: "nord",
+      theme: "asterism",
       lang: "es",
       reducedMotion: "always",
       hasBooted: true,

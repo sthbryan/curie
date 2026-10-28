@@ -98,7 +98,7 @@ export function StatusBar() {
               />
             ))}
           </span>
-          {t(`settings.theme${activeTheme.id.charAt(0).toUpperCase()}${activeTheme.id.slice(1)}`)}
+          {activeTheme.label}
         </button>
 
         <button

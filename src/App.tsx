@@ -29,7 +29,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme.value);
+    document.documentElement.setAttribute("data-sephiro-theme", theme.value);
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- reading .value is how signals re-run the effect
   }, [theme.value]);
 

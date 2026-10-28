@@ -69,9 +69,9 @@ describe("ThemeCard", () => {
   it("previews the theme with its own colours", () => {
     mount(
       <ThemeCard
-        id="nord"
+        id="asterism"
         active={false}
-        label="Nord"
+        label="Asterism"
         hint="arctic"
         swatches={["#2e3440", "#eceff4", "#88c0d0"]}
         onClick={vi.fn()}

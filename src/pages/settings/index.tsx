@@ -8,12 +8,7 @@ import "@zovaris/sephiro/css/segmented-control.css";
 import { Button } from "@/components/Button";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
-import {
-  REDUCED_MOTION_OPTIONS,
-  type ReducedMotionPref,
-  THEME_OPTIONS,
-  type ThemeMode,
-} from "@/components/types";
+import { REDUCED_MOTION_OPTIONS, type ReducedMotionPref, THEME_OPTIONS } from "@/components/types";
 import { useT } from "@/i18n";
 import { APP_NAME } from "@/lib/meta";
 import { systemStore } from "@/store/system";
@@ -22,17 +17,6 @@ import { Row } from "./components/Row";
 import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
 import { UpdateSection } from "./components/UpdateSection";
-
-const THEME_LABEL: Record<ThemeMode, { label: string; hint: string }> = {
-  dark: { label: "themeDark", hint: "themeDarkHint" },
-  rose: { label: "themeRose", hint: "themeRoseHint" },
-  nord: { label: "themeNord", hint: "themeNordHint" },
-  ember: { label: "themeEmber", hint: "themeEmberHint" },
-  light: { label: "themeLight", hint: "themeLightHint" },
-  dawn: { label: "themeDawn", hint: "themeDawnHint" },
-  snow: { label: "themeSnow", hint: "themeSnowHint" },
-  sand: { label: "themeSand", hint: "themeSandHint" },
-};
 
 const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
   user: "reducedMotionSystem",
@@ -98,8 +82,8 @@ export function Settings() {
                       key={opt.id}
                       id={opt.id}
                       active={theme.value === opt.id}
-                      label={t(THEME_LABEL[opt.id].label)}
-                      hint={t(THEME_LABEL[opt.id].hint)}
+                      label={opt.label}
+                      hint={opt.mode.toUpperCase()}
                       swatches={opt.swatches}
                       onClick={handlePickTheme}
                     />

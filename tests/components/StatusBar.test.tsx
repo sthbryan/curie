@@ -83,7 +83,7 @@ describe("StatusBar", () => {
       button.click();
     });
 
-    expect(theme.value).toBe("rose");
+    expect(theme.value).toBe("default");
   });
 
   it("toggles the language from the status bar", () => {

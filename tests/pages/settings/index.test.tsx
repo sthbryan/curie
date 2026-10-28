@@ -99,33 +99,36 @@ describe("Settings", () => {
 
   it("switches the theme when a ThemeCard is clicked", () => {
     render(<Settings />);
-    const rose = container?.querySelector('[data-theme-option="rose"]') as HTMLButtonElement | null;
+    const fizza = container?.querySelector(
+      '[data-theme-option="fizza"]',
+    ) as HTMLButtonElement | null;
     act(() => {
-      rose?.click();
+      fizza?.click();
     });
-    expect(theme.value).toBe("rose");
+    expect(theme.value).toBe("fizza");
   });
 
-  it("offers every theme, darks before lights", () => {
+  it("offers every Sephiro theme in catalog order", () => {
     render(<Settings />);
     const cards = container?.querySelectorAll("[data-theme-option]");
-    expect(cards?.length).toBe(8);
+    expect(cards?.length).toBe(7);
     expect([...(cards ?? [])].map((c) => c.getAttribute("data-theme-option"))).toEqual([
-      "dark",
-      "rose",
-      "nord",
-      "ember",
+      "curie",
       "light",
-      "dawn",
-      "snow",
-      "sand",
+      "asterism",
+      "fizza",
+      "pulso",
+      "dark",
+      "default",
     ]);
 
-    const nord = container?.querySelector('[data-theme-option="nord"]') as HTMLButtonElement | null;
+    const asterism = container?.querySelector(
+      '[data-theme-option="asterism"]',
+    ) as HTMLButtonElement | null;
     act(() => {
-      nord?.click();
+      asterism?.click();
     });
-    expect(theme.value).toBe("nord");
+    expect(theme.value).toBe("asterism");
   });
 
   it("shows the system info block when node is installed", () => {

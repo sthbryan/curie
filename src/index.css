@@ -1,26 +1,29 @@
 @import "tailwindcss";
+/* Sephiro owns the palettes. Curie picks one with `data-sephiro-theme` on
+   <html> and reads it through the token map below. */
+@import "@zovaris/sephiro/themes.css";
 
 @theme {
-  --color-bg: #0a0a0a;
-  --color-surface: #131313;
-  --color-surface-hover: #1c1c1c;
-  --color-surface-tint: #181818;
-  --color-border: #262626;
-  --color-border-strong: #3a3a3a;
-  --color-fg: #f5f5f3;
-  --color-fg-2: #c4c4c0;
-  --color-fg-3: #8a8a87;
-  --color-fg-4: #52524d;
-  --color-accent: #d71921;
-  --color-accent-fg: #ffffff;
-  --color-success: #84a07c;
-  --color-success-fg: #0a0a0a;
-  --color-error: #c25c4f;
-  --color-error-fg: #0a0a0a;
-  --color-warning: #d4a84a;
-  --color-warning-fg: #0a0a0a;
-  --color-info: #6b95b8;
-  --color-info-fg: #0a0a0a;
+  --color-bg: var(--sph-bg);
+  --color-surface: var(--sph-surface);
+  --color-surface-hover: var(--sph-raised);
+  --color-surface-tint: var(--sph-surface-elevated);
+  --color-border: var(--sph-border);
+  --color-border-strong: var(--sph-border-strong);
+  --color-fg: var(--sph-text);
+  --color-fg-2: var(--sph-text-muted);
+  /* Sephiro ships two text levels; Curie's two dimmer ones are derived from
+     them so they stay legible on both the dark and the light palettes. */
+  --color-fg-3: color-mix(in oklab, var(--sph-text) 62%, var(--sph-bg));
+  --color-fg-4: color-mix(in oklab, var(--sph-text) 38%, var(--sph-bg));
+  --color-accent: var(--sph-accent);
+  --color-accent-fg: var(--sph-on-accent);
+  --color-success: var(--sph-success);
+  --color-error: var(--sph-danger);
+  --color-warning: var(--sph-warning);
+  /* No info token in the toolkit: mixed toward the text colour so it keeps its
+     contrast whichever palette is on. */
+  --color-info: color-mix(in oklab, #6b95b8 75%, var(--sph-text));
 
   --font-display: "Doto", ui-monospace, monospace;
   /* Curie speaks mono outside headings, so the body token is the mono stack:
@@ -47,37 +50,10 @@
   --animate-bar-grow: bar-grow 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Sephiro token contract. Curie's palette stays the source of truth: each --sph-*
-   points at a Curie token, so an app theme change reaches the components too.
-   Sephiro components read most values with bare var(--sph-*), so this block has
-   to be complete before a component is rendered. */
+/* The palette comes from Sephiro's theme; this block only pins what makes
+   Curie Curie: its fonts, its square corners and its motion. It has to stay
+   after the theme import — same specificity, so source order decides. */
 :root {
-  --sph-bg: var(--color-bg);
-  --sph-surface: var(--color-surface);
-  --sph-surface-elevated: var(--color-surface-tint);
-  --sph-raised: var(--color-surface-hover);
-  --sph-border: var(--color-border);
-  --sph-border-strong: var(--color-border-strong);
-  --sph-text: var(--color-fg);
-  --sph-text-muted: var(--color-fg-2);
-
-  --sph-accent: var(--color-accent);
-  --sph-accent-hover: color-mix(in srgb, var(--color-accent) 85%, var(--color-fg));
-  --sph-accent-pressed: color-mix(in srgb, var(--color-accent) 72%, var(--color-fg));
-  --sph-accent-strong: color-mix(in srgb, var(--color-accent) 72%, var(--color-fg));
-  --sph-accent-soft: color-mix(in srgb, var(--color-accent) 15%, transparent);
-  --sph-on-accent: var(--color-accent-fg);
-
-  --sph-success: var(--color-success);
-  --sph-success-soft: color-mix(in srgb, var(--color-success) 15%, transparent);
-  --sph-warning: var(--color-warning);
-  --sph-warning-soft: color-mix(in srgb, var(--color-warning) 15%, transparent);
-  --sph-danger: var(--color-error);
-  --sph-danger-soft: color-mix(in srgb, var(--color-error) 15%, transparent);
-
-  --sph-focus: var(--color-accent);
-  --sph-focus-ring: color-mix(in srgb, var(--color-accent) 24%, transparent);
-
   --sph-font-sans: var(--font-body);
   --sph-font-mono: var(--font-mono);
 
@@ -210,167 +186,6 @@
   :root:not([data-reduced-motion="never"])::view-transition-new(root) {
     animation: none;
   }
-}
-
-:root[data-theme="light"] {
-  --color-bg: #fafaf8;
-  --color-surface: #f0eee8;
-  --color-surface-hover: #e6e3dc;
-  --color-surface-tint: #ebe9e2;
-  --color-border: #d4d0c5;
-  --color-border-strong: #b8b4a9;
-  --color-fg: #18181b;
-  --color-fg-2: #3f3f46;
-  --color-fg-3: #71717a;
-  --color-fg-4: #a1a1aa;
-  --color-accent: #c2151c;
-  --color-accent-fg: #fafaf8;
-  --color-success: #5a7a52;
-  --color-success-fg: #fafaf8;
-  --color-error: #a8443a;
-  --color-error-fg: #fafaf8;
-  --color-warning: #a88030;
-  --color-warning-fg: #fafaf8;
-  --color-info: #4a738f;
-  --color-info-fg: #fafaf8;
-}
-
-:root[data-theme="rose"] {
-  --color-bg: #191724;
-  --color-surface: #1f1d2e;
-  --color-surface-hover: #26233a;
-  --color-surface-tint: #21202e;
-  --color-border: #26233a;
-  --color-border-strong: #403d52;
-  --color-fg: #e0def4;
-  --color-fg-2: #908caa;
-  --color-fg-3: #6e6a86;
-  --color-fg-4: #524f67;
-  --color-accent: #eb6f92;
-  --color-accent-fg: #191724;
-  --color-success: #9ccfd8;
-  --color-success-fg: #191724;
-  --color-error: #eb6f92;
-  --color-error-fg: #191724;
-  --color-warning: #f6c177;
-  --color-warning-fg: #191724;
-  --color-info: #7fb5d6;
-  --color-info-fg: #191724;
-}
-
-:root[data-theme="dawn"] {
-  --color-bg: #faf4ed;
-  --color-surface: #fffaf3;
-  --color-surface-hover: #f2e9e1;
-  --color-surface-tint: #f4ede8;
-  --color-border: #dfdad9;
-  --color-border-strong: #cecacd;
-  --color-fg: #575279;
-  --color-fg-2: #797593;
-  --color-fg-3: #9893a5;
-  --color-fg-4: #b0adc0;
-  --color-accent: #b4637a;
-  --color-accent-fg: #faf4ed;
-  --color-success: #56949f;
-  --color-success-fg: #faf4ed;
-  --color-error: #b4637a;
-  --color-error-fg: #faf4ed;
-  --color-warning: #ea9d34;
-  --color-warning-fg: #faf4ed;
-  --color-info: #286983;
-  --color-info-fg: #faf4ed;
-}
-
-:root[data-theme="nord"] {
-  --color-bg: #2e3440;
-  --color-surface: #333a47;
-  --color-surface-hover: #3b4252;
-  --color-surface-tint: #373e4c;
-  --color-border: #3b4252;
-  --color-border-strong: #4c566a;
-  --color-fg: #eceff4;
-  --color-fg-2: #d8dee9;
-  --color-fg-3: #97a1b4;
-  --color-fg-4: #7b8497;
-  --color-accent: #88c0d0;
-  --color-accent-fg: #2e3440;
-  --color-success: #a3be8c;
-  --color-success-fg: #2e3440;
-  --color-error: #bf616a;
-  --color-error-fg: #2e3440;
-  --color-warning: #ebcb8b;
-  --color-warning-fg: #2e3440;
-  --color-info: #81a1c1;
-  --color-info-fg: #2e3440;
-}
-
-:root[data-theme="snow"] {
-  --color-bg: #eceff4;
-  --color-surface: #e5e9f0;
-  --color-surface-hover: #dbe1ea;
-  --color-surface-tint: #e0e6ee;
-  --color-border: #d8dee9;
-  --color-border-strong: #c2cad8;
-  --color-fg: #2e3440;
-  --color-fg-2: #3b4252;
-  --color-fg-3: #5c6779;
-  --color-fg-4: #808b9d;
-  --color-accent: #456590;
-  --color-accent-fg: #eceff4;
-  --color-success: #5f7d4f;
-  --color-success-fg: #eceff4;
-  --color-error: #a54b55;
-  --color-error-fg: #eceff4;
-  --color-warning: #8a6720;
-  --color-warning-fg: #eceff4;
-  --color-info: #456590;
-  --color-info-fg: #eceff4;
-}
-
-:root[data-theme="ember"] {
-  --color-bg: #282828;
-  --color-surface: #32302f;
-  --color-surface-hover: #3c3836;
-  --color-surface-tint: #383432;
-  --color-border: #3c3836;
-  --color-border-strong: #504945;
-  --color-fg: #fbf1c7;
-  --color-fg-2: #ebdbb2;
-  --color-fg-3: #bdae93;
-  --color-fg-4: #928374;
-  --color-accent: #fe8019;
-  --color-accent-fg: #282828;
-  --color-success: #b8bb26;
-  --color-success-fg: #282828;
-  --color-error: #fb4934;
-  --color-error-fg: #282828;
-  --color-warning: #fabd2f;
-  --color-warning-fg: #282828;
-  --color-info: #83a598;
-  --color-info-fg: #282828;
-}
-
-:root[data-theme="sand"] {
-  --color-bg: #fbf1c7;
-  --color-surface: #f2e5bc;
-  --color-surface-hover: #ebdbb2;
-  --color-surface-tint: #f0e3ba;
-  --color-border: #e3d5ab;
-  --color-border-strong: #d5c4a1;
-  --color-fg: #3c3836;
-  --color-fg-2: #504945;
-  --color-fg-3: #6f6459;
-  --color-fg-4: #97897b;
-  --color-accent: #af3a03;
-  --color-accent-fg: #fbf1c7;
-  --color-success: #79740e;
-  --color-success-fg: #fbf1c7;
-  --color-error: #9d0006;
-  --color-error-fg: #fbf1c7;
-  --color-warning: #96610f;
-  --color-warning-fg: #fbf1c7;
-  --color-info: #076678;
-  --color-info-fg: #fbf1c7;
 }
 
 @layer base {
