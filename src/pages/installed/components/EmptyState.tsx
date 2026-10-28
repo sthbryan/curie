@@ -1,4 +1,7 @@
 import { Button } from "@zovaris/sephiro/button";
+import { EmptyState as UiEmptyState } from "@zovaris/sephiro/empty-state";
+
+import "@zovaris/sephiro/css/empty-state.css";
 
 import { useT } from "@/i18n";
 import { useRoute } from "@/lib/routes";
@@ -10,13 +13,15 @@ export function EmptyState() {
   const { go } = useRoute();
 
   return (
-    <div className="flex flex-col items-start gap-4 border border-border-strong bg-surface-tint px-5 py-8">
-      <span className="font-body text-sm text-fg">{t("empty")}</span>
-      <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
-      <Button size="lg" variant="primary" onClick={() => go("find")}>
-        {t("install")}
-      </Button>
-    </div>
+    <UiEmptyState
+      title={t("empty")}
+      description={t("emptyHint")}
+      action={
+        <Button size="lg" variant="primary" onClick={() => go("find")}>
+          {t("install")}
+        </Button>
+      }
+    />
   );
 }
 
@@ -24,11 +29,14 @@ export function NoMatches() {
   const t = useT("installed");
 
   return (
-    <div className="flex flex-col items-start gap-4 border-t border-border py-8">
-      <p className="font-body text-sm text-fg-3">{t("noMatches")}</p>
-      <Button size="sm" variant="secondary" onClick={clearFilters}>
-        {t("clearFilters")}
-      </Button>
-    </div>
+    <UiEmptyState
+      compact
+      title={t("noMatches")}
+      action={
+        <Button size="sm" variant="secondary" onClick={clearFilters}>
+          {t("clearFilters")}
+        </Button>
+      }
+    />
   );
 }

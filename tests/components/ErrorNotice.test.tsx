@@ -43,6 +43,7 @@ describe("ErrorNotice", () => {
     mount(<ErrorNotice title="Search failed" message="offline" onDismiss={() => {}} />);
     const alert = container?.querySelector('[role="alert"]');
     expect(alert).not.toBeNull();
+    expect(alert?.className).toContain("sph-notice");
     expect(alert?.textContent).toContain("Search failed");
     expect(alert?.textContent).toContain("offline");
   });
@@ -63,7 +64,7 @@ describe("ErrorNotice", () => {
     const retry = Array.from(container?.querySelectorAll("button") ?? []).find((b) =>
       b.textContent?.includes("RETRY"),
     );
-    const dismiss = container?.querySelector('button[aria-label="Dismiss"]') as HTMLButtonElement;
+    const dismiss = container?.querySelector(".sph-notice__dismiss") as HTMLButtonElement;
 
     act(() => {
       retry?.click();

@@ -1,6 +1,7 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Button } from "@zovaris/sephiro/button";
-import { Download, RotateCcw, SquareArrowOutUpRight, TriangleAlert } from "lucide-react";
+import { Notice } from "@zovaris/sephiro/notice";
+import { Download, RotateCcw, SquareArrowOutUpRight } from "lucide-react";
 import { Case, Default, Switch } from "react-if";
 import { toast } from "sonner";
 
@@ -76,23 +77,13 @@ export function UpdateSection() {
       <div aria-live="polite">
         <Switch>
           <Case condition={error !== null}>
-            <div className="flex flex-col gap-2 border border-border-strong border-l-2 border-l-error bg-surface-tint px-5 py-4">
-              <span className="flex items-center gap-2 font-mono uppercase tracking-label text-micro text-error">
-                <TriangleAlert size={12} />
-                {t("updateFailed")}
-              </span>
-              <span className="font-body text-sm text-fg-3">{error}</span>
-            </div>
+            <Notice variant="danger" title={t("updateFailed")}>
+              {error}
+            </Notice>
           </Case>
 
           <Case condition={info?.updateAvailable === true}>
-            <div className="flex flex-col gap-3 border border-border-strong border-l-2 border-l-accent bg-surface-tint px-5 py-4">
-              <div className="flex items-baseline gap-2">
-                <span className="font-mono uppercase tracking-label text-micro text-accent">
-                  {t("updateAvailable")}
-                </span>
-                <span className="font-body text-sm text-fg">v{info?.latestVersion}</span>
-              </div>
+            <Notice variant="info" title={`${t("updateAvailable")} v${info?.latestVersion}`}>
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
@@ -108,7 +99,7 @@ export function UpdateSection() {
                   <SquareArrowOutUpRight size={10} strokeWidth={1.5} />
                 </Button>
               </div>
-            </div>
+            </Notice>
           </Case>
 
           <Case condition={info !== null}>

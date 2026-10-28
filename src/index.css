@@ -4,6 +4,9 @@
 @import "@zovaris/sephiro/themes.css";
 @import "@zovaris/sephiro/css/button.css";
 @import "@zovaris/sephiro/css/icon-button.css";
+@import "@zovaris/sephiro/css/notice.css";
+@import "@zovaris/sephiro/css/spinner.css";
+@import "@zovaris/sephiro/css/segmented-control.css";
 
 @theme {
   --color-bg: var(--sph-bg);
@@ -54,8 +57,12 @@
 
 /* The palette comes from Sephiro's theme; this block only pins what makes
    Curie Curie: its fonts, its square corners and its motion. It has to stay
-   after the theme import — same specificity, so source order decides. */
-:root {
+   after the theme import — same specificity, so source order decides.
+   The second selector matters on portals: Sephiro copies `data-sephiro-theme`
+   onto a dialog's backdrop, which would otherwise bring back its own radii and
+   sans stack inside the overlay. */
+:root,
+[data-sephiro-theme] {
   --sph-font-sans: var(--font-body);
   --sph-font-mono: var(--font-mono);
 
@@ -88,6 +95,13 @@
 
 /* Same story for the toast: `css/toast.css` pins 16px on the box. */
 [data-sonner-toast].sph-toast.sph-toast {
+  border-radius: 0;
+}
+
+/* And for the stepper: its markers and connector are pills in the package. */
+.sph-stepper__marker.sph-stepper__marker,
+.sph-stepper__marker.sph-stepper__marker::before,
+.sph-stepper__connector.sph-stepper__connector {
   border-radius: 0;
 }
 
@@ -156,27 +170,6 @@
 
 ::view-transition-new(root) {
   animation: anim-vt-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes anim-overlay {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes anim-dialog {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.96);
-  }
-}
-
-[data-anim="overlay"] {
-  animation: anim-overlay 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-[data-anim="dialog"] {
-  animation: anim-dialog 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 :root[data-reduced-motion="always"] {

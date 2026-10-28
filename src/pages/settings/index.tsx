@@ -1,10 +1,12 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Button } from "@zovaris/sephiro/button";
+import { MetadataList } from "@zovaris/sephiro/metadata-list";
+import { Notice } from "@zovaris/sephiro/notice";
 import { SegmentedControl } from "@zovaris/sephiro/segmented-control";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Else, If, Then } from "react-if";
 
-import "@zovaris/sephiro/css/segmented-control.css";
+import "@zovaris/sephiro/css/metadata-list.css";
 
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
@@ -14,7 +16,6 @@ import { APP_NAME } from "@/lib/meta";
 import { systemStore } from "@/store/system";
 
 import { Row } from "./components/Row";
-import { SystemRow } from "./components/SystemRow";
 import { ThemeCard } from "./components/ThemeCard";
 import { UpdateSection } from "./components/UpdateSection";
 
@@ -122,20 +123,23 @@ export function Settings() {
 
           <If condition={Boolean(node.value?.installed)}>
             <Then>
-              <div className="flex flex-col">
-                <SystemRow
-                  label={t("nodeVersion")}
-                  value={node.value?.version?.replace(/^v/, "") ?? "—"}
-                />
-                <SystemRow label={t("nodeManager")} value={node.value?.manager ?? "—"} />
-                <SystemRow label={t("nodePath")} value={node.value?.path ?? "—"} />
-              </div>
+              <MetadataList
+                layout="columns"
+                dividers
+                items={[
+                  {
+                    label: t("nodeVersion"),
+                    value: node.value?.version?.replace(/^v/, ""),
+                  },
+                  { label: t("nodeManager"), value: node.value?.manager },
+                  { label: t("nodePath"), value: node.value?.path },
+                ]}
+              />
             </Then>
             <Else>
-              <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4">
-                <span className="font-body text-sm text-fg">{t("nodeMissing")}</span>
+              <Notice variant="warning" title={t("nodeMissing")}>
                 <Label>{t("goToSetup")}</Label>
-              </div>
+              </Notice>
             </Else>
           </If>
         </section>

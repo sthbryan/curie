@@ -124,7 +124,7 @@ describe("Installed", () => {
     const el = mount(<Installed />);
     click(el.querySelector('button[aria-label="REMOVE"]'));
 
-    const dialog = document.body.querySelector("[role=alertdialog]");
+    const dialog = document.body.querySelector("[role=dialog]");
     expect(dialog?.textContent).toContain("impeccable");
     expect(invokeMock).not.toHaveBeenCalled();
 
@@ -146,7 +146,7 @@ describe("Installed", () => {
     const el = mount(<Installed />);
     click(buttonWith(el, "REMOVE ALL"));
 
-    const dialog = document.body.querySelector("[role=alertdialog]");
+    const dialog = document.body.querySelector("[role=dialog]");
     expect(dialog?.textContent).toContain("There is no undo");
     const confirm = Array.from(dialog?.querySelectorAll("button") ?? []).find(
       (b) => b.textContent === "REMOVE ALL",

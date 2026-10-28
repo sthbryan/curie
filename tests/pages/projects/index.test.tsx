@@ -121,7 +121,7 @@ describe("Projects", () => {
     expect(document.body.textContent).toContain("Forget project");
     expect(document.body.textContent).toContain("stay exactly where they are on disk");
 
-    const dialog = document.querySelector<HTMLElement>('[role="alertdialog"]');
+    const dialog = document.querySelector<HTMLElement>('[role="dialog"]');
     click(buttonWith(dialog as HTMLElement, "FORGET"));
     await Promise.resolve();
 
@@ -133,7 +133,7 @@ describe("Projects", () => {
     const el = mount(<Projects />);
 
     click(buttonLabelled(el, "Forget don_camaron"));
-    const dialog = document.querySelector<HTMLElement>('[role="alertdialog"]');
+    const dialog = document.querySelector<HTMLElement>('[role="dialog"]');
     click(buttonWith(dialog as HTMLElement, "CANCEL"));
 
     expect(forgetProjectMock).not.toHaveBeenCalled();

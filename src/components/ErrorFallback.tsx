@@ -1,4 +1,5 @@
 import { Button } from "@zovaris/sephiro/button";
+import { Notice } from "@zovaris/sephiro/notice";
 import { House, RefreshCcw } from "lucide-react";
 import { When } from "react-if";
 
@@ -41,12 +42,11 @@ export function ErrorFallback({ error, reset, variant = "page", onHome }: Props)
       </span>
       <Heading>{t(lang, "error.title")}</Heading>
       <p className="font-body text-sm text-fg-3">{t(lang, "error.subtitle")}</p>
-      <p
-        className="w-full border border-border-strong bg-surface-tint px-3 py-2 font-mono text-micro text-fg-3 break-all text-left"
-        title={message}
-      >
-        {message}
-      </p>
+      <Notice variant="danger" className="w-full">
+        <p className="break-all text-left" title={message}>
+          {message}
+        </p>
+      </Notice>
       <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
         <Button size="md" variant="primary" onClick={reset}>
           <RefreshCcw size={14} />

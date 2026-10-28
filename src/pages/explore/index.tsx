@@ -1,11 +1,11 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Button } from "@zovaris/sephiro/button";
+import { SegmentedControl } from "@zovaris/sephiro/segmented-control";
 import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { When } from "react-if";
 import { toast } from "sonner";
 
-import { ChoiceButton } from "@/components/ChoiceButton";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
@@ -141,21 +141,16 @@ export function Explore() {
           {...fadeUp(0.05)}
           className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border pb-4"
         >
-          <div className="flex">
-            {VIEWS.map((v) => {
-              const handlePickView = () => {
-                setView(v);
-              };
-              return (
-                <ChoiceButton
-                  key={v}
-                  active={view === v}
-                  label={t(`view.${v === "all-time" ? "allTime" : v}`)}
-                  onClick={handlePickView}
-                />
-              );
-            })}
-          </div>
+          <SegmentedControl
+            ariaLabel={t("viewLabel")}
+            size="sm"
+            value={view}
+            options={VIEWS.map((v) => ({
+              value: v,
+              label: t(`view.${v === "all-time" ? "allTime" : v}`),
+            }))}
+            onValueChange={(next) => setView(next as ExploreView)}
+          />
 
           <div className="flex items-center gap-4">
             <span

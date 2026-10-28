@@ -51,6 +51,7 @@ export type Messages = {
     updateInstallFailed: string;
   };
   nav: {
+    primary: string;
     home: string;
     skills: string;
     explore: string;
@@ -261,6 +262,7 @@ export type Messages = {
     eyebrow: string;
     title: string;
     subtitle: string;
+    viewLabel: string;
     view: {
       hot: string;
       trending: string;

@@ -1,3 +1,4 @@
+import { Sidebar as UiSidebar } from "@zovaris/sephiro/sidebar";
 import type { LucideIcon } from "lucide-react";
 import {
   Compass,
@@ -8,16 +9,12 @@ import {
   Search,
   Settings as SettingsIcon,
 } from "lucide-react";
-import type { FocusEvent } from "react";
-import { useState } from "react";
+
+import "@zovaris/sephiro/css/sidebar.css";
 
 import { useT } from "@/i18n";
-import { cn } from "@/lib/cn";
-import { useReducedMotion } from "@/lib/motion";
 import type { Section } from "@/lib/routes";
 import { useRoute } from "@/lib/routes";
-
-import { NavItem } from "./NavItem";
 
 type NavKey = "home" | "skills" | "explore" | "find" | "custom" | "projects";
 
@@ -30,74 +27,48 @@ const TOP_ITEMS: { section: Section; key: NavKey; num: string; icon: LucideIcon 
   { section: "projects", key: "projects", num: "06", icon: FolderGit2 },
 ];
 
-export const RAIL_WIDTH = 50;
-const PANEL_WIDTH = 172;
+const RAIL_WIDTH = 56;
 
 export function Sidebar() {
   const t = useT();
   const { section, go } = useRoute();
-  const [open, setOpen] = useState(false);
 
-  const shouldReduceMotion = useReducedMotion();
+  const label = (num: string, text: string) => (
+    <span className="flex items-baseline gap-2 font-mono uppercase tracking-label text-micro">
+      <span className="text-fg-4">{num}</span>
+      <span>{text}</span>
+    </span>
+  );
 
-  const handleNavSettings = () => go("settings", null);
-
-  const handleHoverStart = () => setOpen(true);
-  const handleHoverEnd = () => setOpen(false);
-
-  const handleBlur = (event: FocusEvent<HTMLElement>) => {
-    const next = event.relatedTarget as Node | null;
-    if (next && event.currentTarget.contains(next)) return;
-    setOpen(false);
-  };
+  const icon = (Icon: LucideIcon) => <Icon size={16} strokeWidth={1.5} />;
 
   return (
     <div className="relative z-30 shrink-0" style={{ width: RAIL_WIDTH }}>
-      <nav
-        style={{ width: open ? PANEL_WIDTH : RAIL_WIDTH }}
-        onMouseEnter={handleHoverStart}
-        onMouseLeave={handleHoverEnd}
-        onFocus={handleHoverStart}
-        onBlur={handleBlur}
-        className={cn(
-          "absolute inset-y-0 left-0 flex flex-col overflow-hidden border-r border-border bg-surface",
-          !shouldReduceMotion &&
-            "transition-[width] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-          open && "shadow-2xl",
-        )}
-      >
-        <div className="flex flex-col gap-0.5 px-2 pt-4 pb-2">
-          {TOP_ITEMS.map((item) => {
-            const handleNavItem = () => {
-              go(item.section);
-            };
-            return (
-              <NavItem
-                key={item.section}
-                number={item.num}
-                label={t(`nav.${item.key}`)}
-                icon={item.icon}
-                active={section === item.section}
-                expanded={open}
-                onClick={handleNavItem}
-              />
-            );
-          })}
-        </div>
-
-        <div className="flex-1" />
-
-        <div className="border-t border-border px-2 py-3">
-          <NavItem
-            number="00"
-            label={t("nav.settings")}
-            icon={SettingsIcon}
-            active={section === "settings"}
-            expanded={open}
-            onClick={handleNavSettings}
-          />
-        </div>
-      </nav>
+      <UiSidebar
+        ariaLabel={t("nav.primary")}
+        className="absolute inset-y-0 left-0 shadow-2xl"
+        collapsedMode="hover"
+        value={section}
+        onSelect={(value) => go(value as Section)}
+        sections={[
+          {
+            items: TOP_ITEMS.map((item) => ({
+              value: item.section,
+              icon: icon(item.icon),
+              label: label(item.num, t(`nav.${item.key}`)),
+            })),
+          },
+          {
+            items: [
+              {
+                value: "settings",
+                icon: icon(SettingsIcon),
+                label: label("00", t("nav.settings")),
+              },
+            ],
+          },
+        ]}
+      />
     </div>
   );
 }

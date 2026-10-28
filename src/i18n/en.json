@@ -51,6 +51,7 @@
     "updateInstallFailed": "The update could not be installed."
   },
   "nav": {
+    "primary": "Primary navigation",
     "home": "HOME",
     "skills": "SKILLS",
     "explore": "EXPLORE",
@@ -263,6 +264,7 @@
     "eyebrow": "EXPLORE · SKILLS.SH",
     "title": "Explore skills",
     "subtitle": "Browse the most popular and recent skills from the skills registry",
+    "viewLabel": "Marketplace view",
     "view": {
       "hot": "HOT",
       "trending": "TRENDING",

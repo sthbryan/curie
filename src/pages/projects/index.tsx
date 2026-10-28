@@ -1,7 +1,9 @@
+import { EmptyState } from "@zovaris/sephiro/empty-state";
 import { useEffect, useState } from "react";
 
+import "@zovaris/sephiro/css/empty-state.css";
+
 import { ErrorNotice } from "@/components/ErrorNotice";
-import { Label } from "@/components/Label";
 import type { Project } from "@/components/types";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
@@ -84,12 +86,8 @@ export function Projects() {
         </div>
 
         {list.length === 0 ? (
-          <div
-            className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
-            {...fadeUp(0.1)}
-          >
-            <Label>projects.empty</Label>
-            <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
+          <div {...fadeUp(0.1)}>
+            <EmptyState title={t("empty")} description={t("emptyHint")} />
           </div>
         ) : null}
       </div>
