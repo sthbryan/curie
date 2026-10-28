@@ -1,8 +1,8 @@
-import { CircleFadingArrowUp, LoaderCircle } from "lucide-react";
+import { Spinner } from "@zovaris/sephiro/spinner";
+import { CircleFadingArrowUp } from "lucide-react";
 
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { useReducedMotion } from "@/lib/motion";
 import { useRoute } from "@/lib/routes";
 import { skillsLoading, skillUpdates, updatesLoading } from "@/store/skills";
 
@@ -11,7 +11,6 @@ const CHIP = "flex items-center gap-2 font-mono uppercase tracking-label text-mi
 export function HeaderActivity() {
   const t = useT("app");
   const { section, go } = useRoute();
-  const shouldReduceMotion = useReducedMotion();
 
   const busyKey = skillsLoading.value
     ? "loadingSkills"
@@ -22,11 +21,7 @@ export function HeaderActivity() {
   if (busyKey) {
     return (
       <span className={cn(CHIP, "text-fg-3")} aria-live="polite">
-        <LoaderCircle
-          size={11}
-          className={cn("text-fg-4", !shouldReduceMotion && "animate-spin")}
-          aria-hidden
-        />
+        <Spinner size="sm" className="text-fg-4" />
         {t(busyKey)}
       </span>
     );
