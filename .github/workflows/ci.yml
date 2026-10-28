@@ -53,9 +53,8 @@ jobs:
         with:
           workspaces: src-tauri
 
-      - name: Cargo check
-        run: cargo check --manifest-path src-tauri/Cargo.toml
-
+      # cargo test already compiles the lib and the bins, so a separate
+      # cargo check only duplicated the compile. Neither builds examples.
       - name: Cargo test
         run: cargo test --manifest-path src-tauri/Cargo.toml
 
