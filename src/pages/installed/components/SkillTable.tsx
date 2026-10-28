@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import "@zovaris/sephiro/css/table.css";
 
+import { TableLabel } from "@/components/TableLabel";
 import type { SkillInfo } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
@@ -31,7 +32,7 @@ export function SkillTable({ onAskRemove }: Props) {
     (): TableColumn<SkillInfo>[] => [
       {
         key: "name",
-        label: t("colName"),
+        label: <TableLabel>{t("colName")}</TableLabel>,
         sortable: true,
         width: "24%",
         render: (skill) => (
@@ -45,7 +46,7 @@ export function SkillTable({ onAskRemove }: Props) {
       },
       {
         key: "source",
-        label: t("colSource"),
+        label: <TableLabel>{t("colSource")}</TableLabel>,
         sortable: true,
         width: "25%",
         render: (skill) => (
@@ -61,14 +62,14 @@ export function SkillTable({ onAskRemove }: Props) {
       },
       {
         key: "agents",
-        label: t("colAgents"),
+        label: <TableLabel>{t("colAgents")}</TableLabel>,
         sortable: true,
         width: "23%",
         render: (skill) => <AgentCell agents={skill.agents} />,
       },
       {
         key: "updated",
-        label: t("colWhen"),
+        label: <TableLabel>{t("colWhen")}</TableLabel>,
         sortable: true,
         align: "end",
         width: "12%",
@@ -88,7 +89,7 @@ export function SkillTable({ onAskRemove }: Props) {
       },
       {
         key: "actions",
-        label: t("colActions"),
+        label: <TableLabel>{t("colActions")}</TableLabel>,
         align: "end",
         width: "16%",
         render: (skill) => (
