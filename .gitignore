@@ -34,3 +34,6 @@ SCRATCH.md
 *.log
 .env
 .env.local
+
+# Local preview captures from the browser harness
+/screenshots/
