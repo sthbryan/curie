@@ -23,7 +23,10 @@
   --color-info-fg: #0a0a0a;
 
   --font-display: "Doto", ui-monospace, monospace;
-  --font-body: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  /* Curie speaks mono outside headings, so the body token is the mono stack:
+     every description, hint and row label renders in Space Mono and Doto stays
+     the only other voice. Sephiro's font-sans points here too. */
+  --font-body: var(--font-mono);
   --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --text-display: 52px;
