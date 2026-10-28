@@ -58,7 +58,7 @@ export function StatusBar() {
           </Then>
           <Else>
             <span className="flex items-center gap-1.5 text-warning">
-              <span className="inline-block h-1 w-1 rounded-full bg-warning" aria-hidden />
+              <span className="inline-block h-1 w-1 bg-warning" aria-hidden />
               {t("status.setupRequired")}
             </span>
           </Else>
@@ -74,7 +74,7 @@ export function StatusBar() {
           >
             <span
               className={cn(
-                "inline-block h-1 w-1 rounded-full bg-accent",
+                "inline-block h-1 w-1 bg-accent",
                 !shouldReduceMotion && "animate-pulse",
               )}
               aria-hidden

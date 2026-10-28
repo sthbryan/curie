@@ -5,7 +5,7 @@ import type { DetectionState } from "../hooks/useSkillDetection";
 import type { InstallPhase } from "../lib/phase";
 
 const BASE = "font-mono uppercase tracking-label text-micro inline-flex items-center gap-1.5";
-const DOT = "inline-block h-1 w-1 rounded-full shrink-0";
+const DOT = "inline-block h-1 w-1 shrink-0";
 
 type Props = {
   phase: InstallPhase;

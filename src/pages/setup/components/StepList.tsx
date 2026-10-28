@@ -29,7 +29,7 @@ export function StepList({ steps, current, manager }: Props) {
           >
             <span
               className={cn(
-                "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
+                "flex h-6 w-6 shrink-0 items-center justify-center border",
                 done && "border-success text-success",
                 active && "border-fg-3 text-fg-2",
                 !done && !active && "border-border text-fg-4",
