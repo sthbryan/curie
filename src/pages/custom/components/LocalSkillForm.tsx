@@ -1,5 +1,8 @@
+import { Textarea } from "@zovaris/sephiro/textarea";
 import { FileUp, LoaderCircle, Save } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
+
+import "@zovaris/sephiro/css/textarea.css";
 
 import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
@@ -90,7 +93,7 @@ export function LocalSkillForm() {
           </Button>
         </div>
         <div className="relative">
-          <textarea
+          <Textarea
             id={CONTENT_ID}
             value={content}
             onChange={(e) => setContent((e.target as HTMLTextAreaElement).value)}
@@ -98,14 +101,9 @@ export function LocalSkillForm() {
             spellCheck={false}
             rows={10}
             disabled={installing}
-            aria-invalid={warning !== null}
+            invalid={warning !== null}
             aria-describedby={`${CONTENT_ID}-status`}
-            className={cn(
-              "w-full border bg-bg px-3 py-2 font-mono text-mono text-fg placeholder:text-fg-4 outline-none rounded-sm resize-y min-h-45 disabled:opacity-60",
-              warning
-                ? "border-warning/60 focus:border-warning"
-                : "border-border-strong focus:border-fg-3",
-            )}
+            className="resize-y min-h-45"
           />
           {dragging ? (
             <div

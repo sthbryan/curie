@@ -1,8 +1,12 @@
+import { Field } from "@zovaris/sephiro/field";
+import { Input } from "@zovaris/sephiro/input";
 import { GitBranch, LoaderCircle, X } from "lucide-react";
 import { useState } from "react";
 
+import "@zovaris/sephiro/css/field.css";
+import "@zovaris/sephiro/css/input.css";
+
 import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 
@@ -11,7 +15,6 @@ import { useSkillDetection } from "../hooks/useSkillDetection";
 import { isPending, resolvePhase } from "../lib/phase";
 import { classifyTarget } from "../lib/target";
 import { DetectionChip } from "./DetectionChip";
-import { FieldLabel } from "./FieldLabel";
 import { FormSection } from "./FormSection";
 import { SkillPreview } from "./SkillPreview";
 
@@ -47,13 +50,11 @@ export function RemoteSkillForm() {
   return (
     <FormSection eyebrow={t("eyebrow")} title={t("title")} subtitle={t("subtitle")}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-        <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-          <FieldLabel htmlFor={INPUT_ID}>{t("label")}</FieldLabel>
-          <div className="relative flex min-w-0">
+        <div className="relative flex flex-col gap-1.5 flex-1 min-w-0">
+          <Field label={t("label")} htmlFor={INPUT_ID}>
             <Input
               id={INPUT_ID}
-              label={t("label")}
-              hideLabel
+              size="lg"
               type="text"
               value={value}
               onChange={(e) => setValue((e.target as HTMLInputElement).value)}
@@ -63,27 +64,22 @@ export function RemoteSkillForm() {
               autoCapitalize="off"
               autoCorrect="off"
               disabled={installing}
+              invalid={phase === "noSkills" || phase === "checkFailed"}
               aria-describedby={STATUS_ID}
               aria-busy={pending}
-              wrapperClassName="w-full"
-              className={cn(
-                "pr-9 disabled:opacity-60",
-                phase === "ready" && "border-success/60 focus:border-success",
-                (phase === "noSkills" || phase === "checkFailed") &&
-                  "border-warning/60 focus:border-warning",
-              )}
+              className={cn("pr-9", phase === "ready" && "border-success")}
             />
-            {trimmed.length > 0 && !installing ? (
-              <button
-                type="button"
-                onClick={() => setValue("")}
-                aria-label={t("clear")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-6 w-6 items-center justify-center text-fg-4 hover:text-fg transition-colors cursor-pointer"
-              >
-                <X size={14} aria-hidden />
-              </button>
-            ) : null}
-          </div>
+          </Field>
+          {trimmed.length > 0 && !installing ? (
+            <button
+              type="button"
+              onClick={() => setValue("")}
+              aria-label={t("clear")}
+              className="absolute right-2 bottom-2 inline-flex h-6 w-6 items-center justify-center text-fg-4 hover:text-fg transition-colors cursor-pointer"
+            >
+              <X size={14} aria-hidden />
+            </button>
+          ) : null}
         </div>
         <Button
           size="lg"

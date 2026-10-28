@@ -1,9 +1,11 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { SegmentedControl } from "@zovaris/sephiro/segmented-control";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Else, If, Then } from "react-if";
 
+import "@zovaris/sephiro/css/segmented-control.css";
+
 import { Button } from "@/components/Button";
-import { ChoiceButton } from "@/components/ChoiceButton";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import {
@@ -42,8 +44,6 @@ export function Settings() {
   const t = useT("settings");
   const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } = systemStore;
 
-  const handleLangEN = () => setLang("en");
-  const handleLangES = () => setLang("es");
   const handleOpenGitHub = () => {
     void Promise.resolve(openUrl("https://github.com/sthbryan/curie")).catch(() => {
       // ignore
@@ -71,18 +71,16 @@ export function Settings() {
                 <span className="font-body text-sm text-fg-3 hidden sm:inline">
                   {t(lang.value === "en" ? "languageENFull" : "languageESFull")}
                 </span>
-                <div className="flex">
-                  <ChoiceButton
-                    active={lang.value === "en"}
-                    label={t("languageEN")}
-                    onClick={handleLangEN}
-                  />
-                  <ChoiceButton
-                    active={lang.value === "es"}
-                    label={t("languageES")}
-                    onClick={handleLangES}
-                  />
-                </div>
+                <SegmentedControl
+                  ariaLabel={t("language")}
+                  size="sm"
+                  value={lang.value}
+                  options={[
+                    { value: "en", label: t("languageEN") },
+                    { value: "es", label: t("languageES") },
+                  ]}
+                  onValueChange={(value) => setLang(value === "es" ? "es" : "en")}
+                />
               </div>
             </Row>
 
@@ -113,21 +111,20 @@ export function Settings() {
             <p className="font-body text-sm text-fg-3 pb-4 pl-0 pt-3">{t("themeDesc")}</p>
 
             <Row label={t("reducedMotion")}>
-              <div className="flex">
-                {REDUCED_MOTION_OPTIONS.map((opt) => {
-                  const handlePickMotion = () => {
-                    setReducedMotion(opt);
-                  };
-                  return (
-                    <ChoiceButton
-                      key={opt}
-                      active={reducedMotion.value === opt}
-                      label={t(REDUCED_MOTION_LABEL[opt])}
-                      onClick={handlePickMotion}
-                    />
-                  );
-                })}
-              </div>
+              <SegmentedControl
+                ariaLabel={t("reducedMotion")}
+                size="sm"
+                value={reducedMotion.value}
+                options={REDUCED_MOTION_OPTIONS.map((opt) => ({
+                  value: opt,
+                  label: t(REDUCED_MOTION_LABEL[opt]),
+                }))}
+                onValueChange={(value) =>
+                  setReducedMotion(
+                    value === "always" ? "always" : value === "never" ? "never" : "user",
+                  )
+                }
+              />
             </Row>
 
             <p className="font-body text-sm text-fg-3 pb-4 pl-0">{t("reducedMotionDesc")}</p>
