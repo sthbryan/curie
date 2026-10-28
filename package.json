@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "preview:ui": "vite --config tools/preview/vite.config.ts",
     "tauri": "tauri",
     "check": "oxlint . && oxfmt --check .",
     "check:fix": "oxlint --fix . && oxfmt .",
