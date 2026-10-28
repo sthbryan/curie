@@ -1,8 +1,8 @@
 import { signal } from "@preact/signals";
 import { invoke } from "@tauri-apps/api/core";
+import type { TableSortDirection } from "@zovaris/sephiro/table";
 import { toast } from "sonner";
 
-import type { SortDir } from "@/components/Table";
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
 import { t } from "@/i18n";
 import { loadSkills } from "@/lib/boot";
@@ -15,7 +15,7 @@ import type { SortField } from "../lib/query";
 // ─── Sorting ─────────────────────────────────────────────────────────────────
 
 export const sortKey = signal<SortField>("updated");
-export const sortDir = signal<SortDir>("desc");
+export const sortDir = signal<TableSortDirection>("desc");
 
 const ASCENDING_FIRST: SortField[] = ["name", "source"];
 

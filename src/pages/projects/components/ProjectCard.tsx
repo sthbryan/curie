@@ -1,8 +1,10 @@
+import { Skeleton } from "@zovaris/sephiro/skeleton";
 import { AlertTriangle, X } from "lucide-react";
+
+import "@zovaris/sephiro/css/skeleton.css";
 
 import { AgentBadge } from "@/components/AgentBadge";
 import { IconButton } from "@/components/IconButton";
-import { Bone } from "@/components/Table/Bone";
 import type { Project, ProjectSummary } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
@@ -99,7 +101,7 @@ export function ProjectCard({ project, summary, active, onOpen, onForget }: Prop
           </span>
         </div>
       ) : (
-        <Bone className="h-6 w-16" />
+        <Skeleton className="h-6 w-16" />
       )}
 
       {agents.length > 0 ? (

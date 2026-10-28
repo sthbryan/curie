@@ -1,4 +1,5 @@
-import type { SortDir } from "@/components/Table";
+import type { TableSortDirection } from "@zovaris/sephiro/table";
+
 import type { SkillInfo } from "@/components/types";
 import { skillTimestamp } from "@/lib/skills";
 
@@ -45,7 +46,7 @@ export function selectSkills(
   index: Map<string, string>,
   filters: Filters,
   updateNames: Set<string>,
-  sort: { key: SortField; dir: SortDir },
+  sort: { key: SortField; dir: TableSortDirection },
 ): SkillInfo[] {
   const needle = filters.query.trim().toLowerCase();
 
