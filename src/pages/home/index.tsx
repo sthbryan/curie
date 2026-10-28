@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@zovaris/sephiro/toast";
 
 import { FullPageError } from "@/components/FullPageError";
 import { FullPageLoading } from "@/components/FullPageLoading";

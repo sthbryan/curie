@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
+import { toast } from "@zovaris/sephiro/toast";
 import { useEffect, useRef } from "react";
-import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
 import { Toaster } from "@/components/Toaster";

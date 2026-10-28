@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@zovaris/sephiro/toast";
 
 export type ToastCopy = {
   label: string;

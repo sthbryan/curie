@@ -1,9 +1,9 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Button } from "@zovaris/sephiro/button";
 import { Notice } from "@zovaris/sephiro/notice";
+import { toast } from "@zovaris/sephiro/toast";
 import { Download, RotateCcw, SquareArrowOutUpRight } from "lucide-react";
 import { Case, Default, Switch } from "react-if";
-import { toast } from "sonner";
 
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";

@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
+import { toast } from "@zovaris/sephiro/toast";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 import { t } from "@/i18n";
 import { errorMessage } from "@/lib/errors";
