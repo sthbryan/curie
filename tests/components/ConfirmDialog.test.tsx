@@ -68,7 +68,7 @@ describe("ConfirmDialog", () => {
   it("renders nothing when closed", () => {
     mount(<ConfirmDialog {...base} open={false} />);
     expect(container?.textContent).toBe("");
-    expect(document.body.querySelector("[role=alertdialog]")).toBeNull();
+    expect(document.body.querySelector("[role=dialog]")).toBeNull();
   });
 
   it("renders title and buttons when open", () => {
@@ -85,8 +85,11 @@ describe("ConfirmDialog", () => {
     expect(onConfirm).toHaveBeenCalledOnce();
   });
 
-  it("focuses the cancel button when it opens", () => {
+  it("focuses the cancel button when it opens", async () => {
     mount(<ConfirmDialog {...base} />);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
     expect(document.activeElement?.textContent).toBe("No");
   });
 
@@ -115,9 +118,9 @@ describe("ConfirmDialog", () => {
   it("ignores a backdrop click while busy", () => {
     const onCancel = vi.fn();
     mount(<ConfirmDialog {...base} onCancel={onCancel} busy busyLabel="Removing" />);
-    const backdrop = document.body.querySelector<HTMLElement>("[aria-hidden]");
+    const backdrop = document.body.querySelector<HTMLElement>(".sph-dialog__backdrop");
     act(() => {
-      backdrop?.click();
+      backdrop?.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     });
     expect(onCancel).not.toHaveBeenCalled();
     expect(document.body.textContent).toContain("Removing");
@@ -153,7 +156,7 @@ describe("ConfirmDialog", () => {
 
   it("describes itself for screen readers", () => {
     mount(<ConfirmDialog {...base} description="This cannot be undone" detail="pr-review" />);
-    const dialog = document.body.querySelector("[role=alertdialog]");
+    const dialog = document.body.querySelector("[role=dialog]");
     expect(dialog?.getAttribute("aria-modal")).toBe("true");
     const describedBy = dialog?.getAttribute("aria-describedby");
     expect(describedBy).toBeTruthy();

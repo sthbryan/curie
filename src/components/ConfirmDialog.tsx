@@ -1,6 +1,12 @@
 import { Button } from "@zovaris/sephiro/button";
+import { Dialog } from "@zovaris/sephiro/dialog";
+import { Field } from "@zovaris/sephiro/field";
+import { Input } from "@zovaris/sephiro/input";
 import { useEffect, useId, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+
+import "@zovaris/sephiro/css/dialog.css";
+import "@zovaris/sephiro/css/field.css";
+import "@zovaris/sephiro/css/input.css";
 
 type Props = {
   open: boolean;
@@ -16,9 +22,6 @@ type Props = {
   onConfirm: () => void;
   onCancel: () => void;
 };
-
-const FOCUSABLE =
-  'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 export function ConfirmDialog(props: Props) {
   const {
@@ -36,10 +39,7 @@ export function ConfirmDialog(props: Props) {
     onCancel,
   } = props;
 
-  const titleId = useId();
-  const descId = useId();
   const phraseId = useId();
-  const panelRef = useRef<HTMLDivElement>(null);
   const cancelRef = useRef<HTMLSpanElement>(null);
   const [typed, setTyped] = useState("");
 
@@ -49,97 +49,46 @@ export function ConfirmDialog(props: Props) {
 
   const unlocked = !confirmPhrase || typed.trim().toUpperCase() === confirmPhrase.toUpperCase();
 
-  useEffect(() => {
-    if (!open) return;
-
-    const previous = document.activeElement as HTMLElement | null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    cancelRef.current?.querySelector("button")?.focus();
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !busy) {
-        onCancel();
-        return;
-      }
-      if (e.key !== "Tab") return;
-
-      const nodes = panelRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE);
-      if (!nodes || nodes.length === 0) return;
-      const first = nodes[0];
-      const last = nodes[nodes.length - 1];
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previousOverflow;
-      previous?.focus?.();
-    };
-  }, [open, busy, onCancel]);
-
-  if (typeof document === "undefined") return null;
-
   const handleCancel = () => {
     if (!busy) onCancel();
   };
 
-  return createPortal(
-    open ? (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
-        <div
-          data-anim="overlay"
-          className="absolute inset-0 bg-bg/80 backdrop-blur-sm"
-          onClick={handleCancel}
-          aria-hidden
-        />
-        <div
-          ref={panelRef}
-          data-anim="dialog"
-          role="alertdialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
-          aria-describedby={description || detail ? descId : undefined}
-          className="relative z-10 flex w-full max-w-sm flex-col gap-5 border border-border-strong bg-surface px-5 py-5 shadow-2xl"
-        >
-          <div className="flex flex-col gap-2">
-            <h2
-              id={titleId}
-              className="font-mono uppercase tracking-label text-mono font-bold text-fg"
-            >
-              {title}
-            </h2>
-            {description ? (
-              <p id={descId} className="font-body text-sm text-fg-3">
-                {description}
-              </p>
-            ) : null}
-            {detail ? (
-              <span
-                id={description ? undefined : descId}
-                className="truncate border border-border bg-surface-tint px-2 py-1.5 font-mono text-mono text-fg"
-              >
-                {detail}
-              </span>
-            ) : null}
-          </div>
+  const focusCancel = () => cancelRef.current?.querySelector("button") ?? null;
+
+  return (
+    <Dialog
+      open={open}
+      onClose={handleCancel}
+      title={title}
+      description={description}
+      closeLabel={cancelLabel}
+      closeOnEscape={!busy}
+      closeOnOverlayClick={!busy}
+      initialFocus={focusCancel}
+      className="max-w-sm"
+      footer={
+        <>
+          <span ref={cancelRef} className="contents">
+            <Button size="sm" variant="secondary" onClick={handleCancel} disabled={busy}>
+              {cancelLabel}
+            </Button>
+          </span>
+          <Button size="sm" variant="primary" onClick={onConfirm} disabled={busy || !unlocked}>
+            {busy && busyLabel ? busyLabel : confirmLabel}
+          </Button>
+        </>
+      }
+    >
+      {detail || confirmPhrase ? (
+        <div className="flex flex-col gap-4">
+          {detail ? (
+            <span className="truncate border border-border bg-surface-tint px-2 py-1.5 font-mono text-mono text-fg">
+              {detail}
+            </span>
+          ) : null}
           {confirmPhrase ? (
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor={phraseId}
-                className="font-mono uppercase tracking-label text-micro text-fg-3"
-              >
-                {confirmPhraseLabel}
-              </label>
-              <input
+            <Field label={confirmPhraseLabel} htmlFor={phraseId}>
+              <Input
                 id={phraseId}
                 type="text"
                 value={typed}
@@ -148,23 +97,12 @@ export function ConfirmDialog(props: Props) {
                 autoComplete="off"
                 spellCheck={false}
                 placeholder={confirmPhrase}
-                className="border border-border-strong bg-bg px-2.5 py-2 font-mono uppercase tracking-label text-mono text-fg outline-none placeholder:text-fg-4 focus:border-accent"
+                className="font-mono uppercase tracking-label"
               />
-            </div>
+            </Field>
           ) : null}
-          <div className="flex justify-end gap-2">
-            <span ref={cancelRef} className="contents">
-              <Button size="sm" variant="secondary" onClick={handleCancel} disabled={busy}>
-                {cancelLabel}
-              </Button>
-            </span>
-            <Button size="sm" variant="primary" onClick={onConfirm} disabled={busy || !unlocked}>
-              {busy && busyLabel ? busyLabel : confirmLabel}
-            </Button>
-          </div>
         </div>
-      </div>
-    ) : null,
-    document.body,
+      ) : undefined}
+    </Dialog>
   );
 }
