@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CustomSkillInstallResult } from "@/components/types";
 
 const invokeMock = vi.fn();
+const openMock = vi.fn();
 const promiseToastMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
@@ -15,6 +16,10 @@ vi.mock("@tauri-apps/api/core", () => ({
 
 vi.mock("@tauri-apps/api/webview", () => ({
   getCurrentWebview: () => ({ onDragDropEvent: () => Promise.resolve(() => {}) }),
+}));
+
+vi.mock("@tauri-apps/plugin-dialog", () => ({
+  open: (...args: unknown[]) => openMock(...args),
 }));
 
 vi.mock("@/lib/boot", () => ({
@@ -100,8 +105,17 @@ async function clickInstall() {
   });
 }
 
+async function clickButton(text: string) {
+  await act(async () => {
+    getButtonByText(text).click();
+    for (let i = 0; i < 10; i++) await Promise.resolve();
+  });
+}
+
 beforeEach(() => {
   invokeMock.mockReset();
+  openMock.mockReset();
+  openMock.mockResolvedValue(null);
   promiseToastMock.mockReset();
   mount();
 });
@@ -183,5 +197,53 @@ describe("LocalSkillForm", () => {
     });
 
     expect(getContentInput().value).toBe("");
+  });
+
+  it("installs a whole skill folder picked from disk", async () => {
+    openMock.mockResolvedValueOnce("/Users/me/skills/my-skill");
+    invokeMock.mockResolvedValueOnce({
+      name: "my-skill",
+      path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
+      message: "Installed",
+    } as CustomSkillInstallResult);
+
+    await clickButton("CHOOSE FOLDER");
+
+    expect(openMock).toHaveBeenCalledWith(
+      expect.objectContaining({ directory: true, multiple: false }),
+    );
+    expect(invokeMock).toHaveBeenCalledWith("install_custom_skill_path", {
+      path: "/Users/me/skills/my-skill",
+      projectPath: null,
+    });
+    expect(promiseToastMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("installs a .zip or .skill archive picked from disk", async () => {
+    openMock.mockResolvedValueOnce("/Users/me/Downloads/my-skill.skill");
+    invokeMock.mockResolvedValueOnce({
+      name: "my-skill",
+      path: "/Users/me/.curie/custom-skills/my-skill/SKILL.md",
+      message: "Installed",
+    } as CustomSkillInstallResult);
+
+    await clickButton("UPLOAD .ZIP");
+
+    expect(openMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        directory: false,
+        filters: [{ name: "Skill archive", extensions: ["zip", "skill"] }],
+      }),
+    );
+    expect(invokeMock).toHaveBeenCalledWith("install_custom_skill_path", {
+      path: "/Users/me/Downloads/my-skill.skill",
+      projectPath: null,
+    });
+  });
+
+  it("installs nothing when the picker is dismissed", async () => {
+    await clickButton("CHOOSE FOLDER");
+
+    expect(invokeMock).not.toHaveBeenCalled();
   });
 });
