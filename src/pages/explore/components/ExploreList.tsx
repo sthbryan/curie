@@ -1,8 +1,10 @@
 import { Button } from "@zovaris/sephiro/button";
+import { EmptyState } from "@zovaris/sephiro/empty-state";
 import { Table, type TableColumn } from "@zovaris/sephiro/table";
 import { type ReactNode, useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
 
+import "@zovaris/sephiro/css/empty-state.css";
 import "@zovaris/sephiro/css/table.css";
 
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
@@ -159,12 +161,8 @@ export function ExploreList({
       </Case>
 
       <Case condition={empty}>
-        <div
-          {...fadeUp(0.08)}
-          className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
-        >
-          <span className="font-body text-sm text-fg">{t("empty")}</span>
-          <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
+        <div {...fadeUp(0.08)}>
+          <EmptyState title={t("empty")} description={t("emptyHint")} />
         </div>
       </Case>
 

@@ -1,9 +1,11 @@
 import { Button } from "@zovaris/sephiro/button";
+import { EmptyState } from "@zovaris/sephiro/empty-state";
 import { Table, type TableColumn } from "@zovaris/sephiro/table";
 import { CloudDownload, Compass } from "lucide-react";
 import { useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
 
+import "@zovaris/sephiro/css/empty-state.css";
 import "@zovaris/sephiro/css/table.css";
 
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
@@ -107,16 +109,17 @@ export function ResultsPanel({
   return (
     <Switch>
       <Case condition={showHint}>
-        <div
-          {...fadeUp(0.08)}
-          className="flex flex-col items-start gap-3 border border-border-strong bg-surface-tint px-5 py-8"
-        >
-          <span className="font-body text-sm text-fg">{t("hint")}</span>
-          <p className="font-body text-sm text-fg-3">{t("hintExplore")}</p>
-          <Button size="sm" variant="secondary" onClick={onGoExplore}>
-            <Compass size={12} strokeWidth={1.5} />
-            {t("goExplore")}
-          </Button>
+        <div {...fadeUp(0.08)}>
+          <EmptyState
+            icon={<Compass size={20} strokeWidth={1.5} />}
+            title={t("hint")}
+            description={t("hintExplore")}
+            action={
+              <Button size="sm" variant="secondary" onClick={onGoExplore}>
+                {t("goExplore")}
+              </Button>
+            }
+          />
         </div>
       </Case>
 
@@ -125,12 +128,8 @@ export function ResultsPanel({
       </Case>
 
       <Case condition={empty}>
-        <div
-          {...fadeUp(0.08)}
-          className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-8"
-        >
-          <span className="font-body text-sm text-fg">{t("empty")}</span>
-          <p className="font-body text-sm text-fg-3">{t("emptyHint")}</p>
+        <div {...fadeUp(0.08)}>
+          <EmptyState title={t("empty")} description={t("emptyHint")} />
         </div>
       </Case>
 
