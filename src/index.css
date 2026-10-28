@@ -94,6 +94,13 @@
   border-radius: 0;
 }
 
+/* And for the stepper: its markers and connector are pills in the package. */
+.sph-stepper__marker.sph-stepper__marker,
+.sph-stepper__marker.sph-stepper__marker::before,
+.sph-stepper__connector.sph-stepper__connector {
+  border-radius: 0;
+}
+
 /* Sephiro's inputs set their own padding and border in unlayered CSS, so a
    Tailwind `pr-*` / `border-*` on top of them silently does nothing. These two
    states are what the custom-skill form needs: room for its clear button, and
