@@ -1,4 +1,5 @@
-import { Button } from "@/components/Button";
+import { Button } from "@zovaris/sephiro/button";
+
 import { useT } from "@/i18n";
 
 import { dismissErrors, removeError, updateApplyError } from "../store/store";
@@ -17,7 +18,7 @@ export function ErrorBanner() {
         </span>
         <p className="break-all font-body text-sm text-fg-3">{message}</p>
       </div>
-      <Button size="xs" variant="link" className="shrink-0 px-0" onClick={dismissErrors}>
+      <Button size="sm" variant="quiet" className="shrink-0" onClick={dismissErrors}>
         ×
       </Button>
     </div>

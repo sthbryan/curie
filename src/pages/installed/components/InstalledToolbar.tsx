@@ -1,3 +1,4 @@
+import { Button } from "@zovaris/sephiro/button";
 import { Field } from "@zovaris/sephiro/field";
 import { Input } from "@zovaris/sephiro/input";
 import { X } from "lucide-react";
@@ -5,7 +6,6 @@ import { X } from "lucide-react";
 import "@zovaris/sephiro/css/field.css";
 import "@zovaris/sephiro/css/input.css";
 
-import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { skills } from "@/store/skills";
 
@@ -33,11 +33,10 @@ export function InstalledToolbar() {
 
       {outdated > 0 ? (
         <Button
-          size="sm"
-          variant="outline"
-          selected={updatesOnly.value}
+          size="lg"
+          variant={updatesOnly.value ? "primary" : "secondary"}
+          aria-pressed={updatesOnly.value}
           onClick={toggleUpdatesOnly}
-          className="h-10"
         >
           {t("filterUpdates")}
           <span className="opacity-60">{outdated}</span>
@@ -45,7 +44,7 @@ export function InstalledToolbar() {
       ) : null}
 
       {hasFilters.value ? (
-        <Button size="sm" variant="ghost" onClick={clearFilters} className="h-10">
+        <Button size="lg" variant="quiet" onClick={clearFilters}>
           <X size={12} />
           {t("clearFilters")}
         </Button>

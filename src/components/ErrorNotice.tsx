@@ -1,6 +1,6 @@
+import { Button } from "@zovaris/sephiro/button";
 import { RotateCcw, TriangleAlert, X } from "lucide-react";
 
-import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 
 type Props = {
@@ -29,13 +29,13 @@ export function ErrorNotice({ title, message, onDismiss, onRetry, retryLabel }: 
 
       <div className="flex shrink-0 items-center gap-2">
         {onRetry ? (
-          <Button size="xs" variant="outline" onClick={onRetry}>
+          <Button size="sm" variant="secondary" onClick={onRetry}>
             <RotateCcw size={10} strokeWidth={1.5} />
             {retryLabel ?? t("retry")}
           </Button>
         ) : null}
         {onDismiss ? (
-          <Button size="xs" variant="ghost" aria-label={t("dismiss")} onClick={onDismiss}>
+          <Button size="sm" variant="quiet" aria-label={t("dismiss")} onClick={onDismiss}>
             <X size={12} strokeWidth={1.5} />
           </Button>
         ) : null}

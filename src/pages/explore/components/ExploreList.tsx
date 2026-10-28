@@ -1,10 +1,10 @@
+import { Button } from "@zovaris/sephiro/button";
 import { Table, type TableColumn } from "@zovaris/sephiro/table";
 import { type ReactNode, useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
 
 import "@zovaris/sephiro/css/table.css";
 
-import { Button } from "@/components/Button";
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
 import { SkillNameCell } from "@/components/discovery/SkillNameCell";
 import { SkillSourceCell } from "@/components/discovery/SkillSourceCell";
@@ -134,7 +134,7 @@ export function ExploreList({
       <div className="flex shrink-0 justify-center py-4">
         <Button
           size="sm"
-          variant="outline"
+          variant="secondary"
           onClick={onLoadMore}
           disabled={loadingMore || installBusy}
         >

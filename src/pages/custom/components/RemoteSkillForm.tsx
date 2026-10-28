@@ -1,3 +1,4 @@
+import { Button } from "@zovaris/sephiro/button";
 import { Field } from "@zovaris/sephiro/field";
 import { Input } from "@zovaris/sephiro/input";
 import { GitBranch, LoaderCircle, X } from "lucide-react";
@@ -6,7 +7,6 @@ import { useState } from "react";
 import "@zovaris/sephiro/css/field.css";
 import "@zovaris/sephiro/css/input.css";
 
-import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 

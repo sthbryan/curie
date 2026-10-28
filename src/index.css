@@ -2,6 +2,8 @@
 /* Sephiro owns the palettes. Curie picks one with `data-sephiro-theme` on
    <html> and reads it through the token map below. */
 @import "@zovaris/sephiro/themes.css";
+@import "@zovaris/sephiro/css/button.css";
+@import "@zovaris/sephiro/css/icon-button.css";
 
 @theme {
   --color-bg: var(--sph-bg);

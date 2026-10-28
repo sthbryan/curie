@@ -1,6 +1,7 @@
+import { Button } from "@zovaris/sephiro/button";
+
 import { useT } from "@/i18n";
 
-import { Button } from "./Button";
 import { Label } from "./Label";
 
 type Props = {

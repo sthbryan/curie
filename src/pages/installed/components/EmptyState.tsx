@@ -1,4 +1,5 @@
-import { Button } from "@/components/Button";
+import { Button } from "@zovaris/sephiro/button";
+
 import { useT } from "@/i18n";
 import { useRoute } from "@/lib/routes";
 
@@ -25,7 +26,7 @@ export function NoMatches() {
   return (
     <div className="flex flex-col items-start gap-4 border-t border-border py-8">
       <p className="font-body text-sm text-fg-3">{t("noMatches")}</p>
-      <Button size="sm" variant="outline" onClick={clearFilters}>
+      <Button size="sm" variant="secondary" onClick={clearFilters}>
         {t("clearFilters")}
       </Button>
     </div>

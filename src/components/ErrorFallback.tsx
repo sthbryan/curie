@@ -1,3 +1,4 @@
+import { Button } from "@zovaris/sephiro/button";
 import { House, RefreshCcw } from "lucide-react";
 import { When } from "react-if";
 
@@ -6,7 +7,6 @@ import type { Lang } from "@/i18n";
 import { t } from "@/i18n";
 import { lang } from "@/store/system";
 
-import { Button } from "./Button";
 import type { ErrorBoundaryFallbackProps } from "./ErrorBoundary";
 
 type Props = ErrorBoundaryFallbackProps & {
@@ -53,13 +53,13 @@ export function ErrorFallback({ error, reset, variant = "page", onHome }: Props)
           {t(lang, "error.retry")}
         </Button>
         <When condition={Boolean(onHome)}>
-          <Button size="md" variant="outline" onClick={goToHome}>
+          <Button size="md" variant="secondary" onClick={goToHome}>
             <House size={14} />
             {t(lang, "error.home")}
           </Button>
         </When>
         <When condition={variant === "root"}>
-          <Button size="md" variant="outline" onClick={handleReload}>
+          <Button size="md" variant="secondary" onClick={handleReload}>
             <RefreshCcw size={14} />
             {t(lang, "error.reload")}
           </Button>

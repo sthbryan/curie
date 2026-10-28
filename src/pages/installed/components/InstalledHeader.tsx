@@ -1,7 +1,7 @@
+import { Button } from "@zovaris/sephiro/button";
 import { CircleFadingArrowUp, Plus, RefreshCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/Button";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { t as rawT, useT } from "@/i18n";
@@ -50,16 +50,12 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button
-          size="sm"
-          variant={scope.kind === "project" ? "accent" : "primary"}
-          onClick={() => go("find")}
-        >
+        <Button size="sm" variant="primary" onClick={() => go("find")}>
           <Plus size={14} />
           {t("install")}
         </Button>
 
-        <Button size="sm" variant="outline" onClick={refresh} disabled={refreshing || actionBusy}>
+        <Button size="sm" variant="secondary" onClick={refresh} disabled={refreshing || actionBusy}>
           <RefreshCcw size={14} className={cn(refreshing && "animate-spin")} />
           {refreshing ? t("refreshing") : t("refresh")}
         </Button>
@@ -67,8 +63,7 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
         {outdated.size > 0 ? (
           <Button
             size="sm"
-            variant="accent-outline"
-            className="font-bold"
+            variant="secondary"
             onClick={() => {
               update([...outdated]).catch(() => {});
             }}
@@ -82,7 +77,7 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
         {skills.value.length > 0 ? (
           <Button
             size="sm"
-            variant="danger"
+            variant="secondary"
             className="ml-auto"
             onClick={onAskRemoveAll}
             disabled={actionBusy}

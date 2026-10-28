@@ -1,4 +1,5 @@
-import { Button } from "@/components/Button";
+import { Button } from "@zovaris/sephiro/button";
+
 import { useT } from "@/i18n";
 import { useRoute } from "@/lib/routes";
 
@@ -20,7 +21,7 @@ export function ScopeBanner() {
         </span>
       </p>
 
-      <Button size="xs" variant="ghost" onClick={() => go(section, null)}>
+      <Button size="sm" variant="quiet" onClick={() => go(section, null)}>
         {t("switchToGlobal")}
       </Button>
     </div>

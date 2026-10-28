@@ -1,10 +1,10 @@
+import { IconButton } from "@zovaris/sephiro/icon-button";
 import { Skeleton } from "@zovaris/sephiro/skeleton";
 import { AlertTriangle, X } from "lucide-react";
 
 import "@zovaris/sephiro/css/skeleton.css";
 
 import { AgentBadge } from "@/components/AgentBadge";
-import { IconButton } from "@/components/IconButton";
 import type { Project, ProjectSummary } from "@/components/types";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
@@ -73,14 +73,13 @@ export function ProjectCard({ project, summary, active, onOpen, onForget }: Prop
           ) : null}
 
           <IconButton
+            icon={<X size={12} />}
             label={t("forget", { name: project.name })}
             variant="ghost"
-            size="xs"
+            size="sm"
             className="relative z-10 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"
             onClick={onForget}
-          >
-            <X size={12} />
-          </IconButton>
+          />
         </div>
       </div>
 

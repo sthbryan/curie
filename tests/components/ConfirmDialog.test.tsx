@@ -85,6 +85,11 @@ describe("ConfirmDialog", () => {
     expect(onConfirm).toHaveBeenCalledOnce();
   });
 
+  it("focuses the cancel button when it opens", () => {
+    mount(<ConfirmDialog {...base} />);
+    expect(document.activeElement?.textContent).toBe("No");
+  });
+
   it("calls onCancel when cancel is clicked", () => {
     const onCancel = vi.fn();
     mount(<ConfirmDialog {...base} onCancel={onCancel} />);
