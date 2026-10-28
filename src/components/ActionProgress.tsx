@@ -1,8 +1,7 @@
-import { LoaderCircle } from "lucide-react";
+import { Spinner } from "@zovaris/sephiro/spinner";
 
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
-import { useReducedMotion } from "@/lib/motion";
 
 type Props = {
   active: boolean;
@@ -12,7 +11,6 @@ type Props = {
 
 export function ActionProgress({ active, labelKey, className = "" }: Props) {
   const t = useT();
-  const shouldReduceMotion = useReducedMotion();
 
   if (!active) return null;
 
@@ -21,16 +19,11 @@ export function ActionProgress({ active, labelKey, className = "" }: Props) {
       role="status"
       aria-live="polite"
       className={cn(
-        "inline-flex h-7 items-center justify-center gap-1.5 px-2.5 font-mono uppercase tracking-label text-micro text-fg-3",
+        "inline-flex h-8 items-center justify-center gap-1.5 px-2.5 font-mono uppercase tracking-label text-micro text-fg-3",
         className,
       )}
     >
-      <LoaderCircle
-        size={11}
-        strokeWidth={1.5}
-        aria-hidden
-        className={cn(shouldReduceMotion !== true && "animate-spin")}
-      />
+      <Spinner size="sm" />
       {t(labelKey)}
     </span>
   );
