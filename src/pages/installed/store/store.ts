@@ -1,7 +1,7 @@
 import { signal } from "@preact/signals";
 import { invoke } from "@tauri-apps/api/core";
 import type { TableSortDirection } from "@zovaris/sephiro/table";
-import { toast } from "sonner";
+import { toast } from "@zovaris/sephiro/toast";
 
 import type { SkillRemoveResult, SkillUpdateResult } from "@/components/types";
 import { t } from "@/i18n";

@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@zovaris/sephiro/toast";
 
 import { t } from "@/i18n";
 import { checkSkillUpdates } from "@/lib/boot";

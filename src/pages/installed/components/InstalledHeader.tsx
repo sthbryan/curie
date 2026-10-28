@@ -1,6 +1,6 @@
 import { Button } from "@zovaris/sephiro/button";
+import { toast } from "@zovaris/sephiro/toast";
 import { CircleFadingArrowUp, Plus, RefreshCcw, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";

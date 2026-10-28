@@ -1,10 +1,10 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Button } from "@zovaris/sephiro/button";
 import { SegmentedControl } from "@zovaris/sephiro/segmented-control";
+import { toast } from "@zovaris/sephiro/toast";
 import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { When } from "react-if";
-import { toast } from "sonner";
 
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Heading } from "@/components/Heading";
