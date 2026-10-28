@@ -1,5 +1,6 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Button } from "@zovaris/sephiro/button";
+import { Notice } from "@zovaris/sephiro/notice";
 import { SegmentedControl } from "@zovaris/sephiro/segmented-control";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Else, If, Then } from "react-if";
@@ -130,10 +131,9 @@ export function Settings() {
               </div>
             </Then>
             <Else>
-              <div className="flex flex-col gap-2 border border-border-strong bg-surface-tint px-5 py-4">
-                <span className="font-body text-sm text-fg">{t("nodeMissing")}</span>
+              <Notice variant="warning" title={t("nodeMissing")}>
                 <Label>{t("goToSetup")}</Label>
-              </div>
+              </Notice>
             </Else>
           </If>
         </section>
