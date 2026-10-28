@@ -67,7 +67,7 @@ export function RemoteSkillForm() {
               invalid={phase === "noSkills" || phase === "checkFailed"}
               aria-describedby={STATUS_ID}
               aria-busy={pending}
-              className={cn("pr-9", phase === "ready" && "border-success")}
+              className={cn("sph-input-clear", phase === "ready" && "sph-input-ready")}
             />
           </Field>
           {trimmed.length > 0 && !installing ? (
@@ -84,7 +84,7 @@ export function RemoteSkillForm() {
         <Button
           size="lg"
           variant="primary"
-          className="px-5 shrink-0 sm:mt-5.5 min-w-40"
+          className="shrink-0 sm:mt-5.5 min-w-40"
           onClick={handleSubmit}
           disabled={!canInstall}
           aria-busy={pending}

@@ -91,6 +91,18 @@
   border-radius: 0;
 }
 
+/* Sephiro's inputs set their own padding and border in unlayered CSS, so a
+   Tailwind `pr-*` / `border-*` on top of them silently does nothing. These two
+   states are what the custom-skill form needs: room for its clear button, and
+   a ready border once the manifest parses. */
+.sph-input.sph-input-clear {
+  padding-right: 2.25rem;
+}
+
+.sph-input.sph-input-ready {
+  border-color: var(--sph-success);
+}
+
 @keyframes bar-grow {
   from {
     transform: scaleX(0);

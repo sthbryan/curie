@@ -131,19 +131,13 @@ export function LocalSkillForm() {
                 : t("hint"))}
         </p>
         <div className="flex items-center gap-2">
-          <Button
-            size="lg"
-            variant="quiet"
-            className="px-5"
-            onClick={reset}
-            disabled={installing || !hasContent}
-          >
+          <Button size="lg" variant="quiet" onClick={reset} disabled={installing || !hasContent}>
             {t("clear")}
           </Button>
           <Button
             size="lg"
             variant="primary"
-            className="px-5 min-w-40"
+            className="min-w-40"
             onClick={handleSubmit}
             disabled={!canInstall}
             aria-busy={installing}

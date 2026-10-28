@@ -147,6 +147,8 @@ describe("RemoteSkillForm", () => {
 
     await settleDetection();
     expect(getButtonByText("INSTALL").disabled).toBe(false);
+    expect(getInput().className).toContain("sph-input-clear");
+    expect(getInput().className).toContain("sph-input-ready");
   });
 
   it("never asks the backend about input that is not a target", () => {
