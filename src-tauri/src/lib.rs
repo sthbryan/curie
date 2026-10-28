@@ -75,6 +75,7 @@ pub fn run() {
             skills::remove_skills,
             skills::remove_all_skills,
             skills::install_custom_skill,
+            skills::install_custom_skill_path,
             skills::read_markdown_file,
             projects::validate_project_path,
             projects::read_projects,

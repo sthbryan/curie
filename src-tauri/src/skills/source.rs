@@ -416,7 +416,7 @@ pub(crate) struct DiscoveredSkill {
     pub(crate) internal: bool,
 }
 
-fn parse_skill(dir: &Path) -> Option<DiscoveredSkill> {
+pub(crate) fn parse_skill(dir: &Path) -> Option<DiscoveredSkill> {
     let meta = read_skill_meta(&dir.join("SKILL.md"))?;
     Some(DiscoveredSkill {
         name: meta.name,

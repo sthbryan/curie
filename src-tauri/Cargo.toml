@@ -31,3 +31,4 @@ dirs = "7"
 ureq = { version = "3", features = ["json"] }
 sha2 = "0.10"
 tauri-plugin-dialog = "2"
+zip = { version = "4", default-features = false, features = ["deflate-flate2"] }

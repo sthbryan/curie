@@ -238,6 +238,11 @@ export type Messages = {
       eyebrow: string;
       title: string;
       subtitle: string;
+      bundleHint: string;
+      chooseFolder: string;
+      chooseArchive: string;
+      folderTitle: string;
+      archiveTitle: string;
       contentLabel: string;
       contentPlaceholder: string;
       fileButton: string;

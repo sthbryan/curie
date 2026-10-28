@@ -1,6 +1,7 @@
+import { open } from "@tauri-apps/plugin-dialog";
 import { Button } from "@zovaris/sephiro/button";
 import { Textarea } from "@zovaris/sephiro/textarea";
-import { FileUp, LoaderCircle, Save } from "lucide-react";
+import { FileArchive, FileUp, FolderOpen, LoaderCircle, Save } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
 import "@zovaris/sephiro/css/textarea.css";
@@ -10,6 +11,7 @@ import { cn } from "@/lib/cn";
 
 import { useFileDrop } from "../hooks/useFileDrop";
 import { useLocalInstall } from "../hooks/useLocalInstall";
+import { usePathInstall } from "../hooks/usePathInstall";
 import { checkFrontmatter, type FrontmatterCheck } from "../lib/frontmatter";
 import { FieldLabel } from "./FieldLabel";
 import { FormSection } from "./FormSection";
@@ -32,10 +34,12 @@ export function LocalSkillForm() {
   const [fileName, setFileName] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const { installing, install } = useLocalInstall();
+  const { installing: installingPath, installPath } = usePathInstall();
+  const busy = installing || installingPath;
 
   const hasContent = content.trim().length > 0;
   const frontmatter = checkFrontmatter(content);
-  const canInstall = hasContent && frontmatter.ok && !installing;
+  const canInstall = hasContent && frontmatter.ok && !busy;
 
   const warning = !hasContent || frontmatter.ok ? null : warningFor(frontmatter, t);
 
@@ -54,7 +58,7 @@ export function LocalSkillForm() {
     setFileName(name);
   }, []);
 
-  const { dragging } = useFileDrop({ enabled: !installing, onFile: handleDropped });
+  const { dragging } = useFileDrop({ enabled: !busy, onFile: handleDropped });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -69,8 +73,39 @@ export function LocalSkillForm() {
     });
   };
 
+  const pickFolder = async () => {
+    const selected = await open({
+      directory: true,
+      multiple: false,
+      title: t("folderTitle"),
+    }).catch(() => null);
+    if (typeof selected === "string") await installPath(selected);
+  };
+
+  const pickArchive = async () => {
+    const selected = await open({
+      directory: false,
+      multiple: false,
+      title: t("archiveTitle"),
+      filters: [{ name: "Skill archive", extensions: ["zip", "skill"] }],
+    }).catch(() => null);
+    if (typeof selected === "string") await installPath(selected);
+  };
+
   return (
     <FormSection eyebrow={t("eyebrow")} title={t("title")} subtitle={t("subtitle")}>
+      <div className="flex flex-wrap items-center gap-3 border border-border bg-surface px-3 py-2">
+        <p className="min-w-0 flex-1 font-body text-xs text-fg-4">{t("bundleHint")}</p>
+        <Button size="sm" variant="secondary" onClick={() => void pickFolder()} disabled={busy}>
+          <FolderOpen size={12} aria-hidden />
+          {t("chooseFolder")}
+        </Button>
+        <Button size="sm" variant="secondary" onClick={() => void pickArchive()} disabled={busy}>
+          <FileArchive size={12} aria-hidden />
+          {t("chooseArchive")}
+        </Button>
+      </div>
+
       <div className="flex flex-col gap-1.5">
         <div className="flex items-end justify-between gap-3">
           <FieldLabel htmlFor={CONTENT_ID}>{t("contentLabel")}</FieldLabel>
@@ -86,7 +121,7 @@ export function LocalSkillForm() {
             variant="secondary"
             className="shrink-0"
             onClick={() => fileRef.current?.click()}
-            disabled={installing}
+            disabled={busy}
           >
             <FileUp size={12} aria-hidden />
             {t("fileButton")}
@@ -100,7 +135,7 @@ export function LocalSkillForm() {
             placeholder={t("contentPlaceholder")}
             spellCheck={false}
             rows={10}
-            disabled={installing}
+            disabled={busy}
             invalid={warning !== null}
             aria-describedby={`${CONTENT_ID}-status`}
             className="resize-y min-h-45"
@@ -131,7 +166,7 @@ export function LocalSkillForm() {
                 : t("hint"))}
         </p>
         <div className="flex items-center gap-2">
-          <Button size="lg" variant="quiet" onClick={reset} disabled={installing || !hasContent}>
+          <Button size="lg" variant="quiet" onClick={reset} disabled={busy || !hasContent}>
             {t("clear")}
           </Button>
           <Button
