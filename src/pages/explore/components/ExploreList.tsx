@@ -9,6 +9,7 @@ import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
 import { SkillNameCell } from "@/components/discovery/SkillNameCell";
 import { SkillSourceCell } from "@/components/discovery/SkillSourceCell";
 import { ListSkeleton } from "@/components/ListSkeleton";
+import { TableLabel } from "@/components/TableLabel";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
@@ -59,7 +60,7 @@ export function ExploreList({
     (): TableColumn<SkillExploreResult>[] => [
       {
         key: "rank",
-        label: "#",
+        label: <TableLabel>#</TableLabel>,
         align: "end",
         width: "8%",
         render: (_result, index) => (
@@ -70,7 +71,7 @@ export function ExploreList({
       },
       {
         key: "name",
-        label: t("colName"),
+        label: <TableLabel>{t("colName")}</TableLabel>,
         width: "34%",
         render: (result) => (
           <div className="flex min-w-0 flex-col gap-1">
@@ -86,7 +87,7 @@ export function ExploreList({
       },
       {
         key: "source",
-        label: t("colSource"),
+        label: <TableLabel>{t("colSource")}</TableLabel>,
         width: "26%",
         render: (result) => (
           <div className="flex min-w-0 flex-col gap-1">
@@ -96,7 +97,7 @@ export function ExploreList({
       },
       {
         key: "installs",
-        label: t(installsColumnKey(view)),
+        label: <TableLabel>{t(installsColumnKey(view))}</TableLabel>,
         align: "end",
         width: "12%",
         render: (result) => (
@@ -107,7 +108,7 @@ export function ExploreList({
       },
       {
         key: "actions",
-        label: t("colActions"),
+        label: <TableLabel>{t("colActions")}</TableLabel>,
         align: "end",
         width: "20%",
         render: (result) => (
