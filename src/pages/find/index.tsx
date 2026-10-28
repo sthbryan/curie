@@ -1,12 +1,16 @@
+import { Field } from "@zovaris/sephiro/field";
+import { Input } from "@zovaris/sephiro/input";
 import { X } from "lucide-react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { When } from "react-if";
 
+import "@zovaris/sephiro/css/field.css";
+import "@zovaris/sephiro/css/input.css";
+
 import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Heading } from "@/components/Heading";
-import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
 import { ScopeBanner } from "@/components/ScopeBanner";
 import { useT } from "@/i18n";
@@ -19,6 +23,7 @@ import { ResultsPanel } from "./components/ResultsPanel";
 import { useFindActions } from "./hooks/useFindActions";
 
 const DEBOUNCE_MS = 280;
+const QUERY_ID = "find-query";
 
 export function Find() {
   const t = useT("find");
@@ -37,12 +42,11 @@ export function Find() {
 
   const [query, setQuery] = useState("");
   const [owner, setOwner] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
   const debounce = useRef(0);
   const installBusy = installingPackage !== null;
 
   useEffect(() => {
-    inputRef.current?.focus();
+    document.getElementById(QUERY_ID)?.focus();
   }, []);
 
   useEffect(() => {
@@ -83,7 +87,7 @@ export function Find() {
   const handleClear = () => {
     setQuery("");
     setOwner("");
-    inputRef.current?.focus();
+    document.getElementById(QUERY_ID)?.focus();
   };
 
   const qLen = query.trim().length;
@@ -129,26 +133,28 @@ export function Find() {
           {...fadeUp(0.05)}
           className="flex shrink-0 flex-wrap items-end gap-3 border-b border-border pb-4"
         >
-          <Input
-            ref={inputRef}
-            label={t("query")}
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("queryPlaceholder")}
-            wrapperClassName="min-w-64 flex-1"
-          />
-          <Input
-            label={t("owner")}
-            type="text"
-            value={owner}
-            onChange={(e) => setOwner(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("ownerPlaceholder")}
-            spellCheck={false}
-            wrapperClassName="w-full sm:w-48 shrink-0"
-          />
+          <Field label={t("query")} className="min-w-64 flex-1">
+            <Input
+              id={QUERY_ID}
+              type="search"
+              size="lg"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={t("queryPlaceholder")}
+            />
+          </Field>
+          <Field label={t("owner")} className="w-full shrink-0 sm:w-48">
+            <Input
+              type="text"
+              size="lg"
+              value={owner}
+              onChange={(e) => setOwner(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={t("ownerPlaceholder")}
+              spellCheck={false}
+            />
+          </Field>
 
           <When condition={qLen > 0 || owner.length > 0}>
             <Button size="sm" variant="ghost" className="h-10" onClick={handleClear}>
