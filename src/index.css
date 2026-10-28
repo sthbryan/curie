@@ -43,6 +43,59 @@
   --animate-bar-grow: bar-grow 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Sephiro token contract. Curie's palette stays the source of truth: each --sph-*
+   points at a Curie token, so an app theme change reaches the components too.
+   Sephiro components read most values with bare var(--sph-*), so this block has
+   to be complete before a component is rendered. */
+:root {
+  --sph-bg: var(--color-bg);
+  --sph-surface: var(--color-surface);
+  --sph-surface-elevated: var(--color-surface-tint);
+  --sph-raised: var(--color-surface-hover);
+  --sph-border: var(--color-border);
+  --sph-border-strong: var(--color-border-strong);
+  --sph-text: var(--color-fg);
+  --sph-text-muted: var(--color-fg-2);
+
+  --sph-accent: var(--color-accent);
+  --sph-accent-hover: color-mix(in srgb, var(--color-accent) 85%, var(--color-fg));
+  --sph-accent-pressed: color-mix(in srgb, var(--color-accent) 72%, var(--color-fg));
+  --sph-accent-strong: color-mix(in srgb, var(--color-accent) 72%, var(--color-fg));
+  --sph-accent-soft: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  --sph-on-accent: var(--color-accent-fg);
+
+  --sph-success: var(--color-success);
+  --sph-success-soft: color-mix(in srgb, var(--color-success) 15%, transparent);
+  --sph-warning: var(--color-warning);
+  --sph-warning-soft: color-mix(in srgb, var(--color-warning) 15%, transparent);
+  --sph-danger: var(--color-error);
+  --sph-danger-soft: color-mix(in srgb, var(--color-error) 15%, transparent);
+
+  --sph-focus: var(--color-accent);
+  --sph-focus-ring: color-mix(in srgb, var(--color-accent) 24%, transparent);
+
+  --sph-font-sans: var(--font-body);
+  --sph-font-mono: var(--font-mono);
+
+  --sph-radius-xs: var(--radius-sm);
+  --sph-radius-sm: var(--radius-sm);
+  --sph-radius-md: var(--radius-md);
+
+  --sph-motion-fast: 0.12s;
+  --sph-motion-normal: 0.18s;
+  --sph-motion-slow: 0.28s;
+  --sph-motion-stagger: 26ms;
+
+  --sph-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --sph-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --sph-ease-exit: cubic-bezier(0.4, 0, 0.2, 1);
+  --sph-ease-spring: cubic-bezier(0.3, 1.45, 0.45, 1);
+  --sph-ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --sph-ease-sweep: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --sph-shadow-popover: 0 14px 36px rgb(0 0 0 / 0.38);
+}
+
 @keyframes bar-grow {
   from {
     transform: scaleX(0);
@@ -119,6 +172,13 @@
   animation: anim-dialog 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+:root[data-reduced-motion="always"] {
+  --sph-motion-fast: 0s;
+  --sph-motion-normal: 0s;
+  --sph-motion-slow: 0s;
+  --sph-motion-stagger: 0s;
+}
+
 :root[data-reduced-motion="always"] [data-anim],
 :root[data-reduced-motion="always"]::view-transition-old(root),
 :root[data-reduced-motion="always"]::view-transition-new(root) {
@@ -126,6 +186,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  :root:not([data-reduced-motion="never"]) {
+    --sph-motion-fast: 0s;
+    --sph-motion-normal: 0s;
+    --sph-motion-slow: 0s;
+    --sph-motion-stagger: 0s;
+  }
+
   :root:not([data-reduced-motion="never"]) [data-anim],
   :root:not([data-reduced-motion="never"])::view-transition-old(root),
   :root:not([data-reduced-motion="never"])::view-transition-new(root) {
