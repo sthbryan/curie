@@ -1,12 +1,14 @@
+import { Table, type TableColumn } from "@zovaris/sephiro/table";
 import { type ReactNode, useMemo } from "react";
 import { Case, Default, Switch } from "react-if";
+
+import "@zovaris/sephiro/css/table.css";
 
 import { Button } from "@/components/Button";
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
 import { SkillNameCell } from "@/components/discovery/SkillNameCell";
 import { SkillSourceCell } from "@/components/discovery/SkillSourceCell";
-import type { ColumnDef } from "@/components/Table";
-import { Table } from "@/components/Table";
+import { ListSkeleton } from "@/components/ListSkeleton";
 import type { ExploreView, SkillExploreResult } from "@/components/types";
 import { useT } from "@/i18n";
 import { fadeUp } from "@/lib/motion";
@@ -35,7 +37,7 @@ function installsColumnKey(view: ExploreView): string {
   return "colInstalls";
 }
 
-const EXPLORE_GRID = "grid-cols-[2.5rem_minmax(0,1.2fr)_minmax(0,1fr)_5.5rem_7rem]";
+const FRAME = "min-h-0 flex-1";
 const ROW_HEIGHT = 61;
 
 export function ExploreList({
@@ -54,13 +56,13 @@ export function ExploreList({
 }: Props) {
   const t = useT("explore");
   const columns = useMemo(
-    (): ColumnDef<SkillExploreResult>[] => [
+    (): TableColumn<SkillExploreResult>[] => [
       {
         key: "rank",
-        header: "#",
-        headerClassName: "text-right",
-        cellClassName: "pt-0.5 text-right",
-        cell: (_result, index) => (
+        label: "#",
+        align: "end",
+        width: "8%",
+        render: (_result, index) => (
           <span className="font-mono uppercase tracking-label text-micro text-fg-4">
             {index + 1}
           </span>
@@ -68,45 +70,57 @@ export function ExploreList({
       },
       {
         key: "name",
-        header: t("colName"),
-        cellClassName: "min-w-0 flex flex-col gap-1",
-        cell: (result) => (
-          <SkillNameCell
-            ns="explore"
-            name={result.name}
-            pkg={result.package}
-            installed={installedPackages.has(result.package)}
-            official={result.isOfficial}
-          />
+        label: t("colName"),
+        width: "34%",
+        render: (result) => (
+          <div className="flex min-w-0 flex-col gap-1">
+            <SkillNameCell
+              ns="explore"
+              name={result.name}
+              pkg={result.package}
+              installed={installedPackages.has(result.package)}
+              official={result.isOfficial}
+            />
+          </div>
         ),
       },
       {
         key: "source",
-        header: t("colSource"),
-        cellClassName: "min-w-0 flex flex-col gap-1",
-        cell: (result) => <SkillSourceCell ns="explore" source={result.source} url={result.url} />,
+        label: t("colSource"),
+        width: "26%",
+        render: (result) => (
+          <div className="flex min-w-0 flex-col gap-1">
+            <SkillSourceCell ns="explore" source={result.source} url={result.url} />
+          </div>
+        ),
       },
       {
         key: "installs",
-        header: t(installsColumnKey(view)),
-        headerClassName: "text-right",
-        cellClassName: "flex flex-col items-end gap-0.5",
-        cell: (result) => <MetricCell view={view} result={result} />,
+        label: t(installsColumnKey(view)),
+        align: "end",
+        width: "12%",
+        render: (result) => (
+          <div className="flex flex-col items-end gap-0.5">
+            <MetricCell view={view} result={result} />
+          </div>
+        ),
       },
       {
         key: "actions",
-        header: t("colActions"),
-        headerClassName: "text-right",
-        cellClassName: "flex justify-end",
-        cell: (result) => (
-          <SkillInstallAction
-            ns="explore"
-            pkg={result.package}
-            installed={installedPackages.has(result.package)}
-            installing={installingPackage === result.package}
-            busy={installBusy}
-            onInstall={onInstall}
-          />
+        label: t("colActions"),
+        align: "end",
+        width: "20%",
+        render: (result) => (
+          <div className="flex justify-end">
+            <SkillInstallAction
+              ns="explore"
+              pkg={result.package}
+              installed={installedPackages.has(result.package)}
+              installing={installingPackage === result.package}
+              busy={installBusy}
+              onInstall={onInstall}
+            />
+          </div>
         ),
       },
     ],
@@ -116,7 +130,7 @@ export function ExploreList({
   let footer: ReactNode = null;
   if (hasMore) {
     footer = (
-      <div className="flex justify-center py-6">
+      <div className="flex shrink-0 justify-center py-4">
         <Button
           size="sm"
           variant="outline"
@@ -129,7 +143,7 @@ export function ExploreList({
     );
   } else if (atCap) {
     footer = (
-      <div className="flex justify-center py-6">
+      <div className="flex shrink-0 justify-center py-4">
         <span className="font-mono uppercase tracking-label text-micro text-fg-4">
           {t("capReached", { n: MAX_EXPLORE_SKILLS })}
         </span>
@@ -140,14 +154,7 @@ export function ExploreList({
   return (
     <Switch>
       <Case condition={loading}>
-        <Table
-          columns={columns}
-          rows={[]}
-          gridTemplate={EXPLORE_GRID}
-          loading
-          skeletonRows={8}
-          getRowKey={() => ""}
-        />
+        <ListSkeleton rows={8} />
       </Case>
 
       <Case condition={empty}>
@@ -161,15 +168,18 @@ export function ExploreList({
       </Case>
 
       <Case condition={skills.length > 0}>
-        <Table
-          columns={columns}
-          rows={skills}
-          gridTemplate={EXPLORE_GRID}
-          rowHeight={ROW_HEIGHT}
-          getRowKey={(r) => r.id}
-          viewportClassName="pr-1"
-          footer={footer}
-        />
+        <>
+          <Table
+            className={FRAME}
+            style={{ tableLayout: "fixed" }}
+            columns={columns}
+            rows={skills}
+            getRowId={(result) => result.id}
+            stickyHeader
+            virtualRowHeight={ROW_HEIGHT}
+          />
+          {footer}
+        </>
       </Case>
 
       <Default>{null}</Default>

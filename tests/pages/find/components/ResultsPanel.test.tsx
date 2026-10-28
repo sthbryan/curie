@@ -23,7 +23,7 @@ const results = (n: number): SkillSearchResult[] =>
     url: `https://skills.sh/owner/skill-${i}`,
   }));
 
-function mount(rows: SkillSearchResult[]) {
+function mount(rows: SkillSearchResult[], loading = false) {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
@@ -31,7 +31,7 @@ function mount(rows: SkillSearchResult[]) {
     root?.render(
       <ResultsPanel
         showHint={false}
-        loading={false}
+        loading={loading}
         empty={false}
         results={rows}
         installedPackages={new Set()}
@@ -62,25 +62,24 @@ beforeEach(() => {
 });
 
 describe("ResultsPanel", () => {
-  it("scrolls inside itself instead of growing the page", () => {
+  it("handles its own scrolling instead of growing the page", () => {
     mount(results(40));
-    const viewport = container?.querySelector(".overflow-y-auto");
-    expect(viewport).not.toBeNull();
-    expect(viewport?.className).toContain("flex-1");
-    expect(viewport?.className).toContain("min-h-0");
+    const wrap = container?.querySelector(".sph-table-wrap");
+    expect(wrap).not.toBeNull();
+    expect(wrap?.className).toContain("flex-1");
+    expect(wrap?.className).toContain("min-h-0");
+    expect(wrap?.getAttribute("data-virtual")).toBe("true");
   });
 
-  it("keeps a long result set out of the dom", () => {
-    mount(results(200));
-    const rendered = container?.querySelectorAll("article").length ?? 0;
-    expect(rendered).toBeGreaterThan(0);
-    expect(rendered).toBeLessThan(40);
+  it("renders a row per result", () => {
+    mount(results(40));
+    expect(container?.querySelectorAll("tbody tr").length).toBe(40);
+    expect(container?.textContent).toContain("skill-39");
   });
 
-  it("reserves the height of the rows it does not render", () => {
-    mount(results(200));
-    const padded = container?.querySelector("[style*='padding-bottom']") as HTMLElement | null;
-    expect(padded).not.toBeNull();
-    expect(Number.parseInt(padded?.style.paddingBottom ?? "0", 10)).toBeGreaterThan(1000);
+  it("shows skeleton rows while the search is in flight", () => {
+    mount([], true);
+    expect(container?.querySelectorAll(".sph-skeleton").length).toBeGreaterThan(0);
+    expect(container?.querySelector("tbody")).toBeNull();
   });
 });

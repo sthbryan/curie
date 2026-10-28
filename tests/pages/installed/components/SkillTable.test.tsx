@@ -31,7 +31,7 @@ const noop = () => {};
 describe("SkillTable", () => {
   it("renders a row per visible skill", () => {
     const el = mount(<SkillTable onAskRemove={noop} />);
-    expect(el.querySelectorAll("article").length).toBe(2);
+    expect(el.querySelectorAll("tbody tr").length).toBe(2);
     expect(text(el)).toContain("alpha");
     expect(text(el)).toContain("/skills/beta");
   });
@@ -73,8 +73,8 @@ describe("SkillTable", () => {
 
   it("drives the store when a header is clicked", () => {
     const el = mount(<SkillTable onAskRemove={noop} />);
-    const header = Array.from(el.querySelectorAll("button")).find((b) =>
-      b.getAttribute("aria-label")?.startsWith("NAME"),
+    const header = Array.from(el.querySelectorAll("thead button")).find((b) =>
+      b.textContent?.startsWith("NAME"),
     );
     click(header);
     expect(sortKey.value).toBe("name");
@@ -84,7 +84,7 @@ describe("SkillTable", () => {
   it("reflects the sorted order from the store", () => {
     sortDir.value = "desc";
     const el = mount(<SkillTable onAskRemove={noop} />);
-    const names = Array.from(el.querySelectorAll("article")).map(
+    const names = Array.from(el.querySelectorAll("tbody tr")).map(
       (row) => row.querySelector("span")?.textContent,
     );
     expect(names).toEqual(["beta", "alpha"]);
@@ -93,7 +93,7 @@ describe("SkillTable", () => {
   it("narrows the rows with the active query", () => {
     query.value = "beta";
     const el = mount(<SkillTable onAskRemove={noop} />);
-    expect(el.querySelectorAll("article").length).toBe(1);
+    expect(el.querySelectorAll("tbody tr").length).toBe(1);
     expect(text(el)).toContain("beta");
   });
 });
