@@ -1,6 +1,9 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { SegmentedControl } from "@zovaris/sephiro/segmented-control";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Else, If, Then } from "react-if";
+
+import "@zovaris/sephiro/css/segmented-control.css";
 
 import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
@@ -42,8 +45,6 @@ export function Settings() {
   const t = useT("settings");
   const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } = systemStore;
 
-  const handleLangEN = () => setLang("en");
-  const handleLangES = () => setLang("es");
   const handleOpenGitHub = () => {
     void Promise.resolve(openUrl("https://github.com/sthbryan/curie")).catch(() => {
       // ignore
@@ -71,18 +72,16 @@ export function Settings() {
                 <span className="font-body text-sm text-fg-3 hidden sm:inline">
                   {t(lang.value === "en" ? "languageENFull" : "languageESFull")}
                 </span>
-                <div className="flex">
-                  <ChoiceButton
-                    active={lang.value === "en"}
-                    label={t("languageEN")}
-                    onClick={handleLangEN}
-                  />
-                  <ChoiceButton
-                    active={lang.value === "es"}
-                    label={t("languageES")}
-                    onClick={handleLangES}
-                  />
-                </div>
+                <SegmentedControl
+                  ariaLabel={t("language")}
+                  size="sm"
+                  value={lang.value}
+                  options={[
+                    { value: "en", label: t("languageEN") },
+                    { value: "es", label: t("languageES") },
+                  ]}
+                  onValueChange={(value) => setLang(value === "es" ? "es" : "en")}
+                />
               </div>
             </Row>
 
