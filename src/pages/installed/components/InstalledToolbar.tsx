@@ -1,7 +1,11 @@
+import { Field } from "@zovaris/sephiro/field";
+import { Input } from "@zovaris/sephiro/input";
 import { X } from "lucide-react";
 
+import "@zovaris/sephiro/css/field.css";
+import "@zovaris/sephiro/css/input.css";
+
 import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
 import { useT } from "@/i18n";
 import { skills } from "@/store/skills";
 
@@ -15,14 +19,15 @@ export function InstalledToolbar() {
 
   return (
     <section className="flex flex-wrap items-end gap-3">
-      <Input
-        label={t("search")}
-        type="search"
-        value={queryInput.value}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder={t("searchPlaceholder")}
-        wrapperClassName="min-w-64 flex-1"
-      />
+      <Field label={t("search")} className="min-w-64 flex-1">
+        <Input
+          type="search"
+          size="lg"
+          value={queryInput.value}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t("searchPlaceholder")}
+        />
+      </Field>
 
       <AgentSelect />
 
