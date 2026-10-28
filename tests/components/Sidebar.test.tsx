@@ -13,12 +13,16 @@ import { lang } from "@/store/system";
 let root: ReturnType<typeof createRoot> | null = null;
 let container: HTMLDivElement | null = null;
 
-function mount(ui: React.ReactElement) {
+function mount() {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
   act(() => {
-    root?.render(ui);
+    root?.render(
+      <Router>
+        <Sidebar />
+      </Router>,
+    );
   });
 }
 
@@ -38,47 +42,46 @@ function unmount() {
 afterEach(unmount);
 beforeEach(() => {
   lang.value = "en";
+  window.history.replaceState({}, "", "/find");
 });
 
 describe("Sidebar", () => {
-  it("renders nav items", () => {
-    mount(
-      <Router>
-        <Sidebar />
-      </Router>,
-    );
-    expect(container?.querySelector("nav")).not.toBeNull();
+  it("renders every section plus the settings entry", () => {
+    mount();
+    const items = Array.from(container?.querySelectorAll("button") ?? []);
+    expect(items).toHaveLength(7);
+    expect(container?.textContent).toContain("HOME");
+    expect(container?.textContent).toContain("SETTINGS");
   });
 
   it("keeps the rail out of the flow so the page never reflows", () => {
-    mount(
-      <Router>
-        <Sidebar />
-      </Router>,
-    );
-    const nav = container?.querySelector("nav");
-    expect(nav?.className).toContain("absolute");
-    expect((container?.firstElementChild as HTMLElement | null)?.style.width).toBe("50px");
+    mount();
+    const aside = container?.querySelector("aside");
+    expect(aside?.className).toContain("absolute");
+    expect((container?.firstElementChild as HTMLElement | null)?.style.width).toBe("56px");
   });
 
-  it("reveals the labels when a nav item takes focus", () => {
-    mount(
-      <Router>
-        <Sidebar />
-      </Router>,
+  it("collapses to a rail that expands on hover and focus", () => {
+    mount();
+    const aside = container?.querySelector("aside");
+    expect(aside?.getAttribute("data-collapsed-mode")).toBe("hover");
+    expect(aside?.hasAttribute("data-rail")).toBe(true);
+  });
+
+  it("marks the current section", () => {
+    mount();
+    const current = container?.querySelector('[aria-current="page"]');
+    expect(current?.textContent).toContain("FIND");
+  });
+
+  it("navigates when an item is clicked", () => {
+    mount();
+    const home = Array.from(container?.querySelectorAll("button") ?? []).find((button) =>
+      button.textContent?.includes("HOME"),
     );
-    const label = () => container?.querySelector("button > span:last-child") as HTMLElement;
-
-    expect(label().getAttribute("aria-hidden")).toBe("true");
-    expect(label().className).toContain("opacity-0");
-
-    const first = container?.querySelector("button") as HTMLButtonElement;
     act(() => {
-      first.focus();
+      home?.click();
     });
-
-    expect(label().getAttribute("aria-hidden")).toBe("false");
-    expect(label().className).toContain("opacity-100");
-    expect(label().textContent).toContain("HOME");
+    expect(window.location.pathname).toBe("/");
   });
 });

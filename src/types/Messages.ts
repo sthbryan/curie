@@ -51,6 +51,7 @@ export type Messages = {
     updateInstallFailed: string;
   };
   nav: {
+    primary: string;
     home: string;
     skills: string;
     explore: string;

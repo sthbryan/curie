@@ -51,6 +51,7 @@
     "updateInstallFailed": "The update could not be installed."
   },
   "nav": {
+    "primary": "Primary navigation",
     "home": "HOME",
     "skills": "SKILLS",
     "explore": "EXPLORE",
