@@ -1,3 +1,4 @@
+import { Button } from "@zovaris/sephiro/button";
 import { Field } from "@zovaris/sephiro/field";
 import { Input } from "@zovaris/sephiro/input";
 import { X } from "lucide-react";
@@ -8,7 +9,6 @@ import { When } from "react-if";
 import "@zovaris/sephiro/css/field.css";
 import "@zovaris/sephiro/css/input.css";
 
-import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
@@ -157,7 +157,7 @@ export function Find() {
           </Field>
 
           <When condition={qLen > 0 || owner.length > 0}>
-            <Button size="sm" variant="ghost" className="h-10" onClick={handleClear}>
+            <Button size="lg" variant="quiet" onClick={handleClear}>
               <X size={12} />
               {t("clear")}
             </Button>

@@ -1,7 +1,7 @@
+import { IconButton } from "@zovaris/sephiro/icon-button";
 import { ArrowUp, X } from "lucide-react";
 
 import { ActionProgress } from "@/components/ActionProgress";
-import { IconButton } from "@/components/IconButton";
 import { useT } from "@/i18n";
 
 import { removingSkill, update, updatingSkill } from "../store/store";
@@ -28,28 +28,26 @@ export function RowActions({ name, outdated, busy, onAskRemove }: Props) {
     <>
       {outdated ? (
         <IconButton
-          variant="accent"
+          icon={<ArrowUp size={14} />}
+          variant="solid"
           size="sm"
           label={t("updateOne")}
           disabled={busy}
           onClick={() => {
             update([name]).catch(() => {});
           }}
-        >
-          <ArrowUp size={14} />
-        </IconButton>
+        />
       ) : (
-        <span className="inline-block h-7 w-7 shrink-0" aria-hidden />
+        <span className="inline-block h-8 w-8 shrink-0" aria-hidden />
       )}
       <IconButton
-        variant="danger"
+        icon={<X size={13} />}
+        variant="outline"
         size="sm"
         label={t("remove")}
         disabled={busy}
         onClick={() => onAskRemove(name)}
-      >
-        <X size={13} />
-      </IconButton>
+      />
     </>
   );
 }

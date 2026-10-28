@@ -1,3 +1,4 @@
+import { Button } from "@zovaris/sephiro/button";
 import { Table, type TableColumn } from "@zovaris/sephiro/table";
 import { CloudDownload, Compass } from "lucide-react";
 import { useMemo } from "react";
@@ -5,7 +6,6 @@ import { Case, Default, Switch } from "react-if";
 
 import "@zovaris/sephiro/css/table.css";
 
-import { Button } from "@/components/Button";
 import { SkillInstallAction } from "@/components/discovery/SkillInstallAction";
 import { SkillNameCell } from "@/components/discovery/SkillNameCell";
 import { SkillSourceCell } from "@/components/discovery/SkillSourceCell";
@@ -113,7 +113,7 @@ export function ResultsPanel({
         >
           <span className="font-body text-sm text-fg">{t("hint")}</span>
           <p className="font-body text-sm text-fg-3">{t("hintExplore")}</p>
-          <Button size="sm" variant="outline" onClick={onGoExplore}>
+          <Button size="sm" variant="secondary" onClick={onGoExplore}>
             <Compass size={12} strokeWidth={1.5} />
             {t("goExplore")}
           </Button>

@@ -1,11 +1,11 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { Button } from "@zovaris/sephiro/button";
 import { SegmentedControl } from "@zovaris/sephiro/segmented-control";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Else, If, Then } from "react-if";
 
 import "@zovaris/sephiro/css/segmented-control.css";
 
-import { Button } from "@/components/Button";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { REDUCED_MOTION_OPTIONS, type ReducedMotionPref, THEME_OPTIONS } from "@/components/types";
@@ -155,9 +155,9 @@ export function Settings() {
             <span>{APP_NAME}</span>
             <span className="text-fg-4">·</span>
             <Button
-              size="xs"
-              variant="link"
-              className="px-0 hover:underline cursor-pointer inline-flex items-center gap-1"
+              size="sm"
+              variant="quiet"
+              className="hover:underline cursor-pointer"
               onClick={handleOpenGitHub}
             >
               github.com/sthbryan/curie

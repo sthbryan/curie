@@ -1,10 +1,10 @@
+import { Button } from "@zovaris/sephiro/button";
 import { Textarea } from "@zovaris/sephiro/textarea";
 import { FileUp, LoaderCircle, Save } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
 import "@zovaris/sephiro/css/textarea.css";
 
-import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 
@@ -83,7 +83,7 @@ export function LocalSkillForm() {
           />
           <Button
             size="sm"
-            variant="outline"
+            variant="secondary"
             className="shrink-0"
             onClick={() => fileRef.current?.click()}
             disabled={installing}
@@ -133,7 +133,7 @@ export function LocalSkillForm() {
         <div className="flex items-center gap-2">
           <Button
             size="lg"
-            variant="ghost"
+            variant="quiet"
             className="px-5"
             onClick={reset}
             disabled={installing || !hasContent}

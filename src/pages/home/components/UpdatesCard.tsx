@@ -1,6 +1,6 @@
+import { Button } from "@zovaris/sephiro/button";
 import { RotateCcw } from "lucide-react";
 
-import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { updatesError } from "@/store/skills";
@@ -24,9 +24,8 @@ export function UpdatesCard() {
         title={t("updates")}
         meta={
           <Button
-            size="xs"
-            variant="link"
-            className="px-0"
+            size="sm"
+            variant="quiet"
             onClick={check}
             disabled={checking}
             aria-label={t("updatesCheck")}

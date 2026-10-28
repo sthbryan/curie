@@ -1,10 +1,10 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { Button } from "@zovaris/sephiro/button";
 import { RefreshCw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { When } from "react-if";
 import { toast } from "sonner";
 
-import { Button } from "@/components/Button";
 import { ChoiceButton } from "@/components/ChoiceButton";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { Heading } from "@/components/Heading";
@@ -107,11 +107,11 @@ export function Explore() {
                 <p className="font-body text-sm text-fg-3 max-w-lg">{t("subtitle")}</p>
               </div>
               <div className="flex shrink-0 gap-2">
-                <Button size="sm" variant="outline" onClick={handleGoFind}>
+                <Button size="sm" variant="secondary" onClick={handleGoFind}>
                   <Search size={14} />
                   {t("goFind")}
                 </Button>
-                <Button size="sm" variant="ghost" onClick={handleOpenSite}>
+                <Button size="sm" variant="quiet" onClick={handleOpenSite}>
                   <SquareArrowOutUpRight size={14} />
                   {t("openSite")}
                 </Button>
@@ -164,7 +164,7 @@ export function Explore() {
             >
               {statusLabel}
             </span>
-            <Button size="sm" variant="outline" onClick={handleRefresh} disabled={loading}>
+            <Button size="sm" variant="secondary" onClick={handleRefresh} disabled={loading}>
               <RefreshCw
                 size={11}
                 strokeWidth={1.5}

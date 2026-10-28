@@ -1,7 +1,6 @@
+import { Button } from "@zovaris/sephiro/button";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-
-import { Button } from "@/components/Button";
 
 type Props = {
   open: boolean;
@@ -41,7 +40,7 @@ export function ConfirmDialog(props: Props) {
   const descId = useId();
   const phraseId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
-  const cancelRef = useRef<HTMLButtonElement>(null);
+  const cancelRef = useRef<HTMLSpanElement>(null);
   const [typed, setTyped] = useState("");
 
   useEffect(() => {
@@ -56,7 +55,7 @@ export function ConfirmDialog(props: Props) {
     const previous = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    cancelRef.current?.focus();
+    cancelRef.current?.querySelector("button")?.focus();
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && !busy) {
@@ -154,16 +153,12 @@ export function ConfirmDialog(props: Props) {
             </div>
           ) : null}
           <div className="flex justify-end gap-2">
-            <Button
-              ref={cancelRef}
-              size="sm"
-              variant="outline"
-              onClick={handleCancel}
-              disabled={busy}
-            >
-              {cancelLabel}
-            </Button>
-            <Button size="sm" variant="accent" onClick={onConfirm} disabled={busy || !unlocked}>
+            <span ref={cancelRef} className="contents">
+              <Button size="sm" variant="secondary" onClick={handleCancel} disabled={busy}>
+                {cancelLabel}
+              </Button>
+            </span>
+            <Button size="sm" variant="primary" onClick={onConfirm} disabled={busy || !unlocked}>
               {busy && busyLabel ? busyLabel : confirmLabel}
             </Button>
           </div>

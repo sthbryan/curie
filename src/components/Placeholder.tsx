@@ -1,9 +1,9 @@
+import { Button } from "@zovaris/sephiro/button";
 import { useLocation } from "wouter";
 
 import { Heading } from "@/components/Heading";
 import { useT } from "@/i18n";
 
-import { Button } from "./Button";
 import type { View } from "./types";
 
 type Props = {
@@ -24,7 +24,7 @@ export function Placeholder({ view }: Props) {
       <span className="font-mono uppercase tracking-label text-mono text-fg-3">
         {t("home.notBuilt")}
       </span>
-      <Button size="md" variant="outline" className="mt-4" onClick={handleGoHome}>
+      <Button size="md" variant="secondary" className="mt-4" onClick={handleGoHome}>
         {t("home.back")}
       </Button>
     </main>

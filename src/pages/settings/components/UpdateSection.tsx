@@ -1,9 +1,9 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { Button } from "@zovaris/sephiro/button";
 import { Download, RotateCcw, SquareArrowOutUpRight, TriangleAlert } from "lucide-react";
 import { Case, Default, Switch } from "react-if";
 import { toast } from "sonner";
 
-import { Button } from "@/components/Button";
 import { Label } from "@/components/Label";
 import { useT } from "@/i18n";
 import { checkAppUpdate, installAppUpdate, RESTART_DELAY, restartApp } from "@/lib/boot";
@@ -67,7 +67,7 @@ export function UpdateSection() {
           </span>
         </div>
 
-        <Button size="sm" variant="outline" onClick={handleCheck} disabled={checking}>
+        <Button size="sm" variant="secondary" onClick={handleCheck} disabled={checking}>
           <RotateCcw size={12} className={cn(checking && !shouldReduceMotion && "animate-spin")} />
           {checking ? t("updateChecking") : t("updateCheckBtn")}
         </Button>
@@ -95,15 +95,15 @@ export function UpdateSection() {
               </div>
               <div className="flex items-center gap-2">
                 <Button
-                  size="xs"
-                  variant="accent"
+                  size="sm"
+                  variant="primary"
                   onClick={handleInstall}
                   disabled={appInstallRunning.value}
                 >
                   <Download size={10} strokeWidth={1.5} />
                   {appInstallRunning.value ? t("updateInstalling") : t("updateInstall")}
                 </Button>
-                <Button size="xs" variant="outline" onClick={handleOpenRelease}>
+                <Button size="sm" variant="secondary" onClick={handleOpenRelease}>
                   {t("updateOpenFallback")}
                   <SquareArrowOutUpRight size={10} strokeWidth={1.5} />
                 </Button>

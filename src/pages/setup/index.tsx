@@ -1,7 +1,7 @@
+import { Button } from "@zovaris/sephiro/button";
 import { ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 
-import { Button } from "@/components/Button";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import { FullPageLoading } from "@/components/FullPageLoading";
 import type { NodeInfo, SetupStep } from "@/components/types";
@@ -90,7 +90,7 @@ export function Setup({ onComplete }: Props) {
         </Button>
         <Button
           size="lg"
-          variant="ghost"
+          variant="quiet"
           aria-expanded={manualOpen}
           onClick={() => setManualOpen((open) => !open)}
         >

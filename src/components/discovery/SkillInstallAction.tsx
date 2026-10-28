@@ -1,7 +1,7 @@
+import { Button } from "@zovaris/sephiro/button";
 import { Check, Plus } from "lucide-react";
 
 import { ActionProgress } from "@/components/ActionProgress";
-import { Button } from "@/components/Button";
 import { useT } from "@/i18n";
 import { useScope } from "@/lib/routes";
 
@@ -41,8 +41,8 @@ export function SkillInstallAction({ ns, pkg, installed, installing, busy, onIns
 
   return (
     <Button
-      size="xs"
-      variant={scoped ? "accent" : "primary"}
+      size="sm"
+      variant="primary"
       title={scoped ? t("installTarget", { name: scope.project.name }) : undefined}
       onClick={handleInstall}
       disabled={busy}
