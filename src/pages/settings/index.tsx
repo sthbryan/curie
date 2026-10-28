@@ -4,8 +4,6 @@ import { SegmentedControl } from "@zovaris/sephiro/segmented-control";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Else, If, Then } from "react-if";
 
-import "@zovaris/sephiro/css/segmented-control.css";
-
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import { REDUCED_MOTION_OPTIONS, type ReducedMotionPref, THEME_OPTIONS } from "@/components/types";

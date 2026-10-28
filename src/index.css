@@ -6,6 +6,7 @@
 @import "@zovaris/sephiro/css/icon-button.css";
 @import "@zovaris/sephiro/css/notice.css";
 @import "@zovaris/sephiro/css/spinner.css";
+@import "@zovaris/sephiro/css/segmented-control.css";
 
 @theme {
   --color-bg: var(--sph-bg);

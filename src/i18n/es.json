@@ -263,6 +263,7 @@
     "eyebrow": "EXPLORAR · SKILLS.SH",
     "title": "Explorar skills",
     "subtitle": "Explora las skills más populares y recientes del registro skills",
+    "viewLabel": "Vista del marketplace",
     "view": {
       "hot": "POPULAR",
       "trending": "TENDENCIA",
