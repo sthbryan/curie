@@ -57,8 +57,12 @@
 
 /* The palette comes from Sephiro's theme; this block only pins what makes
    Curie Curie: its fonts, its square corners and its motion. It has to stay
-   after the theme import — same specificity, so source order decides. */
-:root {
+   after the theme import — same specificity, so source order decides.
+   The second selector matters on portals: Sephiro copies `data-sephiro-theme`
+   onto a dialog's backdrop, which would otherwise bring back its own radii and
+   sans stack inside the overlay. */
+:root,
+[data-sephiro-theme] {
   --sph-font-sans: var(--font-body);
   --sph-font-mono: var(--font-mono);
 
