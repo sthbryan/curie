@@ -77,9 +77,10 @@
   --sph-font-sans: var(--font-body);
   --sph-font-mono: var(--font-mono);
 
-  --sph-radius-xs: var(--radius-sm);
-  --sph-radius-sm: var(--radius-sm);
-  --sph-radius-md: var(--radius-md);
+  /* Curie is square: Sephiro's cards, fields and buttons inherit radius 0. */
+  --sph-radius-xs: 0px;
+  --sph-radius-sm: 0px;
+  --sph-radius-md: 0px;
 
   --sph-motion-fast: 0.12s;
   --sph-motion-normal: 0.18s;
