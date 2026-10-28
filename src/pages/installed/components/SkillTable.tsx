@@ -15,7 +15,7 @@ import { removingSkill, sortDir, sortKey, updatingSkill } from "../store/store";
 import { AgentCell } from "./AgentCell";
 import { RowActions } from "./RowActions";
 
-const FRAME = "min-h-0 flex-1";
+const FRAME = "min-h-0 max-h-full";
 
 type Props = {
   onAskRemove: (name: string) => void;
@@ -33,7 +33,7 @@ export function SkillTable({ onAskRemove }: Props) {
         key: "name",
         label: t("colName"),
         sortable: true,
-        width: "26%",
+        width: "24%",
         render: (skill) => (
           <div className="flex min-w-0 flex-col gap-1">
             <span className="truncate font-mono text-mono text-fg">{skill.name}</span>
@@ -47,7 +47,7 @@ export function SkillTable({ onAskRemove }: Props) {
         key: "source",
         label: t("colSource"),
         sortable: true,
-        width: "26%",
+        width: "25%",
         render: (skill) => (
           <div className="flex min-w-0 flex-col gap-1">
             <span className="truncate font-mono text-mono text-fg-2">
@@ -63,7 +63,7 @@ export function SkillTable({ onAskRemove }: Props) {
         key: "agents",
         label: t("colAgents"),
         sortable: true,
-        width: "18%",
+        width: "23%",
         render: (skill) => <AgentCell agents={skill.agents} />,
       },
       {
@@ -71,7 +71,7 @@ export function SkillTable({ onAskRemove }: Props) {
         label: t("colWhen"),
         sortable: true,
         align: "end",
-        width: "14%",
+        width: "12%",
         render: (skill) => {
           const when = skillTimestamp(skill);
           return (

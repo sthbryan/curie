@@ -8,7 +8,7 @@ type Props = {
 
 export function AgentBadge({ label }: Props) {
   return (
-    <Badge size="sm" className="max-w-28 shrink-0 truncate">
+    <Badge size="sm" className="max-w-28 min-w-0 shrink truncate">
       {label}
     </Badge>
   );

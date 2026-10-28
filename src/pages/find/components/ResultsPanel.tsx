@@ -27,7 +27,7 @@ type Props = {
   onGoExplore: () => void;
 };
 
-const FRAME = "min-h-0 flex-1";
+const FRAME = "min-h-0 max-h-full";
 const ROW_HEIGHT = 61;
 
 export function ResultsPanel({
