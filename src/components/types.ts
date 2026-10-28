@@ -1,6 +1,8 @@
 import type { Lang } from "@/i18n";
 
-export type ThemeMode = "dark" | "rose" | "nord" | "ember" | "light" | "dawn" | "snow" | "sand";
+// The palettes come from Sephiro; each id is one of its `data-sephiro-theme`
+// values. `curie` is the one that mirrors Curie's own look.
+export type ThemeMode = "curie" | "light" | "asterism" | "fizza" | "pulso" | "dark" | "default";
 export type ReducedMotionPref = "user" | "always" | "never";
 export type View = "home" | "installed" | "marketplace" | "search" | "settings";
 
@@ -179,16 +181,37 @@ export type ProgressEvent = {
   done: boolean;
 };
 
+// Swatches are copied from Sephiro's themes.css (bg / text / accent of each
+// palette). They only drive the little preview card in Settings.
 export const THEME_OPTIONS: {
   id: ThemeMode;
+  label: string;
+  mode: "light" | "dark";
   swatches: [string, string, string];
 }[] = [
-  { id: "dark", swatches: ["#0a0a0a", "#f5f5f3", "#d71921"] },
-  { id: "rose", swatches: ["#191724", "#e0def4", "#eb6f92"] },
-  { id: "nord", swatches: ["#2e3440", "#eceff4", "#88c0d0"] },
-  { id: "ember", swatches: ["#282828", "#fbf1c7", "#fe8019"] },
-  { id: "light", swatches: ["#fafaf8", "#18181b", "#c2151c"] },
-  { id: "dawn", swatches: ["#faf4ed", "#575279", "#b4637a"] },
-  { id: "snow", swatches: ["#eceff4", "#2e3440", "#456590"] },
-  { id: "sand", swatches: ["#fbf1c7", "#3c3836", "#af3a03"] },
+  { id: "curie", label: "CURIE", mode: "dark", swatches: ["#0a0a0a", "#f5f5f3", "#d71921"] },
+  {
+    id: "light",
+    label: "LIGHT",
+    mode: "light",
+    swatches: ["#f8f1f2", "#2b2023", "#a84f6d"],
+  },
+  {
+    id: "asterism",
+    label: "ASTERISM",
+    mode: "dark",
+    swatches: ["#111111", "#ececec", "#d71921"],
+  },
+  { id: "fizza", label: "FIZZA", mode: "dark", swatches: ["#000000", "#e8e8e8", "#7c3aed"] },
+  { id: "pulso", label: "PULSO", mode: "light", swatches: ["#f5f5f0", "#222720", "#3d7049"] },
+  { id: "dark", label: "DARK", mode: "dark", swatches: ["#211719", "#f6edf0", "#b85c79"] },
+  // In the published 0.14.1 the default and dark ids resolve to the same
+  // rose palette: the `:where(...)` base block is overridden by the pair
+  // selector below it. The card mirrors that so the preview tells the truth.
+  {
+    id: "default",
+    label: "SEPHIRO",
+    mode: "dark",
+    swatches: ["#211719", "#f6edf0", "#b85c79"],
+  },
 ];

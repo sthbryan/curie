@@ -49,8 +49,8 @@ describe("t", () => {
     expect(t("es", "setup.steps.node", { manager: "fnm" })).toBe("Instalando Node.js con fnm");
     expect(t("en", "status.node")).toBe("NODE");
     expect(t("es", "status.agents")).toBe("AGENTES");
-    expect(t("en", "settings.themeRose")).toBe("ROSE");
-    expect(t("es", "settings.themeDawn")).toBe("DAWN");
+    expect(t("en", "settings.theme")).toBe("Theme");
+    expect(t("es", "settings.language")).toBe("Idioma");
     expect(t("en", "settings.reducedMotionSystem")).toBe("SYSTEM");
     expect(t("es", "settings.reducedMotionTrue")).toBe("SI");
     expect(t("en", "installed.title")).toBe("Skills");

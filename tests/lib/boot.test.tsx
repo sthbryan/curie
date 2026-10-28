@@ -494,7 +494,7 @@ describe("useBoot", () => {
       if (cmd === "read_settings")
         return Promise.resolve({
           version: 1,
-          theme: "nord",
+          theme: "asterism",
           lang: "es",
           reducedMotion: "always",
           hasBooted: true,
@@ -508,14 +508,14 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    expect(theme.value).toBe("nord");
+    expect(theme.value).toBe("asterism");
     expect(lang.value).toBe("es");
     expect(reducedMotion.value).toBe("always");
     expect(invokeMock.mock.calls.map(([cmd]) => cmd)).not.toContain("get_locale");
   });
 
   it("seeds the file from the cache when there is none yet", async () => {
-    theme.value = "sand";
+    theme.value = "light";
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "get_locale") return Promise.resolve("en-US");
       if (cmd === "detect_node") return Promise.resolve(nodeMissing);
@@ -530,12 +530,12 @@ describe("useBoot", () => {
     });
 
     expect(invokeMock).toHaveBeenCalledWith("write_settings", {
-      settings: { theme: "sand", lang: "en", reducedMotion: "user", hasBooted: false },
+      settings: { theme: "light", lang: "en", reducedMotion: "user", hasBooted: false },
     });
   });
 
   it("keeps the cached preferences when the settings file cannot be read", async () => {
-    theme.value = "ember";
+    theme.value = "pulso";
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "get_locale") return Promise.resolve("en-US");
       if (cmd === "detect_node") return Promise.resolve(nodeInstalled);
@@ -551,7 +551,7 @@ describe("useBoot", () => {
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    expect(theme.value).toBe("ember");
+    expect(theme.value).toBe("pulso");
     expect(stage.value).toBe("home");
   });
 

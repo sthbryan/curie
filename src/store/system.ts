@@ -10,7 +10,7 @@ const WRITE_DELAY = 200;
 const STORAGE_KEY = "curie.system";
 
 const initial = loadPartial(STORAGE_KEY, {
-  theme: "dark",
+  theme: "curie",
   lang: "en",
   reducedMotion: "user",
   hasBooted: false,

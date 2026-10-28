@@ -128,9 +128,9 @@ describe("settings file persistence", () => {
   });
 
   it("applySettings hydrates every field without writing back", async () => {
-    applySettings({ theme: "nord", lang: "es", reducedMotion: "always", hasBooted: true });
+    applySettings({ theme: "asterism", lang: "es", reducedMotion: "always", hasBooted: true });
 
-    expect(theme.value).toBe("nord");
+    expect(theme.value).toBe("asterism");
     expect(lang.value).toBe("es");
     expect(reducedMotion.value).toBe("always");
     expect(hasBooted.value).toBe(true);
