@@ -84,6 +84,11 @@
   border-radius: 0;
 }
 
+/* Same story for the toast: `css/toast.css` pins 16px on the box. */
+[data-sonner-toast].sph-toast.sph-toast {
+  border-radius: 0;
+}
+
 @keyframes bar-grow {
   from {
     transform: scaleX(0);

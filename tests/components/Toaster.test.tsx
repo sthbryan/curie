@@ -30,10 +30,6 @@ function show(fire: () => void): HTMLElement {
   return toastEl;
 }
 
-function glyphClass(toastEl: HTMLElement): string {
-  return toastEl.querySelector("[data-icon] > *")?.getAttribute("class") ?? "";
-}
-
 afterEach(() => {
   vi.useRealTimers();
   if (root) {
@@ -49,41 +45,28 @@ afterEach(() => {
 });
 
 describe("Toaster", () => {
-  it("gives success its own accent and glyph", () => {
+  it("mounts Sephiro's viewport with its aria label", () => {
+    show(() => toast.success("DONE"));
+    const viewport = container?.querySelector("[class*=sph-toast-viewport]");
+    expect(viewport?.className).toContain("sph-toast-viewport");
+    expect(container?.querySelector('[aria-label*="Notifications"]')).not.toBeNull();
+  });
+
+  it("marks a success toast, so Sephiro can paint its tone", () => {
     const success = show(() => toast.success("DONE"));
-    expect(success.className).toContain("border-l-success");
-    expect(glyphClass(success)).toContain("text-success");
+    expect(success.className).toContain("sph-toast");
+    expect(success.getAttribute("data-type")).toBe("success");
+    expect(success.querySelector("[data-icon] .sph-toast__status-icon")).not.toBeNull();
   });
 
-  it("gives errors an accent that cannot be mistaken for success", () => {
+  it("marks an error toast apart from success", () => {
     const error = show(() => toast.error("FAILED"));
-    expect(error.className).toContain("border-l-error");
-    expect(glyphClass(error)).toContain("text-error");
+    expect(error.className).toContain("sph-toast");
+    expect(error.getAttribute("data-type")).toBe("error");
   });
 
-  it("marks a pending promise with a neutral spinner instead of a colour", () => {
-    const pending = show(() =>
-      toast.promise(new Promise(() => {}), {
-        loading: "WORKING",
-        success: "DONE",
-        error: "FAILED",
-      }),
-    );
-    expect(pending.className).toContain("border-l-fg-4");
-    expect(pending.querySelector("[data-icon] .animate-spin")).not.toBeNull();
-  });
-
-  it("sizes the icon box to the title line so the glyph centres on it", () => {
-    const pending = show(() =>
-      toast.promise(new Promise(() => {}), {
-        loading: "WORKING",
-        success: "DONE",
-        error: "FAILED",
-      }),
-    );
-    const icon = pending.querySelector("[data-icon]");
-    expect(icon?.className).toContain("relative");
-    expect(icon?.className).toContain("h-4.5");
-    expect(icon?.className).toContain("items-center");
+  it("shows the title as the toast content", () => {
+    const success = show(() => toast.success("DONE"));
+    expect(success.textContent).toContain("DONE");
   });
 });

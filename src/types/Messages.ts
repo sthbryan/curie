@@ -349,6 +349,7 @@ export type Messages = {
     refreshed: string;
     appUpdate: string;
     appUpdateAction: string;
+    notifications: string;
     projectAdded: string;
     projectForgotten: string;
   };

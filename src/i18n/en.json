@@ -352,6 +352,7 @@
     "refreshed": "Skills refreshed",
     "appUpdate": "A new version of Curie is available",
     "appUpdateAction": "VIEW UPDATE",
+    "notifications": "Notifications",
     "removedAll": "EVERY SKILL REMOVED",
     "projectAdded": "Added {name}",
     "projectForgotten": "Forgot {name}",
