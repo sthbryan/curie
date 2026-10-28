@@ -26,7 +26,7 @@ describe("AgentCell", () => {
 
   it("keeps two badges and counts the rest", () => {
     const el = mount(<AgentCell agents={["Codex", "Zed", "Cursor", "Pi"]} />);
-    expect(el.querySelectorAll("span[class*=border]").length).toBe(2);
+    expect(el.querySelectorAll(".sph-badge").length).toBe(2);
     expect(text(el)).toContain("+2");
     expect(text(el)).not.toContain("Cursor");
   });
