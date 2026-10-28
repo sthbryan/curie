@@ -1,8 +1,7 @@
 import { Button } from "@zovaris/sephiro/button";
+import { Notice } from "@zovaris/sephiro/notice";
 
 import { useT } from "@/i18n";
-
-import { Label } from "./Label";
 
 type Props = {
   message: string;
@@ -14,14 +13,15 @@ type Props = {
 export function FullPageError({ message, onRetry, title, actionLabel }: Props) {
   const t = useT();
   return (
-    <main className="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 px-10">
-      <div className="flex max-w-md flex-col items-center gap-3 text-center">
-        <Label className="text-accent">{title ?? t("home.loadError")}</Label>
-        <p className="font-body text-sm text-fg-3 break-all">{message}</p>
+    <main className="flex min-w-0 flex-1 flex-col items-center justify-center px-10">
+      <div className="w-full max-w-md">
+        <Notice variant="danger" title={title ?? t("home.loadError")}>
+          <p className="break-all">{message}</p>
+          <Button size="md" variant="primary" className="mt-3" onClick={onRetry}>
+            {actionLabel ?? t("home.retry")}
+          </Button>
+        </Notice>
       </div>
-      <Button size="lg" variant="primary" onClick={onRetry}>
-        {actionLabel ?? t("home.retry")}
-      </Button>
     </main>
   );
 }

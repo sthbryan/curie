@@ -133,9 +133,7 @@ describe("Find", () => {
 
     expect(container?.textContent).toContain("not found");
 
-    const closeBtn = container?.querySelector(
-      'button[aria-label="Dismiss"]',
-    ) as HTMLButtonElement | null;
+    const closeBtn = container?.querySelector(".sph-notice__dismiss") as HTMLButtonElement | null;
     expect(closeBtn).not.toBeNull();
 
     const callsBefore = invokeMock.mock.calls.length;
