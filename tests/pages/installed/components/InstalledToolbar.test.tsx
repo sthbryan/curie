@@ -34,6 +34,14 @@ beforeEach(() => {
   updatesOnly.value = false;
 });
 
+function openAgentSelect(el: HTMLElement) {
+  const trigger = el.querySelector<HTMLButtonElement>(".sph-select__trigger");
+  act(() => {
+    trigger?.click();
+  });
+  return Array.from(document.querySelectorAll<HTMLElement>('[role="option"]'));
+}
+
 function typeSearch(el: HTMLElement, value: string) {
   const input = el.querySelector<HTMLInputElement>("input[type=search]");
   act(() => {
@@ -65,7 +73,7 @@ describe("InstalledToolbar", () => {
 
   it("offers every tool with its count", () => {
     const el = mount(<InstalledToolbar />);
-    const options = Array.from(el.querySelectorAll("option")).map((o) => o.textContent);
+    const options = openAgentSelect(el).map((o) => o.textContent);
     expect(options[0]).toBe("ALL");
     expect(options.some((o) => o?.includes("Codex") && o?.includes("3"))).toBe(true);
     expect(options.some((o) => o?.includes("Zed") && o?.includes("1"))).toBe(true);
@@ -73,12 +81,9 @@ describe("InstalledToolbar", () => {
 
   it("filters by the picked tool", () => {
     const el = mount(<InstalledToolbar />);
-    const select = el.querySelector<HTMLSelectElement>("select");
+    const zed = openAgentSelect(el).find((option) => option.textContent?.includes("Zed"));
     act(() => {
-      if (select) {
-        select.value = "Zed";
-        select.dispatchEvent(new Event("change", { bubbles: true }));
-      }
+      zed?.click();
     });
     expect(agentFilter.value).toBe("Zed");
   });
