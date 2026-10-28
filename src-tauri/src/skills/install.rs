@@ -50,7 +50,7 @@ fn remove_path(path: &Path) -> io::Result<()> {
     }
 }
 
-fn copy_contents(src: &Path, dest: &Path) -> io::Result<()> {
+pub(crate) fn copy_contents(src: &Path, dest: &Path) -> io::Result<()> {
     fs::create_dir_all(dest)?;
     for entry in fs::read_dir(src)? {
         let entry = entry?;

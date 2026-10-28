@@ -17,7 +17,7 @@ mod update;
 
 pub use add::add_skill_in;
 pub use check::check_skill_updates_in;
-pub use custom::{install_custom_skill_in, read_markdown_in};
+pub use custom::{install_custom_from_path_in, install_custom_skill_in, read_markdown_in};
 pub use detect::{detect_skill_in, DetectedSkill, SkillDetection};
 pub use explore::explore_skills as browse_skills;
 pub use find::find_skills as search_skills;
@@ -137,6 +137,18 @@ pub async fn install_custom_skill(
 ) -> Result<CustomSkillInstallResult, String> {
     tauri::async_runtime::spawn_blocking(move || {
         install_custom_skill_in(&Scope::resolve(project_path)?, &name, &content)
+    })
+    .await
+    .map_err(|e| format!("install task failed: {e}"))?
+}
+
+#[tauri::command]
+pub async fn install_custom_skill_path(
+    path: String,
+    project_path: Option<String>,
+) -> Result<CustomSkillInstallResult, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        install_custom_from_path_in(&Scope::resolve(project_path)?, std::path::Path::new(&path))
     })
     .await
     .map_err(|e| format!("install task failed: {e}"))?
