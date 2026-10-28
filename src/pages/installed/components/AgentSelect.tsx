@@ -1,4 +1,9 @@
-import { Select } from "@/components/Select";
+import { Field } from "@zovaris/sephiro/field";
+import { Select } from "@zovaris/sephiro/select";
+
+import "@zovaris/sephiro/css/field.css";
+import "@zovaris/sephiro/css/select.css";
+
 import { useT } from "@/i18n";
 
 import { agentOptions } from "../lib/derived";
@@ -11,18 +16,20 @@ export function AgentSelect() {
   if (agents.length === 0) return null;
 
   return (
-    <Select
-      label={t("filterAgent")}
-      value={agentFilter.value ?? ""}
-      onChange={(e) => setAgentFilter((e.target as HTMLSelectElement).value || null)}
-      wrapperClassName="w-56 shrink-0"
-      options={[
-        { value: "", label: t("filterAll") },
-        ...agents.map((agent) => ({
-          value: agent.label,
-          label: `${agent.label} · ${agent.count}`,
-        })),
-      ]}
-    />
+    <Field label={t("filterAgent")} className="w-56 shrink-0">
+      <Select
+        ariaLabel={t("filterAgent")}
+        size="lg"
+        value={agentFilter.value ?? ""}
+        onValueChange={(value) => setAgentFilter(value || null)}
+        options={[
+          { value: "", label: t("filterAll") },
+          ...agents.map((agent) => ({
+            value: agent.label,
+            label: `${agent.label} · ${agent.count}`,
+          })),
+        ]}
+      />
+    </Field>
   );
 }
