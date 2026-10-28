@@ -1,5 +1,7 @@
 import { Check } from "lucide-react";
 
+import "@zovaris/sephiro/css/card.css";
+
 import type { ThemeMode } from "@/components/types";
 import { cn } from "@/lib/cn";
 
@@ -21,12 +23,9 @@ export function ThemeCard({ id, active, label, hint, swatches, onClick }: Props)
       onClick={onClick}
       aria-pressed={active}
       data-theme-option={id}
-      className={cn(
-        "flex flex-col gap-2.5 rounded-sm border p-2.5 text-left transition-colors duration-150",
-        active
-          ? "border-fg bg-surface-tint"
-          : "border-border-strong hover:border-fg-3 hover:bg-surface-hover",
-      )}
+      data-interactive
+      data-selected={active || undefined}
+      className="sph-card flex flex-col gap-2.5 p-2.5 text-left"
     >
       <span
         className="flex h-13 w-full overflow-hidden rounded-sm border border-border-strong"
