@@ -37,7 +37,7 @@ function installsColumnKey(view: ExploreView): string {
   return "colInstalls";
 }
 
-const FRAME = "min-h-0 flex-1";
+const FRAME = "min-h-0 max-h-full";
 const ROW_HEIGHT = 61;
 
 export function ExploreList({

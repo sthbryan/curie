@@ -66,7 +66,7 @@ describe("ResultsPanel", () => {
     mount(results(40));
     const wrap = container?.querySelector(".sph-table-wrap");
     expect(wrap).not.toBeNull();
-    expect(wrap?.className).toContain("flex-1");
+    expect(wrap?.className).toContain("max-h-full");
     expect(wrap?.className).toContain("min-h-0");
     expect(wrap?.getAttribute("data-virtual")).toBe("true");
   });

@@ -70,7 +70,7 @@ it("renders the rows inside the table and the load-more control after it", () =>
   mount(true);
   expect(container?.querySelectorAll("tbody tr").length).toBe(3);
   const wrap = container?.querySelector(".sph-table-wrap");
-  expect(wrap?.className).toContain("flex-1");
+  expect(wrap?.className).toContain("max-h-full");
   expect(wrap?.getAttribute("data-virtual")).toBe("true");
   expect(wrap?.nextElementSibling?.querySelector("button")?.textContent).toContain("LOAD MORE");
 });
