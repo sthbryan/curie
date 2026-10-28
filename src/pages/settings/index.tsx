@@ -6,7 +6,6 @@ import { Else, If, Then } from "react-if";
 import "@zovaris/sephiro/css/segmented-control.css";
 
 import { Button } from "@/components/Button";
-import { ChoiceButton } from "@/components/ChoiceButton";
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
 import {
@@ -112,21 +111,20 @@ export function Settings() {
             <p className="font-body text-sm text-fg-3 pb-4 pl-0 pt-3">{t("themeDesc")}</p>
 
             <Row label={t("reducedMotion")}>
-              <div className="flex">
-                {REDUCED_MOTION_OPTIONS.map((opt) => {
-                  const handlePickMotion = () => {
-                    setReducedMotion(opt);
-                  };
-                  return (
-                    <ChoiceButton
-                      key={opt}
-                      active={reducedMotion.value === opt}
-                      label={t(REDUCED_MOTION_LABEL[opt])}
-                      onClick={handlePickMotion}
-                    />
-                  );
-                })}
-              </div>
+              <SegmentedControl
+                ariaLabel={t("reducedMotion")}
+                size="sm"
+                value={reducedMotion.value}
+                options={REDUCED_MOTION_OPTIONS.map((opt) => ({
+                  value: opt,
+                  label: t(REDUCED_MOTION_LABEL[opt]),
+                }))}
+                onValueChange={(value) =>
+                  setReducedMotion(
+                    value === "always" ? "always" : value === "never" ? "never" : "user",
+                  )
+                }
+              />
             </Row>
 
             <p className="font-body text-sm text-fg-3 pb-4 pl-0">{t("reducedMotionDesc")}</p>
