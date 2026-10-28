@@ -35,14 +35,8 @@ export function ThemeCard({ id, active, label, hint, swatches, onClick }: Props)
       >
         <span className="w-2.5 shrink-0" style={{ backgroundColor: fg, opacity: 0.1 }} />
         <span className="flex flex-1 flex-col justify-center gap-1.5 px-2">
-          <span
-            className="h-0.5 w-3/5 rounded-full"
-            style={{ backgroundColor: fg, opacity: 0.7 }}
-          />
-          <span
-            className="h-0.5 w-2/5 rounded-full"
-            style={{ backgroundColor: fg, opacity: 0.3 }}
-          />
+          <span className="h-0.5 w-3/5" style={{ backgroundColor: fg, opacity: 0.7 }} />
+          <span className="h-0.5 w-2/5" style={{ backgroundColor: fg, opacity: 0.3 }} />
         </span>
         <span className="m-2 h-2.5 w-2.5 shrink-0 self-start" style={{ backgroundColor: accent }} />
       </span>

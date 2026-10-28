@@ -37,8 +37,9 @@
   --tracking-tight: -0.02em;
   --tracking-display: -0.035em;
 
-  --radius-sm: 2px;
-  --radius-md: 4px;
+  /* Curie is square: no radius token has a value. */
+  --radius-sm: 0px;
+  --radius-md: 0px;
 
   --animate-bar-grow: bar-grow 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -95,6 +96,13 @@
   --sph-ease-sweep: cubic-bezier(0.65, 0, 0.35, 1);
 
   --sph-shadow-popover: 0 14px 36px rgb(0 0 0 / 0.38);
+}
+
+/* Badge is the one Sephiro shape Curie can't reach through a token: its pill
+   radius is hardcoded in the package. The doubled class is what beats the
+   component's own rule without depending on bundle order. */
+.sph-badge.sph-badge {
+  border-radius: 0;
 }
 
 @keyframes bar-grow {
@@ -421,7 +429,6 @@
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-border-strong);
-  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-fg-4);
