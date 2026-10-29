@@ -95,6 +95,20 @@ describe("InstalledActions", () => {
     expect(updatingSkill.value).toBeNull();
   });
 
+  it("update() reports the skills the backend failed to update", async () => {
+    invokeMock.mockResolvedValue({
+      updated: [],
+      failed: ["beta: network"],
+      message: "No skills were updated · beta: network",
+    } as SkillUpdateResult);
+
+    await update();
+
+    expect(updateApplyError.value).toBe("beta: network");
+    expect(loadSkillsMock).toHaveBeenCalled();
+    expect(updatingSkill.value).toBeNull();
+  });
+
   it("update() captures a plain string rejection message", async () => {
     invokeMock.mockRejectedValueOnce("plain failure");
     await update().catch(() => {});

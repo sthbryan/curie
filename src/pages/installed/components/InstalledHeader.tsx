@@ -8,7 +8,8 @@ import { t as rawT, useT } from "@/i18n";
 import { checkSkillUpdates, loadSkills } from "@/lib/boot";
 import { cn } from "@/lib/cn";
 import { useRoute } from "@/lib/routes";
-import { skills, skillsLoading, updatesLoading } from "@/store/skills";
+import { unverifiedCount } from "@/lib/skills";
+import { skills, skillUpdates, skillsLoading, updatesLoading } from "@/store/skills";
 import { lang } from "@/store/system";
 
 import { updateNames } from "../lib/derived";
@@ -27,14 +28,28 @@ export function InstalledHeader({ onAskRemoveAll }: Props) {
   const projectPath = scope.kind === "project" ? scope.project.path : null;
 
   const refresh = async () => {
-    await loadSkills(projectPath, { checkUpdates: false });
-    await checkSkillUpdates(projectPath, { fresh: true });
+    // The list and the update check are independent round trips.
+    const [checked] = await Promise.all([
+      checkSkillUpdates(projectPath, { fresh: true }),
+      loadSkills(projectPath, { checkUpdates: false }),
+    ]);
+    if (checked === "failed") {
+      toast.warning(rawT(lang.value, "toast.updatesFailed"));
+      return;
+    }
+    if (checked !== "ok") return;
+
     const found = updateNames.value.size;
-    toast.success(
-      found > 0
-        ? rawT(lang.value, "toast.updates", { n: found })
-        : rawT(lang.value, "toast.noUpdates"),
-    );
+    if (found > 0) {
+      toast.success(rawT(lang.value, "toast.updates", { n: found }));
+      return;
+    }
+    const unverified = unverifiedCount(skillUpdates.value);
+    if (unverified > 0) {
+      toast.warning(rawT(lang.value, "toast.unverified", { n: unverified }));
+      return;
+    }
+    toast.success(rawT(lang.value, "toast.noUpdates"));
   };
 
   return (
