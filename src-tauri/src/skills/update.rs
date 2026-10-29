@@ -120,6 +120,7 @@ pub fn update_skills_in(
     if entries.is_empty() {
         return Ok(SkillUpdateResult {
             updated: Vec::new(),
+            failed: Vec::new(),
             message: if requested.is_empty() {
                 "No skills to update".into()
             } else {
@@ -195,12 +196,12 @@ pub fn update_skills_in(
                 continue;
             }
         };
-        let tree = match (&source, scope) {
-            (Source::Git(git), Scope::Global) if git.owner_repo.is_some() => git
+        let tree = match &source {
+            Source::Git(git) => git
                 .owner_repo
                 .as_deref()
                 .and_then(|repo| fetch_github_tree(repo, git.ref_name.as_deref(), true)),
-            _ => None,
+            Source::Local(_) => None,
         };
 
         for (name, entry) in items {
@@ -243,7 +244,11 @@ pub fn update_skills_in(
         message.push_str(&format!(" · failed: {}", failures.join("; ")));
     }
 
-    Ok(SkillUpdateResult { updated, message })
+    Ok(SkillUpdateResult {
+        updated,
+        failed: failures,
+        message,
+    })
 }
 
 #[cfg(test)]

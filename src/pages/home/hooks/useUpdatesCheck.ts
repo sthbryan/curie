@@ -8,7 +8,13 @@ import { lang } from "@/store/system";
 
 export function useUpdatesCheck() {
   const check = async () => {
-    await checkSkillUpdates(activeScopePath.value, { fresh: true });
+    const result = await checkSkillUpdates(activeScopePath.value, { fresh: true });
+    if (result === "failed") {
+      toast.warning(t(lang.value, "toast.updatesFailed"));
+      return;
+    }
+    if (result !== "ok") return;
+
     const found = skillUpdates.value.filter((update) => update.updateAvailable).length;
     const unverified = unverifiedCount(skillUpdates.value);
 

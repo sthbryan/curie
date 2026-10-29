@@ -98,10 +98,14 @@ export async function restartApp() {
 let loadToken = 0;
 let updatesToken = 0;
 
+/** What a caller can report: a fresh answer, the cached one, a newer check
+ * that took over, or a failed round trip. */
+export type UpdatesCheck = "ok" | "cached" | "superseded" | "failed";
+
 export async function checkSkillUpdates(
   projectPath: string | null = null,
   options?: { fresh?: boolean },
-) {
+): Promise<UpdatesCheck> {
   const fresh = options?.fresh ?? false;
   const key = updatesCacheKey(projectPath);
   const cached = readCache<SkillUpdateInfo[]>(key);
@@ -111,7 +115,7 @@ export async function checkSkillUpdates(
   // network is only touched when the user asks or the TTL has passed.
   if (hasCache && cached) {
     setSkillUpdates(cached.value);
-    if (!fresh && Date.now() - cached.at < UPDATES_TTL) return;
+    if (!fresh && Date.now() - cached.at < UPDATES_TTL) return "cached";
   }
 
   const token = ++updatesToken;
@@ -119,13 +123,15 @@ export async function checkSkillUpdates(
   setUpdatesError(null);
   try {
     const updates = await invoke<SkillUpdateInfo[]>("check_skill_updates", { projectPath, fresh });
-    if (token !== updatesToken) return;
+    if (token !== updatesToken) return "superseded";
     setSkillUpdates(updates);
     writeCache(key, updates);
+    return "ok";
   } catch (e) {
-    if (token !== updatesToken) return;
+    if (token !== updatesToken) return "superseded";
     // With a cached list on screen, an offline check is not worth an error card.
     if (!hasCache) setUpdatesError(errorMessage(e));
+    return "failed";
   } finally {
     if (token === updatesToken) setUpdatesLoading(false);
   }

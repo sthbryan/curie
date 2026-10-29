@@ -348,7 +348,9 @@
     "removedAll": "SE BORRARON TODAS LAS SKILLS",
     "projectAdded": "Se agregó {name}",
     "projectForgotten": "Se olvidó {name}",
-    "unverified": "NO SE PUDIERON VERIFICAR {n} SKILLS"
+    "unverified": "NO SE PUDIERON VERIFICAR {n} SKILLS",
+    "updatesFailed": "No se pudieron buscar actualizaciones",
+    "updateFailed": "No se pudieron actualizar {n} skills"
   },
   "projects": {
     "eyebrow": "PROYECTOS · ÁMBITOS",
