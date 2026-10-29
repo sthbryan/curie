@@ -11,6 +11,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 
 const {
   applySettings,
+  colorMode,
   completeSetup,
   flushSettings,
   hasBooted,
@@ -20,12 +21,17 @@ const {
   node,
   reducedMotion,
   resetSettingsPersistence,
+  resolvedMode,
+  setColorMode,
   setLang,
   setNode,
   setReducedMotion,
+  setSidebarOpen,
   setStage,
   setTheme,
+  sidebarOpen,
   stage,
+  systemDark,
   theme,
 } = await import("@/store/system");
 
@@ -42,6 +48,8 @@ beforeEach(() => {
   resetSettingsPersistence();
   localStorage.clear();
   theme.value = "dark";
+  colorMode.value = "auto";
+  sidebarOpen.value = false;
   lang.value = "en";
   reducedMotion.value = "user";
   hasBooted.value = false;
@@ -52,6 +60,8 @@ beforeEach(() => {
 describe("system store (signals)", () => {
   it("starts with the documented defaults", () => {
     expect(theme.value).toBe("dark");
+    expect(colorMode.value).toBe("auto");
+    expect(sidebarOpen.value).toBe(false);
     expect(lang.value).toBe("en");
     expect(reducedMotion.value).toBe("user");
     expect(hasBooted.value).toBe(false);
@@ -59,9 +69,25 @@ describe("system store (signals)", () => {
     expect(node.value).toBeNull();
   });
 
-  it("setTheme updates the theme", () => {
-    setTheme("light");
-    expect(theme.value).toBe("light");
+  it("setTheme updates the theme family", () => {
+    setTheme("pulso");
+    expect(theme.value).toBe("pulso");
+  });
+
+  it("resolves auto to the system preference and pins a chosen mode", () => {
+    systemDark.value = true;
+    expect(resolvedMode.value).toBe("dark");
+
+    systemDark.value = false;
+    expect(resolvedMode.value).toBe("light");
+
+    setColorMode("dark");
+    expect(resolvedMode.value).toBe("dark");
+  });
+
+  it("setSidebarOpen remembers whether the sidebar is open", () => {
+    setSidebarOpen(true);
+    expect(sidebarOpen.value).toBe(true);
   });
 
   it("setLang updates the language", () => {
@@ -100,8 +126,10 @@ describe("system store (signals)", () => {
     expect(stage.value).toBe("home");
   });
 
-  it("persists only theme, lang, reducedMotion, and hasBooted to localStorage", () => {
-    setTheme("light");
+  it("persists the settings to localStorage and leaves the runtime state out", () => {
+    setTheme("pulso");
+    setColorMode("light");
+    setSidebarOpen(true);
     setLang("es");
     setReducedMotion("always");
     markBooted();
@@ -112,7 +140,14 @@ describe("system store (signals)", () => {
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw ?? "{}") as Record<string, unknown>;
     const persistedKeys = Object.keys(parsed).sort();
-    expect(persistedKeys).toEqual(["hasBooted", "lang", "reducedMotion", "theme"]);
+    expect(persistedKeys).toEqual([
+      "colorMode",
+      "hasBooted",
+      "lang",
+      "reducedMotion",
+      "sidebarOpen",
+      "theme",
+    ]);
     expect(parsed.stage).toBeUndefined();
     expect(parsed.node).toBeUndefined();
   });
@@ -120,17 +155,26 @@ describe("system store (signals)", () => {
 
 describe("settings file persistence", () => {
   it("caches to localStorage but never writes the file before hydration", async () => {
-    setTheme("light");
+    setTheme("pulso");
     await flushSettings();
 
-    expect(localStorage.getItem("curie.system")).toContain("light");
+    expect(localStorage.getItem("curie.system")).toContain("pulso");
     expect(invokeMock).not.toHaveBeenCalled();
   });
 
   it("applySettings hydrates every field without writing back", async () => {
-    applySettings({ theme: "asterism", lang: "es", reducedMotion: "always", hasBooted: true });
+    applySettings({
+      theme: "asterism",
+      colorMode: "light",
+      sidebarOpen: true,
+      lang: "es",
+      reducedMotion: "always",
+      hasBooted: true,
+    });
 
     expect(theme.value).toBe("asterism");
+    expect(colorMode.value).toBe("light");
+    expect(sidebarOpen.value).toBe(true);
     expect(lang.value).toBe("es");
     expect(reducedMotion.value).toBe("always");
     expect(hasBooted.value).toBe(true);
@@ -141,35 +185,51 @@ describe("settings file persistence", () => {
 
   it("writes the file once hydrated", async () => {
     markHydrated();
-    setTheme("light");
+    setTheme("pulso");
+    setSidebarOpen(true);
 
-    expect(localStorage.getItem("curie.system")).toContain("light");
+    expect(localStorage.getItem("curie.system")).toContain("pulso");
     await flushSettings();
 
     expect(invokeMock).toHaveBeenCalledWith("write_settings", {
-      settings: { theme: "light", lang: "en", reducedMotion: "user", hasBooted: false },
+      settings: {
+        theme: "pulso",
+        colorMode: "auto",
+        sidebarOpen: true,
+        lang: "en",
+        reducedMotion: "user",
+        hasBooted: false,
+      },
     });
   });
 
   it("coalesces a burst of changes into a single write", async () => {
     markHydrated();
-    setTheme("light");
+    setTheme("pulso");
+    setColorMode("light");
     setLang("es");
     setReducedMotion("always");
     await flushSettings();
 
     expect(invokeMock).toHaveBeenCalledTimes(1);
     expect(invokeMock).toHaveBeenCalledWith("write_settings", {
-      settings: { theme: "light", lang: "es", reducedMotion: "always", hasBooted: false },
+      settings: {
+        theme: "pulso",
+        colorMode: "light",
+        sidebarOpen: false,
+        lang: "es",
+        reducedMotion: "always",
+        hasBooted: false,
+      },
     });
   });
 
   it("keeps the app running when the write fails", async () => {
     invokeMock.mockRejectedValue("could not save settings");
     markHydrated();
-    setTheme("light");
+    setTheme("pulso");
 
     await expect(flushSettings()).resolves.toBeUndefined();
-    expect(theme.value).toBe("light");
+    expect(theme.value).toBe("pulso");
   });
 });

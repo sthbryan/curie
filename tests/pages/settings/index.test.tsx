@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Router } from "wouter";
 
 import {
+  colorMode,
   hasBooted,
   lang,
   node,
@@ -39,6 +40,7 @@ function render(ui: React.ReactNode) {
 
 beforeEach(() => {
   theme.value = "dark";
+  colorMode.value = "dark";
   lang.value = "en";
   reducedMotion.value = "user";
   hasBooted.value = false;
@@ -108,18 +110,16 @@ describe("Settings", () => {
     expect(theme.value).toBe("fizza");
   });
 
-  it("offers every Sephiro theme in catalog order", () => {
+  it("offers one card per Sephiro theme family", () => {
     render(<Settings />);
     const cards = container?.querySelectorAll("[data-theme-option]");
-    expect(cards?.length).toBe(7);
+    expect(cards?.length).toBe(5);
     expect([...(cards ?? [])].map((c) => c.getAttribute("data-theme-option"))).toEqual([
       "curie",
-      "light",
       "asterism",
       "fizza",
       "pulso",
       "dark",
-      "default",
     ]);
 
     const asterism = container?.querySelector(
@@ -129,6 +129,23 @@ describe("Settings", () => {
       asterism?.click();
     });
     expect(theme.value).toBe("asterism");
+  });
+
+  it("switches the colour mode between auto, light and dark", () => {
+    render(<Settings />);
+    const modeButtons = Array.from(container?.querySelectorAll("button") ?? []).filter(
+      (b) => b.textContent === "LIGHT" || b.textContent === "DARK" || b.textContent === "AUTO",
+    );
+
+    act(() => {
+      modeButtons.find((b) => b.textContent === "AUTO")?.click();
+    });
+    expect(colorMode.value).toBe("auto");
+
+    act(() => {
+      modeButtons.find((b) => b.textContent === "LIGHT")?.click();
+    });
+    expect(colorMode.value).toBe("light");
   });
 
   it("shows the system info block when node is installed", () => {

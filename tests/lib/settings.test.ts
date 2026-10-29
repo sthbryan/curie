@@ -13,6 +13,8 @@ const { readSettings, resolveSettings, writeSettings } = await import("@/lib/set
 const stored: Settings = {
   version: 1,
   theme: "asterism",
+  colorMode: "auto",
+  sidebarOpen: true,
   lang: "es",
   reducedMotion: "always",
   hasBooted: true,
@@ -20,6 +22,8 @@ const stored: Settings = {
 
 const cached = {
   theme: "dark",
+  colorMode: "dark",
+  sidebarOpen: false,
   lang: "en",
   reducedMotion: "user",
   hasBooted: false,
@@ -54,6 +58,8 @@ describe("resolveSettings", () => {
   it("prefers the values from the file", () => {
     expect(resolveSettings(stored, cached)).toEqual({
       theme: "asterism",
+      colorMode: "auto",
+      sidebarOpen: true,
       lang: "es",
       reducedMotion: "always",
       hasBooted: true,
@@ -64,6 +70,8 @@ describe("resolveSettings", () => {
     const corrupt = {
       version: 1,
       theme: "vaporwave",
+      colorMode: "sepia",
+      sidebarOpen: "yes",
       lang: "fr",
       reducedMotion: "sometimes",
       hasBooted: false,

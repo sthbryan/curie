@@ -2,19 +2,18 @@ import { Check } from "lucide-react";
 
 import "@zovaris/sephiro/css/card.css";
 
-import type { ThemeMode } from "@/components/types";
+import type { ThemeFamily } from "@/components/types";
 import { cn } from "@/lib/cn";
 
 type Props = {
-  id: ThemeMode;
+  id: ThemeFamily;
   active: boolean;
   label: string;
-  hint: string;
   swatches: [string, string, string];
   onClick: () => void;
 };
 
-export function ThemeCard({ id, active, label, hint, swatches, onClick }: Props) {
+export function ThemeCard({ id, active, label, swatches, onClick }: Props) {
   const [bg, fg, accent] = swatches;
 
   return (
@@ -50,9 +49,6 @@ export function ThemeCard({ id, active, label, hint, swatches, onClick }: Props)
           {label}
         </span>
         {active ? <Check size={11} className="text-fg" aria-hidden /> : null}
-        <span className="ml-auto truncate font-mono uppercase tracking-label text-micro text-fg-4">
-          {hint}
-        </span>
       </span>
     </button>
   );

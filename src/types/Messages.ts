@@ -315,6 +315,10 @@ export type Messages = {
     languageESFull: string;
     languageDesc: string;
     theme: string;
+    colorMode: string;
+    colorModeAuto: string;
+    colorModeLight: string;
+    colorModeDark: string;
     themeDesc: string;
     reducedMotion: string;
     reducedMotionSystem: string;

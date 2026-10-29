@@ -36,28 +36,25 @@ function unmount() {
 afterEach(unmount);
 
 describe("ThemeCard", () => {
-  it("renders label and hint", () => {
+  it("renders the family label", () => {
     mount(
       <ThemeCard
         id="dark"
         active={false}
-        label="Dark"
-        hint="darker"
+        label="SEPHIRO"
         swatches={["#000", "#111", "#222"]}
         onClick={vi.fn()}
       />,
     );
-    expect(container?.textContent).toContain("Dark");
-    expect(container?.textContent).toContain("darker");
+    expect(container?.textContent).toContain("SEPHIRO");
   });
 
   it("marks aria-pressed when active", () => {
     mount(
       <ThemeCard
-        id="light"
+        id="pulso"
         active={true}
-        label="Light"
-        hint="brighter"
+        label="PULSO"
         swatches={["#fff", "#eee", "#ccc"]}
         onClick={vi.fn()}
       />,
@@ -72,7 +69,6 @@ describe("ThemeCard", () => {
         id="asterism"
         active={false}
         label="Asterism"
-        hint="arctic"
         swatches={["#2e3440", "#eceff4", "#88c0d0"]}
         onClick={vi.fn()}
       />,
@@ -89,8 +85,7 @@ describe("ThemeCard", () => {
       <ThemeCard
         id="dark"
         active={false}
-        label="Dark"
-        hint=""
+        label="SEPHIRO"
         swatches={["#000", "#111", "#222"]}
         onClick={onClick}
       />,

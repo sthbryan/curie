@@ -7,7 +7,7 @@ import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { APP_NAME, APP_VERSION_LABEL } from "@/lib/meta";
 import { useReducedMotion } from "@/lib/motion";
-import { lang, node, setLang, setTheme, theme } from "@/store/system";
+import { lang, node, resolvedMode, setLang, setTheme, theme } from "@/store/system";
 import { appUpdate } from "@/store/update";
 
 const CHIP =
@@ -38,6 +38,7 @@ export function StatusBar() {
     THEME_OPTIONS.findIndex((option) => option.id === theme.value),
   );
   const activeTheme = THEME_OPTIONS[themeIndex];
+  const activeSwatches = activeTheme.swatches[resolvedMode.value];
 
   const cycleTheme = () => setTheme(THEME_OPTIONS[(themeIndex + 1) % THEME_OPTIONS.length].id);
   const toggleLang = () => setLang(lang.value === "en" ? "es" : "en");
@@ -90,7 +91,7 @@ export function StatusBar() {
           className={cn(CHIP, "text-fg-3 hover:bg-surface-hover hover:text-fg")}
         >
           <span className="flex gap-px" aria-hidden>
-            {activeTheme.swatches.map((swatch) => (
+            {activeSwatches.map((swatch) => (
               <span
                 key={swatch}
                 className="inline-block h-2 w-1 border border-border-strong"

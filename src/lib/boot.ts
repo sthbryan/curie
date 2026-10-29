@@ -24,6 +24,7 @@ import {
 } from "@/store/skills";
 import {
   applySettings,
+  colorMode,
   hasBooted,
   lang,
   markBooted,
@@ -32,6 +33,7 @@ import {
   setLang,
   setNode,
   setStage,
+  sidebarOpen,
   theme,
 } from "@/store/system";
 import {
@@ -170,6 +172,8 @@ export function useBoot() {
       if (file) {
         const cached = {
           theme: theme.value,
+          colorMode: colorMode.value,
+          sidebarOpen: sidebarOpen.value,
           lang: lang.value,
           reducedMotion: reducedMotion.value,
           hasBooted: hasBooted.value,

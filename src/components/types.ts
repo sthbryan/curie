@@ -1,8 +1,12 @@
 import type { Lang } from "@/i18n";
 
 // The palettes come from Sephiro; each id is one of its `data-sephiro-theme`
-// values. `curie` is the one that mirrors Curie's own look.
-export type ThemeMode = "curie" | "light" | "asterism" | "fizza" | "pulso" | "dark" | "default";
+// values. `curie` is the one that mirrors Curie's own look. Every family ships
+// a light and a dark palette, picked by the colour mode below.
+export type ThemeFamily = "curie" | "asterism" | "fizza" | "pulso" | "dark";
+// `auto` follows the OS; the other two pin the palette.
+export type ColorMode = "auto" | "light" | "dark";
+export type ColorScheme = "light" | "dark";
 export type ReducedMotionPref = "user" | "always" | "never";
 export type View = "home" | "installed" | "marketplace" | "search" | "settings";
 
@@ -24,7 +28,9 @@ export const REDUCED_MOTION_OPTIONS: ReducedMotionPref[] = ["user", "always", "n
 
 export type Settings = {
   version: number;
-  theme: ThemeMode;
+  theme: ThemeFamily;
+  colorMode: ColorMode;
+  sidebarOpen: boolean;
   lang: Lang;
   reducedMotion: ReducedMotionPref;
   hasBooted: boolean;
@@ -181,37 +187,55 @@ export type ProgressEvent = {
   done: boolean;
 };
 
+export const COLOR_MODE_OPTIONS: ColorMode[] = ["auto", "light", "dark"];
+
 // Swatches are copied from Sephiro's themes.css (bg / text / accent of each
-// palette). They only drive the little preview card in Settings.
+// palette, per mode). They only drive the little preview cards and the status
+// bar chip. `dark` is Sephiro's own rose family: its published `light` id is
+// the light half of that same palette, so both come from one card.
 export const THEME_OPTIONS: {
-  id: ThemeMode;
+  id: ThemeFamily;
   label: string;
-  mode: "light" | "dark";
-  swatches: [string, string, string];
+  swatches: Record<ColorScheme, [string, string, string]>;
 }[] = [
-  { id: "curie", label: "CURIE", mode: "dark", swatches: ["#0a0a0a", "#f5f5f3", "#d71921"] },
   {
-    id: "light",
-    label: "LIGHT",
-    mode: "light",
-    swatches: ["#f8f1f2", "#2b2023", "#a84f6d"],
+    id: "curie",
+    label: "CURIE",
+    swatches: {
+      dark: ["#0a0a0a", "#f5f5f3", "#d71921"],
+      light: ["#fafaf8", "#18181b", "#c2151c"],
+    },
   },
   {
     id: "asterism",
     label: "ASTERISM",
-    mode: "dark",
-    swatches: ["#111111", "#ececec", "#d71921"],
+    swatches: {
+      dark: ["#111111", "#ececec", "#d71921"],
+      light: ["#f7f7f7", "#171717", "#c4161d"],
+    },
   },
-  { id: "fizza", label: "FIZZA", mode: "dark", swatches: ["#000000", "#e8e8e8", "#7c3aed"] },
-  { id: "pulso", label: "PULSO", mode: "light", swatches: ["#f5f5f0", "#222720", "#3d7049"] },
-  { id: "dark", label: "DARK", mode: "dark", swatches: ["#211719", "#f6edf0", "#b85c79"] },
-  // In the published 0.14.1 the default and dark ids resolve to the same
-  // rose palette: the `:where(...)` base block is overridden by the pair
-  // selector below it. The card mirrors that so the preview tells the truth.
   {
-    id: "default",
+    id: "fizza",
+    label: "FIZZA",
+    swatches: {
+      dark: ["#000000", "#e8e8e8", "#7c3aed"],
+      light: ["#f7f7f7", "#171717", "#6d28d9"],
+    },
+  },
+  {
+    id: "pulso",
+    label: "PULSO",
+    swatches: {
+      dark: ["#131713", "#f0f1ea", "#4e7657"],
+      light: ["#f5f5f0", "#222720", "#3d7049"],
+    },
+  },
+  {
+    id: "dark",
     label: "SEPHIRO",
-    mode: "dark",
-    swatches: ["#211719", "#f6edf0", "#b85c79"],
+    swatches: {
+      dark: ["#211719", "#f6edf0", "#b85c79"],
+      light: ["#f8f1f2", "#2b2023", "#a84f6d"],
+    },
   },
 ];

@@ -1,15 +1,19 @@
 import { invoke } from "@tauri-apps/api/core";
 
-import type { ReducedMotionPref, Settings, ThemeMode } from "@/components/types";
-import { REDUCED_MOTION_OPTIONS, THEME_OPTIONS } from "@/components/types";
+import type { ColorMode, ReducedMotionPref, Settings, ThemeFamily } from "@/components/types";
+import { COLOR_MODE_OPTIONS, REDUCED_MOTION_OPTIONS, THEME_OPTIONS } from "@/components/types";
 import type { Lang } from "@/i18n";
 
 export type SettingsPatch = Omit<Settings, "version">;
 
 const LANGS: Lang[] = ["en", "es"];
 
-function isTheme(value: unknown): value is ThemeMode {
+function isTheme(value: unknown): value is ThemeFamily {
   return THEME_OPTIONS.some((opt) => opt.id === value);
+}
+
+function isColorMode(value: unknown): value is ColorMode {
+  return COLOR_MODE_OPTIONS.some((mode) => mode === value);
 }
 
 function isLang(value: unknown): value is Lang {
@@ -35,6 +39,8 @@ export async function writeSettings(next: SettingsPatch): Promise<void> {
 export function resolveSettings(file: Settings, cached: SettingsPatch): SettingsPatch {
   return {
     theme: isTheme(file.theme) ? file.theme : cached.theme,
+    colorMode: isColorMode(file.colorMode) ? file.colorMode : cached.colorMode,
+    sidebarOpen: typeof file.sidebarOpen === "boolean" ? file.sidebarOpen : cached.sidebarOpen,
     lang: isLang(file.lang) ? file.lang : cached.lang,
     reducedMotion: isReducedMotion(file.reducedMotion) ? file.reducedMotion : cached.reducedMotion,
     hasBooted: file.hasBooted || cached.hasBooted,

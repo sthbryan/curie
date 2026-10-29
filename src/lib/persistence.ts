@@ -1,8 +1,10 @@
-import type { ReducedMotionPref, ThemeMode } from "@/components/types";
+import type { ColorMode, ReducedMotionPref, ThemeFamily } from "@/components/types";
 import type { Lang } from "@/i18n";
 
 type Persisted = {
-  theme: ThemeMode;
+  theme: ThemeFamily;
+  colorMode: ColorMode;
+  sidebarOpen: boolean;
   lang: Lang;
   reducedMotion: ReducedMotionPref;
   hasBooted: boolean;

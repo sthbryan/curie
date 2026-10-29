@@ -9,7 +9,7 @@ import { useBoot } from "@/lib/boot";
 import { useRoute } from "@/lib/routes";
 import { markViewTransitionSupport } from "@/lib/viewTransition";
 import { skillUpdates } from "@/store/skills";
-import { lang, reducedMotion, theme } from "@/store/system";
+import { lang, reducedMotion, resolvedMode, theme } from "@/store/system";
 import { appUpdate } from "@/store/update";
 
 function App() {
@@ -30,8 +30,10 @@ function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-sephiro-theme", theme.value);
+    // The family ships both palettes; this is the one `auto` resolved to.
+    document.documentElement.setAttribute("data-theme", resolvedMode.value);
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- reading .value is how signals re-run the effect
-  }, [theme.value]);
+  }, [theme.value, resolvedMode.value]);
 
   useEffect(() => {
     document.documentElement.lang = lang.value;

@@ -13,6 +13,8 @@ beforeEach(() => {
 describe("persistence", () => {
   const fallback = {
     theme: "dark" as const,
+    colorMode: "auto" as const,
+    sidebarOpen: false,
     lang: "en" as const,
     reducedMotion: "user" as const,
     hasBooted: false,
@@ -31,9 +33,10 @@ describe("persistence", () => {
   });
 
   it("merges saved data with fallback", () => {
-    savePartial(KEY, { theme: "light", lang: "en", reducedMotion: "user", hasBooted: false });
+    savePartial(KEY, { ...fallback, theme: "pulso", sidebarOpen: true });
     const result = loadPartial(KEY, { ...fallback, theme: "dark" });
-    expect(result.theme).toBe("light");
+    expect(result.theme).toBe("pulso");
+    expect(result.sidebarOpen).toBe(true);
   });
 
   it("returns fallback on JSON parse error", () => {

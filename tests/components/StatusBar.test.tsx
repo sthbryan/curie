@@ -77,13 +77,13 @@ describe("StatusBar", () => {
   it("cycles the theme from the status bar", () => {
     mount(<StatusBar />);
     const button = container?.querySelector("[aria-label=Theme]") as HTMLButtonElement;
-    expect(button.textContent).toContain("DARK");
+    expect(button.textContent).toContain("SEPHIRO");
 
     act(() => {
       button.click();
     });
 
-    expect(theme.value).toBe("default");
+    expect(theme.value).toBe("curie");
   });
 
   it("toggles the language from the status bar", () => {

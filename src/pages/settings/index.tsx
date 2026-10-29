@@ -10,7 +10,13 @@ import "@zovaris/sephiro/css/metadata-list.css";
 
 import { Heading } from "@/components/Heading";
 import { Label } from "@/components/Label";
-import { REDUCED_MOTION_OPTIONS, type ReducedMotionPref, THEME_OPTIONS } from "@/components/types";
+import {
+  COLOR_MODE_OPTIONS,
+  type ColorMode,
+  REDUCED_MOTION_OPTIONS,
+  type ReducedMotionPref,
+  THEME_OPTIONS,
+} from "@/components/types";
 import { useT } from "@/i18n";
 import { APP_NAME } from "@/lib/meta";
 import { systemStore } from "@/store/system";
@@ -25,9 +31,26 @@ const REDUCED_MOTION_LABEL: Record<ReducedMotionPref, string> = {
   never: "reducedMotionFalse",
 };
 
+const COLOR_MODE_LABEL: Record<ColorMode, string> = {
+  auto: "colorModeAuto",
+  light: "colorModeLight",
+  dark: "colorModeDark",
+};
+
 export function Settings() {
   const t = useT("settings");
-  const { lang, theme, reducedMotion, node, setLang, setTheme, setReducedMotion } = systemStore;
+  const {
+    lang,
+    theme,
+    colorMode,
+    resolvedMode,
+    reducedMotion,
+    node,
+    setLang,
+    setTheme,
+    setColorMode,
+    setReducedMotion,
+  } = systemStore;
 
   const handleOpenGitHub = () => {
     void Promise.resolve(openUrl("https://github.com/sthbryan/curie")).catch(() => {
@@ -72,24 +95,32 @@ export function Settings() {
             <p className="font-body text-sm text-fg-3 pb-4 pl-0">{t("languageDesc")}</p>
 
             <div className="flex flex-col gap-3 border-b border-border py-4">
-              <span className="font-body text-sm text-fg">{t("theme")}</span>
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-                {THEME_OPTIONS.map((opt) => {
-                  const handlePickTheme = () => {
-                    setTheme(opt.id);
-                  };
-                  return (
-                    <ThemeCard
-                      key={opt.id}
-                      id={opt.id}
-                      active={theme.value === opt.id}
-                      label={opt.label}
-                      hint={opt.mode.toUpperCase()}
-                      swatches={opt.swatches}
-                      onClick={handlePickTheme}
-                    />
-                  );
-                })}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="font-body text-sm text-fg">{t("theme")}</span>
+                <SegmentedControl
+                  ariaLabel={t("colorMode")}
+                  size="sm"
+                  value={colorMode.value}
+                  options={COLOR_MODE_OPTIONS.map((mode) => ({
+                    value: mode,
+                    label: t(COLOR_MODE_LABEL[mode]),
+                  }))}
+                  onValueChange={(value) =>
+                    setColorMode(value === "light" ? "light" : value === "dark" ? "dark" : "auto")
+                  }
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
+                {THEME_OPTIONS.map((opt) => (
+                  <ThemeCard
+                    key={opt.id}
+                    id={opt.id}
+                    active={theme.value === opt.id}
+                    label={opt.label}
+                    swatches={opt.swatches[resolvedMode.value]}
+                    onClick={() => setTheme(opt.id)}
+                  />
+                ))}
               </div>
             </div>
 

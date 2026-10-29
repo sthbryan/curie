@@ -16,11 +16,13 @@ import {
   updatesLoading,
 } from "@/store/skills";
 import {
+  colorMode,
   hasBooted,
   lang,
   node,
   reducedMotion,
   resetSettingsPersistence,
+  sidebarOpen,
   stage,
   theme,
 } from "@/store/system";
@@ -38,6 +40,8 @@ const { checkSkillUpdates, loadSkills, useBoot } = await import("@/lib/boot");
 const storedSettings: Settings = {
   version: 1,
   theme: "dark",
+  colorMode: "auto",
+  sidebarOpen: false,
   lang: "en",
   reducedMotion: "user",
   hasBooted: false,
@@ -93,6 +97,8 @@ beforeEach(() => {
   updatesLoading.value = false;
   updatesError.value = null;
   theme.value = "dark";
+  colorMode.value = "auto";
+  sidebarOpen.value = false;
   lang.value = "en";
   reducedMotion.value = "user";
   hasBooted.value = false;
@@ -495,6 +501,8 @@ describe("useBoot", () => {
         return Promise.resolve({
           version: 1,
           theme: "asterism",
+          colorMode: "light",
+          sidebarOpen: true,
           lang: "es",
           reducedMotion: "always",
           hasBooted: true,
@@ -509,13 +517,17 @@ describe("useBoot", () => {
     });
 
     expect(theme.value).toBe("asterism");
+    expect(colorMode.value).toBe("light");
+    expect(sidebarOpen.value).toBe(true);
     expect(lang.value).toBe("es");
     expect(reducedMotion.value).toBe("always");
     expect(invokeMock.mock.calls.map(([cmd]) => cmd)).not.toContain("get_locale");
   });
 
   it("seeds the file from the cache when there is none yet", async () => {
-    theme.value = "light";
+    theme.value = "asterism";
+    colorMode.value = "dark";
+    sidebarOpen.value = true;
     invokeMock.mockImplementation((cmd) => {
       if (cmd === "get_locale") return Promise.resolve("en-US");
       if (cmd === "detect_node") return Promise.resolve(nodeMissing);
@@ -530,7 +542,14 @@ describe("useBoot", () => {
     });
 
     expect(invokeMock).toHaveBeenCalledWith("write_settings", {
-      settings: { theme: "light", lang: "en", reducedMotion: "user", hasBooted: false },
+      settings: {
+        theme: "asterism",
+        colorMode: "dark",
+        sidebarOpen: true,
+        lang: "en",
+        reducedMotion: "user",
+        hasBooted: false,
+      },
     });
   });
 

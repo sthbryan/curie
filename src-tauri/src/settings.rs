@@ -9,6 +9,10 @@ fn default_theme() -> String {
     "dark".to_string()
 }
 
+fn default_color_mode() -> String {
+    "auto".to_string()
+}
+
 fn default_lang() -> String {
     "en".to_string()
 }
@@ -24,6 +28,10 @@ pub struct Settings {
     pub version: u32,
     #[serde(default = "default_theme")]
     pub theme: String,
+    #[serde(default = "default_color_mode")]
+    pub color_mode: String,
+    #[serde(default)]
+    pub sidebar_open: bool,
     #[serde(default = "default_lang")]
     pub lang: String,
     #[serde(default = "default_reduced_motion")]
@@ -37,6 +45,8 @@ impl Default for Settings {
         Self {
             version: 0,
             theme: default_theme(),
+            color_mode: default_color_mode(),
+            sidebar_open: false,
             lang: default_lang(),
             reduced_motion: default_reduced_motion(),
             has_booted: false,
@@ -105,6 +115,8 @@ mod tests {
         Settings {
             version: 0,
             theme: "nord".to_string(),
+            color_mode: "dark".to_string(),
+            sidebar_open: true,
             lang: "es".to_string(),
             reduced_motion: "always".to_string(),
             has_booted: true,
@@ -137,6 +149,8 @@ mod tests {
 
         let settings = read_settings_file(&file);
         assert_eq!(settings.theme, "nord");
+        assert_eq!(settings.color_mode, "auto");
+        assert!(!settings.sidebar_open);
         assert_eq!(settings.lang, "en");
         assert_eq!(settings.reduced_motion, "user");
         assert!(!settings.has_booted);
@@ -151,6 +165,8 @@ mod tests {
 
         let stored = read_settings_file(&file);
         assert_eq!(stored.theme, "nord");
+        assert_eq!(stored.color_mode, "dark");
+        assert!(stored.sidebar_open);
         assert_eq!(stored.lang, "es");
         assert_eq!(stored.reduced_motion, "always");
         assert!(stored.has_booted);
