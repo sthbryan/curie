@@ -1,86 +1,15 @@
 import { open } from "@tauri-apps/plugin-dialog";
 import { Button } from "@zovaris/sephiro/button";
-import { Textarea } from "@zovaris/sephiro/textarea";
-import { FileArchive, FileUp, FolderOpen, LoaderCircle, Save } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
-
-import "@zovaris/sephiro/css/textarea.css";
+import { FileArchive, LoaderCircle } from "lucide-react";
 
 import { useT } from "@/i18n";
-import { cn } from "@/lib/cn";
 
-import { useFileDrop } from "../hooks/useFileDrop";
-import { useLocalInstall } from "../hooks/useLocalInstall";
 import { usePathInstall } from "../hooks/usePathInstall";
-import { checkFrontmatter, type FrontmatterCheck } from "../lib/frontmatter";
-import { FieldLabel } from "./FieldLabel";
 import { FormSection } from "./FormSection";
-
-const CONTENT_ID = "custom-local-content";
-
-function warningFor(
-  check: Extract<FrontmatterCheck, { ok: false }>,
-  t: ReturnType<typeof useT>,
-): string {
-  if (check.reason === "block") return t("blockMissing");
-  if (check.reason === "name") return t("nameInvalid", { name: check.name });
-  if (check.missing.length > 1) return t("bothMissing");
-  return check.missing[0] === "name" ? t("nameMissing") : t("descriptionMissing");
-}
 
 export function LocalSkillForm() {
   const t = useT("custom.local");
-  const [content, setContent] = useState("");
-  const [fileName, setFileName] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
-  const { installing, install } = useLocalInstall();
-  const { installing: installingPath, installPath } = usePathInstall();
-  const busy = installing || installingPath;
-
-  const hasContent = content.trim().length > 0;
-  const frontmatter = checkFrontmatter(content);
-  const canInstall = hasContent && frontmatter.ok && !busy;
-
-  const warning = !hasContent || frontmatter.ok ? null : warningFor(frontmatter, t);
-
-  const reset = () => {
-    setContent("");
-    setFileName(null);
-  };
-
-  const handleFile = async (file: File) => {
-    setContent(await file.text());
-    setFileName(file.name);
-  };
-
-  const handleDropped = useCallback((name: string, text: string) => {
-    setContent(text);
-    setFileName(name);
-  }, []);
-
-  const { dragging } = useFileDrop({ enabled: !busy, onFile: handleDropped });
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) void handleFile(file);
-    e.target.value = "";
-  };
-
-  const handleSubmit = () => {
-    if (!canInstall || !frontmatter.ok) return;
-    void install(frontmatter.name, content).then((ok) => {
-      if (ok) reset();
-    });
-  };
-
-  const pickFolder = async () => {
-    const selected = await open({
-      directory: true,
-      multiple: false,
-      title: t("folderTitle"),
-    }).catch(() => null);
-    if (typeof selected === "string") await installPath(selected);
-  };
+  const { installing, installPath } = usePathInstall();
 
   const pickArchive = async () => {
     const selected = await open({
@@ -96,95 +25,20 @@ export function LocalSkillForm() {
     <FormSection eyebrow={t("eyebrow")} title={t("title")} subtitle={t("subtitle")}>
       <div className="flex flex-wrap items-center gap-3 border border-border bg-surface px-3 py-2">
         <p className="min-w-0 flex-1 font-body text-xs text-fg-4">{t("bundleHint")}</p>
-        <Button size="sm" variant="secondary" onClick={() => void pickFolder()} disabled={busy}>
-          <FolderOpen size={12} aria-hidden />
-          {t("chooseFolder")}
-        </Button>
-        <Button size="sm" variant="secondary" onClick={() => void pickArchive()} disabled={busy}>
-          <FileArchive size={12} aria-hidden />
+        <Button
+          size="sm"
+          variant="primary"
+          onClick={() => void pickArchive()}
+          disabled={installing}
+          aria-busy={installing}
+        >
+          {installing ? (
+            <LoaderCircle size={12} className="animate-spin" aria-hidden />
+          ) : (
+            <FileArchive size={12} aria-hidden />
+          )}
           {t("chooseArchive")}
         </Button>
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-end justify-between gap-3">
-          <FieldLabel htmlFor={CONTENT_ID}>{t("contentLabel")}</FieldLabel>
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".md,text/markdown,text/plain"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-          <Button
-            size="sm"
-            variant="secondary"
-            className="shrink-0"
-            onClick={() => fileRef.current?.click()}
-            disabled={busy}
-          >
-            <FileUp size={12} aria-hidden />
-            {t("fileButton")}
-          </Button>
-        </div>
-        <div className="relative">
-          <Textarea
-            id={CONTENT_ID}
-            value={content}
-            onChange={(e) => setContent((e.target as HTMLTextAreaElement).value)}
-            placeholder={t("contentPlaceholder")}
-            spellCheck={false}
-            rows={10}
-            disabled={busy}
-            invalid={warning !== null}
-            aria-describedby={`${CONTENT_ID}-status`}
-            className="resize-y min-h-45"
-          />
-          {dragging ? (
-            <div
-              aria-hidden
-              className="absolute inset-0 flex items-center justify-center gap-2 border border-accent border-dashed bg-bg/90 font-mono uppercase tracking-label text-micro text-accent"
-            >
-              <FileUp size={13} />
-              {t("dropHint")}
-            </div>
-          ) : null}
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <p
-          id={`${CONTENT_ID}-status`}
-          aria-live="polite"
-          className={cn("font-body text-xs max-w-md", warning ? "text-warning" : "text-fg-4")}
-        >
-          {warning ??
-            (frontmatter.ok
-              ? t("ready", { name: frontmatter.name })
-              : fileName
-                ? t("fileLoaded", { name: fileName })
-                : t("hint"))}
-        </p>
-        <div className="flex items-center gap-2">
-          <Button size="lg" variant="quiet" onClick={reset} disabled={busy || !hasContent}>
-            {t("clear")}
-          </Button>
-          <Button
-            size="lg"
-            variant="primary"
-            className="min-w-40"
-            onClick={handleSubmit}
-            disabled={!canInstall}
-            aria-busy={installing}
-          >
-            {installing ? (
-              <LoaderCircle size={14} className="animate-spin" aria-hidden />
-            ) : (
-              <Save size={14} aria-hidden />
-            )}
-            {installing ? t("installing") : t("submit")}
-          </Button>
-        </div>
       </div>
     </FormSection>
   );

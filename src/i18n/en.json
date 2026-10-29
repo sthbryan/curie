@@ -208,7 +208,7 @@
   "custom": {
     "eyebrow": "CUSTOM · DIRECT INSTALL",
     "title": "Install skills from anywhere",
-    "subtitle": "A GitHub repo or a SKILL.md you wrote yourself. Either way the skill ends up installed and ready for your agents.",
+    "subtitle": "A GitHub repo or a .zip bundle from your machine. Either way the skill ends up installed and ready for your agents.",
     "divider": "OR",
     "remote": {
       "eyebrow": "OPTION 01 · FROM GITHUB",
@@ -237,32 +237,13 @@
     "local": {
       "eyebrow": "OPTION 02 · YOUR OWN SKILL",
       "title": "Install from your machine",
-      "subtitle": "Pick a skill folder, upload a .zip or .skill, or paste a SKILL.md. Everything inside the folder travels with the skill.",
-      "bundleHint": "A folder or archive keeps its scripts, references and assets.",
-      "chooseFolder": "CHOOSE FOLDER",
+      "subtitle": "Upload the skill as a .zip or .skill archive. Everything inside it travels with the skill.",
+      "bundleHint": "The archive keeps its scripts, references and assets.",
       "chooseArchive": "UPLOAD .ZIP",
-      "folderTitle": "Pick a skill folder",
       "archiveTitle": "Pick a .zip or .skill",
-      "contentLabel": "SKILL.md content",
-      "contentPlaceholder": "---\nname: my-skill\ndescription: what it does\n---\n\n# My skill\n\n…",
-      "fileButton": "UPLOAD .MD",
-      "fileLoaded": "Loaded {name}",
-      "hint": "We read the name and the description from the block between --- lines at the top.",
-      "clear": "CLEAR",
-      "submit": "INSTALL",
-      "installing": "SAVING",
       "toastLoading": "INSTALLING",
       "toastSuccess": "INSTALLED",
-      "toastError": "INSTALL FAILED",
-      "ready": "READY TO INSTALL AS {name}",
-      "blockMissing": "The file has to start with a block between --- lines giving the skill a name and a description.",
-      "nameMissing": "The block at the top is missing the skill's name.",
-      "descriptionMissing": "The block at the top is missing the skill's description.",
-      "bothMissing": "The block at the top is missing the skill's name and description.",
-      "nameInvalid": "\"{name}\" won't work as a name: use letters, digits, dashes and dots, with no spaces.",
-      "dropHint": "DROP THE .MD HERE",
-      "dropRejected": "THAT IS NOT A MARKDOWN FILE",
-      "dropFailed": "COULD NOT READ THAT FILE"
+      "toastError": "INSTALL FAILED"
     }
   },
   "explore": {

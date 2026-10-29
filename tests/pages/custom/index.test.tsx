@@ -2,14 +2,10 @@
 
 import { createRoot } from "preact/compat/client";
 import { act } from "preact/test-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { Router } from "wouter";
 
 import { lang } from "@/store/system";
-
-vi.mock("@tauri-apps/api/webview", () => ({
-  getCurrentWebview: () => ({ onDragDropEvent: () => Promise.resolve(() => {}) }),
-}));
 
 const { Custom } = await import("@/pages/custom/index");
 
@@ -73,9 +69,8 @@ describe("Custom", () => {
       </Router>,
     );
     expect(container?.textContent).toContain("Install from your machine");
-    expect(container?.textContent).toContain("CHOOSE FOLDER");
     expect(container?.textContent).toContain("UPLOAD .ZIP");
-    expect(container?.textContent).toContain("UPLOAD .MD");
-    expect(container?.textContent).toContain("SKILL.md content");
+    expect(container?.textContent).not.toContain("CHOOSE FOLDER");
+    expect(container?.textContent).not.toContain("SKILL.md content");
   });
 });
