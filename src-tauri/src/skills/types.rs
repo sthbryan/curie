@@ -29,6 +29,10 @@ pub struct SkillUpdateInfo {
 #[serde(rename_all = "camelCase")]
 pub struct SkillUpdateResult {
     pub updated: Vec<String>,
+    /// Skills that were attempted and failed, so the caller can tell a partial
+    /// update from a clean one instead of parsing the message.
+    #[serde(default)]
+    pub failed: Vec<String>,
     pub message: String,
 }
 

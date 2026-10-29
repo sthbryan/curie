@@ -59,25 +59,36 @@ pub(crate) fn lock_entry(
     }
     entry.insert("skillPath".into(), json!(skill_path));
 
+    let existing = lock
+        .skills
+        .get(&skill.name)
+        .or_else(|| lock.skills.get(&sanitize_name(&skill.name)));
+    // A reinstall without a GitHub tree (project scope, offline, local source)
+    // must not drop the hash the update check compares against.
+    let folder_hash = tree
+        .and_then(|tree| super::check::latest_folder_hash(tree, &skill_path))
+        .filter(|hash| !hash.is_empty())
+        .or_else(|| existing.and_then(|entry| entry.skill_folder_hash.clone()))
+        .filter(|hash| !hash.is_empty());
+
     match scope {
         Scope::Global => {
-            let existing = lock
-                .skills
-                .get(&skill.name)
-                .or_else(|| lock.skills.get(&sanitize_name(&skill.name)));
             let installed_at = existing
                 .and_then(|entry| entry.installed_at.clone())
                 .unwrap_or_else(lock::now_iso8601);
             entry.insert("installedAt".into(), json!(installed_at));
             entry.insert("updatedAt".into(), json!(lock::now_iso8601()));
-            let folder_hash = tree
-                .and_then(|tree| super::check::latest_folder_hash(tree, &skill_path))
-                .unwrap_or_default();
-            entry.insert("skillFolderHash".into(), json!(folder_hash));
+            entry.insert(
+                "skillFolderHash".into(),
+                json!(folder_hash.unwrap_or_default()),
+            );
         }
         Scope::Project(_) => {
             let computed = install::folder_hash(&skill.dir).unwrap_or_default();
             entry.insert("computedHash".into(), json!(computed));
+            if let Some(hash) = folder_hash {
+                entry.insert("skillFolderHash".into(), json!(hash));
+            }
         }
     }
 
@@ -122,12 +133,14 @@ pub(crate) fn install_source(
 
     let targets = install::targets(scope)?;
     let lock = lock::load_skill_lock(scope);
-    let tree = match (scope, source) {
-        (Scope::Global, Source::Git(git)) => git
+    // Both scopes record the folder hash: it is the baseline the update check
+    // compares against, and without it project skills can never show an update.
+    let tree = match source {
+        Source::Git(git) => git
             .owner_repo
             .as_deref()
             .and_then(|repo| fetch_github_tree(repo, git.ref_name.as_deref(), true)),
-        _ => None,
+        Source::Local(_) => None,
     };
 
     let mut installed: Vec<String> = Vec::new();
@@ -216,6 +229,45 @@ mod tests {
                 .len()
                 == 64
         );
+
+        let _ = fs::remove_dir_all(&project);
+        let _ = fs::remove_dir_all(&source);
+    }
+
+    #[test]
+    fn a_project_reinstall_keeps_the_folder_hash_it_cannot_recompute() {
+        let project = temp_dir("keep-hash");
+        let source = temp_dir("keep-hash-source");
+        write_skill(&source, "", "alpha");
+        fs::write(
+            project.join("skills-lock.json"),
+            serde_json::json!({
+                "version": 1,
+                "skills": {
+                    "alpha": {
+                        "source": "one/alpha",
+                        "sourceType": "github",
+                        "skillPath": "SKILL.md",
+                        "skillFolderHash": "kept-hash",
+                    }
+                }
+            })
+            .to_string(),
+        )
+        .expect("lock");
+
+        install_source(
+            &Scope::Project(project.clone()),
+            &Source::Local(source.clone()),
+            None,
+        )
+        .expect("install");
+
+        let lock: Value = serde_json::from_str(
+            &fs::read_to_string(project.join("skills-lock.json")).expect("lock"),
+        )
+        .expect("json");
+        assert_eq!(lock["skills"]["alpha"]["skillFolderHash"], "kept-hash");
 
         let _ = fs::remove_dir_all(&project);
         let _ = fs::remove_dir_all(&source);
