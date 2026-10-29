@@ -1,8 +1,23 @@
+use std::sync::OnceLock;
+use std::time::Duration;
+
 use super::types::{SearchApiResponse, SkillSearchResult};
 
 const SEARCH_API_BASE: &str = "https://skills.sh";
 const DEFAULT_LIMIT: u32 = 20;
 const MIN_QUERY_LEN: usize = 2;
+
+/// Search runs on every debounced keystroke: keep connections and TLS state
+/// alive between them instead of a handshake per query.
+fn http_agent() -> &'static ureq::Agent {
+    static AGENT: OnceLock<ureq::Agent> = OnceLock::new();
+    AGENT.get_or_init(|| {
+        ureq::Agent::config_builder()
+            .timeout_global(Some(Duration::from_secs(15)))
+            .build()
+            .into()
+    })
+}
 
 pub fn find_skills(query: &str, owner: Option<&str>) -> Result<Vec<SkillSearchResult>, String> {
     let q = query.trim();
@@ -30,12 +45,7 @@ pub fn find_skills(query: &str, owner: Option<&str>) -> Result<Vec<SkillSearchRe
         url.push_str(&urlencoding_encode(o));
     }
 
-    let config = ureq::Agent::config_builder()
-        .timeout_global(Some(std::time::Duration::from_secs(15)))
-        .build();
-    let agent: ureq::Agent = config.into();
-
-    let mut resp = agent
+    let mut resp = http_agent()
         .get(&url)
         .header("Accept", "application/json")
         .header("User-Agent", "curie-skills-manager")
