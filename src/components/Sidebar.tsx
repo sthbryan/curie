@@ -15,6 +15,7 @@ import "@zovaris/sephiro/css/sidebar.css";
 import { useT } from "@/i18n";
 import type { Section } from "@/lib/routes";
 import { useRoute } from "@/lib/routes";
+import { setSidebarOpen, sidebarOpen } from "@/store/system";
 
 type NavKey = "home" | "skills" | "explore" | "find" | "custom" | "projects";
 
@@ -26,8 +27,6 @@ const TOP_ITEMS: { section: Section; key: NavKey; num: string; icon: LucideIcon 
   { section: "custom", key: "custom", num: "05", icon: FileCode },
   { section: "projects", key: "projects", num: "06", icon: FolderGit2 },
 ];
-
-const RAIL_WIDTH = 56;
 
 export function Sidebar() {
   const t = useT();
@@ -42,33 +41,35 @@ export function Sidebar() {
 
   const icon = (Icon: LucideIcon) => <Icon size={16} strokeWidth={1.5} />;
 
+  // Open or closed is a stored choice, not a hover state: the rail is the same
+  // width in both modes, so the content only reflows when the button is used.
   return (
-    <div className="relative z-30 shrink-0" style={{ width: RAIL_WIDTH }}>
-      <UiSidebar
-        ariaLabel={t("nav.primary")}
-        className="absolute inset-y-0 left-0 shadow-2xl"
-        collapsedMode="hover"
-        value={section}
-        onSelect={(value) => go(value as Section)}
-        sections={[
-          {
-            items: TOP_ITEMS.map((item) => ({
-              value: item.section,
-              icon: icon(item.icon),
-              label: label(item.num, t(`nav.${item.key}`)),
-            })),
-          },
-          {
-            items: [
-              {
-                value: "settings",
-                icon: icon(SettingsIcon),
-                label: label("00", t("nav.settings")),
-              },
-            ],
-          },
-        ]}
-      />
-    </div>
+    <UiSidebar
+      ariaLabel={t("nav.primary")}
+      collapsible
+      collapsed={!sidebarOpen.value}
+      collapsedMode="rail"
+      onCollapsedChange={(collapsed) => setSidebarOpen(!collapsed)}
+      value={section}
+      onSelect={(value) => go(value as Section)}
+      sections={[
+        {
+          items: TOP_ITEMS.map((item) => ({
+            value: item.section,
+            icon: icon(item.icon),
+            label: label(item.num, t(`nav.${item.key}`)),
+          })),
+        },
+        {
+          items: [
+            {
+              value: "settings",
+              icon: icon(SettingsIcon),
+              label: label("00", t("nav.settings")),
+            },
+          ],
+        },
+      ]}
+    />
   );
 }

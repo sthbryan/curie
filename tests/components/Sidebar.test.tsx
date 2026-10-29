@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { Router } from "wouter";
 
 import { Sidebar } from "@/components/Sidebar";
-import { lang } from "@/store/system";
+import { lang, sidebarOpen } from "@/store/system";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -39,33 +39,54 @@ function unmount() {
   }
 }
 
+function aside() {
+  return container?.querySelector("aside") as HTMLElement | null;
+}
+
+function toggle() {
+  const button = container?.querySelector(".sph-sidebar__toggle") as HTMLButtonElement | null;
+  if (!button) throw new Error("sidebar toggle not found");
+  return button;
+}
+
 afterEach(unmount);
 beforeEach(() => {
   lang.value = "en";
+  sidebarOpen.value = false;
   window.history.replaceState({}, "", "/find");
 });
 
 describe("Sidebar", () => {
   it("renders every section plus the settings entry", () => {
     mount();
-    const items = Array.from(container?.querySelectorAll("button") ?? []);
+    const items = Array.from(container?.querySelectorAll(".sph-sidebar__item") ?? []);
     expect(items).toHaveLength(7);
     expect(container?.textContent).toContain("HOME");
     expect(container?.textContent).toContain("SETTINGS");
   });
 
-  it("keeps the rail out of the flow so the page never reflows", () => {
+  it("stays in the flow as a fixed rail, not an overlay", () => {
     mount();
-    const aside = container?.querySelector("aside");
-    expect(aside?.className).toContain("absolute");
-    expect((container?.firstElementChild as HTMLElement | null)?.style.width).toBe("56px");
+    const rail = aside();
+    expect(rail?.className).not.toContain("absolute");
+    expect(rail?.getAttribute("data-collapsed-mode")).toBe("rail");
+    expect(rail?.hasAttribute("data-rail")).toBe(true);
   });
 
-  it("collapses to a rail that expands on hover and focus", () => {
+  it("opens and closes from its own button and remembers the choice", () => {
     mount();
-    const aside = container?.querySelector("aside");
-    expect(aside?.getAttribute("data-collapsed-mode")).toBe("hover");
-    expect(aside?.hasAttribute("data-rail")).toBe(true);
+    expect(toggle().getAttribute("aria-label")).toBe("Expand sidebar");
+
+    act(() => {
+      toggle().click();
+    });
+    expect(sidebarOpen.value).toBe(true);
+    expect(aside()?.hasAttribute("data-rail")).toBe(false);
+    expect(toggle().getAttribute("aria-label")).toBe("Collapse sidebar");
+
+    unmount();
+    mount();
+    expect(aside()?.hasAttribute("data-rail")).toBe(false);
   });
 
   it("marks the current section", () => {
@@ -76,9 +97,9 @@ describe("Sidebar", () => {
 
   it("navigates when an item is clicked", () => {
     mount();
-    const home = Array.from(container?.querySelectorAll("button") ?? []).find((button) =>
-      button.textContent?.includes("HOME"),
-    );
+    const home = Array.from(container?.querySelectorAll(".sph-sidebar__item") ?? []).find(
+      (button) => button.textContent?.includes("HOME"),
+    ) as HTMLButtonElement | undefined;
     act(() => {
       home?.click();
     });
