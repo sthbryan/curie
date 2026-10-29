@@ -172,8 +172,8 @@ describe("useExploreActions", () => {
 
     const { get, unmount } = renderHook(() => useExploreActions());
 
-    let first: Promise<void>;
-    let second: Promise<void>;
+    let first: Promise<boolean>;
+    let second: Promise<boolean>;
     act(() => {
       first = get().load("hot");
     });
@@ -190,6 +190,43 @@ describe("useExploreActions", () => {
 
     expect(get().skills).toEqual([sample]);
     expect(get().total).toBe(1);
+    unmount();
+  });
+
+  it("clears the load-more spinner when a new load supersedes the page", async () => {
+    type Resolver = (value: unknown) => void;
+    let resolveMore: Resolver = () => {};
+    invokeMock
+      .mockResolvedValueOnce(page({ hasMore: true, page: 0 }))
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveMore = resolve as Resolver;
+          }),
+      )
+      .mockResolvedValueOnce(page({ view: "trending" }, [{ ...sample, id: "fresh" }]));
+
+    const { get, unmount } = renderHook(() => useExploreActions());
+    await act(async () => {
+      await get().load("hot");
+    });
+    expect(get().hasMore).toBe(true);
+
+    act(() => {
+      void get().loadMore();
+    });
+    expect(get().loadingMore).toBe(true);
+
+    await act(async () => {
+      await get().load("trending");
+    });
+    expect(get().loadingMore).toBe(false);
+    expect(get().skills).toEqual([{ ...sample, id: "fresh" }]);
+
+    await act(async () => {
+      resolveMore(page({ hasMore: false, page: 1 }, [{ ...sample, id: "stale" }]));
+    });
+    expect(get().skills).toEqual([{ ...sample, id: "fresh" }]);
     unmount();
   });
 
