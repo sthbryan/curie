@@ -78,11 +78,22 @@ export const update = async (names?: string[]) => {
   updatingSkill.value = token;
   updateApplyError.value = null;
   try {
-    await invoke<SkillUpdateResult>("update_skills", {
+    const result = await invoke<SkillUpdateResult>("update_skills", {
       skills: names && names.length > 0 ? names : null,
       projectPath,
     });
-    toast.success(t(lang.value, "toast.updated", { name: names?.length === 1 ? names[0] : "" }));
+    const failed = result.failed ?? [];
+    if (failed.length > 0) {
+      // Surfaces in the banner as well: a toast can be missed.
+      updateApplyError.value = failed.join("; ");
+      toast.warning(t(lang.value, "toast.updateFailed", { n: failed.length }), {
+        description: result.message,
+      });
+    } else if (result.updated.length === 0) {
+      toast.success(t(lang.value, "toast.noUpdates"));
+    } else {
+      toast.success(t(lang.value, "toast.updated", { name: names?.length === 1 ? names[0] : "" }));
+    }
     if (projectPath === activeScopePath.value)
       await loadSkills(projectPath, { checkUpdates: true, freshUpdates: true });
   } catch (e) {

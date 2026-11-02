@@ -1,7 +1,21 @@
+use std::sync::OnceLock;
+use std::time::Duration;
+
 use super::types::{ExploreApiResponse, ExplorePage, SkillExploreResult};
 
 const SEARCH_API_BASE: &str = "https://skills.sh";
 const VALID_VIEWS: &[&str] = &["hot", "trending", "all-time"];
+
+/// One pooled client for every page and view switch.
+fn http_agent() -> &'static ureq::Agent {
+    static AGENT: OnceLock<ureq::Agent> = OnceLock::new();
+    AGENT.get_or_init(|| {
+        ureq::Agent::config_builder()
+            .timeout_global(Some(Duration::from_secs(20)))
+            .build()
+            .into()
+    })
+}
 
 pub fn explore_skills(view: &str, page: u32) -> Result<ExplorePage, String> {
     let view = view.trim();
@@ -14,12 +28,7 @@ pub fn explore_skills(view: &str, page: u32) -> Result<ExplorePage, String> {
 
     let url = format!("{SEARCH_API_BASE}/api/skills/{view}/{page}");
 
-    let config = ureq::Agent::config_builder()
-        .timeout_global(Some(std::time::Duration::from_secs(20)))
-        .build();
-    let agent: ureq::Agent = config.into();
-
-    let mut resp = agent
+    let mut resp = http_agent()
         .get(&url)
         .header("Accept", "application/json")
         .header("User-Agent", "curie-skills-manager")

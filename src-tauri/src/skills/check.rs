@@ -52,6 +52,20 @@ fn github_token() -> Option<String> {
         .filter(|t| !t.trim().is_empty())
 }
 
+/// One pool for every GitHub read in this module: connections and TLS state
+/// are reused instead of rebuilt for each of the four parallel checks.
+fn http_agent() -> &'static ureq::Agent {
+    static AGENT: OnceLock<ureq::Agent> = OnceLock::new();
+    AGENT.get_or_init(|| {
+        ureq::Agent::config_builder()
+            .timeout_global(Some(REQUEST_TIMEOUT))
+            // A rate-limited reply still carries the header that tells us to stop.
+            .http_status_as_error(false)
+            .build()
+            .into()
+    })
+}
+
 fn encode_path_segment(segment: &str) -> String {
     let mut out = String::with_capacity(segment.len());
     for b in segment.bytes() {
@@ -84,12 +98,7 @@ pub(crate) fn fetch_github_tree(
     };
 
     let token = github_token();
-    let config = ureq::Agent::config_builder()
-        .timeout_global(Some(REQUEST_TIMEOUT))
-        // A rate-limited reply still carries the header that tells us to stop.
-        .http_status_as_error(false)
-        .build();
-    let agent: ureq::Agent = config.into();
+    let agent = http_agent();
 
     for branch in branches {
         let url = format!(
@@ -156,19 +165,30 @@ fn is_github_entry(entry: &SkillLockEntry) -> bool {
             .unwrap_or(false)
 }
 
+/// `owner/repo` for a lock entry whose source is a GitHub URL as well as a
+/// shorthand; the tree API only understands the shorthand shape.
+fn github_repo(raw: &str) -> Option<String> {
+    let raw = raw.trim();
+    if raw.is_empty() {
+        return None;
+    }
+    if raw.contains("://") || raw.starts_with("git@") || raw.starts_with("ssh://") {
+        let Ok(super::source::Source::Git(git)) = super::source::parse_source(raw) else {
+            return None;
+        };
+        return git.owner_repo.filter(|repo| !repo.is_empty());
+    }
+    let repo = raw.trim_end_matches(".git").trim_end_matches('/');
+    (repo.matches('/').count() == 1 && !repo.chars().any(char::is_whitespace))
+        .then(|| repo.to_string())
+}
+
 fn resolve_github_source(entry: &SkillLockEntry) -> Option<String> {
     entry
         .source
-        .clone()
-        .or_else(|| {
-            entry.source_url.as_ref().and_then(|url| {
-                url.trim_end_matches(".git")
-                    .trim_end_matches('/')
-                    .rsplit_once("github.com/")
-                    .map(|(_, rest)| rest.to_string())
-            })
-        })
-        .filter(|s| !s.is_empty())
+        .as_deref()
+        .and_then(github_repo)
+        .or_else(|| entry.source_url.as_deref().and_then(github_repo))
 }
 
 pub fn check_skill_updates_in(scope: &Scope, fresh: bool) -> Result<Vec<SkillUpdateInfo>, String> {
@@ -177,8 +197,9 @@ pub fn check_skill_updates_in(scope: &Scope, fresh: bool) -> Result<Vec<SkillUpd
         return Ok(Vec::new());
     }
 
-    // Group checkable GitHub skills by source (one tree fetch per repo).
-    let mut by_source: HashMap<String, Vec<(String, SkillLockEntry)>> = HashMap::new();
+    // Group checkable GitHub skills by source and ref: one tree fetch covers
+    // every skill installed from the same repository at the same revision.
+    let mut by_source: HashMap<(String, String), Vec<(String, SkillLockEntry)>> = HashMap::new();
     let mut results: Vec<SkillUpdateInfo> = Vec::new();
 
     for (name, entry) in &lock.skills {
@@ -215,13 +236,12 @@ pub fn check_skill_updates_in(scope: &Scope, fresh: bool) -> Result<Vec<SkillUpd
             continue;
         };
 
-        by_source
-            .entry(source)
-            .or_default()
-            .push((name.clone(), entry.clone()));
+        let group = (source, entry.r#ref.clone().unwrap_or_default());
+        by_source.entry(group).or_default().push((name.clone(), entry.clone()));
     }
 
-    let sources: Vec<(String, Vec<(String, SkillLockEntry)>)> = by_source.into_iter().collect();
+    let sources: Vec<((String, String), Vec<(String, SkillLockEntry)>)> =
+        by_source.into_iter().collect();
     let results: Mutex<Vec<SkillUpdateInfo>> = Mutex::new(Vec::new());
     let next = AtomicUsize::new(0);
 
@@ -229,7 +249,7 @@ pub fn check_skill_updates_in(scope: &Scope, fresh: bool) -> Result<Vec<SkillUpd
         for _ in 0..CHECK_WORKERS.min(sources.len()) {
             scope.spawn(|| loop {
                 let index = next.fetch_add(1, Ordering::Relaxed);
-                let Some((source, items)) = sources.get(index) else {
+                let Some(((source, _), items)) = sources.get(index) else {
                     break;
                 };
                 let checked = check_source(source, items, fresh);
@@ -365,6 +385,56 @@ mod tests {
 
         assert_eq!(cached_tree(&format!("{base}#")).unwrap().sha, "head");
         assert_eq!(cached_tree(&format!("{base}#v2")).unwrap().sha, "tagged");
+    }
+
+    #[test]
+    fn a_stored_url_resolves_to_the_repo_the_tree_api_needs() {
+        assert_eq!(github_repo("one/url").as_deref(), Some("one/url"));
+        assert_eq!(
+            github_repo("https://github.com/one/url").as_deref(),
+            Some("one/url")
+        );
+        assert_eq!(
+            github_repo("https://github.com/one/url.git").as_deref(),
+            Some("one/url")
+        );
+        assert_eq!(github_repo("https://gitlab.com/one/url"), None);
+        assert_eq!(github_repo("some/local/folder"), None);
+    }
+
+    #[test]
+    fn a_lock_entry_that_only_records_the_url_is_still_checked() {
+        let root = std::env::temp_dir().join(format!("curie-url-check-{}", std::process::id()));
+        std::fs::create_dir_all(&root).expect("temp dir");
+        let lock = serde_json::json!({
+            "skills": {
+                "url-skill": {
+                    "sourceType": "github",
+                    "sourceUrl": "https://github.com/one/url",
+                    "skillPath": "skills/url-skill/SKILL.md",
+                    "skillFolderHash": "old",
+                },
+            }
+        });
+        std::fs::write(root.join("skills-lock.json"), lock.to_string()).expect("lockfile");
+        store_tree(
+            "one/url#".to_string(),
+            &GitTreeResponse {
+                sha: "root".into(),
+                tree: vec![GitTreeEntry {
+                    path: "skills/url-skill".into(),
+                    entry_type: "tree".into(),
+                    sha: "new".into(),
+                }],
+            },
+        );
+
+        let rows = check_skill_updates_in(&Scope::Project(root.clone()), false).expect("check");
+        let _ = std::fs::remove_dir_all(&root);
+
+        assert_eq!(rows.len(), 1);
+        assert!(rows[0].checked);
+        assert!(rows[0].update_available);
     }
 
     #[test]

@@ -348,7 +348,9 @@
     "removedAll": "EVERY SKILL REMOVED",
     "projectAdded": "Added {name}",
     "projectForgotten": "Forgot {name}",
-    "unverified": "COULD NOT CHECK {n} SKILLS"
+    "unverified": "COULD NOT CHECK {n} SKILLS",
+    "updatesFailed": "Could not check for updates",
+    "updateFailed": "Could not update {n} skills"
   },
   "projects": {
     "eyebrow": "PROJECTS · SCOPES",

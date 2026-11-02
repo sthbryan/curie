@@ -89,6 +89,7 @@ export type SkillUpdateInfo = {
 
 export type SkillUpdateResult = {
   updated: string[];
+  failed?: string[];
   message: string;
 };
 

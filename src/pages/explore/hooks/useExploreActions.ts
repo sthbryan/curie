@@ -17,7 +17,8 @@ export type ExploreActions = SkillInstall & {
   loadingMore: boolean;
   error: string | null;
   setView: (view: ExploreView) => void;
-  load: (view?: ExploreView) => Promise<void>;
+  /** Resolves true when this call's page is the one that landed. */
+  load: (view?: ExploreView) => Promise<boolean>;
   loadMore: () => Promise<void>;
   dismissError: () => void;
 };
@@ -57,13 +58,17 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
       const v = nextView ?? viewRef.current;
       const id = ++latestLoadId.current;
       setLoading(true);
+      // A page load supersedes any in-flight "load more"; its spinner belongs
+      // to work nobody is waiting for anymore.
+      setLoadingMore(false);
       setError(null);
       try {
         const res = await invoke<ExplorePage>("explore_skills", { view: v, page: 0 });
-        if (id !== latestLoadId.current) return;
+        if (id !== latestLoadId.current) return false;
         applyPage(res, false);
+        return true;
       } catch (e) {
-        if (id !== latestLoadId.current) return;
+        if (id !== latestLoadId.current) return false;
         setError(errorMessage(e));
         skillsRef.current = [];
         setSkills([]);
@@ -71,6 +76,7 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
         setHasMore(false);
         setAtCap(false);
         setPage(0);
+        return false;
       } finally {
         if (id === latestLoadId.current) setLoading(false);
       }
@@ -104,7 +110,8 @@ export function useExploreActions(initialView: ExploreView = "hot"): ExploreActi
       if (id !== latestLoadId.current) return;
       setError(errorMessage(e));
     } finally {
-      if (id === latestLoadId.current) setLoadingMore(false);
+      // Always: a load that superseded this page leaves the footer spinner on.
+      setLoadingMore(false);
     }
   }, [applyPage, hasMore, loading, loadingMore, page]);
 

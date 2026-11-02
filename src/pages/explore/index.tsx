@@ -80,8 +80,7 @@ export function Explore() {
   };
   const tToast = useT();
   const handleRefresh = async () => {
-    await load(view);
-    toast.success(tToast("toast.refreshed"));
+    if (await load(view)) toast.success(tToast("toast.refreshed"));
   };
   const handleLoadMore = () => {
     void loadMore();

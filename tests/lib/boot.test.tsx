@@ -287,7 +287,7 @@ describe("checkSkillUpdates", () => {
     invokeMock.mockImplementation(() => Promise.resolve(sampleUpdates));
     setUpdatesError("stale");
 
-    await checkSkillUpdates();
+    await expect(checkSkillUpdates()).resolves.toBe("ok");
 
     expect(skillUpdates.value).toBe(sampleUpdates);
     expect(updatesError.value).toBeNull();
@@ -297,7 +297,7 @@ describe("checkSkillUpdates", () => {
   it("records the rejection message and clears loading", async () => {
     invokeMock.mockImplementation(() => Promise.reject("plain string error"));
 
-    await checkSkillUpdates();
+    await expect(checkSkillUpdates()).resolves.toBe("failed");
 
     expect(updatesError.value).toBe("plain string error");
     expect(updatesLoading.value).toBe(false);
